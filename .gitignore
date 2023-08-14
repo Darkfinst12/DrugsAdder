@@ -26,3 +26,7 @@
 /target/classes/main/java/de/DrugsAdder/api/events/table/TableAccessEvent.class
 /target/classes/main/java/de/DrugsAdder/api/events/table/TableEvent.class
 /target/classes/config/en/config.yml
+/target/classes/config/de/config.yml
+/target/classes/languages/de.yml
+/target/classes/languages/en.yml
+/target/classes/plugin.yml

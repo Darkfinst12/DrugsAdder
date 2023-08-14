@@ -1,4 +1,4 @@
-main: de.DrugsAdder.DA
+main: de.darkfinst.DrugsAdder.DA
 name: DrugsAdder
 version: 0.0.1
 api-version: 1.20
