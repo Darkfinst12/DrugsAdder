@@ -20,16 +20,11 @@
         <resources>
             <!-- Static resources -->
             <resource>
+                <directory>src/resources</directory>
                 <filtering>true</filtering>
-                <directory>${project.basedir}/resources</directory>
                 <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.txt</include>
+                    <include>**/*.*</include>
                 </includes>
-                <excludes>
-                    <exclude>target/**</exclude>
-                    <exclude>.travis.yml</exclude>
-                </excludes>
             </resource>
         </resources>
 
