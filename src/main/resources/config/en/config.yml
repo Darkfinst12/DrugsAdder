@@ -1,0 +1,7 @@
+# config for DrugsAdder.jar
+
+#Version of the Config
+version: "0.1"
+
+#Language
+language: en
