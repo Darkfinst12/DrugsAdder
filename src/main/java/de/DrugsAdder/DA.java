@@ -23,7 +23,7 @@ public class DA extends JavaPlugin {
 
     @Override
     public void onDisable(){
-        Bukkit.getLogger().info(String.format("[%s] Disabled  Version %s", getDescription().getName(), getDescription().getVersion()));
+        Bukkit.getLogger().info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
         loader.unload();
     }
 

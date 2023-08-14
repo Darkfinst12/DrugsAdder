@@ -1,6 +1,7 @@
 package main.java.de.DrugsAdder;
 
 import lombok.Getter;
+import main.java.de.DrugsAdder.filedata.DAConfig;
 
 @Getter
 public class DALoader {
@@ -13,6 +14,15 @@ public class DALoader {
     }
 
     public void init() {
+        this.initConfig();
+    }
+
+    private void initConfig() {
+
+    }
+
+    private void initCommands() {
+        new DACommand().register();
     }
 
     public void unload() {
