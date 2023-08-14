@@ -1,13 +1,20 @@
 package de.darkfinst.DrugsAdder.listeners;
 
+import de.darkfinst.DrugsAdder.DA;
 import de.darkfinst.DrugsAdder.constructs.barrel.DABarrel;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
 public class SignChangeEventListener implements Listener {
 
-    @EventHandler
+    public SignChangeEventListener() {
+        Bukkit.getPluginManager().registerEvents(this, DA.getInstance);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
         String[] lines = event.getLines();
 

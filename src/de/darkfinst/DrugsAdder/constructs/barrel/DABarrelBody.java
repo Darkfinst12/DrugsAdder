@@ -42,10 +42,27 @@ public class DABarrelBody {
         Vector direction = loc.subtract(attachedBlock.getLocation()).toVector();
         Bukkit.getLogger().info(String.format("Direction: %s", direction));
         if (direction.getX() != 0) {
-
-
+            if (direction.getX() == 1) {
+                //WEST
+                isValid = Material.SPRUCE_TRAPDOOR.equals(world.getBlockAt(attachedBlock.getLocation().getBlockX() + 1, attachedBlock.getLocation().getBlockY(), attachedBlock.getLocation().getBlockZ()).getType());
+                Bukkit.getLogger().info(String.format("BehindSignValid+WX1: %s", isValid));
+                isValid = Material.SPRUCE_TRAPDOOR.equals(world.getBlockAt(attachedBlock.getLocation().getBlockX() + 1, attachedBlock.getLocation().getBlockY() + 1, attachedBlock.getLocation().getBlockZ()).getType());
+                Bukkit.getLogger().info(String.format("BehindSignValid+WX2: %s", isValid));
+            }
+            if (direction.getX() == -1) {
+                //EAST
+                isValid = Material.SPRUCE_TRAPDOOR.equals(world.getBlockAt(attachedBlock.getLocation().getBlockX() - 1, attachedBlock.getLocation().getBlockY(), attachedBlock.getLocation().getBlockZ()).getType());
+                Bukkit.getLogger().info(String.format("BehindSignValid+EX1: %s", isValid));
+                isValid = Material.SPRUCE_TRAPDOOR.equals(world.getBlockAt(attachedBlock.getLocation().getBlockX() - 1, attachedBlock.getLocation().getBlockY() + 1, attachedBlock.getLocation().getBlockZ()).getType());
+                Bukkit.getLogger().info(String.format("BehindSignValid+EX2: %s", isValid));
+            }
         } else if (direction.getZ() != 0) {
-
+            if (direction.getZ() == 1) {
+                //NORTH
+            }
+            if (direction.getZ() == -1) {
+                //SOUTH
+            }
         }
 
         Bukkit.getLogger().info("------------------------------------------------");

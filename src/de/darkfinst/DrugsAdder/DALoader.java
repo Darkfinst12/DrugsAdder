@@ -14,7 +14,7 @@ public class DALoader {
 
     private final DA plugin;
 
-    private final DAConfig daConfig = new DAConfig();
+    private DAConfig daConfig;
 
 
     public DALoader(DA plugin) {
@@ -28,6 +28,7 @@ public class DALoader {
     }
 
     private void initConfig() {
+        this.daConfig = new DAConfig();
         if (!this.daConfig.checkConfig()) {
             this.plugin.disable();
         }
@@ -40,6 +41,7 @@ public class DALoader {
 
     private void initListener() {
         new SignChangeEventListener();
+
     }
 
     //Logging
