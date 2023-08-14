@@ -9,7 +9,6 @@ public class DA extends JavaPlugin {
     public static DALoader loader;
 
 
-
     @Override
     public void onLoad() {
         getInstance = this;
@@ -22,9 +21,13 @@ public class DA extends JavaPlugin {
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         Bukkit.getLogger().info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
         loader.unload();
+    }
+
+    public void disable() {
+        this.getServer().getPluginManager().disablePlugin(this);
     }
 
 
