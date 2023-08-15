@@ -33,7 +33,7 @@ public class DAConfig {
     public boolean checkConfig() {
         if (!this.file.exists()) {
             this.daLoader.errorLog(ChatColor.BOLD + "No config.yml found, creating default file! You may want to choose a config according to your language!");
-            this.daLoader.log(ChatColor.BOLD + "You can find them in plugins/DrugsAdder/config/");
+            this.daLoader.log(ChatColor.BOLD + "You can find them in plugins/DrugsAdder/configs/");
             this.daLoader.log(ChatColor.BOLD + "Just copy the config for your language into the DrugsAdder folder and use /drugsadder reload");
             InputStream defConf = DA.getInstance.getResource("config/en/config.yml");
             if (defConf == null) {
@@ -64,10 +64,25 @@ public class DAConfig {
             return false;
         }
 
+
+        copyDefaultConfigs(false);
         return true;
     }
 
-    public void readConfig(){
+    private static void copyDefaultConfigs(boolean overwrite) {
+        File configs = new File(DA.getInstance.getDataFolder(), "configs");
+        File languages = new File(DA.getInstance.getDataFolder(), "languages");
+        for (String l : new String[]{"de", "en"}) {
+            File lfold = new File(configs, l);
+            try {
+                DAUtil.saveFile(DA.getInstance.getResource("config/" + l + "/config.yml"), lfold, "config.yml", overwrite);
+                DAUtil.saveFile(DA.getInstance.getResource("languages/" + l + ".yml"), languages, l + ".yml", false); // Never overwrite languages, they get updated with their updater
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
+    public void readConfig() {
 
     }
 
