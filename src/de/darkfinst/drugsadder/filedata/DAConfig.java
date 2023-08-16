@@ -52,13 +52,21 @@ public class DAConfig {
         File configs = new File(DA.getInstance.getDataFolder(), "configs");
         File languages = new File(DA.getInstance.getDataFolder(), "languages");
         for (String l : new String[]{"de", "en"}) {
-            File lfold = new File(configs, l);
+            File lFold = new File(configs, l);
             try {
-                DAUtil.saveFile(DA.getInstance.getResource("config/" + l + "/config.yml"), lfold, "config.yml", overwrite);
+                DAUtil.saveFile(DA.getInstance.getResource("config/" + l + "/config.yml"), lFold, "config.yml", overwrite);
                 DAUtil.saveFile(DA.getInstance.getResource("languages/" + l + ".yml"), languages, l + ".yml", false); // Never overwrite languages, they get updated with their updater
             } catch (IOException ignored) {
             }
         }
+        File recipes = new File(DA.getInstance.getDataFolder(), "recipes");
+        for (String r : new String[]{"barrel", "press", "table"}) {
+            try {
+                DAUtil.saveFile(DA.getInstance.getResource("recipes/" + r + ".yml"), recipes, r + ".yml", overwrite);
+            } catch (IOException ignored) {
+            }
+        }
+
     }
 
     public static FileConfiguration loadConfigFile() {
