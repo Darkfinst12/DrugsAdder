@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayerInteractEventListener implements Listener {
 
@@ -14,9 +15,8 @@ public class PlayerInteractEventListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() != null && DA.loader.isStructure(event.getClickedBlock())) {
+        if (event.getClickedBlock() != null && DA.loader.isStructure(event.getClickedBlock()) && EquipmentSlot.HAND.equals(event.getHand()) && event.getItem() == null) {
             event.setCancelled(true);
-            //TODO: Call only Once
             DA.loader.openStructure(event.getClickedBlock(), event.getPlayer());
         }
     }
