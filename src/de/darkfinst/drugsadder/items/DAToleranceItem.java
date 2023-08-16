@@ -10,8 +10,8 @@ public class DAToleranceItem extends DAItem {
     private final int lessTolerance;
 
 
-    public DAToleranceItem(ItemStack itemStack, int moreTolerance, int lessTolerance) {
-        super(itemStack);
+    public DAToleranceItem(ItemStack itemStack, String namespacedID, int moreTolerance, int lessTolerance) {
+        super(itemStack, namespacedID);
         this.moreTolerance = moreTolerance;
         this.lessTolerance = lessTolerance;
     }

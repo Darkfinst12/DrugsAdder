@@ -60,9 +60,9 @@ public class DAConfig {
             }
         }
         File recipes = new File(DA.getInstance.getDataFolder(), "recipes");
-        for (String r : new String[]{"barrel", "press", "table"}) {
+        for (String r : new String[]{"barrel", "crafting", "furnace", "press", "table"}) {
             try {
-                DAUtil.saveFile(DA.getInstance.getResource("recipes/" + r + ".yml"), recipes, r + ".yml", overwrite);
+                DAUtil.saveFile(DA.getInstance.getResource("recipes/" + r + ".yml"), recipes, r + ".yml", false); //Never overwrite recipes, as it would overwrite User created recipes
             } catch (IOException ignored) {
             }
         }
@@ -82,7 +82,7 @@ public class DAConfig {
                 // Failed to load
                 if (loader.languageReader != null) {
                     loader.errorLog(loader.languageReader.get("Error_YmlRead"));
-                    Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> loader.log(stackTraceElement.toString()));
+                    Arrays.asList(e.getStackTrace()).forEach(stackTraceElement -> loader.log(stackTraceElement.toString()));
                 } else {
                     loader.errorLog("Could not read file config.yml, please make sure the file is in valid yml format (correct spaces etc.)");
                 }
