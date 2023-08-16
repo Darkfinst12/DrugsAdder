@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class DAConfig {
 
@@ -60,31 +61,45 @@ public class DAConfig {
         }
     }
 
-    private static FileConfiguration getConfig() {
+    public static FileConfiguration loadConfigFile() {
+        FileConfiguration fileConfiguration = null;
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
-        if (!checkConfig()) {
-            return null;
-        }
-
-        try {
-            YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-            if (cfg.contains("version") && cfg.contains("language")) {
-                return cfg;
+        if (checkConfig()) {
+            try {
+                FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+                if (cfg.contains("version") && cfg.contains("language")) {
+                    fileConfiguration = cfg;
+                }
+            } catch (Exception e) {
+                // Failed to load
+                if (loader.languageReader != null) {
+                    loader.errorLog(loader.languageReader.get("Error_YmlRead"));
+                    Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> loader.log(stackTraceElement.toString()));
+                } else {
+                    loader.errorLog("Could not read file config.yml, please make sure the file is in valid yml format (correct spaces etc.)");
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        // Failed to load
-        if (loader.languageReader != null) {
-            loader.errorLog(loader.languageReader.get("Error_YmlRead"));
-        } else {
-            loader.errorLog("Could not read file config.yml, please make sure the file is in valid yml format (correct spaces etc.)");
-        }
-        return null;
+        return fileConfiguration;
     }
 
-    public void readConfig(FileConfiguration config) {
+    public static void readConfig(FileConfiguration config) {
+
+        //Set Language
+        loader.language = config.getString("language", "en");
+
+        //Loads the LanguageReader
+        loader.languageReader = new LanguageReader(new File(DA.getInstance.getDataFolder(), "languages/" + loader.language + ".yml"), "languages/" + loader.language + ".yml");
+
+        // Check if config is the newest version
+        String version = config.getString("version", null);
+        if (version != null) {
+            if (!version.equals(configVersion)) {
+                File file = new File(DA.getInstance.getDataFolder(), "config.yml");
+                copyDefaultConfigs(true);
+                config = YamlConfiguration.loadConfiguration(file);
+            }
+        }
 
     }
 

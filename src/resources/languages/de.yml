@@ -1,0 +1,16 @@
+# ---- Permission ----
+Perms_Barrel_NoCreate: "Du hast keine Berechtigung, um ein Fass erstellen zu können!"
+Perms_Barrel_NoOpen: "Du hast keine Berechtigung ,um ein Fass öffnen zu können!"
+Perm_Press_NoCreate: "Du hast keine Berechtigung, um eine Presse erstellen zu können!"
+Perm_Press_NoUse: "Du hast keine Berechtigung, um eine Presse benutzen zu können!"
+Perm_Table_NoCreate: "Du hast keine Berechtigung, um ein Labortisch erstellen zu können!"
+Perms_Table_NoOpen: "Du hast keine Berechtigung ,um ein Labortisch öffnen zu können!"
+
+
+# ---- Player ----
+Player_Barrel_Created: "Das Fass wurde erfolgreich erstellt"
+Player_Barrel_NotValid: "Diese Fass ist nicht korrekt gebaut!"
+Player_Press_Created: "Die Presse wurde erfolgreich erstellt"
+Player_Press_NotValid: "Die Presse ist nicht korrekt gebaut!"
+Player_Table_Created: "Der Labortisch wurde erfolgreich erstellt"
+Player_Table_NotValid: "Der Labortisch ist nicht korrekt gebaut!"

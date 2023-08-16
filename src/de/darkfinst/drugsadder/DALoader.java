@@ -14,18 +14,22 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Getter
 public class DALoader {
 
     private final DA plugin;
-    public LanguageReader languageReader;
 
     private DAConfig daConfig;
+
+    public LanguageReader languageReader;
+    public String language;
 
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
 
@@ -41,7 +45,18 @@ public class DALoader {
     }
 
     private void initConfig() {
-
+        try {
+            FileConfiguration config = DAConfig.loadConfigFile();
+            if (config == null) {
+                this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+                return;
+            }
+            DAConfig.readConfig(config);
+        } catch (Exception e) {
+            this.errorLog(e.getMessage());
+            Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> this.log(stackTraceElement.toString()));
+            this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+        }
     }
 
     private void initCommands() {
@@ -56,6 +71,10 @@ public class DALoader {
 
     public void registerDAStructure(DAStructure structure) {
         this.structureList.add(structure);
+    }
+
+    public void unregisterDAStructure(DAStructure structure) {
+        this.structureList.remove(structure);
     }
 
     public boolean isStructure(Block block) {
@@ -102,4 +121,5 @@ public class DALoader {
 
     public void unload() {
     }
+
 }

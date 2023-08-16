@@ -1,0 +1,16 @@
+# ---- Permission ----
+Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
+Perms_Barrel_NoOpen: "You have no permission to open a barrel!"
+Perm_Press_NoCreate: "You have no permission to create a press!"
+Perm_Press_NoUse: "You have no permission to use a press!"
+Perm_Table_NoCreate: "You have no permission to create a table!"
+Perms_Table_NoOpen: "You have no permission to open a table!"
+
+
+# ---- Player ----
+Player_Barrel_Created: "The barrel was created"
+Player_Barrel_NotValid: "The barrel is not properly built"
+Player_Press_Created: "The press was created"
+Player_Press_NotValid: "The press is not properly built"
+Player_Table_Created: "The laboratory table was created"
+Player_Table_NotValid: "The laboratory table was not properly built"

@@ -16,6 +16,7 @@ public class PlayerInteractEventListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() != null && DA.loader.isStructure(event.getClickedBlock())) {
             event.setCancelled(true);
+            //TODO: Call only Once
             DA.loader.openStructure(event.getClickedBlock(), event.getPlayer());
         }
     }

@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.structures.table;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.structures.press.DAPressBody;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -19,20 +20,29 @@ public class DATable extends DAStructure implements InventoryHolder {
     }
 
     public void create(Block sign, Player player) {
-        DATableBody daTableBody = new DATableBody(this, sign);
-        boolean isValid = false;
-        try {
-            isValid = daTableBody.isValidTable();
-            if (isValid) {
-                super.setBody(daTableBody);
-                DA.loader.registerDAStructure(this);
+        if (player.hasPermission("drugsadder.table.create")) {
+            DATableBody daTableBody = new DATableBody(this, sign);
+            try {
+                boolean isValid = daTableBody.isValidTable();
+                if (isValid) {
+                    super.setBody(daTableBody);
+                    DA.loader.registerDAStructure(this);
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_Created"));
+                }
+            } catch (ValidateStructureException ignored) {
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_NotValid"));
             }
-        } catch (ValidateStructureException ignored) {
+        } else {
+            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Table_NoCreate"));
         }
     }
 
     public void open(Player player) {
-        player.openInventory(this.inventory);
+        if (player.hasPermission("drugsadder.table.open")) {
+            player.openInventory(this.inventory);
+        } else {
+            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"));
+        }
     }
 
     public DATableBody getBody() {

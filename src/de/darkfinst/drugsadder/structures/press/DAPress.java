@@ -3,8 +3,10 @@ package de.darkfinst.drugsadder.structures.press;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.type.Switch;
+import org.bukkit.block.data.type.Piston;
+import org.bukkit.block.data.type.PistonHead;
 import org.bukkit.entity.Player;
 
 public class DAPress extends DAStructure {
@@ -20,7 +22,7 @@ public class DAPress extends DAStructure {
                     DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"));
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Invalid"));
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_NotValid"));
             }
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoCreate"));
@@ -33,10 +35,26 @@ public class DAPress extends DAStructure {
 
     public void usePress(Player player) {
         if (player.hasPermission("drugsadder.press.use")) {
-            Block lever = this.getBody().getLever();
-            Switch leverData = (Switch) lever.getBlockData();
-            leverData.setPowered(leverData.isPowered());
-            lever.setBlockData(leverData);
+            try {
+                Block block = this.getBody().getPiston();
+                Piston piston = (Piston) block.getBlockData();
+                if (piston.isExtended()) {
+                    piston.setExtended(true);
+                    block.setBlockData(piston, false);
+                    Block head = block.getRelative(piston.getFacing());
+                    head.setType(Material.AIR);
+                } else {
+                    piston.setExtended(true);
+                    block.setBlockData(piston, false);
+                    Block head = block.getRelative(piston.getFacing());
+                    head.setType(Material.PISTON_HEAD);
+                    PistonHead headData = (PistonHead) head.getBlockData();
+                    headData.setFacing(piston.getFacing());
+                    head.setBlockData(headData, false);
+                }
+            }catch (Exception e) {
+                DA.loader.unregisterDAStructure(this);
+            }
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoUse"));
         }
