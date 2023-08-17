@@ -99,7 +99,11 @@ public class DALoader {
 
     //Logging
     public void msg(CommandSender sender, String msg) {
-        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(false, sender, msg);
+        this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
+    }
+
+    public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type Type) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(false, sender, msg, Type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
             sender.sendMessage(ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE + sendMessageEvent.getMessage());
@@ -107,15 +111,15 @@ public class DALoader {
     }
 
     public void log(String msg) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg);
+        this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG);
     }
 
     public void debugLog(String msg) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg);
+        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG);
     }
 
     public void errorLog(String msg) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg);
+        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR);
     }
 
 

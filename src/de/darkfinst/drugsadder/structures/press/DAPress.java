@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder.structures.press;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
 import org.bukkit.Material;
@@ -19,13 +20,13 @@ public class DAPress extends DAStructure {
                 if (isValid) {
                     super.setBody(pressBody);
                     DA.loader.registerDAStructure(this);
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"));
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_NotValid"));
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoCreate"));
+            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -56,7 +57,7 @@ public class DAPress extends DAStructure {
                 DA.loader.unregisterDAStructure(this);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoUse"));
+            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoUse"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 }

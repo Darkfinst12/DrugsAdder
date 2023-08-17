@@ -32,6 +32,11 @@
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="phoenix" />
+      <option name="name" value="phoenix" />
+      <option name="url" value="https://nexus.phoenixdevt.fr/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="md_5-public" />
       <option name="name" value="md_5-public" />
       <option name="url" value="https://repo.md-5.net/content/groups/public/" />

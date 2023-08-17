@@ -10,6 +10,8 @@ Perms_Table_NoOpen: "You have no permission to open a table!"
 # ---- Player ----
 Player_Barrel_Created: "The barrel was created"
 Player_Barrel_NotValid: "The barrel is not properly built"
+Player_Overdose_Consume: "You have taken an overdose!"
+Player_Overdose_Death: "%s died of an overdose!"
 Player_Press_Created: "The press was created"
 Player_Press_NotValid: "The press is not properly built"
 Player_Table_Created: "The laboratory table was created"

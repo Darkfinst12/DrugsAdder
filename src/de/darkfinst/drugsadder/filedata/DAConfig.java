@@ -6,6 +6,7 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,13 +60,6 @@ public class DAConfig {
             } catch (IOException ignored) {
             }
         }
-        File recipes = new File(DA.getInstance.getDataFolder(), "recipes");
-        for (String r : new String[]{"barrel", "crafting", "furnace", "press", "table"}) {
-            try {
-                DAUtil.saveFile(DA.getInstance.getResource("recipes/" + r + ".yml"), recipes, r + ".yml", false); //Never overwrite recipes, as it would overwrite User created recipes
-            } catch (IOException ignored) {
-            }
-        }
 
     }
 
@@ -99,6 +93,7 @@ public class DAConfig {
         //Loads the LanguageReader
         loader.languageReader = new LanguageReader(new File(DA.getInstance.getDataFolder(), "languages/" + loader.language + ".yml"), "languages/" + loader.language + ".yml");
 
+
         // Check if config is the newest version
         String version = config.getString("version", null);
         if (version != null) {
@@ -108,6 +103,7 @@ public class DAConfig {
                 config = YamlConfiguration.loadConfiguration(file);
             }
         }
+
 
     }
 

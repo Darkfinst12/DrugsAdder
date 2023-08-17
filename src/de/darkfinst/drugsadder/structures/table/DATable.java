@@ -1,9 +1,9 @@
 package de.darkfinst.drugsadder.structures.table;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
-import de.darkfinst.drugsadder.structures.press.DAPressBody;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -27,13 +27,13 @@ public class DATable extends DAStructure implements InventoryHolder {
                 if (isValid) {
                     super.setBody(daTableBody);
                     DA.loader.registerDAStructure(this);
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_Created"));
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_NotValid"));
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Table_NoCreate"));
+            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Table_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -41,7 +41,7 @@ public class DATable extends DAStructure implements InventoryHolder {
         if (player.hasPermission("drugsadder.table.open")) {
             player.openInventory(this.inventory);
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"));
+            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 

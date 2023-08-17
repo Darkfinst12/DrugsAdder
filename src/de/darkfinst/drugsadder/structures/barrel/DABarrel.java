@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder.structures.barrel;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
 import org.bukkit.block.Block;
@@ -25,13 +26,13 @@ public class DABarrel extends DAStructure implements InventoryHolder {
                 if (isValid) {
                     super.setBody(barrelBody);
                     DA.loader.registerDAStructure(this);
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_Created"));
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_NotValid"));
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoCreate"));
+            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -39,7 +40,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         if (player.hasPermission("drugsadder.barrel.open")) {
             player.openInventory(this.inventory);
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoOpen"));
+            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 

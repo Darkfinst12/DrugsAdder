@@ -5,3 +5,86 @@ version: "0.1"
 
 #Sprache
 language: de
+
+#
+
+#Custom Items
+customItems:
+  #Name des Items - Dies ist die ID des Items, die NamespacedID is dann drugsadder:ITEMNAME
+  cocaine:
+    #Name des Items
+    name: '&fCocaine'
+    #Material des Items - Hier sind nur Items von Minecraft erlaubt
+    material: 'paper'
+    #Lore des Items
+    lore:
+      - '&7Cocaine'
+    #CustomModelData des Items
+    customModelData: 1
+
+#Ob ein Eimer zurückgeben werden soll, wenn ein gefüllter beim Craften benutzt wird
+returnBucket: true
+#Ob eine Flasche zurückgeben werden soll, wenn eine gefüllte beim Craften benutzt wird
+returnBottle: true
+
+#Recipes
+recipes:
+  barrel:
+    dirty_cocaine:
+      difficulty: 1
+      duration: 100
+      materials:
+        - 'minecraft:coal/2'
+        - 'drugsadder:coca/4'
+      result: 'drugdrugsadder:dirty_cocaine/1'
+  crafting:
+  furnace:
+  press:
+    cocaine_pills:
+      mold: 'drugdrugsadder:pill_mold'
+      materials:
+        - 'drugdrugsadder:dirty_cocaine/1'
+      result: 'drugdrugsadder:cocaine_pills/1'
+  table:
+
+#Drogen
+drugs:
+  #Name der Droge
+  cocaine:
+    #Welches Item für die Droge benutzt wird
+    itemStack: 'drugdrugsadder:cocaine'
+    #MatchType - CONTAINS_CMD = Das Item enthält die CustomModelData, CONTAINS_LORE = Das Item enthält die Lore, CONTAINS_NAME = Das Item enthält den Namen, EXACT_CMD = Das Item hat die CustomModelData, EXACT_LORE = Das Item hat die Lore, EXACT_NAME = Das Item ist identisch mit dem angegebenen Item
+    matchType: 'CONTAINS_CMD'
+    #Die Einstellungen zur Abhängigkeit bei Konsum der Droge
+    addictionSettings:
+      #Ob man von dieser Droge abhängig werden kann
+      addictionAble: true
+      #Wie viele Suchtpunkte man pro Konsum erhält
+      addictionPoints: 5
+      #Ab wie viel AddictionPoints eine Abhängigkeit eintritt (Ab dieser Grenze tritt dann Entzug ein)
+      addictionStart: 20
+      #Wie viele dieser Droge kurz hintereinander konsumiert werden müssen, um eine Überdosis zu bekommen
+      overdose: 3
+      #Ob die Abhängigkeit die Effekte der Droge beeinflusst, welche man beim Konsum erhält
+      addictionInfluencesEffects: true
+      #Wann immer ein die AddictionPoints reduziert werden in minuten
+      reductionTime: 10
+      #Wie viele AddictionPoints bei jeder Reduzierung reduziert werden
+      reductionAmount: 1
+      #Ob die Reduzierung nur Online stattfinden soll
+      reductionOnlyOnline: true
+      #Welche Effekte man erhält beim Entzug
+      deprivation:
+        15:
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+        30:
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          - 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+    effects:
+      - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+    serverCommands:
+      - 'say %player% hat %drug% konsumiert'
+    playerCommands:
+      - 'say Ich habe %drug% konsumiert'
+    consumeMessage: 'Du hast %drug% konsumiert'
+    consumeTitle: 'Du hast %drug% konsumiert'

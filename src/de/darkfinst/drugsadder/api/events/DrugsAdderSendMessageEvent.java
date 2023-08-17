@@ -14,12 +14,14 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
     private final CommandSender sender;
     private String message;
     private boolean cancelled;
+    private final Type type;
 
 
-    public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, String message) {
+    public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, String message, Type type) {
         super(isAsync);
         this.sender = sender;
         this.message = message;
+        this.type = type;
         this.cancelled = false;
     }
 
@@ -46,5 +48,14 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
     // Required by Bukkit
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public enum Type{
+        DEBUG,
+        ERROR,
+        LOG,
+        NONE,
+        PERMISSION,
+        PLAYER,
     }
 }

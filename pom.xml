@@ -56,14 +56,19 @@
             <url>https://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
+            <!-- Vault, Slimefun-->
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <!-- WorldEdit, WorldGuard -->
             <id>enginehub-maven</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
-            <!-- Vault -->
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <!-- MMOItems -->
+            <id>phoenix</id>
+            <url>https://nexus.phoenixdevt.fr/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -107,6 +112,21 @@
             <version>7.0.9</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <!-- https://gitlab.com/phoenix-dvpmt/mmoitems -->
+            <groupId>net.Indyuce</groupId>
+            <artifactId>MMOItems-API</artifactId>
+            <version>6.9.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- https://github.com/Slimefun/Slimefun4/releases -->
+            <groupId>com.github.Slimefun</groupId>
+            <artifactId>Slimefun4</artifactId>
+            <version>RC-35</version>
+        </dependency>
+
+
         <dependency>
             <!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
             <groupId>org.jetbrains</groupId>
