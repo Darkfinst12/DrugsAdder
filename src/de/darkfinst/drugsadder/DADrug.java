@@ -3,6 +3,8 @@ package de.darkfinst.drugsadder;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,17 +12,31 @@ import java.util.List;
 @Getter
 public class DADrug extends DAAddiction {
 
+    @NotNull
     private final String ID;
+    @NotNull
     private final ItemStack itemStack;
     private final List<String> serverCommands = new ArrayList<>();
     private final List<String> playerCommands = new ArrayList<>();
+    @Nullable
     private final String consumeMessage;
+    @Nullable
     private final String consumeTitle;
-    private final MatchType[] matchTypes;
+    @NotNull
+    private final ItemMatchType[] matchTypes;
     private final List<DAEffect> effects = new ArrayList<>();
 
-    public DADrug(String ID, ItemStack itemStack, Boolean addictionAble, String consumeMessage, String consumeTitle, MatchType... matchTypes) {
+    public DADrug(@NotNull String ID, @NotNull ItemStack itemStack, Boolean addictionAble, @Nullable String consumeMessage, @Nullable String consumeTitle, @NotNull ItemMatchType... matchTypes) {
         super(addictionAble);
+        this.ID = ID;
+        this.itemStack = itemStack;
+        this.consumeMessage = consumeMessage;
+        this.consumeTitle = consumeTitle;
+        this.matchTypes = matchTypes;
+    }
+
+    public DADrug(@NotNull String ID, @NotNull ItemStack itemStack, @Nullable String consumeMessage, @Nullable String consumeTitle, @NotNull ItemMatchType... matchTypes) {
+        super(false);
         this.ID = ID;
         this.itemStack = itemStack;
         this.consumeMessage = consumeMessage;
@@ -30,13 +46,6 @@ public class DADrug extends DAAddiction {
 
     public void consume(Player player) {
 
-    }
-
-    public enum MatchType {
-        CMD,
-        NAME,
-        LORE,
-        ALL
     }
 
 }
