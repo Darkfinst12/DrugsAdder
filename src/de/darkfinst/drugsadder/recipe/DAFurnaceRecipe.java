@@ -1,8 +1,10 @@
 package de.darkfinst.drugsadder.recipe;
 
-public class DAFurnaceRecipe {
+import de.darkfinst.drugsadder.items.DAItem;
 
-    
+public class DAFurnaceRecipe extends DARecipe{
 
-
+    protected DAFurnaceRecipe(String namedID, DAItem result, DAItem... materials) {
+        super(namedID, result, materials);
+    }
 }

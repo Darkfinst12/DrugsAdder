@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
-public abstract class DAAddiction {
+public class DAAddiction {
 
-    private final Boolean isAddictionAble;
+    private boolean addictionAble;
     private int addictionPoints = -1;
     private int addictionStart = -1;
     private int overdose = -1;
@@ -18,9 +19,25 @@ public abstract class DAAddiction {
     private int reductionTime = -1;
     private boolean reductionOnlyOnline = false;
 
-    private final Map<Integer, DAEffect> deprivation = new HashMap<>();
+    private final Map<Integer, List<DAEffect>> deprivation = new HashMap<>();
+    private final Map<Integer, List<DAEffect>> effects = new HashMap<>();
 
-    public DAAddiction(Boolean isAddictionAble) {
-        this.isAddictionAble = isAddictionAble;
+    public DAAddiction(Boolean addictionAble) {
+        this.addictionAble = addictionAble;
+    }
+
+    public void setAddiction(DAAddiction daAddiction) {
+        if (!this.equals(daAddiction)) {
+            this.addictionAble = daAddiction.isAddictionAble();
+            this.addictionPoints = daAddiction.getAddictionPoints();
+            this.addictionStart = daAddiction.getAddictionStart();
+            this.overdose = daAddiction.getOverdose();
+            this.reductionAmount = daAddiction.getReductionAmount();
+            this.reductionTime = daAddiction.getReductionTime();
+            this.reductionOnlyOnline = daAddiction.isReductionOnlyOnline();
+
+            this.deprivation.clear();
+            this.deprivation.putAll(daAddiction.getDeprivation());
+        }
     }
 }

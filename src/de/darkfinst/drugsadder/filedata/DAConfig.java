@@ -6,7 +6,6 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,31 +16,46 @@ public class DAConfig {
 
     private static final String configVersion = "0.1";
 
-    public static DALoader loader = DA.loader;
+    private static final DALoader loader = DA.loader;
+
+    public static DACustomItemReader customItemReader;
+    public static boolean logCustomItemLoadInfo;
+    public static boolean logCustomItemLoadComplete;
+    public static boolean logCustomItemLoadError;
+
+    public static DARecipeReader daRecipeReader;
+    public static boolean logRecipeLoadInfo;
+    public static boolean logRecipeLoadComplete;
+    public static boolean logRecipeLoadError;
+
+    public static DADrugReader drugReader;
+    public static boolean logDrugLoadInfo;
+    public static boolean logDrugLoadComplete;
+    public static boolean logDrugLoadError;
 
     public static boolean checkConfig() {
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
         if (!file.exists()) {
-            DA.loader.errorLog(ChatColor.BOLD + "No config.yml found, creating default file! You may want to choose a config according to your language!");
-            DA.loader.log(ChatColor.BOLD + "You can find them in plugins/DrugsAdder/configs/");
-            DA.loader.log(ChatColor.BOLD + "Just copy the config for your language into the DrugsAdder folder and use /drugsadder reload");
+            loader.errorLog(ChatColor.BOLD + "No config.yml found, creating default file! You may want to choose a config according to your language!");
+            loader.log(ChatColor.BOLD + "You can find them in plugins/DrugsAdder/configs/");
+            loader.log(ChatColor.BOLD + "Just copy the config for your language into the DrugsAdder folder and use /drugsadder reload");
             InputStream defConf = DA.getInstance.getResource("config/en/config.yml");
             if (defConf == null) {
-                DA.loader.errorLog("Default config file not found! Your jarfile might be corrupted. Disabling DrugsAdder");
+                loader.errorLog("Default config file not found! Your jarfile might be corrupted. Disabling DrugsAdder");
                 return false;
             }
             try {
                 DAUtil.saveFile(defConf, DA.getInstance.getDataFolder(), "config.yml", false);
             } catch (IOException e) {
-                DA.loader.errorLog(e.getMessage());
+                loader.errorLog(e.getMessage());
                 for (StackTraceElement element : e.getStackTrace()) {
-                    DA.loader.log(element.toString());
+                    loader.log(element.toString());
                 }
                 return false;
             }
         }
         if (!file.exists()) {
-            DA.loader.errorLog("Default config file not found! Your jarfile might be corrupted. Disabling DrugsAdder");
+            loader.errorLog("Default config file not found! Your jarfile might be corrupted. Disabling DrugsAdder");
             return false;
         }
 
@@ -104,6 +118,42 @@ public class DAConfig {
             }
         }
 
+        //Loads the Logging
+        logCustomItemLoadInfo = config.getBoolean("logCustomItemLoadInfo", true);
+        logCustomItemLoadComplete = config.getBoolean("logCustomItemLoadComplete", true);
+        logCustomItemLoadError = config.getBoolean("logCustomItemLoadError", true);
+        logRecipeLoadInfo = config.getBoolean("logRecipeLoadInfo", true);
+        logRecipeLoadComplete = config.getBoolean("logRecipeLoadComplete", true);
+        logRecipeLoadError = config.getBoolean("logRecipeLoadError", true);
+        logDrugLoadInfo = config.getBoolean("logDrugLoadInfo", true);
+        logDrugLoadComplete = config.getBoolean("logDrugLoadComplete", true);
+        logDrugLoadError = config.getBoolean("logDrugLoadError", true);
+
+        //Loads the own CustomItems
+        if (config.contains("customItems")) {
+            customItemReader = new DACustomItemReader(config.getConfigurationSection("customItems"));
+            customItemReader.loadItems();
+        } else {
+            customItemReader = new DACustomItemReader();
+        }
+
+        //Loads the Recipes
+        if (config.contains("recipes")) {
+            daRecipeReader = new DARecipeReader(config.getConfigurationSection("recipes"));
+            daRecipeReader.loadRecipes();
+        } else {
+            daRecipeReader = new DARecipeReader();
+        }
+
+
+        //Loads the Drugs
+        if (config.contains("drugs")) {
+            drugReader = new DADrugReader(config.getConfigurationSection("drugs"));
+            drugReader.loadDrugs();
+        } else {
+            drugReader = new DADrugReader();
+            loader.errorLog(loader.languageReader.get("Load_Error_NoDrugs"));
+        }
 
     }
 

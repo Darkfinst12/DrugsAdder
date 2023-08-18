@@ -1,10 +1,8 @@
 package de.darkfinst.drugsadder.items;
 
+import de.darkfinst.drugsadder.ItemMatchType;
 import lombok.Getter;
-import net.Indyuce.mmoitems.api.MMOItemsAPI;
-import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +12,7 @@ import java.util.List;
 @Getter
 public class DAItem {
 
+    @NotNull
     private final ItemStack itemStack;
     @Nullable
     private String name;
@@ -21,40 +20,23 @@ public class DAItem {
     private List<String> lore;
     @Nullable
     private Integer customModelData;
+    @Setter
+    private ItemMatchType itemMatchType;
+    @Setter
+    private int amount = 1;
 
     private final String namespacedID;
 
-    public DAItem(ItemStack itemStack, String namespacedID) {
+    public DAItem(@NotNull ItemStack itemStack, String namespacedID) {
         this.itemStack = itemStack;
         this.namespacedID = namespacedID;
     }
 
-    public DAItem(String namespacedID) {
-        this.namespacedID = namespacedID;
-        this.itemStack = DAItem.getItemStackByNamespacedID(namespacedID);
-    }
-
-    public DAItem(ItemStack itemStack, @NotNull String name, @NotNull List<String> lore, @NotNull Integer customModelData, String namespacedID) {
+    public DAItem(@NotNull ItemStack itemStack, @NotNull String name, @NotNull List<String> lore, @NotNull Integer customModelData, String namespacedID) {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;
         this.customModelData = customModelData;
         this.namespacedID = namespacedID;
-    }
-
-
-    public static ItemStack getItemStackByNamespacedID(String namespacedID) {
-        ItemStack itemStack = null;
-        //TODO: CustomItem Check and get
-        //TODO: Support: MMOItems - https://gitlab.com/phoenix-dvpmt/mmoitems
-        //TODO: Support: Slimefun4 - https://github.com/Slimefun/Slimefun4
-        //TODO: Support: ItemsAdder - https://github.com/LoneDev6/API-ItemsAdder
-        //TODO: Support: OwnCustomItems
-
-        return itemStack;
-    }
-
-    public static DAItem getDAItemByNamespacedID(String namespacedID) {
-        return new DAItem(namespacedID);
     }
 }

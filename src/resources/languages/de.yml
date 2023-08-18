@@ -1,3 +1,12 @@
+# ---- Load ----
+Load_Error_NoDrugs: "Es wurden keine Drogen in der config.yml konfiguriert!"
+Load_Error_Drug_NotConfigSection: "Die Droge: %v1 ist nicht korrekt in der config.yml konfiguriert!"
+Load_Error_Drug_ItemStack: "Von der Droge: %v1 ist der ItemStack: %v2 kein gültiger ItemStack!"
+Load_Error_Drug_MatchType: "Von der Droge: %v1 ist der MatchType: %v2 kein gültiger MatchType!"
+Load_Error_Drug_Effect: "Von der Droge: %v1 ist der Effect: %v2 kein gültiger Effect!"
+Load_Error_Drug_Addiction: "Die addictionSettings der Droge: %v1 ist nicht korrekt in der config.yml konfiguriert! - Die Droge wird ohne addictionSettings geladen!"
+
+
 # ---- Permission ----
 Perms_Barrel_NoCreate: "Du hast keine Berechtigung, um ein Fass erstellen zu können!"
 Perms_Barrel_NoOpen: "Du hast keine Berechtigung ,um ein Fass öffnen zu können!"
@@ -11,7 +20,7 @@ Perms_Table_NoOpen: "Du hast keine Berechtigung ,um ein Labortisch öffnen zu k�
 Player_Barrel_Created: "Das Fass wurde erfolgreich erstellt"
 Player_Barrel_NotValid: "Diese Fass ist nicht korrekt gebaut!"
 Player_Overdose_Consume: "Du hast eine Überdosis genommen!"
-Player_Overdose_Death: "%s ist an einer Überdosis gestorben!"
+Player_Overdose_Death: "%v1 ist an einer Überdosis gestorben!"
 Player_Press_Created: "Die Presse wurde erfolgreich erstellt"
 Player_Press_NotValid: "Die Presse ist nicht korrekt gebaut!"
 Player_Table_Created: "Der Labortisch wurde erfolgreich erstellt"

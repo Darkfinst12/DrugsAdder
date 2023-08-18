@@ -6,7 +6,16 @@ version: "0.1"
 #Sprache
 language: de
 
-#
+#Logging
+logCustomItemLoadInfo: true
+logCustomItemLoadComplete: true
+logCustomItemLoadError: true
+logRecipeLoadInfo: true
+logRecipeLoadComplete: true
+logRecipeLoadError: true
+logDrugLoadInfo: true
+logDrugLoadComplete: true
+logDrugLoadError: true
 
 #Custom Items
 customItems:
@@ -45,7 +54,7 @@ recipes:
   press:
     cocaine_pills:
       mold: 'drugdrugsadder:pill_mold'
-      consumeMold: true
+      returnMold: true
       materials:
         - 'drugdrugsadder:dirty_cocaine':
             amount: 1
@@ -71,14 +80,18 @@ drugs:
       addictionStart: 20
       #Wie viele dieser Droge kurz hintereinander konsumiert werden müssen, um eine Überdosis zu bekommen
       overdose: 3
-      #Ob die Abhängigkeit die Effekte der Droge beeinflusst, welche man beim Konsum erhält
-      addictionInfluencesEffects: true
       #Wann immer ein die AddictionPoints reduziert werden in minuten
       reductionTime: 10
       #Wie viele AddictionPoints bei jeder Reduzierung reduziert werden
       reductionAmount: 1
       #Ob die Reduzierung nur Online stattfinden soll
       reductionOnlyOnline: true
+      #Die Effekte die Man beim Konsumieren erhält, entsprechend der AddictionPoints
+      effects:
+        15:
+          - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+        30:
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
       #Welche Effekte man erhält beim Entzug
       deprivation:
         15:

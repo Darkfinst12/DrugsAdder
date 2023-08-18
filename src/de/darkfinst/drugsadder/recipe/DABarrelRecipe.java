@@ -9,7 +9,7 @@ public class DABarrelRecipe extends DARecipe {
 
     private final int processTime;
 
-    public DABarrelRecipe(String namedID, int processTime, DAItem result, DAToleranceItem... materials) {
+    public DABarrelRecipe(String namedID, int processTime, DAItem result, DAItem... materials) {
         super(namedID, result, materials);
         this.processTime = processTime;
     }

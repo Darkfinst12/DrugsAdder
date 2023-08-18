@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 public class DAPressRecipe extends DARecipe {
 
     private final DAItem mold;
+    private final boolean returnMold;
 
-    public DAPressRecipe(String namedID, DAItem mold, DAItem result, DAItem... materials) {
+    public DAPressRecipe(String namedID, DAItem mold, boolean returnMold, DAItem result, DAItem... materials) {
         super(namedID, result, materials);
+        this.returnMold = returnMold;
         this.mold = mold;
     }
 
