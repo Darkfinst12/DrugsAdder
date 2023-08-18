@@ -228,29 +228,32 @@ public class DARecipeReader {
     }
 
     private List<DAItem> loadMaterials(String recipeID, ConfigurationSection recipeConfig) {
-        List<ConfigurationSection> empty = new ArrayList<>();
         List<DAItem> materials = new ArrayList<>();
-        var materialsList = recipeConfig.getList("materials", empty);
-        if (materialsList.isEmpty()) {
-            return materials;
+        ConfigurationSection materialsConfig = recipeConfig.getConfigurationSection("materials");
+        if (materialsConfig == null) {
+            this.logError("Load_Error_Recipes_NotConfigSection", recipeID);
+            return Collections.emptyList();
         }
-        for (Object o : materialsList) {
-            if (o instanceof LinkedHashMap materialMap) {
-                for (Object namespacedID : materialMap.keySet()) {
-                    DAItem material = DAUtil.getItemStackByNamespacedID(namespacedID.toString());
-                    if (material == null) {
-                        this.logError("Load_Error_Recipes_ItemNotFound", namespacedID.toString(), recipeID);
-                        continue;
-                    }
-                    material.setAmount(Objects.requireNonNullElse((Integer) ((Map) materialMap.get(namespacedID)).get("amount"), 1));
-                    ItemMatchType itemMatchType = ItemMatchType.valueOf(Objects.requireNonNullElse(((Map) materialMap.get(namespacedID)).get("matchType"), "NULL").toString());
-                    if (ItemMatchType.NULL.equals(itemMatchType)) {
-                        this.logError("Load_Error_Recipes_MatchTypeNotFound", recipeID, namespacedID.toString());
-                        continue;
-                    }
-                    material.setItemMatchType(itemMatchType);
-                    materials.add(material);
+
+        //TODO: Dose not work
+        for (String key : materialsConfig.getKeys(false)) {
+            ConfigurationSection materialSec = materialsConfig.getConfigurationSection(key);
+            if (materialSec != null) {
+                DAItem material = DAUtil.getItemStackByNamespacedID(materialSec.getString("itemStack", "null"));
+                if (material == null) {
+                    this.logError("Load_Error_Recipes_ItemNotFound", materialSec.getName(), recipeID);
+                    continue;
                 }
+                material.setAmount(materialSec.getInt("amount", 1));
+                ItemMatchType itemMatchType = ItemMatchType.valueOf(materialSec.getString("matchType", "NULL"));
+                if (ItemMatchType.NULL.equals(itemMatchType)) {
+                    this.logError("Load_Error_Recipes_MatchTypeNotFound", materialSec.getName(), recipeID);
+                    continue;
+                }
+                material.setItemMatchType(itemMatchType);
+                materials.add(material);
+            } else {
+                this.logError("Load_Error_Recipes_NotConfigSection", recipeID);
             }
         }
         return materials;

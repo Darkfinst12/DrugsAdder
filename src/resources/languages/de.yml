@@ -23,6 +23,7 @@ Load_Error_Recipes_MatchTypeNotFound: "Der MatchType: &v1 des Rezeptes: &v2 ist 
 Load_Error_Recipes_ItemNotFound: "Das Item: &v1 des Rezeptes: &v2 ist kein gültiges Item! - Bitte überprüfe die config.yml!"
 Load_Error_Recipes_NoMaterials: "Das Rezept: &v1 hat keine Materialien! - Bitte überprüfe die config.yml!"
 Load_Info_RecipeLoaded: "Das Rezept: &v1 wurde erfolgreich geladen!"
+Load_Error_Recipes_NotConfigSection: "Das Rezept: &v1 ist nicht korrekt in der config.yml konfiguriert!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "Du hast keine Berechtigung, um ein Fass erstellen zu können!"

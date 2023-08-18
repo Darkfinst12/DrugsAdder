@@ -23,6 +23,7 @@ Load_Error_Recipes_MatchTypeNotFound: "The MatchType: &v1 of the recipe: &v2 is 
 Load_Error_Recipes_ItemNotFound: "The Item: &v1 of the recipe: &v2 is not a valid Item! - Please check the config.yml!"
 Load_Error_Recipes_NoMaterials: "The recipe: &v1 has no materials! - Please check the config.yml!"
 Load_Info_RecipeLoaded: "The recipe: &v1 was successfully loaded!"
+Load_Error_Recipes_NotConfigSection: "The recipe: &v1 is not properly configured in the config.yml!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"

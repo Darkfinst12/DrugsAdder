@@ -42,12 +42,14 @@ recipes:
     dirty_cocaine:
       duration: 100
       materials:
-        - 'minecraft:coal':
-            amount: 1
-            matchTyp: "ALL"
-        - 'drugsadder:coca':
-            amount: 4
-            matchTyp: "ALL"
+        1:
+          itemStack: 'minecraft:coal'
+          amount: 1
+          matchTyp: "ALL"
+        2:
+          itemStack: 'drugsadder:coca'
+          amount: 4
+          matchTyp: "ALL"
       result: 'drugsadder:dirty_cocaine/1'
   crafting:
   furnace:
@@ -56,9 +58,10 @@ recipes:
       mold: 'drugsadder:pill_mold'
       returnMold: true
       materials:
-        - 'drugsadder:dirty_cocaine':
-            amount: 1
-            matchTyp: "ALL"
+        1:
+          itemStack: 'drugsadder:dirty_cocaine'
+          amount: 1
+          matchTyp: "ALL"
       result: 'drugsadder:cocaine_pills/1'
   table:
 
