@@ -81,7 +81,7 @@ public class DARecipeReader {
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
         if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", barrelRID, resultAmount[0]);
+            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], barrelRID);
             return;
         }
         result.setAmount(amount);
@@ -122,7 +122,7 @@ public class DARecipeReader {
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
         if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", pressRID, resultAmount[0]);
+            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], pressRID);
             return;
         }
         result.setAmount(amount);
@@ -130,7 +130,7 @@ public class DARecipeReader {
         String moldString = recipeConfig.getString("mold", "null");
         DAItem mold = DAUtil.getItemStackByNamespacedID(moldString);
         if (mold == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", pressRID, moldString);
+            this.logError("Load_Error_Recipes_ItemNotFound", moldString, pressRID);
             return;
         }
         boolean returnMold = recipeConfig.getBoolean("returnMold", true);
@@ -239,7 +239,7 @@ public class DARecipeReader {
             if (o instanceof ConfigurationSection materialSec) {
                 DAItem material = DAUtil.getItemStackByNamespacedID(materialSec.getName());
                 if (material == null) {
-                    this.logError("Load_Error_Recipes_ItemNotFound", recipeID, materialSec.getName());
+                    this.logError("Load_Error_Recipes_ItemNotFound", materialSec.getName(), recipeID);
                     continue;
                 }
                 material.setAmount(materialSec.getInt("amount", 1));
@@ -263,7 +263,7 @@ public class DARecipeReader {
             long craftingCount = this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).count();
             long furnaceCount = this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe).count();
 
-            this.logInfo("Load_Info_RecipesComplete", ("" + this.configBarrelCount), ("" + barrelCount), ("" + this.configPressCount), ("" + pressCount), ("" + this.configTableCount), ("" + tableCount), ("" + this.configCraftingCount), ("" + craftingCount), ("" + this.configFurnaceCount), ("" + furnaceCount));
+            this.logInfo("Load_Info_RecipesComplete", ("" + barrelCount), ("" + this.configBarrelCount), ("" + pressCount), ("" + this.configPressCount), ("" + tableCount), ("" + this.configTableCount), ("" + craftingCount), ("" + this.configCraftingCount), ("" + furnaceCount), ("" + this.configFurnaceCount));
         }
     }
 
