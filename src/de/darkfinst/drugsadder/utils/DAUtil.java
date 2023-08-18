@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.utils;
 import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -18,14 +19,19 @@ public class DAUtil {
 
     //Items
     public static DAItem getItemStackByNamespacedID(String namespacedID) {
-        DAItem daItem = DAConfig.customItemReader.getItemByNamespacedID(namespacedID);
-        if (daItem != null) {
-            return daItem;
+        DAItem daItem = null;
+        if (namespacedID.startsWith("minecraft:")) {
+            Material material = Material.getMaterial(namespacedID.split(":")[1].toUpperCase());
+            if (material != null) {
+                daItem = new DAItem(new ItemStack(material, 1), namespacedID);
+            }
+        } else if (namespacedID.startsWith("drugsadder:")) {
+            daItem = DAConfig.customItemReader.getItemByNamespacedID(namespacedID);
         }
         //TODO: Support: MMOItems - https://gitlab.com/phoenix-dvpmt/mmoitems
         //TODO: Support: Slimefun4 - https://github.com/Slimefun/Slimefun4
         //TODO: Support: ItemsAdder - https://github.com/LoneDev6/API-ItemsAdder
-        return null;
+        return daItem;
     }
 
     public static boolean matchItems(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB, @NotNull ItemMatchType matchType) {

@@ -122,6 +122,10 @@ public class DALoader {
         this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR);
     }
 
+    public void reloadConfig(){
+        this.initConfig();
+    }
+
 
     public void unload() {
     }

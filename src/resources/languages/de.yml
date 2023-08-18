@@ -15,6 +15,7 @@ Load_Info_DrugsComplete: "Drogen laden abgeschlossen! \n &v1/&v2 Drogen geladen!
 Load_Error_CustomItem_NotConfigSection: "Das CustomItem: &v1 ist nicht korrekt in der config.yml konfiguriert!"
 Load_Error_CustomItem_IDAlreadyAssigned: "Das CustomItem: &v1 wurde bereits konfiguriert! - Bitte überprüfe die config.yml!"
 Load_Info_CustomItem_Loaded: "Das CustomItem: &v1 wurde erfolgreich geladen!"
+Load_Info_CustomItemsComplete: "CustomItems laden abgeschlossen! \n - &v1/&v2 CustomItems geladen!"
 Load_Error_CustomItem_MaterialNotFound: "Das Material: &v1 des CustomItems: &v2 ist kein gültiges Minecraft Item Material! - Bitte überprüfe die config.yml!"
 Load_Info_RecipesComplete: "Rezepte laden abgeschlossen! \n - &v1/&v2 Fass rezepte geladen! \n - &v3/&v4 Press rezepte geladen! \n - &v5/&v6 Labortisch rezepte geladen! \n - &v7/&v8 Crafting rezepte geladen! \n - &v9/&v1 Offen rezepte geladen!"
 Load_Info_Recipes: "&v1 rezepte geladen!"

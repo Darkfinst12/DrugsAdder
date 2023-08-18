@@ -30,6 +30,24 @@ customItems:
       - '&7Cocaine'
     #CustomModelData of the Item
     customModelData: 1
+  dirty_cocaine:
+    name: '&fDirty Cocaine'
+    material: 'paper'
+    lore:
+      - '&7Dirty Cocaine'
+    customModelData: 2
+  cocaine_pills:
+    name: '&fCocaine Pills'
+    material: 'paper'
+    lore:
+      - '&7Cocaine Pills'
+    customModelData: 3
+  pill_mold:
+    name: '&fPill Mold'
+    material: 'paper'
+    lore:
+      - '&7Pill Mold'
+    customModelData: 4
 
 #Whether a bucket should be returned when a filled one is used when crafting
 returnBucket: true
@@ -48,18 +66,18 @@ recipes:
         - 'drugsadder:coca':
             amount: 4
             matchTyp: "ALL"
-      result: 'drugdrugsadder:dirty_cocaine/1'
+      result: 'drugsadder:dirty_cocaine/1'
   crafting:
   furnace:
   press:
     cocaine_pills:
-      mold: 'drugdrugsadder:pill_mold'
+      mold: 'drugsadder:pill_mold'
       returnMold: true
       materials:
-        - 'drugdrugsadder:dirty_cocaine':
+        - 'drugsadder:dirty_cocaine':
             amount: 1
             matchTyp: "ALL"
-      result: 'drugdrugsadder:cocaine_pills/1'
+      result: 'drugsadder:cocaine_pills/1'
   table:
 
 #Drugs
@@ -67,7 +85,7 @@ drugs:
   #Name of the Drug
   cocaine:
     #Which Item is used for the Drug
-    itemStack: 'drugdrugsadder:cocaine'
+    itemStack: 'drugsadder:cocaine'
     #MatchType of the Drug
     matchType: "ALL"
     #The Settings

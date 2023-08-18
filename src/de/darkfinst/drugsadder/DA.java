@@ -20,12 +20,12 @@ public class DA extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        loader.init();
         Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + " ____                  _____   _   _         ");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|    \\ ___ _ _ ___ ___|  _  |_| |_| |___ ___     " + ChatColor.of(new Color(0, 171, 34)) + getDescription().getName() + " " + ChatColor.of(new Color(130, 130, 130)) + getDescription().getVersion());
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|  |  |  _| | | . |_ -|     | . | . | -_|  _|     " + ChatColor.of(new Color(0, 171, 34)) + "Version " + ChatColor.of(new Color(130, 130, 130)) + getDescription().getVersion());
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|____/|_| |___|_  |___|__|__|___|___|___|_|       " + ChatColor.of(new Color(73, 73, 73)) + String.format("(MC-API: %s)", getDescription().getAPIVersion()));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|    \\ ___ _ _ ___ ___|  _  |_| |_| |___ ___      " + ChatColor.of(new Color(0, 171, 34)) + getDescription().getName() + " " + ChatColor.of(new Color(130, 130, 130)) + getDescription().getVersion());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|  |  |  _| | | . |_ -|     | . | . | -_|  _|     ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|____/|_| |___|_  |___|__|__|___|___|___|_|       " + ChatColor.of(new Color(73, 73, 73)) + getServer().getVersion());
         Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "              |___|                          ");
+        loader.init();
     }
 
     @Override

@@ -39,7 +39,7 @@ public class DACustomItemReader {
             this.loadItem(itemID);
         }
         if (DAConfig.logCustomItemLoadComplete) {
-            this.logInfo("Load_Info_DrugsComplete", (this.registeredItems.size() + ""), (this.configItemCount + ""));
+            this.logInfo("Load_Info_CustomItemsComplete", (this.registeredItems.size() + ""), (this.configItemCount + ""));
         }
     }
 

@@ -8,11 +8,10 @@ import de.darkfinst.drugsadder.recipe.*;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DARecipeReader {
 
@@ -236,20 +235,22 @@ public class DARecipeReader {
             return materials;
         }
         for (Object o : materialsList) {
-            if (o instanceof ConfigurationSection materialSec) {
-                DAItem material = DAUtil.getItemStackByNamespacedID(materialSec.getName());
-                if (material == null) {
-                    this.logError("Load_Error_Recipes_ItemNotFound", materialSec.getName(), recipeID);
-                    continue;
+            if (o instanceof LinkedHashMap materialMap) {
+                for (Object namespacedID : materialMap.keySet()) {
+                    DAItem material = DAUtil.getItemStackByNamespacedID(namespacedID.toString());
+                    if (material == null) {
+                        this.logError("Load_Error_Recipes_ItemNotFound", namespacedID.toString(), recipeID);
+                        continue;
+                    }
+                    material.setAmount(Objects.requireNonNullElse((Integer) ((Map) materialMap.get(namespacedID)).get("amount"), 1));
+                    ItemMatchType itemMatchType = ItemMatchType.valueOf(Objects.requireNonNullElse(((Map) materialMap.get(namespacedID)).get("matchType"), "NULL").toString());
+                    if (ItemMatchType.NULL.equals(itemMatchType)) {
+                        this.logError("Load_Error_Recipes_MatchTypeNotFound", recipeID, namespacedID.toString());
+                        continue;
+                    }
+                    material.setItemMatchType(itemMatchType);
+                    materials.add(material);
                 }
-                material.setAmount(materialSec.getInt("amount", 1));
-                ItemMatchType itemMatchType = ItemMatchType.valueOf(materialSec.getString("matchType", "NULL"));
-                if (ItemMatchType.NULL.equals(itemMatchType)) {
-                    this.logError("Load_Error_Recipes_MatchTypeNotFound", recipeID, materialSec.getName());
-                    continue;
-                }
-                material.setItemMatchType(itemMatchType);
-                materials.add(material);
             }
         }
         return materials;
