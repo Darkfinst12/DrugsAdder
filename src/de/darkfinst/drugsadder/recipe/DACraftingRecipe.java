@@ -50,7 +50,7 @@ public class DACraftingRecipe extends DARecipe {
             ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
             shapedRecipe.shape(this.shape.toArray(new String[0]));
             for (int i = 0; i < this.shape.size(); i++) {
-                shapedRecipe.setIngredient(this.shapeKeys.toArray(new String[0])[i].charAt(0), this.getMaterials()[i].getItemStack().getData());
+                shapedRecipe.setIngredient(this.shapeKeys.toArray(new String[0])[i].charAt(0), this.getMaterials()[i].getItemStack().getType());
             }
             Bukkit.addRecipe(shapedRecipe);
         }
