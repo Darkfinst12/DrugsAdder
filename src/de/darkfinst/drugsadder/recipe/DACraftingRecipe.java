@@ -34,6 +34,7 @@ public class DACraftingRecipe extends DARecipe {
         this.shapeKeys.addAll(Arrays.asList(shapeKeys));
     }
 
+    //TODO: Wirte own Listener to check if the recipe is valid
     public void registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
         if (this.isShapeless) {
