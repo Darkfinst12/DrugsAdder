@@ -38,7 +38,6 @@ public class DARecipeReader {
         assert config != null;
         Set<String> recipes = config.getKeys(false);
         for (String recipeType : recipes) {
-            assert config != null;
             ConfigurationSection configSec = config.getConfigurationSection(recipeType);
             if (configSec == null) {
                 this.logError("Load_Error_Recipe_NotConfigSection", recipeType);
