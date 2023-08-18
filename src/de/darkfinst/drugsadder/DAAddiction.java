@@ -13,7 +13,6 @@ public class DAAddiction {
 
     private boolean addictionAble;
     private int addictionPoints = -1;
-    private int addictionStart = -1;
     private int overdose = -1;
     private int reductionAmount = -1;
     private int reductionTime = -1;
@@ -30,7 +29,6 @@ public class DAAddiction {
         if (!this.equals(daAddiction)) {
             this.addictionAble = daAddiction.isAddictionAble();
             this.addictionPoints = daAddiction.getAddictionPoints();
-            this.addictionStart = daAddiction.getAddictionStart();
             this.overdose = daAddiction.getOverdose();
             this.reductionAmount = daAddiction.getReductionAmount();
             this.reductionTime = daAddiction.getReductionTime();

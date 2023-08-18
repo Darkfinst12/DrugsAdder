@@ -76,11 +76,9 @@ drugs:
       addictionAble: true
       #Wie viele Suchtpunkte man pro Konsum erhält
       addictionPoints: 5
-      #Ab wie viel AddictionPoints eine Abhängigkeit eintritt (Ab dieser Grenze tritt dann Entzug ein)
-      addictionStart: 20
       #Wie viele dieser Droge kurz hintereinander konsumiert werden müssen, um eine Überdosis zu bekommen
       overdose: 3
-      #Wann immer ein die AddictionPoints reduziert werden in minuten
+      #Wann immer die AddictionPoints reduziert werden in minuten
       reductionTime: 10
       #Wie viele AddictionPoints bei jeder Reduzierung reduziert werden
       reductionAmount: 1

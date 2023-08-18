@@ -5,3 +5,103 @@ version: "0.1"
 
 #Language
 language: en
+
+#Logging
+logCustomItemLoadInfo: true
+logCustomItemLoadComplete: true
+logCustomItemLoadError: true
+logRecipeLoadInfo: true
+logRecipeLoadComplete: true
+logRecipeLoadError: true
+logDrugLoadInfo: true
+logDrugLoadComplete: true
+logDrugLoadError: true
+
+#Custom Items
+customItems:
+  #Name of the Item - This is the ID of the Item, the NamespacedID is then drugsadder:ITEMNAME
+  cocaine:
+    #Name of the Item
+    name: '&fCocaine'
+    #Material of the Item - Only items from Minecraft are allowed here
+    material: 'paper'
+    #Lore of the Item
+    lore:
+      - '&7Cocaine'
+    #CustomModelData of the Item
+    customModelData: 1
+
+#Whether a bucket should be returned when a filled one is used when crafting
+returnBucket: true
+#Whether a bottle should be returned when a filled one is used when crafting
+returnBottle: true
+
+#Recipes
+recipes:
+  barrel:
+    dirty_cocaine:
+      duration: 100
+      materials:
+        - 'minecraft:coal':
+            amount: 1
+            matchTyp: "ALL"
+        - 'drugsadder:coca':
+            amount: 4
+            matchTyp: "ALL"
+      result: 'drugdrugsadder:dirty_cocaine/1'
+  crafting:
+  furnace:
+  press:
+    cocaine_pills:
+      mold: 'drugdrugsadder:pill_mold'
+      returnMold: true
+      materials:
+        - 'drugdrugsadder:dirty_cocaine':
+            amount: 1
+            matchTyp: "ALL"
+      result: 'drugdrugsadder:cocaine_pills/1'
+  table:
+
+#Drugs
+drugs:
+  #Name of the Drug
+  cocaine:
+    #Which Item is used for the Drug
+    itemStack: 'drugdrugsadder:cocaine'
+    #MatchType of the Drug
+    matchType: "ALL"
+    #The Settings
+    addictionSettings:
+      #Is Addiction enabled
+      addictionAble: true
+      #The addictionPoints
+      addictionPoints: 10
+      #Overdose
+      overdose: 3
+      #The time it takes to reduce the addictionPoints in minutes
+      reductionTime: 10
+      #The reductionAmount
+      reductionAmount: 1
+      #If the reduction should only be online
+      reductionOnlyOnline: true
+      #Which effects you get when you are addicted
+      effects:
+        15:
+          - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+        30:
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+        #Which effects you get when you are in deprivation
+        deprivation:
+          15:
+            - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          30:
+            - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+            - 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+    effects:
+      - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+    serverCommands:
+      - 'say %player% hat %drug% konsumiert'
+    playerCommands:
+      - 'say Ich habe %drug% konsumiert'
+    consumeMessage: 'Du hast %drug% konsumiert'
+    consumeTitle: 'Du hast %drug% konsumiert'

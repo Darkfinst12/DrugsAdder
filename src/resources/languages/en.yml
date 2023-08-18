@@ -23,14 +23,6 @@ Load_Error_Recipes_ItemNotFound: "The Item: %v1 of the recipe: %v2 is not a vali
 Load_Error_Recipes_NoMaterials: "The recipe: %v1 has no materials! - Please check the config.yml!"
 Load_Info_RecipeLoaded: "The recipe: %v1 was successfully loaded!"
 
-
-
-
-
-
-
-
-
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
 Perms_Barrel_NoOpen: "You have no permission to open a barrel!"
