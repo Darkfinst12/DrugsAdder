@@ -149,7 +149,7 @@ public class DADrugReader {
 
     private DAAddiction loadAddictionSettings(ConfigurationSection drugConfig) {
         DAAddiction daAddiction = new DAAddiction(false);
-        ConfigurationSection addictionConfig = drugConfig.getConfigurationSection("addiction");
+        ConfigurationSection addictionConfig = drugConfig.getConfigurationSection("addictionSettings");
         if (addictionConfig == null) {
             this.logError("Load_Error_Drug_Addiction", drugConfig.getName());
         } else {
