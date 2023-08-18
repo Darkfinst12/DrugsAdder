@@ -48,6 +48,18 @@ customItems:
     lore:
       - '&7Pill Mold'
     customModelData: 4
+  coca:
+    name: '&fCoca'
+    material: 'paper'
+    lore:
+      - '&7Coca'
+    customModelData: 5
+  shrooms:
+    name: '&fShrooms'
+    material: 'paper'
+    lore:
+      - '&7Shrooms'
+    customModelData: 6
 
 #Whether a bucket should be returned when a filled one is used when crafting
 returnBucket: true
@@ -70,6 +82,38 @@ recipes:
           matchType: "ALL"
       result: 'drugsadder:dirty_cocaine/1'
   crafting:
+    dirty_cocaine:
+      isShaped: true
+      shape:
+        - 'XOX'
+        - 'XOX'
+        - 'XOX'
+      materials:
+        X:
+          itemStack: 'minecraft:coal'
+          amount: 1
+          matchType: "ALL"
+        O:
+          itemStack: 'drugsadder:coca'
+          amount: 4
+          matchType: "ALL"
+      result: 'drugsadder:dirty_cocaine/6'
+    shrooms:
+      isShaped: false
+      shape:
+        - 'XOE'
+        - 'XXX'
+        - 'XXX'
+      materials:
+        E:
+          itemStack: 'minecraft:sugar'
+          amount: 1
+          matchType: "ALL"
+        O:
+          itemStack: 'drugsadder:coca'
+          amount: 1
+          matchType: "ALL"
+      result: 'drugsadder:dirty_cocaine/6'
   furnace:
   press:
     cocaine_pills:

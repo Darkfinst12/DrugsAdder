@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.*;
 
@@ -85,7 +86,7 @@ public class DARecipeReader {
         }
         result.setAmount(amount);
 
-        List<DAItem> materials = new ArrayList<>(this.loadMaterials(barrelRID, recipeConfig));
+        Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(barrelRID, recipeConfig));
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", barrelRID);
             return;
@@ -93,7 +94,7 @@ public class DARecipeReader {
 
         int duration = recipeConfig.getInt("duration", 10);
 
-        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, duration, result, materials.toArray(new DAItem[0]));
+        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, duration, result, materials.values().toArray(new DAItem[0]));
     }
 
     private void loadPressRecipes(ConfigurationSection configSec) {
@@ -134,13 +135,13 @@ public class DARecipeReader {
         }
         boolean returnMold = recipeConfig.getBoolean("returnMold", true);
 
-        List<DAItem> materials = new ArrayList<>(this.loadMaterials(pressRID, recipeConfig));
+        Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(pressRID, recipeConfig));
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", pressRID);
             return;
         }
 
-        DAPressRecipe pressRecipe = new DAPressRecipe(pressRID, mold, returnMold, result, materials.toArray(new DAItem[0]));
+        DAPressRecipe pressRecipe = new DAPressRecipe(pressRID, mold, returnMold, result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(pressRecipe);
 
@@ -173,6 +174,17 @@ public class DARecipeReader {
         String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
+        if (result == null) {
+            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], tableRID);
+            return;
+        }
+        result.setAmount(amount);
+
+        Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(tableRID, recipeConfig));
+        if (materials.isEmpty()) {
+            this.logError("Load_Error_Recipes_NoMaterials", tableRID);
+            return;
+        }
     }
 
     private void loadCraftingRecipes(ConfigurationSection configSec) {
@@ -199,6 +211,50 @@ public class DARecipeReader {
         String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
+        if (result == null) {
+            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], craftingRID);
+            return;
+        }
+        result.setAmount(amount);
+
+        Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(craftingRID, recipeConfig));
+        if (materials.isEmpty()) {
+            this.logError("Load_Error_Recipes_NoMaterials", craftingRID);
+            return;
+        }
+        if (materials.size() > 9) {
+            this.logError("Load_Error_Recipes_TooManyMaterials", craftingRID);
+            return;
+        }
+
+        List<String> shape = recipeConfig.getStringList("shape");
+        if (shape.isEmpty()) {
+            this.logError("Load_Error_Recipes_NoShape", craftingRID);
+            return;
+        }
+        if (shape.size() != 3) {
+            this.logError("Load_Error_Recipes_WrongShape", craftingRID);
+            return;
+        }
+        for (String line : shape) {
+            if (line.length() != 3) {
+                this.logError("Load_Error_Recipes_WrongShape", craftingRID);
+                return;
+            }
+        }
+        for (String shapeKey : materials.keySet()) {
+            if (shape.stream().noneMatch(line -> line.contains(shapeKey))) {
+                this.logError("Load_Error_Recipes_ShapeKeyNotFound", shapeKey, craftingRID);
+                return;
+            }
+        }
+
+        boolean isShaped = recipeConfig.getBoolean("isShaped", true);
+
+        DACraftingRecipe craftingRecipe = new DACraftingRecipe(craftingRID, result, materials.values().toArray(new DAItem[0]));
+        craftingRecipe.setShapeless(isShaped);
+        craftingRecipe.setShape(shape.toArray(new String[0]));
+        craftingRecipe.setMaterials(String.valueOf(materials.keySet()));
     }
 
     private void loadFurnaceRecipes(ConfigurationSection configSec) {
@@ -227,12 +283,12 @@ public class DARecipeReader {
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
     }
 
-    private List<DAItem> loadMaterials(String recipeID, ConfigurationSection recipeConfig) {
-        List<DAItem> materials = new ArrayList<>();
+    private Map<String, DAItem> loadMaterials(String recipeID, ConfigurationSection recipeConfig) {
+        Map<String, DAItem> materials = new HashMap<>();
         ConfigurationSection materialsConfig = recipeConfig.getConfigurationSection("materials");
         if (materialsConfig == null) {
             this.logError("Load_Error_Recipes_NotConfigSection", recipeID);
-            return Collections.emptyList();
+            return materials;
         }
 
         for (String key : materialsConfig.getKeys(false)) {
@@ -241,7 +297,7 @@ public class DARecipeReader {
                 String namespacedID = materialSec.getString("itemStack", "null");
                 DAItem material = DAUtil.getItemStackByNamespacedID(namespacedID);
                 if (material == null) {
-                    this.logError("Load_Error_Recipes_ItemNotFound",namespacedID, recipeID);
+                    this.logError("Load_Error_Recipes_ItemNotFound", namespacedID, recipeID);
                     continue;
                 }
                 material.setAmount(materialSec.getInt("amount", 1));
@@ -252,7 +308,7 @@ public class DARecipeReader {
                     continue;
                 }
                 material.setItemMatchType(itemMatchType);
-                materials.add(material);
+                materials.put(key, material);
             } else {
                 this.logError("Load_Error_Recipes_NotConfigSection", recipeID);
             }

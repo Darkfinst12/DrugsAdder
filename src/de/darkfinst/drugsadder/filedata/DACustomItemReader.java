@@ -105,4 +105,8 @@ public class DACustomItemReader {
             loader.log(languageReader.get(key, args));
         }
     }
+
+    public DAItem getCustomItem(String id) {
+        return this.registeredItems.stream().filter(daItem -> daItem.getNamespacedID().equalsIgnoreCase("durgsadder:" + id)).findFirst().orElse(null);
+    }
 }
