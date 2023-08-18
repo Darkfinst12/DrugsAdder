@@ -16,7 +16,7 @@ Load_Error_CustomItem_NotConfigSection: "The CustomItem: &v1 is not properly con
 Load_Error_CustomItem_IDAlreadyAssigned: "The CustomItem: &v1 has already been configured! - Please check the config.yml!"
 Load_Info_CustomItem_Loaded: "The CustomItem: &v1 was successfully loaded!"
 Load_Error_CustomItem_MaterialNotFound: "The Material: &v1 of the CustomItem: &v2 is not a valid Minecraft Item Material! - Please check the config.yml!"
-Load_Info_RecipesComplete: "Recipe load completed! \n - &v1/&v2 Barrel recipes loaded! \n - &v3/&v4 Press recipes loaded! \n - &v5/&v6 Table recipes loaded! \n - &v7/&v8 Crafting recipes loaded! \n - &v9/&v10 Furnace recipes loaded!"
+Load_Info_RecipesComplete: "Recipe load completed! \n - &v1/&v2 Barrel recipes loaded! \n - &v3/&v4 Press recipes loaded! \n - &v5/&v6 Table recipes loaded! \n - &v7/&v8 Crafting recipes loaded! \n - &v9/&v1 Furnace recipes loaded!"
 Load_Info_Recipes: "&v1 recipes loaded!"
 Load_Error_Recipes_MatchTypeNotFound: "The MatchType: &v1 of the recipe: &v2 is not a valid MatchType! - Please check the config.yml!"
 Load_Error_Recipes_ItemNotFound: "The Item: &v1 of the recipe: &v2 is not a valid Item! - Please check the config.yml!"
