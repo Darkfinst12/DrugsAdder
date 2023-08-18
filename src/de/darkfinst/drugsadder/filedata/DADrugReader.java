@@ -6,7 +6,6 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
@@ -91,7 +90,7 @@ public class DADrugReader {
                 daEffects.add(daEffect);
             }
         }
-        drug.getEffects().addAll(daEffects);
+        //drug.getDaEffects().addAll(daEffects);
 
         DAAddiction daAddiction = this.loadAddictionSettings(drugConfig);
         drug.setAddiction(daAddiction);
@@ -173,7 +172,7 @@ public class DADrugReader {
                 if (effectMap.isEmpty()) {
                     this.logError("Load_Error_Drug_Addiction_EffectsEmpty", drugConfig.getName());
                 } else {
-                    daAddiction.getEffects().putAll(effectMap);
+                    daAddiction.getDaEffects().putAll(effectMap);
                 }
 
                 ConfigurationSection deprivationConfig = addictionConfig.getConfigurationSection("deprivation");

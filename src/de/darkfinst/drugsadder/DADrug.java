@@ -18,22 +18,13 @@ public class DADrug extends DAAddiction {
     private final ItemStack itemStack;
     private final List<String> serverCommands = new ArrayList<>();
     private final List<String> playerCommands = new ArrayList<>();
+    //private final List<DAEffect> daEffects = new ArrayList<>();
     @Nullable
     private final String consumeMessage;
     @Nullable
     private final String consumeTitle;
     @NotNull
     private final ItemMatchType[] matchTypes;
-    private final List<DAEffect> effects = new ArrayList<>();
-
-    public DADrug(@NotNull String ID, @NotNull ItemStack itemStack, Boolean addictionAble, @Nullable String consumeMessage, @Nullable String consumeTitle, @NotNull ItemMatchType... matchTypes) {
-        super(addictionAble);
-        this.ID = ID;
-        this.itemStack = itemStack;
-        this.consumeMessage = consumeMessage;
-        this.consumeTitle = consumeTitle;
-        this.matchTypes = matchTypes;
-    }
 
     public DADrug(@NotNull String ID, @NotNull ItemStack itemStack, @Nullable String consumeMessage, @Nullable String consumeTitle, @NotNull ItemMatchType... matchTypes) {
         super(false);

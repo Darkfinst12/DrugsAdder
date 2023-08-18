@@ -19,7 +19,7 @@ public class DAAddiction {
     private boolean reductionOnlyOnline = false;
 
     private final Map<Integer, List<DAEffect>> deprivation = new HashMap<>();
-    private final Map<Integer, List<DAEffect>> effects = new HashMap<>();
+    private final Map<Integer, List<DAEffect>> daEffects = new HashMap<>();
 
     public DAAddiction(Boolean addictionAble) {
         this.addictionAble = addictionAble;
