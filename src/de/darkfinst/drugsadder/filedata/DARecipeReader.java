@@ -235,19 +235,20 @@ public class DARecipeReader {
             return Collections.emptyList();
         }
 
-        //TODO: Dose not work
         for (String key : materialsConfig.getKeys(false)) {
             ConfigurationSection materialSec = materialsConfig.getConfigurationSection(key);
             if (materialSec != null) {
-                DAItem material = DAUtil.getItemStackByNamespacedID(materialSec.getString("itemStack", "null"));
+                String namespacedID = materialSec.getString("itemStack", "null");
+                DAItem material = DAUtil.getItemStackByNamespacedID(namespacedID);
                 if (material == null) {
-                    this.logError("Load_Error_Recipes_ItemNotFound", materialSec.getName(), recipeID);
+                    this.logError("Load_Error_Recipes_ItemNotFound",namespacedID, recipeID);
                     continue;
                 }
                 material.setAmount(materialSec.getInt("amount", 1));
-                ItemMatchType itemMatchType = ItemMatchType.valueOf(materialSec.getString("matchType", "NULL"));
+                String matchType = materialSec.getString("matchType", "NULL");
+                ItemMatchType itemMatchType = ItemMatchType.valueOf(matchType);
                 if (ItemMatchType.NULL.equals(itemMatchType)) {
-                    this.logError("Load_Error_Recipes_MatchTypeNotFound", materialSec.getName(), recipeID);
+                    this.logError("Load_Error_Recipes_MatchTypeNotFound", matchType, recipeID);
                     continue;
                 }
                 material.setItemMatchType(itemMatchType);
