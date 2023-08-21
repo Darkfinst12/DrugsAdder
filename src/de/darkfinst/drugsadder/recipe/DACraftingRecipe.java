@@ -29,13 +29,8 @@ public class DACraftingRecipe extends DARecipe {
         this.shape.addAll(Arrays.asList(shape));
     }
 
-    public void setMaterials(String... shapeKeys) {
-        this.shapeKeys.clear();
-        this.shapeKeys.addAll(Arrays.asList(shapeKeys));
-    }
-
     //TODO: Wirte own Listener to check if the recipe is valid
-    public void registerRecipe() {
+    public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
         if (this.isShapeless) {
             ItemStack result = this.getResult().getItemStack();
@@ -44,7 +39,7 @@ public class DACraftingRecipe extends DARecipe {
             for (DAItem material : this.getMaterials()) {
                 shapelessRecipe.addIngredient(material.getItemStack().getType());
             }
-            Bukkit.addRecipe(shapelessRecipe);
+            return Bukkit.addRecipe(shapelessRecipe);
         } else {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
@@ -53,7 +48,7 @@ public class DACraftingRecipe extends DARecipe {
             for (int i = 0; i < this.shape.size(); i++) {
                 shapedRecipe.setIngredient(this.shapeKeys.toArray(new String[0])[i].charAt(0), this.getMaterials()[i].getItemStack().getType());
             }
-            Bukkit.addRecipe(shapedRecipe);
+            return Bukkit.addRecipe(shapedRecipe);
         }
     }
 }

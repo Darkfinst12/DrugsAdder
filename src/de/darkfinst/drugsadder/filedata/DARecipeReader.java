@@ -8,9 +8,8 @@ import de.darkfinst.drugsadder.recipe.*;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ShapedRecipe;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -77,14 +76,8 @@ public class DARecipeReader {
             this.logError("Load_Error_BarrelRecipe_IDAlreadyAssigned", barrelRID);
             return;
         }
-        String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
-        int amount = Integer.parseInt(resultAmount[1]);
-        DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
-        if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], barrelRID);
-            return;
-        }
-        result.setAmount(amount);
+        DAItem result = this.getResultItem(barrelRID, recipeConfig);
+        if (result == null) return;
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(barrelRID, recipeConfig));
         if (materials.isEmpty()) {
@@ -95,6 +88,13 @@ public class DARecipeReader {
         int duration = recipeConfig.getInt("duration", 10);
 
         DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, duration, result, materials.values().toArray(new DAItem[0]));
+
+        this.registeredRecipes.add(barrelRecipe);
+
+        if (DAConfig.logRecipeLoadInfo) {
+            this.logInfo("Load_Info_RecipeLoaded", barrelRID);
+        }
+
     }
 
     private void loadPressRecipes(ConfigurationSection configSec) {
@@ -118,14 +118,8 @@ public class DARecipeReader {
             this.logError("Load_Error_PressRecipe_IDAlreadyAssigned", pressRID);
             return;
         }
-        String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
-        int amount = Integer.parseInt(resultAmount[1]);
-        DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
-        if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], pressRID);
-            return;
-        }
-        result.setAmount(amount);
+        DAItem result = this.getResultItem(pressRID, recipeConfig);
+        if (result == null) return;
 
         String moldString = recipeConfig.getString("mold", "null");
         DAItem mold = DAUtil.getItemStackByNamespacedID(moldString);
@@ -171,19 +165,17 @@ public class DARecipeReader {
             this.logError("Load_Error_TableRecipe_IDAlreadyAssigned", tableRID);
             return;
         }
-        String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
-        int amount = Integer.parseInt(resultAmount[1]);
-        DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
-        if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], tableRID);
-            return;
-        }
-        result.setAmount(amount);
+        DAItem result = this.getResultItem(tableRID, recipeConfig);
+        if (result == null) return;
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(tableRID, recipeConfig));
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", tableRID);
             return;
+        }
+
+        if (DAConfig.logRecipeLoadInfo) {
+            this.logInfo("Load_Info_RecipeLoaded", tableRID);
         }
     }
 
@@ -208,14 +200,8 @@ public class DARecipeReader {
             this.logError("Load_Error_CraftingRecipe_IDAlreadyAssigned", craftingRID);
             return;
         }
-        String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
-        int amount = Integer.parseInt(resultAmount[1]);
-        DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
-        if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], craftingRID);
-            return;
-        }
-        result.setAmount(amount);
+        DAItem result = this.getResultItem(craftingRID, recipeConfig);
+        if (result == null) return;
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(craftingRID, recipeConfig));
         if (materials.isEmpty()) {
@@ -254,7 +240,17 @@ public class DARecipeReader {
         DACraftingRecipe craftingRecipe = new DACraftingRecipe(craftingRID, result, materials.values().toArray(new DAItem[0]));
         craftingRecipe.setShapeless(isShaped);
         craftingRecipe.setShape(shape.toArray(new String[0]));
-        craftingRecipe.setMaterials(String.valueOf(materials.keySet()));
+
+        if (!craftingRecipe.registerRecipe()) {
+            this.logError("Load_Error_Recipes_RecipeNotRegistered", craftingRID);
+            return;
+        }
+        this.registeredRecipes.add(craftingRecipe);
+
+        if (DAConfig.logRecipeLoadInfo) {
+            this.logInfo("Load_Info_RecipeLoaded", craftingRID);
+        }
+
     }
 
     private void loadFurnaceRecipes(ConfigurationSection configSec) {
@@ -278,9 +274,67 @@ public class DARecipeReader {
             this.logError("Load_Error_FurnaceRecipe_IDAlreadyAssigned", furnaceRID);
             return;
         }
+        DAItem result = this.getResultItem(furnaceRID, recipeConfig);
+        if (result == null) return;
+
+        DAItem material = this.loadMaterial(furnaceRID, recipeConfig);
+        if (material == null) {
+            this.logError("Load_Error_Recipes_NoMaterial", furnaceRID);
+            return;
+        }
+        int cookingTime = recipeConfig.getInt("cookingTime", -1);
+        if (cookingTime == -1) {
+            this.logError("Load_Error_Recipes_NoCookingTime", furnaceRID);
+            return;
+        }
+        float exp = recipeConfig.getFloatList("exp").stream().findFirst().orElse(0f);
+        DAFurnaceRecipe furnaceRecipe = new DAFurnaceRecipe(furnaceRID, result, material);
+        furnaceRecipe.setCookingTime(cookingTime);
+        furnaceRecipe.setExperience(exp);
+
+        if (!furnaceRecipe.registerRecipe()) {
+            this.logError("Load_Error_Recipes_RecipeNotRegistered", furnaceRID);
+            return;
+        }
+        this.registeredRecipes.add(furnaceRecipe);
+
+        if (DAConfig.logRecipeLoadInfo) {
+            this.logInfo("Load_Info_RecipeLoaded", furnaceRID);
+        }
+    }
+
+    @Nullable
+    private DAItem getResultItem(String pressRID, ConfigurationSection recipeConfig) {
         String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
+        if (result == null) {
+            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], pressRID);
+            return null;
+        }
+        result.setAmount(amount);
+        return result;
+    }
+
+    private DAItem loadMaterial(String recipeID, ConfigurationSection recipeConfig) {
+        ConfigurationSection materialConfig = recipeConfig.getConfigurationSection("material");
+        if (materialConfig == null) {
+            this.logError("Load_Error_Recipes_NotConfigSection", recipeID);
+            return null;
+        }
+        String namespacedID = materialConfig.getString("itemStack", "null");
+        DAItem daItem = DAUtil.getItemStackByNamespacedID(namespacedID);
+        if (daItem == null) {
+            this.logError("Load_Error_Recipes_ItemNotFound", namespacedID, recipeID);
+            return null;
+        }
+        daItem.setAmount(materialConfig.getInt("amount", 1));
+        List<ItemMatchType> itemMatchType = this.loadMatchTypes(recipeID, materialConfig);
+        if (itemMatchType.isEmpty()) {
+            return null;
+        }
+        daItem.setItemMatchTypes(itemMatchType.toArray(new ItemMatchType[0]));
+        return daItem;
     }
 
     private Map<String, DAItem> loadMaterials(String recipeID, ConfigurationSection recipeConfig) {
@@ -301,19 +355,62 @@ public class DARecipeReader {
                     continue;
                 }
                 material.setAmount(materialSec.getInt("amount", 1));
-                String matchType = materialSec.getString("matchType", "NULL");
-                ItemMatchType itemMatchType = ItemMatchType.valueOf(matchType);
-                if (ItemMatchType.NULL.equals(itemMatchType)) {
-                    this.logError("Load_Error_Recipes_MatchTypeNotFound", matchType, recipeID);
+                List<ItemMatchType> itemMatchType = this.loadMatchTypes(recipeID, materialSec);
+                if (itemMatchType.isEmpty()) {
                     continue;
                 }
-                material.setItemMatchType(itemMatchType);
+                material.setItemMatchTypes(itemMatchType.toArray(new ItemMatchType[0]));
                 materials.put(key, material);
             } else {
                 this.logError("Load_Error_Recipes_NotConfigSection", recipeID);
             }
         }
         return materials;
+    }
+
+    private List<ItemMatchType> loadMatchTypes(String recipeID, ConfigurationSection section) {
+        List<ItemMatchType> matchTypes = new ArrayList<>();
+        String matchType = section.getString("matchType", "NULL");
+        if (matchType.contains(",")) {
+            String[] types = matchType.split(",");
+            for (String type : types) {
+                ItemMatchType itemMatchType = ItemMatchType.valueOf(type);
+                if (ItemMatchType.NULL.equals(itemMatchType)) {
+                    this.logError("Load_Error_Recipes_MatchTypeNotFound", type, section.getName());
+                    matchTypes.clear();
+                    return matchTypes;
+                } else {
+                    matchTypes.add(itemMatchType);
+                }
+            }
+        } else {
+            ItemMatchType itemMatchType = ItemMatchType.valueOf(matchType);
+            if (ItemMatchType.NULL.equals(itemMatchType)) {
+                this.logError("Load_Error_Recipes_MatchTypeNotFound", matchType, recipeID);
+                return matchTypes;
+            }
+            matchTypes.add(itemMatchType);
+        }
+
+        if (matchTypes.contains(ItemMatchType.ALL) && matchTypes.size() > 1) {
+            this.logError("Load_Error_Recipes_MatchTypeWrongComposition", recipeID);
+            matchTypes.clear();
+            return matchTypes;
+        }
+
+        if (matchTypes.contains(ItemMatchType.CONTAINS_LORE) && matchTypes.contains(ItemMatchType.EXACT_LORE)) {
+            this.logError("Load_Error_Recipes_MatchTypeWrongComposition", recipeID);
+            matchTypes.clear();
+            return matchTypes;
+        }
+
+        if (matchTypes.contains(ItemMatchType.CONTAINS_NAME) && matchTypes.contains(ItemMatchType.EXACT_NAME)) {
+            this.logError("Load_Error_Recipes_MatchTypeWrongComposition", recipeID);
+            matchTypes.clear();
+            return matchTypes;
+        }
+
+        return matchTypes;
     }
 
     private void completeLog() {
@@ -346,5 +443,9 @@ public class DARecipeReader {
         if (languageReader != null) {
             loader.log(languageReader.get(key, args));
         }
+    }
+
+    public DARecipe getRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
     }
 }

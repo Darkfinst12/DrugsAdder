@@ -115,6 +115,14 @@ recipes:
           matchType: "ALL"
       result: 'drugsadder:dirty_cocaine/6'
   furnace:
+    cocaine:
+      cookingTime: 100
+      exp: 0
+      material:
+        itemStack: 'drugsadder:dirty_cocaine'
+        amount: 1
+        matchType: "EXACT_CMD"
+      result: 'drugsadder:cocaine/1'
   press:
     cocaine_pills:
       mold: 'drugsadder:pill_mold'

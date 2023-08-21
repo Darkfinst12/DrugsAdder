@@ -22,12 +22,20 @@ Load_Info_Recipes: "&v1 recipes loaded!"
 Load_Error_Recipes_MatchTypeNotFound: "The MatchType: &v1 of the recipe: &v2 is not a valid MatchType! - Please check the config.yml!"
 Load_Error_Recipes_ItemNotFound: "The Item: &v1 of the recipe: &v2 is not a valid Item! - Please check the config.yml!"
 Load_Error_Recipes_NoMaterials: "The recipe: &v1 has no materials! - Please check the config.yml!"
+Load_Error_Recipes_NoMaterial: "The recipe: &v1 has no material: &v2! - Please check the config.yml!"
 Load_Info_RecipeLoaded: "The recipe: &v1 was successfully loaded!"
 Load_Error_Recipes_NotConfigSection: "The recipe: &v1 is not properly configured in the config.yml!"
 Load_Error_Recipes_TooManyMaterials: "The recipe: &v1 has too many materials! - Please check the config.yml!"
-Load_Error_Recipes_NoShape: "The recipe: &v1 has no shape!"
-Load_Error_Recipes_WrongShape: "The recipe: &v1 has a wrong shape!"
+Load_Error_Recipes_NoShape: "The recipe: &v1 has no shape! - Please check the config.yml!"
+Load_Error_Recipes_WrongShape: "The recipe: &v1 has a wrong shape! - Please check the config.yml!"
 Load_Error_Recipes_ShapeKeyNotFound: "In the recipe: &v1 the ShapeKey: &v2 was not found!"
+Load_Error_Recipes_RecipeNotRegistered: "The recipe: &v1 could not be registered by the Server!"
+Load_Error_Recipes_NoCookingTime: "The recipe: &v1 has no cooking time! - Please check the config.yml!"
+Load_Error_Recipes_MatchTypeWrongComposition: "The Recipe: &v1 has a wrong composition for its MatchTypes! - Please check the config.yml!"
+
+# ---- Errors ----
+Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
+
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"

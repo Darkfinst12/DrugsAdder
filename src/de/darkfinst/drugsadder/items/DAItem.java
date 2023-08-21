@@ -21,7 +21,7 @@ public class DAItem {
     @Nullable
     private Integer customModelData;
     @Setter
-    private ItemMatchType itemMatchType;
+    private ItemMatchType[] itemMatchTypes;
     @Setter
     private int amount = 1;
 

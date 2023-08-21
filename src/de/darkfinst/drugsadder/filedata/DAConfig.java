@@ -18,6 +18,9 @@ public class DAConfig {
 
     private static final DALoader loader = DA.loader;
 
+    public static boolean returnBucket;
+    public static boolean returnBottle;
+
     public static DACustomItemReader customItemReader;
     public static boolean logCustomItemLoadInfo;
     public static boolean logCustomItemLoadComplete;
@@ -117,6 +120,10 @@ public class DAConfig {
                 config = YamlConfiguration.loadConfiguration(file);
             }
         }
+
+        //Loads the return values
+        returnBucket = config.getBoolean("returnBucket", true);
+        returnBottle = config.getBoolean("returnBottle", true);
 
         //Loads the Logging
         logCustomItemLoadInfo = config.getBoolean("logCustomItemLoadInfo", true);

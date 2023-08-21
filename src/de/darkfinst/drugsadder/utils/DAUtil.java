@@ -34,6 +34,17 @@ public class DAUtil {
         return daItem;
     }
 
+    public static boolean matchItems(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB, @NotNull ItemMatchType... matchTypes) {
+        boolean match = false;
+        for (ItemMatchType matchType : matchTypes) {
+            match = DAUtil.matchItems(itemStackA, itemStackB, matchType);
+            if (!match) {
+                break;
+            }
+        }
+        return match;
+    }
+
     public static boolean matchItems(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB, @NotNull ItemMatchType matchType) {
         boolean match = false;
         if (itemStackA.getType().equals(itemStackB.getType())) {
