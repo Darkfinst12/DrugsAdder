@@ -19,8 +19,8 @@ public class DAFurnaceRecipe extends DARecipe {
     private int cookingTime;
     private float experience;
 
-    public DAFurnaceRecipe(String namedID, DAItem result, DAItem... materials) {
-        super(namedID, result, materials);
+    public DAFurnaceRecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
+        super(namedID, recipeType, result, materials);
     }
 
     public boolean registerRecipe() {

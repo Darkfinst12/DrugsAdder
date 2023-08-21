@@ -11,16 +11,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public class DACustomItemReader {
 
     @Getter(AccessLevel.NONE)
     private final ConfigurationSection config;
-    private final List<DAItem> registeredItems = new ArrayList<>();
+    private final Map<String, DAItem> registeredItems = new HashMap<>();
     private int configItemCount = 0;
 
     public DACustomItemReader(ConfigurationSection config) {
@@ -46,12 +44,12 @@ public class DACustomItemReader {
     private void loadItem(String itemID) {
         assert config != null;
         ConfigurationSection itemConfig = config.getConfigurationSection(itemID);
-        String namespacedID = ("drugsadder:" + itemID);
+        String namespacedID = ("drugsadder:" + itemID).toLowerCase();
         if (itemConfig == null) {
             this.logError("Load_Error_CustomItem_NotConfigSection", itemID);
             return;
         }
-        if (this.registeredItems.stream().anyMatch(daItem -> daItem.getNamespacedID().toLowerCase().equals(namespacedID))) {
+        if (this.registeredItems.containsKey(namespacedID.toLowerCase())) {
             this.logError("Load_Error_CustomItem_IDAlreadyAssigned", itemID);
             return;
         }
@@ -60,7 +58,7 @@ public class DACustomItemReader {
             this.logError("Load_Error_CustomItem_MaterialNotFound", itemID);
             return;
         }
-        ItemStack itemStack = new ItemStack(material);
+        ItemStack itemStack = new ItemStack(material, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         String name = ChatColor.translateAlternateColorCodes('&', itemConfig.getString("name", itemID));
         itemMeta.setDisplayName(name);
@@ -76,14 +74,10 @@ public class DACustomItemReader {
         itemStack.setItemMeta(itemMeta);
         DAItem item = new DAItem(itemStack, name, lore, cmd, namespacedID);
 
-        this.registeredItems.add(item);
+        this.registeredItems.put(namespacedID, item);
         if (DAConfig.logCustomItemLoadInfo) {
             this.logInfo("Load_Info_CustomItem_Loaded", itemID);
         }
-    }
-
-    public DAItem getItemByNamespacedID(String namespacedID) {
-        return this.registeredItems.stream().filter(daItem -> daItem.getNamespacedID().equalsIgnoreCase(namespacedID)).findFirst().orElse(null);
     }
 
     private void logError(String key, String... args) {
@@ -106,7 +100,15 @@ public class DACustomItemReader {
         }
     }
 
-    public DAItem getCustomItem(String id) {
-        return this.registeredItems.stream().filter(daItem -> daItem.getNamespacedID().equalsIgnoreCase("durgsadder:" + id)).findFirst().orElse(null);
+    public DAItem getItemByNamespacedID(String namespacedID) {
+        return this.registeredItems.get(namespacedID);
+    }
+
+    public List<String> getCustomItemNames() {
+        List<String> names = new ArrayList<>();
+        for (String key : this.registeredItems.keySet()) {
+            names.add(key.replace("drugsadder:", ""));
+        }
+        return names;
     }
 }

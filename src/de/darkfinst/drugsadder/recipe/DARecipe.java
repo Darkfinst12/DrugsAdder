@@ -9,12 +9,14 @@ import java.util.Arrays;
 public abstract class DARecipe {
 
     private final String namedID;
+    private final RecipeType recipeType;
 
     private final DAItem[] materials;
     private final DAItem result;
 
-    protected DARecipe(String namedID, DAItem result, DAItem... materials) {
+    protected DARecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
         this.namedID = namedID;
+        this.recipeType = recipeType;
         this.result = result;
         this.materials = materials;
     }
@@ -30,4 +32,9 @@ public abstract class DARecipe {
         }
         return null;
     }
+
+    public String getRecipeNamedID() {
+        return this.recipeType.name().toLowerCase() + ":" + this.namedID;
+    }
+
 }

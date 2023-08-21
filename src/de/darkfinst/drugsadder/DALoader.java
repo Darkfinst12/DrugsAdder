@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.filedata.LanguageReader;
+import de.darkfinst.drugsadder.listeners.CraftItemEventListener;
+import de.darkfinst.drugsadder.listeners.PrepareItemCraftEventListener;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.press.DAPress;
@@ -53,8 +55,9 @@ public class DALoader {
             }
             DAConfig.readConfig(config);
         } catch (Exception e) {
-            this.errorLog(e.getMessage());
-            Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> this.log(stackTraceElement.toString()));
+            StringBuilder log = new StringBuilder(e.getMessage());
+            Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> log.append("\n       ").append(stackTraceElement.toString()));
+            this.errorLog(log.toString());
             this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
         }
     }
@@ -64,8 +67,10 @@ public class DALoader {
     }
 
     private void initListener() {
-        new SignChangeEventListener();
+        new CraftItemEventListener();
         new PlayerInteractEventListener();
+        new PrepareItemCraftEventListener();
+        new SignChangeEventListener();
 
     }
 
@@ -122,7 +127,11 @@ public class DALoader {
         this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR);
     }
 
-    public void reloadConfig(){
+    public void reloadConfig() {
+        //TODO: fix this
+        DAConfig.customItemReader.getRegisteredItems().clear();
+        DAConfig.daRecipeReader.getRegisteredRecipes().clear();
+        DAConfig.drugReader.getRegisteredDrugs().clear();
         this.initConfig();
     }
 

@@ -18,6 +18,7 @@ public class DARecipeReader {
 
     @Getter(AccessLevel.NONE)
     private final ConfigurationSection config;
+    @Getter
     private final List<DARecipe> registeredRecipes = new ArrayList<>();
     private int configBarrelCount = 0;
     private int configPressCount = 0;
@@ -72,7 +73,7 @@ public class DARecipeReader {
             this.logError("Load_Error_BarrelRecipe_NotConfigSection", barrelRID);
             return;
         }
-        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getNamedID().toLowerCase().equals(barrelRID))) {
+        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getRecipeNamedID().toLowerCase().equals(barrelRID))) {
             this.logError("Load_Error_BarrelRecipe_IDAlreadyAssigned", barrelRID);
             return;
         }
@@ -87,7 +88,7 @@ public class DARecipeReader {
 
         int duration = recipeConfig.getInt("duration", 10);
 
-        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, duration, result, materials.values().toArray(new DAItem[0]));
+        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, duration, result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(barrelRecipe);
 
@@ -114,7 +115,7 @@ public class DARecipeReader {
             this.logError("Load_Error_PressRecipe_NotConfigSection", pressRID);
             return;
         }
-        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getNamedID().toLowerCase().equals(pressRID))) {
+        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getRecipeNamedID().toLowerCase().equals(pressRID))) {
             this.logError("Load_Error_PressRecipe_IDAlreadyAssigned", pressRID);
             return;
         }
@@ -135,7 +136,7 @@ public class DARecipeReader {
             return;
         }
 
-        DAPressRecipe pressRecipe = new DAPressRecipe(pressRID, mold, returnMold, result, materials.values().toArray(new DAItem[0]));
+        DAPressRecipe pressRecipe = new DAPressRecipe(pressRID, RecipeType.PRESS, mold, returnMold, result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(pressRecipe);
 
@@ -161,7 +162,7 @@ public class DARecipeReader {
             this.logError("Load_Error_TableRecipe_NotConfigSection", tableRID);
             return;
         }
-        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getNamedID().toLowerCase().equals(tableRID))) {
+        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getRecipeNamedID().toLowerCase().equals(tableRID))) {
             this.logError("Load_Error_TableRecipe_IDAlreadyAssigned", tableRID);
             return;
         }
@@ -173,6 +174,10 @@ public class DARecipeReader {
             this.logError("Load_Error_Recipes_NoMaterials", tableRID);
             return;
         }
+
+        DATableRecipe tableRecipe = new DATableRecipe(tableRID, RecipeType.TABLE, result, null, materials.values().toArray(new DAItem[0]));
+
+        //this.registeredRecipes.add();
 
         if (DAConfig.logRecipeLoadInfo) {
             this.logInfo("Load_Info_RecipeLoaded", tableRID);
@@ -193,11 +198,11 @@ public class DARecipeReader {
     private void loadCraftingRecipe(String craftingRID, ConfigurationSection craftingSec) {
         ConfigurationSection recipeConfig = craftingSec.getConfigurationSection(craftingRID);
         if (recipeConfig == null) {
-            this.logError("Load_Error_CraftingRecipe_NotConfigSection", craftingRID);
+            this.logError("Load_Error_Recipe_NotConfigSection", craftingRID);
             return;
         }
-        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getNamedID().toLowerCase().equals(craftingRID))) {
-            this.logError("Load_Error_CraftingRecipe_IDAlreadyAssigned", craftingRID);
+        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getRecipeNamedID().toLowerCase().equals(craftingRID))) {
+            this.logError("Load_Error_Recipe_IDAlreadyAssigned", craftingRID);
             return;
         }
         DAItem result = this.getResultItem(craftingRID, recipeConfig);
@@ -234,15 +239,36 @@ public class DARecipeReader {
                 return;
             }
         }
+        StringBuilder stringBuilder = new StringBuilder("[^");
+        for (String key : materials.keySet()) {
+            stringBuilder.append(key);
+        }
+        stringBuilder.append("]");
+        String regex = stringBuilder.toString();
+
+        DA.loader.debugLog(shape.toString());
+        for (String s : new ArrayList<>(shape)) {
+            shape.remove(s);
+            shape.add(s.replaceAll(regex, " "));
+        }
+        DA.loader.debugLog(shape.toString());
 
         boolean isShaped = recipeConfig.getBoolean("isShaped", true);
 
-        DACraftingRecipe craftingRecipe = new DACraftingRecipe(craftingRID, result, materials.values().toArray(new DAItem[0]));
+        DACraftingRecipe craftingRecipe = new DACraftingRecipe(craftingRID, RecipeType.CRAFTING, result, materials.values().toArray(new DAItem[0]));
         craftingRecipe.setShapeless(isShaped);
         craftingRecipe.setShape(shape.toArray(new String[0]));
+        craftingRecipe.setShapeKeys(materials.keySet().toArray(new String[0]));
 
-        if (!craftingRecipe.registerRecipe()) {
-            this.logError("Load_Error_Recipes_RecipeNotRegistered", craftingRID);
+        try {
+            if (!craftingRecipe.registerRecipe()) {
+                this.logError("Load_Error_Recipes_RecipeNotRegistered", craftingRID);
+                return;
+            }
+        } catch (Exception e) {
+            StringBuilder log = new StringBuilder(e.getMessage());
+            Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> log.append("\n       ").append(stackTraceElement.toString()));
+            DA.loader.errorLog(log.toString());
             return;
         }
         this.registeredRecipes.add(craftingRecipe);
@@ -270,7 +296,7 @@ public class DARecipeReader {
             this.logError("Load_Error_FurnaceRecipe_NotConfigSection", furnaceRID);
             return;
         }
-        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getNamedID().toLowerCase().equals(furnaceRID))) {
+        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getRecipeNamedID().toLowerCase().equals(furnaceRID))) {
             this.logError("Load_Error_FurnaceRecipe_IDAlreadyAssigned", furnaceRID);
             return;
         }
@@ -288,7 +314,7 @@ public class DARecipeReader {
             return;
         }
         float exp = recipeConfig.getFloatList("exp").stream().findFirst().orElse(0f);
-        DAFurnaceRecipe furnaceRecipe = new DAFurnaceRecipe(furnaceRID, result, material);
+        DAFurnaceRecipe furnaceRecipe = new DAFurnaceRecipe(furnaceRID, RecipeType.FURNACE, result, material);
         furnaceRecipe.setCookingTime(cookingTime);
         furnaceRecipe.setExperience(exp);
 
@@ -446,6 +472,6 @@ public class DARecipeReader {
     }
 
     public DARecipe getRecipe(String recipe) {
-        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
     }
 }

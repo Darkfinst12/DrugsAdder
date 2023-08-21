@@ -74,7 +74,7 @@ public class LanguageReader {
                 }
             }
         } else {
-            entry = "%placeholder%";
+            entry = String.format("Key: %s not found", key);
         }
 
         return entry;

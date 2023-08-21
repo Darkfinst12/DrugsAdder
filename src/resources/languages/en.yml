@@ -32,6 +32,7 @@ Load_Error_Recipes_ShapeKeyNotFound: "In the recipe: &v1 the ShapeKey: &v2 was n
 Load_Error_Recipes_RecipeNotRegistered: "The recipe: &v1 could not be registered by the Server!"
 Load_Error_Recipes_NoCookingTime: "The recipe: &v1 has no cooking time! - Please check the config.yml!"
 Load_Error_Recipes_MatchTypeWrongComposition: "The Recipe: &v1 has a wrong composition for its MatchTypes! - Please check the config.yml!"
+Load_Error_Recipe_IDAlreadyAssigned: "The recipe: &v1 has already been configured! - Please check the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
