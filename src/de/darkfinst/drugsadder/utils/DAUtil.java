@@ -34,12 +34,14 @@ public class DAUtil {
         return daItem;
     }
 
-    public static boolean matchItems(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB, @NotNull ItemMatchType... matchTypes) {
+    public static boolean matchItems(ItemStack itemStackA, ItemStack itemStackB, ItemMatchType... matchTypes) {
         boolean match = false;
-        for (ItemMatchType matchType : matchTypes) {
-            match = DAUtil.matchItems(itemStackA, itemStackB, matchType);
-            if (!match) {
-                break;
+        if (!(itemStackA == null || itemStackB == null || matchTypes == null || matchTypes.length == 0)) {
+            for (ItemMatchType matchType : matchTypes) {
+                match = DAUtil.matchItems(itemStackA, itemStackB, matchType);
+                if (!match) {
+                    break;
+                }
             }
         }
         return match;

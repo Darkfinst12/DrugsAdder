@@ -5,11 +5,14 @@ import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -17,7 +20,7 @@ import java.util.*;
 public class DACraftingRecipe extends DARecipe {
 
     private final List<String> shape = new ArrayList<>(3);
-    private final List<String> shapeKeys = new ArrayList<>();
+    private final Map<String, DAItem> shapeKeys = new HashMap<>();
     @Setter
     private boolean isShapeless = false;
 
@@ -30,14 +33,14 @@ public class DACraftingRecipe extends DARecipe {
         this.shape.addAll(Arrays.asList(shape));
     }
 
-    public void setShapeKeys(String... shapeKeys) {
+    public void setShapeKeys(@NotNull Map<String, DAItem> shapeKeys) {
         this.shapeKeys.clear();
-        this.shapeKeys.addAll(Arrays.asList(shapeKeys));
+        this.shapeKeys.putAll(shapeKeys);
     }
 
     public boolean registerRecipe() {
-        //TODO: You always get the Item after taking any item out of the crafting table
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
+        DA.loader.debugLog("Register Recipe: " + namespacedKey.getKey() + " - " + namespacedKey.getNamespace());
         if (this.isShapeless) {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
@@ -45,21 +48,59 @@ public class DACraftingRecipe extends DARecipe {
             for (DAItem material : this.getMaterials()) {
                 shapelessRecipe.addIngredient(material.getItemStack().getType());
             }
+            DA.loader.debugLog(shapelessRecipe.getIngredientList().toString());
+            if (shapelessRecipe.getIngredientList().contains(null)) {
+                return false;
+            }
             return Bukkit.addRecipe(shapelessRecipe);
         } else {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
             ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
             shapedRecipe.shape(this.shape.toArray(new String[0]));
+            DA.loader.debugLog("Shape: " + this.shape);
+            DA.loader.debugLog("ShapeKeys: " + this.shapeKeys);
             for (String s : this.shape) {
-                char key = s.charAt(0);
-                if (this.shapeKeys.contains(key + "")) {
-                    int index = this.shapeKeys.indexOf(key + "");
-                    Material material = this.getMaterials()[index].getItemStack().getType();
-                    shapedRecipe.setIngredient(key, material);
+                for (int i = 0; i < s.length(); i++) {
+                    char key = s.charAt(i);
+                    if (this.shapeKeys.containsKey(key + "")) {
+                        DA.loader.debugLog("Key: " + key);
+                        Material material = this.shapeKeys.get(key + "").getItemStack().getType();
+                        DA.loader.debugLog("Material: " + material.name());
+                        shapedRecipe.setIngredient(key, material);
+                    } else {
+                        return false;
+                    }
                 }
             }
+            DA.loader.debugLog(shapedRecipe.getIngredientMap().toString());
+            if (shapedRecipe.getIngredientMap().containsValue(null)) {
+                return false;
+            }
             return Bukkit.addRecipe(shapedRecipe);
+        }
+    }
+
+    public static void registerDEMORecipe(boolean isShapeless) {
+        ItemStack result = new ItemStack(Material.STICK, 1);
+        ItemMeta meta = result.getItemMeta();
+        if (isShapeless) {
+            meta.setDisplayName("§6§lDEMO-Recipe-NoShape");
+            result.setItemMeta(meta);
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shapeless"), result);
+            shapelessRecipe.addIngredient(Material.BIRCH_PLANKS);
+            shapelessRecipe.addIngredient(Material.ACACIA_PLANKS);
+            shapelessRecipe.addIngredient(Material.CHERRY_PLANKS);
+            Bukkit.addRecipe(shapelessRecipe);
+        } else {
+            meta.setDisplayName("§6§lDEMO-Recipe-Shape");
+            result.setItemMeta(meta);
+            ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shape"), result);
+            shapedRecipe.shape(" A ", " B ", " C ");
+            shapedRecipe.setIngredient('A', Material.SPRUCE_PLANKS);
+            shapedRecipe.setIngredient('B', Material.DARK_OAK_PLANKS);
+            shapedRecipe.setIngredient('C', Material.CHERRY_PLANKS);
+            Bukkit.addRecipe(shapedRecipe);
         }
     }
 }

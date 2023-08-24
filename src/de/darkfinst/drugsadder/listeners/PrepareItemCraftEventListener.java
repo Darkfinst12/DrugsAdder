@@ -8,6 +8,7 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
 import de.darkfinst.drugsadder.recipe.DARecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,10 @@ import java.util.Arrays;
 
 public class PrepareItemCraftEventListener implements Listener {
 
+    public PrepareItemCraftEventListener() {
+        Bukkit.getPluginManager().registerEvents(this, DA.getInstance);
+    }
+
     @EventHandler
     public void onPrepareItemCraftEvent(PrepareItemCraftEvent event) {
         CraftingInventory inv = event.getInventory();
@@ -28,19 +33,21 @@ public class PrepareItemCraftEventListener implements Listener {
         if (recipe instanceof Keyed keyed) {
             NamespacedKey namespacedKey = keyed.getKey();
             if (namespacedKey.getNamespace().equalsIgnoreCase(DA.getInstance.getName())) {
+                DA.loader.debugLog("Crafting Recipe: " + namespacedKey.getKey() + " - " + namespacedKey.getNamespace());
                 this.checkCrafting(inv, namespacedKey.getKey());
             }
         }
     }
 
     private void checkCrafting(CraftingInventory inventory, String recipe) {
+        //TODO: fix this
         DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(recipe);
         if (daRecipe instanceof DACraftingRecipe craftingRecipe) {
             ItemStack[] matrix = inventory.getMatrix();
             DAItem[] materials = craftingRecipe.getMaterials();
             if (craftingRecipe.isShapeless()) {
                 for (DAItem material : materials) {
-                    if (Arrays.stream(matrix).noneMatch(itemStack -> DAUtil.matchItems(material.getItemStack(), itemStack, material.getItemMatchTypes()))) {
+                    if (!Arrays.stream(matrix).allMatch(itemStack -> DAUtil.matchItems(material.getItemStack(), itemStack, material.getItemMatchTypes()))) {
                         inventory.setResult(null);
                         break;
                     }

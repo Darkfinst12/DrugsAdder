@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -148,6 +149,8 @@ public class DAConfig {
         if (config.contains("recipes")) {
             daRecipeReader = new DARecipeReader(config.getConfigurationSection("recipes"));
             daRecipeReader.loadRecipes();
+            DACraftingRecipe.registerDEMORecipe(true);
+            DACraftingRecipe.registerDEMORecipe(false);
         } else {
             daRecipeReader = new DARecipeReader();
         }

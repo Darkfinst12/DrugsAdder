@@ -256,9 +256,9 @@ public class DARecipeReader {
         boolean isShaped = recipeConfig.getBoolean("isShaped", true);
 
         DACraftingRecipe craftingRecipe = new DACraftingRecipe(craftingRID, RecipeType.CRAFTING, result, materials.values().toArray(new DAItem[0]));
-        craftingRecipe.setShapeless(isShaped);
+        craftingRecipe.setShapeless(!isShaped);
         craftingRecipe.setShape(shape.toArray(new String[0]));
-        craftingRecipe.setShapeKeys(materials.keySet().toArray(new String[0]));
+        craftingRecipe.setShapeKeys(materials);
 
         try {
             if (!craftingRecipe.registerRecipe()) {
@@ -472,6 +472,6 @@ public class DARecipeReader {
     }
 
     public DARecipe getRecipe(String recipe) {
-        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
     }
 }

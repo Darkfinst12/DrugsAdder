@@ -85,15 +85,15 @@ recipes:
     dirty_cocaine:
       isShaped: true
       shape:
-        - 'XOX'
-        - 'XOX'
-        - 'XOX'
+        - 'XVX'
+        - 'XVX'
+        - 'XVX'
       materials:
         X:
           itemStack: 'minecraft:coal'
           amount: 1
           matchType: "ALL"
-        O:
+        V:
           itemStack: 'drugsadder:coca'
           amount: 4
           matchType: "ALL"
@@ -113,7 +113,7 @@ recipes:
           itemStack: 'drugsadder:coca'
           amount: 1
           matchType: "ALL"
-      result: 'drugsadder:dirty_cocaine/6'
+      result: 'drugsadder:shrooms/6'
   furnace:
     cocaine:
       cookingTime: 100

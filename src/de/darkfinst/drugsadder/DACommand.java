@@ -77,7 +77,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 stringBuilder.append(craftingRecipe.getResult().getNamespacedID());
                                 stringBuilder.append(" - Materials: ");
                                 for (int i = 0; i < craftingRecipe.getShapeKeys().size() - 1; i++) {
-                                    String key = craftingRecipe.getShapeKeys().get(i);
+                                    String key = craftingRecipe.getShapeKeys().keySet().toArray(new String[0])[i];
                                     stringBuilder.append(key);
                                     stringBuilder.append(": ");
                                     stringBuilder.append(craftingRecipe.getMaterials()[i].getNamespacedID());

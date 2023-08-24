@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
 import de.darkfinst.drugsadder.recipe.DARecipe;
+import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,6 +18,10 @@ import org.bukkit.inventory.Recipe;
 import java.util.Arrays;
 
 public class CraftItemEventListener implements Listener {
+
+    public CraftItemEventListener() {
+        Bukkit.getPluginManager().registerEvents(this, DA.getInstance);
+    }
 
     @EventHandler
     public void onCraftItemEvent(CraftItemEvent event) {
