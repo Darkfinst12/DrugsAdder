@@ -7,6 +7,7 @@ import de.darkfinst.drugsadder.filedata.LanguageReader;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
 import de.darkfinst.drugsadder.recipe.DARecipe;
+import de.darkfinst.drugsadder.recipe.RecipeType;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -33,34 +34,21 @@ public class PrepareItemCraftEventListener implements Listener {
         if (recipe instanceof Keyed keyed) {
             NamespacedKey namespacedKey = keyed.getKey();
             if (namespacedKey.getNamespace().equalsIgnoreCase(DA.getInstance.getName())) {
-                DA.loader.debugLog("Crafting Recipe: " + namespacedKey.getKey() + " - " + namespacedKey.getNamespace());
                 this.checkCrafting(inv, namespacedKey.getKey());
             }
         }
     }
 
     private void checkCrafting(CraftingInventory inventory, String recipe) {
-        //TODO: fix this
-        DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(recipe);
+        DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(RecipeType.getNamedRecipeID(RecipeType.CRAFTING, recipe));
         if (daRecipe instanceof DACraftingRecipe craftingRecipe) {
             ItemStack[] matrix = inventory.getMatrix();
             DAItem[] materials = craftingRecipe.getMaterials();
-            if (craftingRecipe.isShapeless()) {
-                for (DAItem material : materials) {
-                    if (!Arrays.stream(matrix).allMatch(itemStack -> DAUtil.matchItems(material.getItemStack(), itemStack, material.getItemMatchTypes()))) {
-                        inventory.setResult(null);
-                        break;
-                    }
-                }
-            } else {
-                for (int i = 0; i < 9; i++) {
-                    if (matrix[i] != null) {
-                        DAItem material = materials[i];
-                        if (!DAUtil.matchItems(material.getItemStack(), matrix[i], material.getItemMatchTypes())) {
-                            inventory.setResult(null);
-                            break;
-                        }
-                    }
+            for (DAItem daItem : materials) {
+                boolean match = Arrays.stream(matrix).anyMatch(itemStack -> DAUtil.matchItems(itemStack, daItem.getItemStack(), daItem.getItemMatchTypes()));
+                if (!match) {
+                    inventory.setResult(null);
+                    break;
                 }
             }
         } else {

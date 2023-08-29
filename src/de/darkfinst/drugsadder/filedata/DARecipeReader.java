@@ -246,12 +246,12 @@ public class DARecipeReader {
         stringBuilder.append("]");
         String regex = stringBuilder.toString();
 
-        DA.loader.debugLog(shape.toString());
+        //DA.loader.debugLog(shape.toString());
         for (String s : new ArrayList<>(shape)) {
             shape.remove(s);
             shape.add(s.replaceAll(regex, " "));
         }
-        DA.loader.debugLog(shape.toString());
+        //DA.loader.debugLog(shape.toString());
 
         boolean isShaped = recipeConfig.getBoolean("isShaped", true);
 
@@ -472,6 +472,6 @@ public class DARecipeReader {
     }
 
     public DARecipe getRecipe(String recipe) {
-        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
     }
 }

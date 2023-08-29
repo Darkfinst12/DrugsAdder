@@ -7,4 +7,9 @@ public enum RecipeType {
     PRESS,
     TABLE,
     FURNACE,
+    ;
+
+    public static String getNamedRecipeID(RecipeType recipeType, String recipeID) {
+        return recipeType.name().toLowerCase() + ":" + recipeID;
+    }
 }

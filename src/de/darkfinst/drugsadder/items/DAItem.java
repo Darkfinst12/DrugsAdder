@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -38,5 +39,18 @@ public class DAItem {
         this.lore = lore;
         this.customModelData = customModelData;
         this.namespacedID = namespacedID;
+    }
+
+    @Override
+    public String toString() {
+        return "DAItem{" +
+                "itemStack=" + itemStack +
+                ", name='" + name +
+                ", lore=" + lore +
+                ", customModelData=" + customModelData +
+                ", itemMatchTypes=" + Arrays.toString(itemMatchTypes) +
+                ", amount=" + amount +
+                ", namespacedID='" + namespacedID + '\'' +
+                '}';
     }
 }

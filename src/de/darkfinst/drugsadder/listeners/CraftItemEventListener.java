@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
 import de.darkfinst.drugsadder.recipe.DARecipe;
+import de.darkfinst.drugsadder.recipe.RecipeType;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -36,7 +37,7 @@ public class CraftItemEventListener implements Listener {
     }
 
     private void checkDrops(CraftingInventory inv, String recipe) {
-        DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(recipe);
+        DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(RecipeType.getNamedRecipeID(RecipeType.CRAFTING, recipe));
         if (daRecipe instanceof DACraftingRecipe craftingRecipe) {
             if (DAConfig.returnBucket) {
                 int returnBucketCount = Arrays.stream(craftingRecipe.getMaterials()).filter(daItem -> daItem.getItemStack().getType().equals(Material.WATER_BUCKET) || daItem.getItemStack().getType().equals(Material.LAVA_BUCKET)).toList().size();

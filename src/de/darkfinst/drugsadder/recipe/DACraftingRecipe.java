@@ -5,7 +5,6 @@ import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -40,7 +39,6 @@ public class DACraftingRecipe extends DARecipe {
 
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
-        DA.loader.debugLog("Register Recipe: " + namespacedKey.getKey() + " - " + namespacedKey.getNamespace());
         if (this.isShapeless) {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
@@ -48,7 +46,6 @@ public class DACraftingRecipe extends DARecipe {
             for (DAItem material : this.getMaterials()) {
                 shapelessRecipe.addIngredient(material.getItemStack().getType());
             }
-            DA.loader.debugLog(shapelessRecipe.getIngredientList().toString());
             if (shapelessRecipe.getIngredientList().contains(null)) {
                 return false;
             }
@@ -58,22 +55,17 @@ public class DACraftingRecipe extends DARecipe {
             result.setAmount(this.getResult().getAmount());
             ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
             shapedRecipe.shape(this.shape.toArray(new String[0]));
-            DA.loader.debugLog("Shape: " + this.shape);
-            DA.loader.debugLog("ShapeKeys: " + this.shapeKeys);
             for (String s : this.shape) {
                 for (int i = 0; i < s.length(); i++) {
                     char key = s.charAt(i);
                     if (this.shapeKeys.containsKey(key + "")) {
-                        DA.loader.debugLog("Key: " + key);
                         Material material = this.shapeKeys.get(key + "").getItemStack().getType();
-                        DA.loader.debugLog("Material: " + material.name());
                         shapedRecipe.setIngredient(key, material);
                     } else {
                         return false;
                     }
                 }
             }
-            DA.loader.debugLog(shapedRecipe.getIngredientMap().toString());
             if (shapedRecipe.getIngredientMap().containsValue(null)) {
                 return false;
             }

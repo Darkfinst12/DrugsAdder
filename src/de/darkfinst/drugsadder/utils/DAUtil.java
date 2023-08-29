@@ -49,14 +49,18 @@ public class DAUtil {
 
     public static boolean matchItems(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB, @NotNull ItemMatchType matchType) {
         boolean match = false;
+        ItemStack stackA = itemStackA.clone();
+        ItemStack stackB = itemStackB.clone();
+        stackA.setAmount(1);
+        stackB.setAmount(1);
         if (itemStackA.getType().equals(itemStackB.getType())) {
             switch (matchType) {
-                case EXACT_CMD -> match = DAUtil.matchItemCMD(itemStackA, itemStackB);
-                case EXACT_NAME -> match = DAUtil.matchItemName(itemStackA, itemStackB);
-                case EXACT_LORE -> match = DAUtil.matchItemLore(itemStackA, itemStackB);
-                case CONTAINS_NAME -> match = DAUtil.matchItemNameContains(itemStackA, itemStackB);
-                case CONTAINS_LORE -> match = DAUtil.matchItemLoreContains(itemStackA, itemStackB);
-                case ALL -> match = itemStackA.equals(itemStackB);
+                case EXACT_CMD -> match = DAUtil.matchItemCMD(stackA, stackB);
+                case EXACT_NAME -> match = DAUtil.matchItemName(stackA, stackB);
+                case EXACT_LORE -> match = DAUtil.matchItemLore(stackA, stackB);
+                case CONTAINS_NAME -> match = DAUtil.matchItemNameContains(stackA, stackB);
+                case CONTAINS_LORE -> match = DAUtil.matchItemLoreContains(stackA, stackB);
+                case ALL -> match = stackA.equals(stackB);
                 default -> match = true;
             }
         }

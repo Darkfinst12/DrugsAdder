@@ -149,8 +149,6 @@ public class DAConfig {
         if (config.contains("recipes")) {
             daRecipeReader = new DARecipeReader(config.getConfigurationSection("recipes"));
             daRecipeReader.loadRecipes();
-            DACraftingRecipe.registerDEMORecipe(true);
-            DACraftingRecipe.registerDEMORecipe(false);
         } else {
             daRecipeReader = new DARecipeReader();
         }
