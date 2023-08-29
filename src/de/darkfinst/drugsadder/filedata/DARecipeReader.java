@@ -396,7 +396,7 @@ public class DARecipeReader {
 
     private List<ItemMatchType> loadMatchTypes(String recipeID, ConfigurationSection section) {
         List<ItemMatchType> matchTypes = new ArrayList<>();
-        String matchType = section.getString("matchType", "NULL");
+        String matchType = section.getString("matchType", "ALL");
         if (matchType.contains(",")) {
             String[] types = matchType.split(",");
             for (String type : types) {

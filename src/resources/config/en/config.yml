@@ -121,7 +121,6 @@ recipes:
       material:
         itemStack: 'drugsadder:dirty_cocaine'
         amount: 1
-        matchType: "ALL" #TODO: Find a way to make this work
       result: 'drugsadder:cocaine/1'
   press:
     cocaine_pills:

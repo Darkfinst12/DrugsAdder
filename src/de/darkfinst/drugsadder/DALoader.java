@@ -1,16 +1,13 @@
 package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.filedata.LanguageReader;
-import de.darkfinst.drugsadder.listeners.CraftItemEventListener;
-import de.darkfinst.drugsadder.listeners.PrepareItemCraftEventListener;
+import de.darkfinst.drugsadder.listeners.*;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import de.darkfinst.drugsadder.listeners.PlayerInteractEventListener;
-import de.darkfinst.drugsadder.listeners.SignChangeEventListener;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -68,6 +65,9 @@ public class DALoader {
 
     private void initListener() {
         new CraftItemEventListener();
+        new FurnaceBurnEventListener();
+        new FurnaceSmeltEventListener();
+        new FurnaceStartSmeltEventListener();
         new PlayerInteractEventListener();
         new PrepareItemCraftEventListener();
         new SignChangeEventListener();

@@ -4,16 +4,16 @@ import de.darkfinst.drugsadder.DA;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
 
-public class FurnaceStartSmeltEventListener implements Listener {
+public class FurnaceSmeltEventListener implements Listener {
 
-    public FurnaceStartSmeltEventListener() {
+    public FurnaceSmeltEventListener() {
         Bukkit.getPluginManager().registerEvents(this, DA.getInstance);
     }
 
     @EventHandler
-    public void onFurnaceStartSmeltEvent(FurnaceStartSmeltEvent event) {
+    public void onFurnaceSmeltEvent(FurnaceSmeltEvent event) {
 
     }
 }
