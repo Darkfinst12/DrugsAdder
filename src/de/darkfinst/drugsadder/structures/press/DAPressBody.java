@@ -20,6 +20,7 @@ public class DAPressBody extends DABody {
     private final DAPress press;
     private final Block sign;
     private Block piston;
+    private Block lever;
 
     public DAPressBody(DAPress press, Block sign) {
         this.press = press;
@@ -54,6 +55,7 @@ public class DAPressBody extends DABody {
         if (!(isValid && !blockOSignY1.isBlockPowered() && blockOSignY1.getRelative(BlockFace.DOWN, 2).equals(this.sign))) {
             throw new ValidateStructureException("BlockOverSign +1y is not valid!");
         }
+        this.lever = blockOSignY1;
         this.blocks.add(blockOSignY1);
 
         Block blockOSignY2 = world.getBlockAt(loc.getBlockX(), loc.getBlockY() + 3, loc.getBlockZ());

@@ -122,6 +122,8 @@ public class DARecipeReader {
         DAItem result = this.getResultItem(pressRID, recipeConfig);
         if (result == null) return;
 
+        double duration = recipeConfig.getDouble("duration", 10.0D);
+
         String moldString = recipeConfig.getString("mold", "null");
         DAItem mold = DAUtil.getItemStackByNamespacedID(moldString);
         if (mold == null) {
@@ -136,7 +138,7 @@ public class DARecipeReader {
             return;
         }
 
-        DAPressRecipe pressRecipe = new DAPressRecipe(pressRID, RecipeType.PRESS, mold, returnMold, result, materials.values().toArray(new DAItem[0]));
+        DAPressRecipe pressRecipe = new DAPressRecipe(pressRID, RecipeType.PRESS, duration, mold, returnMold, result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(pressRecipe);
 
@@ -300,6 +302,8 @@ public class DARecipeReader {
             this.logError("Load_Error_FurnaceRecipe_IDAlreadyAssigned", furnaceRID);
             return;
         }
+        RecipeType recipeType = RecipeType.valueOf(recipeConfig.getString("recipeType", "FURNACE").toUpperCase());
+
         DAItem result = this.getResultItem(furnaceRID, recipeConfig);
         if (result == null) return;
 
@@ -314,7 +318,7 @@ public class DARecipeReader {
             return;
         }
         float exp = recipeConfig.getFloatList("exp").stream().findFirst().orElse(0f);
-        DAFurnaceRecipe furnaceRecipe = new DAFurnaceRecipe(furnaceRID, RecipeType.FURNACE, result, material);
+        DAFurnaceRecipe furnaceRecipe = new DAFurnaceRecipe(furnaceRID, recipeType, result, material);
         furnaceRecipe.setCookingTime(cookingTime);
         furnaceRecipe.setExperience(exp);
 
@@ -396,7 +400,7 @@ public class DARecipeReader {
 
     private List<ItemMatchType> loadMatchTypes(String recipeID, ConfigurationSection section) {
         List<ItemMatchType> matchTypes = new ArrayList<>();
-        String matchType = section.getString("matchType", "ALL");
+        String matchType = section.getString("matchType", "ALL").toUpperCase();
         if (matchType.contains(",")) {
             String[] types = matchType.split(",");
             for (String type : types) {
@@ -473,5 +477,9 @@ public class DARecipeReader {
 
     public DARecipe getRecipe(String recipe) {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
+    }
+
+    public List<DAPressRecipe> getPressRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAPressRecipe).map(daRecipe -> (DAPressRecipe) daRecipe).toList();
     }
 }

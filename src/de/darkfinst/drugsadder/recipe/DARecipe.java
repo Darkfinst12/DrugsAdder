@@ -1,8 +1,12 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.items.DAItem;
+import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 @Getter
@@ -33,8 +37,24 @@ public abstract class DARecipe {
         return null;
     }
 
+    public boolean containsMaterials(@NotNull ItemStack... givenItems) {
+        for (ItemStack item : givenItems) {
+            for (DAItem material : this.getMaterials()) {
+                boolean contains = DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes());
+                if (contains) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public String getRecipeNamedID() {
         return this.recipeType.name().toLowerCase() + ":" + this.namedID;
     }
 
+    @Nullable
+    public DAItem getMaterial(@NotNull ItemStack item) {
+        return Arrays.stream(this.materials).filter(material -> DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes())).findFirst().orElse(null);
+    }
 }

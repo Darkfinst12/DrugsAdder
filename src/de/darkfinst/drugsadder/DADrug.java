@@ -18,7 +18,7 @@ public class DADrug extends DAAddiction {
     private final ItemStack itemStack;
     private final List<String> serverCommands = new ArrayList<>();
     private final List<String> playerCommands = new ArrayList<>();
-    //private final List<DAEffect> daEffects = new ArrayList<>();
+    private final List<DAEffect> daEffects = new ArrayList<>();
     @Nullable
     private final String consumeMessage;
     @Nullable

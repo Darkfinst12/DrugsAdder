@@ -122,14 +122,31 @@ recipes:
         itemStack: 'drugsadder:dirty_cocaine'
         amount: 1
       result: 'drugsadder:cocaine/1'
+    blast_cocaine:
+      recipeType: "BLASTING"
+      cookingTime: 50
+      exp: 0
+      material:
+        itemStack: 'drugsadder:dirty_cocaine'
+        amount: 1
+      result: 'drugsadder:cocaine/1'
+    smoke_cocaine:
+      recipeType: "SMOKING"
+      cookingTime: 75
+      exp: 0
+      material:
+        itemStack: 'drugsadder:dirty_cocaine'
+        amount: 1
+      result: 'drugsadder:cocaine/1'
   press:
     cocaine_pills:
+      duration: 2.0
       mold: 'drugsadder:pill_mold'
       returnMold: true
       materials:
         1:
           itemStack: 'drugsadder:dirty_cocaine'
-          amount: 1
+          amount: 2
           matchType: "ALL"
       result: 'drugsadder:cocaine_pills/1'
   table:

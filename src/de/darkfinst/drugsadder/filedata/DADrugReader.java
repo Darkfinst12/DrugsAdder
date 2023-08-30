@@ -90,7 +90,7 @@ public class DADrugReader {
                 daEffects.add(daEffect);
             }
         }
-        //drug.getDaEffects().addAll(daEffects);
+        drug.getDaEffects().addAll(daEffects);
 
         DAAddiction daAddiction = this.loadAddictionSettings(drugConfig);
         drug.setAddiction(daAddiction);
@@ -172,7 +172,7 @@ public class DADrugReader {
                 if (effectMap.isEmpty()) {
                     this.logError("Load_Error_Drug_Addiction_EffectsEmpty", drugConfig.getName());
                 } else {
-                    daAddiction.getDaEffects().putAll(effectMap);
+                    daAddiction.getConsummation().putAll(effectMap);
                 }
 
                 ConfigurationSection deprivationConfig = addictionConfig.getConfigurationSection("deprivation");

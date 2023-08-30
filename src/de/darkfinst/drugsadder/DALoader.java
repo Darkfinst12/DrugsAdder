@@ -52,10 +52,7 @@ public class DALoader {
             }
             DAConfig.readConfig(config);
         } catch (Exception e) {
-            StringBuilder log = new StringBuilder(e.getMessage());
-            Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> log.append("\n       ").append(stackTraceElement.toString()));
-            this.errorLog(log.toString());
-            this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+            this.logException(e);
         }
     }
 
@@ -125,6 +122,14 @@ public class DALoader {
 
     public void errorLog(String msg) {
         this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR);
+    }
+
+    public void logException(Exception e) {
+        String s = e.getMessage() == null ? "null" : e.getMessage();
+        StringBuilder log = new StringBuilder(s);
+        Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> log.append("\n       ").append(stackTraceElement.toString()));
+        this.errorLog(log.toString());
+        this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
     }
 
     public void reloadConfig() {

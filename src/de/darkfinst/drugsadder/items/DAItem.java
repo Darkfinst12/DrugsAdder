@@ -22,7 +22,7 @@ public class DAItem {
     @Nullable
     private Integer customModelData;
     @Setter
-    private ItemMatchType[] itemMatchTypes;
+    private ItemMatchType[] itemMatchTypes = new ItemMatchType[]{ItemMatchType.EXACT_CMD};
     @Setter
     private int amount = 1;
 

@@ -1,29 +1,23 @@
-package de.darkfinst.drugsadder.api.events.table;
+package de.darkfinst.drugsadder.api.events.press;
 
+import de.darkfinst.drugsadder.recipe.DAPressRecipe;
+import de.darkfinst.drugsadder.structures.press.DAPress;
 import lombok.Getter;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class TableAccessEvent extends TableEvent implements Cancellable {
+public class PressItemEvent extends PressEvent implements Cancellable {
+
     private static final HandlerList handlers = new HandlerList();
-    @Getter
-    private final Player player;
-    @Getter
-    private final Block clickedBlock;
-    @Getter
-    private final BlockFace clickedBlockFace;
     private boolean isCancelled = false;
+    @Getter
+    private final DAPressRecipe recipe;
 
-    public TableAccessEvent(Player player, Block clickedBlock, BlockFace clickedBlockFace) {
-        this.player = player;
-        this.clickedBlock = clickedBlock;
-        this.clickedBlockFace = clickedBlockFace;
+    public PressItemEvent(DAPress press, DAPressRecipe recipe) {
+        super(press);
+        this.recipe = recipe;
     }
-
 
     @Override
     public boolean isCancelled() {
