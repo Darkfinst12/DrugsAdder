@@ -38,7 +38,22 @@ public abstract class DARecipe {
     }
 
     public boolean containsMaterials(@NotNull ItemStack... givenItems) {
-        for (ItemStack item : givenItems) {
+        for (DAItem material : this.getMaterials()) {
+            boolean contains = false;
+            for (ItemStack item : givenItems) {
+                contains = DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes());
+                if (contains) {
+                    break;
+                }
+            }
+            if (!contains) {
+                return false;
+            }
+        }
+        return true;
+
+
+       /* for (ItemStack item : givenItems) {
             for (DAItem material : this.getMaterials()) {
                 boolean contains = DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes());
                 if (contains) {
@@ -46,7 +61,7 @@ public abstract class DARecipe {
                 }
             }
         }
-        return false;
+        return false;*/
     }
 
     public String getRecipeNamedID() {
