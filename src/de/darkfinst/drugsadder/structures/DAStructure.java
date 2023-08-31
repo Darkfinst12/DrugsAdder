@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder.structures;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 @Setter
@@ -13,5 +14,9 @@ public abstract class DAStructure {
 
     public boolean isBodyPart(Block block) {
         return this.body.blocks.contains(block);
+    }
+
+    public World getWorld() {
+        return this.body.getWorld();
     }
 }

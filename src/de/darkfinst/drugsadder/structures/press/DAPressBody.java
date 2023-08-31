@@ -23,6 +23,7 @@ public class DAPressBody extends DABody {
     private Block lever;
 
     public DAPressBody(DAPress press, Block sign) {
+        super(sign.getWorld());
         this.press = press;
         this.sign = sign;
     }
@@ -75,7 +76,7 @@ public class DAPressBody extends DABody {
         this.blocks.add(anvilBSign);
 
         Block blockBSignYa1 = world.getBlockAt(anvilBSign.getLocation().getBlockX(), anvilBSign.getLocation().getBlockY() + 1, anvilBSign.getLocation().getBlockZ());
-        isValid = Material.AIR.equals(blockBSignYa1.getType());
+        isValid = Material.AIR.equals(blockBSignYa1.getType()) || Material.PISTON_HEAD.equals(blockBSignYa1.getType());
         if (!isValid) {
             throw new ValidateStructureException("BlockBehindSign +1y is not valid!");
         }

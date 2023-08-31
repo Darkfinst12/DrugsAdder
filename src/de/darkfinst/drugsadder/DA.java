@@ -10,12 +10,14 @@ public class DA extends JavaPlugin {
 
     public static DA getInstance;
     public static DALoader loader;
+    public static DALoader log;
 
 
     @Override
     public void onLoad() {
         getInstance = this;
         loader = new DALoader(this);
+        log = loader;
     }
 
     @Override

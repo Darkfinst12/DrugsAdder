@@ -23,9 +23,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
@@ -141,39 +142,31 @@ public class DAPress extends DAStructure {
 
     private void pressItems() {
         if (this.pressActiveTime == null) {
-            DA.loader.errorLog("PressActiveTime is null");
             return;
         }
         List<DAPressRecipe> recipes = DAConfig.daRecipeReader.getPressRecipes();
         ItemStack[] compressedItems = this.compressedItems.toArray(new ItemStack[0]);
         for (DAPressRecipe recipe : recipes) {
-            DA.loader.debugLog("Checking recipe: " + recipe.getNamedID());
             if ((recipe.containsMold(compressedItems))) {
-                DA.loader.debugLog("Recipe contains mold");
                 if (recipe.containsMaterials(compressedItems)) {
-                    DA.loader.debugLog("Recipe contains materials");
                     long duration = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - this.pressActiveTime);
                     if (duration < recipe.getDuration()) {
-                        DA.loader.debugLog("Press is not ready");
                         return;
                     }
                     if (!this.hasMaterials(recipe, compressedItems)) {
-                        DA.loader.debugLog("Press has wrong or not enough materials");
                         return;
                     }
                     PressItemEvent pressItemEvent = new PressItemEvent(this, recipe);
                     Bukkit.getPluginManager().callEvent(pressItemEvent);
                     if (pressItemEvent.isCancelled()) {
-                        DA.loader.debugLog("PressItemEvent is cancelled");
                         return;
                     }
                     if (!recipe.isReturnMold()) {
                         this.compressedItems.remove(recipe.getMold().getItemStack());
                     }
-                    //TODO: fix this
                     var fallback = 0;
                     while (this.hasMaterials(recipe, this.compressedItems.toArray(new ItemStack[0]))) {
-                        if (fallback >= 10) {
+                        if (fallback >= 100) {
                             break;
                         }
                         this.addResult(recipe);
@@ -190,42 +183,29 @@ public class DAPress extends DAStructure {
         for (DAItem material : recipe.getMaterials()) {
             for (ItemStack compressedItem : this.compressedItems) {
                 if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
-                    compressedItem.setAmount(compressedItem.getAmount() - material.getAmount());
-                    if (compressedItem.getAmount() <= 0) {
+                    int newAmount = compressedItem.getAmount() - material.getAmount();
+                    if (newAmount <= 0) {
                         this.compressedItems.remove(compressedItem);
+                    } else {
+                        compressedItem.setAmount(newAmount);
                     }
                     break;
                 }
             }
         }
-
-        /*for (ItemStack compressedItem : this.compressedItems) {
-            DAItem daItem = recipe.getMaterial(compressedItem);
-            if (daItem != null && !DAUtil.matchItems(recipe.getMold().getItemStack(), daItem.getItemStack(), recipe.getMold().getItemMatchTypes())) {
-                compressedItem.setAmount(compressedItem.getAmount() - daItem.getAmount());
-                if (compressedItem.getAmount() <= 0) {
-                    this.compressedItems.remove(compressedItem);
-                }
-            }
-        }*/
         this.compressedItems.add(recipe.getResult().getItemStack());
     }
 
     private boolean hasMaterials(DAPressRecipe recipe, ItemStack[] compressedItems) {
-        DA.loader.debugLog("Checking materials");
         for (DAItem material : recipe.getMaterials()) {
-            DA.loader.debugLog("Checking material: " + material.getName());
             boolean contains = false;
             for (ItemStack compressedItem : compressedItems) {
-                DA.loader.debugLog("Checking compressedItem: " + compressedItem.getType().name());
                 if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
-                    DA.loader.debugLog("Material found");
                     contains = true;
                     break;
                 }
             }
             if (!contains) {
-                DA.loader.debugLog("Material not found");
                 return false;
             }
         }

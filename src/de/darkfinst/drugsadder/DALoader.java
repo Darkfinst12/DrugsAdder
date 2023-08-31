@@ -1,5 +1,7 @@
 package de.darkfinst.drugsadder;
 
+import de.darkfinst.drugsadder.filedata.DAData;
+import de.darkfinst.drugsadder.filedata.DataSave;
 import de.darkfinst.drugsadder.filedata.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
@@ -11,6 +13,7 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,6 +22,7 @@ import org.bukkit.entity.Player;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Getter
 public class DALoader {
@@ -39,6 +43,7 @@ public class DALoader {
 
     public void init() {
         this.initConfig();
+        this.initData();
         this.initCommands();
         this.initListener();
     }
@@ -51,6 +56,14 @@ public class DALoader {
                 return;
             }
             DAConfig.readConfig(config);
+        } catch (Exception e) {
+            this.logException(e);
+        }
+    }
+
+    private void initData() {
+        try {
+            DAData.readData();
         } catch (Exception e) {
             this.logException(e);
         }
@@ -85,6 +98,14 @@ public class DALoader {
 
     public DAStructure getStructure(Block block) {
         return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block)).findAny().orElse(null);
+    }
+
+    public List<DAStructure> getStructures(World world) {
+        return this.structureList.stream().filter(daStructure -> daStructure.getWorld().equals(world)).toList();
+    }
+
+    public void unloadStructures(World world) {
+        this.structureList.removeIf(daStructure -> daStructure.getWorld().equals(world));
     }
 
     public void openStructure(Block block, Player player) {
@@ -142,6 +163,7 @@ public class DALoader {
 
 
     public void unload() {
+        DataSave.save(true);
     }
 
 }

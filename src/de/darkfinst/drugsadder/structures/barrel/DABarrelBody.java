@@ -19,6 +19,7 @@ public class DABarrelBody extends DABody {
     private final Block sign;
 
     public DABarrelBody(DABarrel barrel, Block sign) {
+        super(sign.getWorld());
         this.barrel = barrel;
         this.sign = sign;
     }

@@ -21,6 +21,7 @@ public class DATableBody extends DABody {
     private final Block sign;
 
     public DATableBody(DATable table, Block sign) {
+        super(sign.getWorld());
         this.table = table;
         this.sign = sign;
     }

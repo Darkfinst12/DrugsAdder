@@ -133,6 +133,7 @@ public class DARecipeReader {
         boolean returnMold = recipeConfig.getBoolean("returnMold", true);
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(pressRID, recipeConfig));
+        DA.loader.debugLog(materials.toString());
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", pressRID);
             return;

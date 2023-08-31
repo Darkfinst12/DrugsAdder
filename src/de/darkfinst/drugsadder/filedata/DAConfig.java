@@ -19,6 +19,8 @@ public class DAConfig {
 
     private static final DALoader loader = DA.loader;
 
+    public static boolean loadDataAsync;
+
     public static boolean returnBucket;
     public static boolean returnBottle;
 
@@ -121,6 +123,9 @@ public class DAConfig {
                 config = YamlConfiguration.loadConfiguration(file);
             }
         }
+
+        //Loads the Data
+        loadDataAsync = config.getBoolean("loadDataAsync", true);
 
         //Loads the return values
         returnBucket = config.getBoolean("returnBucket", true);

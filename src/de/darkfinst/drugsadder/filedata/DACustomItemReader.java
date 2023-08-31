@@ -73,6 +73,7 @@ public class DACustomItemReader {
         }
         itemStack.setItemMeta(itemMeta);
         DAItem item = new DAItem(itemStack, name, lore, cmd, namespacedID);
+        item.setAmount(itemStack.getAmount());
 
         this.registeredItems.put(namespacedID, item);
         if (DAConfig.logCustomItemLoadInfo) {
