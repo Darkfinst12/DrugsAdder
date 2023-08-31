@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.structures.barrel.DABarrelBody;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -26,7 +27,7 @@ public class DATable extends DAStructure implements InventoryHolder {
                 boolean isValid = daTableBody.isValidTable();
                 if (isValid) {
                     super.setBody(daTableBody);
-                    DA.loader.registerDAStructure(this);
+                    DA.loader.registerDAStructure(this, false);
                     DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } catch (ValidateStructureException ignored) {
@@ -34,6 +35,15 @@ public class DATable extends DAStructure implements InventoryHolder {
             }
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perm_Table_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+        }
+    }
+
+    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+        DATableBody tableBody = new DATableBody(this, sign);
+        boolean isValid = tableBody.isValidTable();
+        if (isValid) {
+            super.setBody(tableBody);
+            DA.loader.registerDAStructure(this, isAsync);
         }
     }
 

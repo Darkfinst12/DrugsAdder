@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.structures.DAStructure;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class DataSave extends BukkitRunnable {
 
@@ -68,6 +70,10 @@ public class DataSave extends BukkitRunnable {
             FileConfiguration data = new YamlConfiguration();
             FileConfiguration worldData = new YamlConfiguration();
 
+            //Start Save of Structures
+            DAStructure.save(worldData.createSection("Structures"), oldWorldData.getConfigurationSection("Structures"));
+            //End Save Of Structures
+
             saveWorldNames(worldData, oldWorldData.getConfigurationSection("Worlds"));
 
             data.set("Version", dataVersion);
@@ -86,7 +92,7 @@ public class DataSave extends BukkitRunnable {
                 unloadingWorlds.clear();
             }
 
-            DA.log.debugLog("saving: " + ((System.nanoTime() - saveTime) / 1000000.0) + "ms");
+            DA.log.debugLog("Saving: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - saveTime) + "ms");
 
             if (DA.getInstance.isEnabled()) {
                 DA.getInstance.getServer().getScheduler().runTaskAsynchronously(DA.getInstance, new WriteData(data, worldData));

@@ -1,5 +1,6 @@
 package de.darkfinst.drugsadder;
 
+import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
 import de.darkfinst.drugsadder.filedata.DAData;
 import de.darkfinst.drugsadder.filedata.DataSave;
 import de.darkfinst.drugsadder.filedata.LanguageReader;
@@ -23,6 +24,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class DALoader {
@@ -46,6 +49,7 @@ public class DALoader {
         this.initData();
         this.initCommands();
         this.initListener();
+        this.initRunnable();
     }
 
     private void initConfig() {
@@ -58,6 +62,7 @@ public class DALoader {
             DAConfig.readConfig(config);
         } catch (Exception e) {
             this.logException(e);
+            this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
         }
     }
 
@@ -84,8 +89,17 @@ public class DALoader {
 
     }
 
-    public void registerDAStructure(DAStructure structure) {
-        this.structureList.add(structure);
+    private void initRunnable() {
+        this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
+    }
+
+    public void registerDAStructure(DAStructure structure, boolean isAsync) {
+        RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
+        this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
+        if (!registerStructureEvent.isCancelled()) {
+            this.structureList.add(structure);
+            DA.loader.debugLog("Registered Structure: " + structure.getClass().getSimpleName(), isAsync);
+        }
     }
 
     public void unregisterDAStructure(DAStructure structure) {
@@ -126,7 +140,11 @@ public class DALoader {
     }
 
     public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type Type) {
-        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(false, sender, msg, Type);
+        this.msg(sender, msg, Type, false);
+    }
+
+    public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type Type, boolean isAsync) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, Type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
             sender.sendMessage(ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE + sendMessageEvent.getMessage());
@@ -134,23 +152,38 @@ public class DALoader {
     }
 
     public void log(String msg) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG);
+        this.log(msg, false);
+    }
+
+    public void log(String msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG, isAsync);
     }
 
     public void debugLog(String msg) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG);
+        this.debugLog(msg, false);
+    }
+
+    public void debugLog(String msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
     }
 
     public void errorLog(String msg) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR);
+        this.errorLog(msg, false);
+    }
+
+    public void errorLog(String msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR, isAsync);
     }
 
     public void logException(Exception e) {
+        this.logException(e, false);
+    }
+
+    public void logException(Exception e, boolean isAsync) {
         String s = e.getMessage() == null ? "null" : e.getMessage();
         StringBuilder log = new StringBuilder(s);
         Arrays.stream(e.getStackTrace()).toList().forEach(stackTraceElement -> log.append("\n       ").append(stackTraceElement.toString()));
-        this.errorLog(log.toString());
-        this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+        this.errorLog(log.toString(), isAsync);
     }
 
     public void reloadConfig() {
@@ -164,6 +197,16 @@ public class DALoader {
 
     public void unload() {
         DataSave.save(true);
+    }
+
+    public class DrugsAdderRunnable implements Runnable {
+        @Override
+        public void run() {
+            long t1 = System.nanoTime();
+            DataSave.autoSave();
+            long t2 = System.nanoTime();
+            debugLog("DrugsAdderRunnable: t1: " + TimeUnit.NANOSECONDS.toMillis(t2 - t1) + " ms");
+        }
     }
 
 }

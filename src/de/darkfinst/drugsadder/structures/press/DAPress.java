@@ -11,7 +11,9 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAPressRecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.barrel.DABarrelBody;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -32,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DAPress extends DAStructure {
 
+    @Getter
     private final ConcurrentLinkedDeque<ItemStack> compressedItems = new ConcurrentLinkedDeque<>();
     private Long pressActiveTime = null;
 
@@ -42,7 +45,7 @@ public class DAPress extends DAStructure {
                 boolean isValid = pressBody.isValidPress();
                 if (isValid) {
                     super.setBody(pressBody);
-                    DA.loader.registerDAStructure(this);
+                    DA.loader.registerDAStructure(this, false);
                     DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } catch (ValidateStructureException ignored) {
@@ -50,6 +53,15 @@ public class DAPress extends DAStructure {
             }
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+        }
+    }
+
+    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+        DAPressBody pressBody = new DAPressBody(this, sign);
+        boolean isValid = pressBody.isValidPress();
+        if (isValid) {
+            super.setBody(pressBody);
+            DA.loader.registerDAStructure(this, isAsync);
         }
     }
 
@@ -138,6 +150,10 @@ public class DAPress extends DAStructure {
             });
         }
         return true;
+    }
+
+    public void addCompressedItem(ItemStack itemStack) {
+        this.compressedItems.add(itemStack);
     }
 
     private void pressItems() {

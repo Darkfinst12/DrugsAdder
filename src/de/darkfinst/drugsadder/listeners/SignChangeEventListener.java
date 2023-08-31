@@ -23,7 +23,7 @@ public class SignChangeEventListener implements Listener {
 
         if (hasBarrelLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
             DABarrel daBarrel = new DABarrel();
-           daBarrel.create(event.getBlock(), event.getPlayer());
+            daBarrel.create(event.getBlock(), event.getPlayer());
 
         } else if (hasPressLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
             DAPress daPress = new DAPress();

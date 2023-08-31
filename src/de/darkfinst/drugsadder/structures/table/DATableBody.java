@@ -31,7 +31,7 @@ public class DATableBody extends DABody {
         this.blocks.add(this.sign);
         World world = this.sign.getWorld();
 
-        WallSign wallSign = (WallSign) this.sign.getState().getBlockData();
+        WallSign wallSign = (WallSign) this.sign.getBlockData();
         BlockFace face = wallSign.getFacing();
         BlockFace direction = this.getDirection(face);
         int[] xz = this.getXZValues(direction);

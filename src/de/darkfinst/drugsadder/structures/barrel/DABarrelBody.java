@@ -36,7 +36,7 @@ public class DABarrelBody extends DABody {
         }
         this.blocks.add(blockOSign);
 
-        WallSign wallSign = (WallSign) this.sign.getState().getBlockData();
+        WallSign wallSign = (WallSign) this.sign.getBlockData();
         Block barrelBSign = this.sign.getRelative(wallSign.getFacing().getOppositeFace());
         isValid = Material.BARREL.equals(barrelBSign.getType());
         if (!isValid) {

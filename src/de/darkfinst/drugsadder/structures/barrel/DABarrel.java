@@ -25,7 +25,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
                 boolean isValid = barrelBody.isValidBarrel();
                 if (isValid) {
                     super.setBody(barrelBody);
-                    DA.loader.registerDAStructure(this);
+                    DA.loader.registerDAStructure(this, false);
                     DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } catch (ValidateStructureException ignored) {
@@ -33,6 +33,15 @@ public class DABarrel extends DAStructure implements InventoryHolder {
             }
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+        }
+    }
+
+    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+        DABarrelBody barrelBody = new DABarrelBody(this, sign);
+        boolean isValid = barrelBody.isValidBarrel();
+        if (isValid) {
+            super.setBody(barrelBody);
+            DA.loader.registerDAStructure(this, isAsync);
         }
     }
 

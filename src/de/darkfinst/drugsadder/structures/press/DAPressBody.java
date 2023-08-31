@@ -33,7 +33,7 @@ public class DAPressBody extends DABody {
         this.blocks.add(this.sign);
         World world = this.sign.getWorld();
 
-        WallSign wallSign = (WallSign) this.sign.getState().getBlockData();
+        WallSign wallSign = (WallSign) this.sign.getBlockData();
         BlockFace face = wallSign.getFacing();
 
         this.checkBlocksOverSign(world, face);
@@ -84,7 +84,7 @@ public class DAPressBody extends DABody {
 
         Block blockBSignYa2 = world.getBlockAt(anvilBSign.getLocation().getBlockX(), anvilBSign.getLocation().getBlockY() + 2, anvilBSign.getLocation().getBlockZ());
         isValid = Material.PISTON.equals(blockBSignYa2.getType());
-        if (!(isValid && blockBSignYa2.getBlockData() instanceof Piston piston && !piston.isExtended() && piston.getFacing().equals(BlockFace.DOWN))) {
+        if (!(isValid && blockBSignYa2.getBlockData() instanceof Piston piston && piston.getFacing().equals(BlockFace.DOWN))) {
             throw new ValidateStructureException("BlockBehindSign +2y is not valid!");
         }
         this.piston = blockBSignYa2;

@@ -3,7 +3,9 @@ package de.darkfinst.drugsadder.utils;
 import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -150,6 +152,47 @@ public class DAUtil {
 
         in.close();
         out.close();
+    }
+
+    public static void createWorldSections(ConfigurationSection section) {
+        for (World world : Bukkit.getWorlds()) {
+            String worldName = world.getUID().toString();
+            section.createSection(worldName);
+        }
+    }
+
+    //Pars
+    public static int parseInt(String string) {
+        if (string == null) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
+    }
+
+    public static double parseDouble(String string) {
+        if (string == null) {
+            return 0;
+        }
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
+    }
+
+    public static float parseFloat(String string) {
+        if (string == null) {
+            return 0;
+        }
+        try {
+            return Float.parseFloat(string);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
     }
 
 }
