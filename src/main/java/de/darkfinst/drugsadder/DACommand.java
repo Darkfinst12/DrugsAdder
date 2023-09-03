@@ -34,15 +34,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
             } else if (args[0].equalsIgnoreCase("testProperties") && commandSender instanceof Player player) {
 
                 try {
-                    PlayerProfile playerProfile = player.getPlayerProfile();
-                    if (playerProfile instanceof org.bukkit.craftbukkit.v1_20_R1.profile.CraftPlayerProfile craftPlayerProfile) {
+                    if (player.getPlayerProfile() instanceof org.bukkit.craftbukkit.v1_20_R1.profile.CraftPlayerProfile craftPlayerProfile) {
                         DA.log.log(craftPlayerProfile.toString());
-                    } /*
-                    else if (playerProfile instanceof com.destroystokyo.paper.profile.CraftPlayerProfile craftPlayerProfile) {
+                    } else if (player.getPlayerProfile() instanceof com.destroystokyo.paper.profile.CraftPlayerProfile craftPlayerProfile) {
                         DA.log.log(craftPlayerProfile.toString());
-                    }
-                    */ else {
-                        DA.log.log("PlayerProfile is not CraftPlayerProfile it is " + playerProfile.getClass().getName());
+                    } else {
+                        DA.log.log("PlayerProfile is not CraftPlayerProfile it is " + player.getPlayerProfile().getClass().getName());
                     }
                 } catch (Exception e) {
                     DA.log.logException(e);

@@ -1,7 +1,8 @@
 plugins {
-    java
+    `java-library`
     `maven-publish`
-    id("io.github.patrick.remapper") version "1.4.0"
+    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("xyz.jpenilla.run-paper") version "2.1.0" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
 repositories {
@@ -39,6 +40,8 @@ repositories {
 }
 
 dependencies {
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
@@ -57,11 +60,33 @@ dependencies {
 }
 
 tasks {
-    remap {
-        version.set("1.20.1")
-        archiveName.set("${project.name}-${project.version}-remapped.jar")
-        archiveClassifier.set("remapped")
-        archiveDirectory.set(File(projectDir, "output"))
+    // Configure reobfJar to run when invoking the build task
+    assemble {
+        dependsOn(reobfJar)
+    }
+
+    compileJava {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+
+        // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
+        // See https://openjdk.java.net/jeps/247 for more information.
+        options.release.set(17)
+    }
+    javadoc {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+    }
+    processResources {
+        filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
+        val props = mapOf(
+                "name" to project.name,
+                "version" to project.version,
+                "description" to project.description,
+                "apiVersion" to "1.20"
+        )
+        inputs.properties(props)
+        filesMatching("plugin.yml") {
+            expand(props)
+        }
     }
 }
 
@@ -71,21 +96,6 @@ description = "DrugsAdder"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
-
-tasks.withType<JavaCompile>() {
-    options.encoding = "UTF-8"
-}
-
-tasks.withType<Javadoc>() {
-    options.encoding = "UTF-8"
+    // Configure the java toolchain. This allows gradle to auto-provision JDK 17 on systems that only have JDK 8 installed for example.
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
