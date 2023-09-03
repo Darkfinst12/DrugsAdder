@@ -87,6 +87,10 @@
             <url>https://repo.md-5.net/content/groups/public/</url>
         </repository>
         <repository>
+            <id>destroystokyo-repo</id>
+            <url>https://repo.destroystokyo.com/repository/maven-public/</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -119,6 +123,15 @@
             <classifier>remapped-mojang</classifier>
             <scope>provided</scope>
         </dependency>
+
+        <!--Paperclip API -->
+        <dependency>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <!-- https://bstats.org/getting-started/include-metrics -->
             <groupId>org.bstats</groupId>
