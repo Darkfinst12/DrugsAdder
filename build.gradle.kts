@@ -1,5 +1,5 @@
 plugins {
-    `java-library`
+    java
     `maven-publish`
     id("io.github.patrick.remapper") version "1.4.0"
 }
@@ -39,9 +39,13 @@ repositories {
 }
 
 dependencies {
-    api("org.bstats:bstats-bukkit:3.0.2")
-    api("com.github.Slimefun:Slimefun4:RC-35")
-    api("org.jetbrains:annotations:24.0.0")
+    implementation("org.jetbrains:annotations:24.0.0")
+    implementation("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+
+    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("com.github.Slimefun:Slimefun4:RC-35")
+
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
@@ -67,8 +71,8 @@ description = "DrugsAdder"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 java {
-    withJavadocJar()
     withSourcesJar()
+    withJavadocJar()
 }
 
 
