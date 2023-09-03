@@ -6,6 +6,7 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
@@ -95,10 +96,18 @@ public class DADrugReader {
         DAAddiction daAddiction = this.loadAddictionSettings(drugConfig);
         drug.setAddiction(daAddiction);
 
+        if(daAddiction.isAddictionAble()){
+            drug.registerReductionTask();
+        }
+
         registeredDrugs.add(drug);
         if (DAConfig.logDrugLoadInfo) {
             this.logInfo("Load_Info_Drug_Loaded", drugID);
         }
+    }
+
+    public DADrug getDrug(ItemStack item) {
+        return this.registeredDrugs.stream().filter(drug -> DAUtil.matchItems(item, drug.getItemStack(), drug.getMatchTypes())).findFirst().orElse(null);
     }
 
     private DAEffect loadEffect(String effectString) {
@@ -253,6 +262,4 @@ public class DADrugReader {
             loader.log(languageReader.get(key, args));
         }
     }
-
-
 }

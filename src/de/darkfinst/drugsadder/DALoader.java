@@ -11,6 +11,7 @@ import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
+import lombok.AccessLevel;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -38,6 +39,7 @@ public class DALoader {
     public String language;
 
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
+    private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
 
 
     public DALoader(DA plugin) {
@@ -84,6 +86,7 @@ public class DALoader {
         new FurnaceSmeltEventListener();
         new FurnaceStartSmeltEventListener();
         new PlayerInteractEventListener();
+        new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
         new SignChangeEventListener();
 
@@ -197,6 +200,18 @@ public class DALoader {
 
     public void unload() {
         DataSave.save(true);
+    }
+
+    public DAPlayer getDaPlayer(Player player) {
+        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getPlayer().equals(player)).findAny().orElse(null);
+    }
+
+    public void removeDaPlayer(DAPlayer daPlayer) {
+        this.daPlayerList.remove(daPlayer);
+    }
+
+    public void addDaPlayer(DAPlayer daPlayer) {
+        this.daPlayerList.add(daPlayer);
     }
 
     public class DrugsAdderRunnable implements Runnable {
