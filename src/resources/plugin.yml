@@ -1,0 +1,102 @@
+main: de.darkfinst.drugsadder.DA
+name: DrugsAdder
+version: 0.0.1
+api-version: 1.20
+softdepend: [ WorldGuard ]
+author: Jarod Békési
+
+commands:
+  drugsadder:
+    description: Mostly admin commands to create/modify Drugs and addictions
+    aliases: [ da ]
+
+permissions:
+  # -- Groups --
+  # Admin
+  drugsadder.admin:
+    description: Gives access to every Command
+    default: op
+    children:
+      drugsadder.user: true
+      drugsadder.cmd: true
+
+  #User
+  drugsadder.user:
+    description: Access to everything needed to process Drugs
+    default: true
+    children:
+      drugsadder.barrel: true
+      drugsadder.press: true
+      drugsadder.cauldron: true
+      drugsadder.table: true
+
+  #*
+  drugsadder.*:
+    description: Gives Access to every Permission
+    children:
+      drugsadder.admin: true
+      drugsadder.cmd: true
+      drugsadder.user: true
+
+
+  # -- Barrel --
+  drugsadder.barrel:
+    description: Allow to create and access Barrels
+    children:
+      drugsadder.barrel.create: true
+      drugsadder.barrel.open: true
+  drugsadder.barrel.create:
+    description: Allow to create a Barrel
+  drugsadder.barrel.open:
+    description: Allow to open a Barrel
+
+  # -- Press --
+  drugsadder.press:
+    description: Allow to create and use the Press to process Drugs
+    children:
+      drugsadder.press.create: true
+      drugsadder.press.use: true
+  drugsadder.press.create:
+    description: Allow to create a Press
+  drugsadder.press.use:
+    description: Allow to use a Press
+
+  # -- Table --
+  drugsadder.table:
+    description: Allow to create and access the Table to process Drugs
+    children:
+      drugsadder.table.create: true
+      drugsadder.table.open: true
+  drugsadder.table.create:
+    description: Allow to create a Table
+  drugsadder.table.open:
+    description: Allow to open a Table
+
+  # -- Cauldron --
+  drugsadder.cauldron:
+    description: Allow to view the current Cooking time, to add Ingredients and fill a Bottle form a Cauldron
+    children:
+      drugsadder.cauldron.time: true
+      drugsadder.cauldron.insert: true
+      drugsadder.cauldron.fill: true
+  drugsadder.cauldron.time:
+    description: View the current Cooking time of a cauldron with a watch
+  drugsadder.cauldron.insert:
+    description: Add Ingredients to the Cauldron
+  drugsadder.cauldron.fill:
+    description: Fill a Bottle form a Cauldron wit a DrugsAdder brew
+
+  # -- Commands --
+  drugsadder.cmd:
+    description: Gives access to all DrugsAdder Commands
+    children:
+      drugsadder.cmd.reload: true
+      drugsadder.cmd.help: true
+  drugsadder.cmd.reload:
+    description: Reload config
+  drugsadder.cmd.help:
+    description: Get help for the Plugin and its Commands
+  drugsadder.cmd.info:
+    description: Information about your own addictions
+  drugsadder.cmd.infoOther:
+    description: Information about the addictions of another Player
