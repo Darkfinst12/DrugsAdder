@@ -8,11 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.profile.PlayerProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
@@ -30,6 +31,24 @@ public class DACommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("reload")) {
                 loader.reloadConfig();
                 commandSender.sendMessage("Reloaded config");
+            } else if (args[0].equalsIgnoreCase("testProperties") && commandSender instanceof Player player) {
+
+                try {
+                    PlayerProfile playerProfile = player.getPlayerProfile();
+                    if (playerProfile instanceof org.bukkit.craftbukkit.v1_20_R1.profile.CraftPlayerProfile craftPlayerProfile) {
+                        DA.log.log(craftPlayerProfile.toString());
+                    } /*
+                    else if (playerProfile instanceof com.destroystokyo.paper.profile.CraftPlayerProfile craftPlayerProfile) {
+                        DA.log.log(craftPlayerProfile.toString());
+                    }
+                    */ else {
+                        DA.log.log("PlayerProfile is not CraftPlayerProfile it is " + playerProfile.getClass().getName());
+                    }
+                } catch (Exception e) {
+                    DA.log.logException(e);
+                } finally {
+                    player.sendMessage("Check console");
+                }
             }
         } else if (args.length == 2 && commandSender instanceof Player player) {
             if (args[0].equalsIgnoreCase("getCustomItem")) {
@@ -110,16 +129,16 @@ public class DACommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command
             command, @NotNull String s, @NotNull String[] strings) {
         if (strings.length == 1) {
-            return Arrays.asList("reload", "getCustomItem", "list");
+            return Stream.of("reload", "getCustomItem", "list", "testProperties").filter(s1 -> s1.contains(strings[0])).toList();
         }
         if (strings.length == 2 && strings[0].equalsIgnoreCase("getCustomItem")) {
-            return DAConfig.customItemReader.getCustomItemNames();
+            return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.contains(strings[1])).toList();
         }
         if (strings.length == 2 && strings[0].equalsIgnoreCase("list")) {
-            return Arrays.asList("recipes");
+            return Stream.of("recipes").filter(s1 -> s1.contains(strings[1])).toList();
         }
         if (strings.length == 3 && strings[0].equalsIgnoreCase("list") && strings[1].equalsIgnoreCase("recipes")) {
-            return Arrays.asList("all", "barrel", "crafting", "furnace", "press", "table");
+            return Stream.of("all", "barrel", "crafting", "furnace", "press", "table").filter(s1 -> s1.contains(strings[2])).toList();
         }
         return null;
     }
