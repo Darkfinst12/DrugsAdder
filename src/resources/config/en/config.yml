@@ -179,13 +179,13 @@ drugs:
           - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
         30:
           - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
-        #Which effects you get when you are in deprivation
-        deprivation:
-          15:
-            - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
-          30:
-            - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
-            - 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+      #Which effects you get when you are in deprivation
+      deprivation:
+        15:
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+        30:
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          - 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
     effects:
       - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
     serverCommands:

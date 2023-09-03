@@ -117,7 +117,26 @@ public class DACommand implements CommandExecutor, TabCompleter {
                     } else if (args[2].equalsIgnoreCase("table")) {
 
                     }
+                } else if (args[1].equalsIgnoreCase("drugs")) {
+                    DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);
+                    if (daDrug != null) {
+                        DA.loader.msg(player, daDrug.toString());
+                    } else {
+                        player.sendMessage("Drug not found");
+                    }
                 }
+            } else if (args[0].equalsIgnoreCase("setAddiction")) {
+                Player target = Bukkit.getPlayer(args[1]);
+                if (target == null) {
+                    commandSender.sendMessage("Player not found");
+                    return true;
+                }
+                DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);
+                if (daDrug == null) {
+                    commandSender.sendMessage("Drug not found");
+                    return true;
+                }
+                daDrug.consume(target);
             }
         }
         return true;
@@ -129,16 +148,30 @@ public class DACommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command
             command, @NotNull String s, @NotNull String[] strings) {
         if (strings.length == 1) {
-            return Stream.of("reload", "getCustomItem", "list", "testProperties").filter(s1 -> s1.contains(strings[0])).toList();
+            return Stream.of("reload", "getCustomItem", "list", "testProperties", "setAddiction").filter(s1 -> s1.contains(strings[0])).toList();
         }
         if (strings.length == 2 && strings[0].equalsIgnoreCase("getCustomItem")) {
             return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.contains(strings[1])).toList();
         }
         if (strings.length == 2 && strings[0].equalsIgnoreCase("list")) {
-            return Stream.of("recipes").filter(s1 -> s1.contains(strings[1])).toList();
+            return Stream.of("recipes", "drugs").filter(s1 -> s1.contains(strings[1])).toList();
+        }
+        if (strings.length == 2 && strings[0].equalsIgnoreCase("setAddiction")) {
+            if (!strings[1].isEmpty()) {
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(s1 -> s1.contains(strings[1])).toList();
+            } else {
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+            }
         }
         if (strings.length == 3 && strings[0].equalsIgnoreCase("list") && strings[1].equalsIgnoreCase("recipes")) {
             return Stream.of("all", "barrel", "crafting", "furnace", "press", "table").filter(s1 -> s1.contains(strings[2])).toList();
+        }
+        if (strings.length == 3 && strings[0].equalsIgnoreCase("setAddiction")) {
+            var drugs = DAConfig.drugReader.getRegisteredDrugs().stream().filter(drug -> drug.getID().contains(strings[2])).toList();
+            return drugs.stream().map(DADrug::getID).toList();
+        }
+        if (strings.length == 3 && strings[0].equalsIgnoreCase("list") && strings[1].equalsIgnoreCase("drugs")) {
+            return DAConfig.drugReader.getRegisteredDrugs().stream().map(DADrug::getID).toList();
         }
         return null;
     }

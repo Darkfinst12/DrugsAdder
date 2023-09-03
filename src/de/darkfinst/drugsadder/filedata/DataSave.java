@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.DAPlayer;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -73,6 +74,15 @@ public class DataSave extends BukkitRunnable {
             //Start Save of Structures
             DAStructure.save(worldData.createSection("Structures"), oldWorldData.getConfigurationSection("Structures"));
             //End Save Of Structures
+
+            //Start Save of Players
+            if (!DA.loader.getDaPlayerList().isEmpty()) {
+                DA.log.log("Saving " + DA.loader.getDaPlayerList().size() + " Players");
+                DAPlayer.save(data.createSection("Players"));
+            } else {
+                DA.log.log("No Players to save");
+            }
+            //End Save of Players
 
             saveWorldNames(worldData, oldWorldData.getConfigurationSection("Worlds"));
 

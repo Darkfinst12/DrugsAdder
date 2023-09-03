@@ -203,7 +203,7 @@ public class DALoader {
     }
 
     public DAPlayer getDaPlayer(Player player) {
-        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getPlayer().equals(player)).findAny().orElse(null);
+        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
     }
 
     public void removeDaPlayer(DAPlayer daPlayer) {

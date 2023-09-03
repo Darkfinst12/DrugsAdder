@@ -38,4 +38,18 @@ public class DAAddiction {
             this.deprivation.putAll(daAddiction.getDeprivation());
         }
     }
+
+    @Override
+    public String toString() {
+        return "DAAddiction{" +
+                "addictionAble=" + addictionAble +
+                ", addictionPoints=" + addictionPoints +
+                ", overdose=" + overdose +
+                ", reductionAmount=" + reductionAmount +
+                ", reductionTime=" + reductionTime +
+                ", reductionOnlyOnline=" + reductionOnlyOnline +
+                ", deprivation=" + deprivation +
+                ", consummation=" + consummation +
+                '}';
+    }
 }

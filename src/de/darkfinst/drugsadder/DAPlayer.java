@@ -3,29 +3,38 @@ package de.darkfinst.drugsadder;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.api.events.drug.DrugAddAddictionEvent;
 import de.darkfinst.drugsadder.api.events.drug.DrugReduceAddictionEvent;
+import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class DAPlayer {
 
     @Getter
     @NotNull
-    private final Player player;
+    private final UUID uuid;
+
 
     private final HashMap<DADrug, Integer> addicted = new HashMap<>();
 
 
-    public DAPlayer(@NotNull Player player) {
-        this.player = player;
+    public DAPlayer(@NotNull UUID uuid) {
+        this.uuid = uuid;
     }
 
     public void consumeDrug(DADrug daDrug) {
+        Player player = Bukkit.getPlayer(this.uuid);
+        if (player == null) {
+            DA.log.errorLog("Consuming drug for offline player!");
+            return;
+        }
         if (daDrug.isAddictionAble()) {
             int addictionPointsOld = this.addicted.getOrDefault(daDrug, 0);
             int addictionPoints = addictionPointsOld + daDrug.getAddictionPoints();
@@ -40,18 +49,18 @@ public class DAPlayer {
             if (!daDrug.getConsummation().isEmpty()) {
                 int[] keys = daDrug.getConsummation().keySet().stream().mapToInt(i -> i).toArray();
                 int closest = DAUtil.findClosest(keys, addictionPoints);
-                daDrug.getConsummation().get(closest).forEach(daEffect -> daEffect.applyEffect(this.player));
+                daDrug.getConsummation().get(closest).forEach(daEffect -> daEffect.applyEffect(player));
             }
         } else {
-            daDrug.getDaEffects().forEach(daEffect -> daEffect.applyEffect(this.player));
-            daDrug.getServerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(DA.getInstance.getServer().getConsoleSender(), commandLine.replace("%player%", this.player.getName())));
-            daDrug.getPlayerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(this.player, commandLine));
+            daDrug.getDaEffects().forEach(daEffect -> daEffect.applyEffect(player));
+            daDrug.getServerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(DA.getInstance.getServer().getConsoleSender(), commandLine.replace("%player%", player.getName())));
+            daDrug.getPlayerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(player, commandLine));
         }
         if (daDrug.getConsumeMessage() != null) {
-            DA.loader.msg(this.player, ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeMessage()), DrugsAdderSendMessageEvent.Type.PLAYER);
+            DA.loader.msg(player, ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeMessage()), DrugsAdderSendMessageEvent.Type.PLAYER);
         }
         if (daDrug.getConsumeTitle() != null) {
-            this.player.sendTitle(ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeTitle()), "", 10, 70, 20);
+            player.sendTitle(ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeTitle()), "", 10, 70, 20);
         }
     }
 
@@ -90,13 +99,14 @@ public class DAPlayer {
                 this.addicted.put(daDrug, addictionPoints);
             }
 
-            if (!daDrug.getDeprivation().isEmpty()) {
+            if (!daDrug.getDeprivation().isEmpty() && this.isOnline()) {
+                Player player = Bukkit.getPlayer(this.uuid);
                 int[] keys = daDrug.getDeprivation().keySet().stream().mapToInt(i -> i).toArray();
                 int closest = DAUtil.findClosest(keys, addictionPoints);
                 if (isAsync) {
-                    Bukkit.getScheduler().runTask(DA.getInstance, () -> daDrug.getDeprivation().get(closest).forEach(daEffect -> daEffect.applyEffect(this.player)));
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> daDrug.getDeprivation().get(closest).forEach(daEffect -> daEffect.applyEffect(player)));
                 } else {
-                    daDrug.getDeprivation().get(closest).forEach(daEffect -> daEffect.applyEffect(this.player));
+                    daDrug.getDeprivation().get(closest).forEach(daEffect -> daEffect.applyEffect(player));
                 }
             }
         }
@@ -109,4 +119,24 @@ public class DAPlayer {
         }
     }
 
+    public boolean isOnline() {
+        return Bukkit.getOfflinePlayer(this.uuid).isOnline();
+    }
+
+    public void addDrug(String drugID, int addictionPoints) {
+        DADrug daDrug = DAConfig.drugReader.getDrug(drugID);
+        if (daDrug == null) {
+            DA.log.errorLog("Drug with ID " + drugID + " not found!");
+            return;
+        }
+        this.addicted.put(daDrug, addictionPoints);
+    }
+
+    public static void save(ConfigurationSection players) {
+        DA.loader.getDaPlayerList().forEach(daPlayer -> {
+            DA.log.log("Saving player " + daPlayer.getUuid());
+            ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
+            daPlayer.addicted.forEach((daDrug, integer) -> player.set(daDrug.getID(), (daDrug.getID() + "/" + integer)));
+        });
+    }
 }

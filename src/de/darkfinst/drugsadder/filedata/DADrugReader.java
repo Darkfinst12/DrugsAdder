@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import org.stringtemplate.v4.ST;
 
 import java.util.*;
 
@@ -96,7 +97,7 @@ public class DADrugReader {
         DAAddiction daAddiction = this.loadAddictionSettings(drugConfig);
         drug.setAddiction(daAddiction);
 
-        if(daAddiction.isAddictionAble()){
+        if (daAddiction.isAddictionAble()) {
             drug.registerReductionTask();
         }
 
@@ -108,6 +109,10 @@ public class DADrugReader {
 
     public DADrug getDrug(ItemStack item) {
         return this.registeredDrugs.stream().filter(drug -> DAUtil.matchItems(item, drug.getItemStack(), drug.getMatchTypes())).findFirst().orElse(null);
+    }
+
+    public DADrug getDrug(String id) {
+        return this.registeredDrugs.stream().filter(drug -> drug.getID().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
 
     private DAEffect loadEffect(String effectString) {
@@ -162,7 +167,7 @@ public class DADrugReader {
         if (addictionConfig == null) {
             this.logError("Load_Error_Drug_Addiction", drugConfig.getName());
         } else {
-            boolean isAddictionAble = addictionConfig.getBoolean("isAddictionAble", false);
+            boolean isAddictionAble = addictionConfig.getBoolean("addictionAble", false);
             boolean reductionOnlyOnline = addictionConfig.getBoolean("reductionOnlyOnline", false);
             int addictionPoints = addictionConfig.getInt("addictionPoints", -1);
             int overdose = addictionConfig.getInt("overdose", -1);

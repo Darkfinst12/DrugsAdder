@@ -1,21 +1,26 @@
 package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.DAPlayer;
 import de.darkfinst.drugsadder.api.events.DrugsAdderLoadDataEvent;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.stringtemplate.v4.ST;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DAData {
@@ -53,6 +58,28 @@ public class DAData {
                 lwDataTask(worlds, false);
             }
 
+            // loading Players
+            ConfigurationSection section = data.getConfigurationSection("Players");
+            if (section != null) {
+                for (String uuidString : section.getKeys(false)) {
+                    ConfigurationSection playerSection = section.getConfigurationSection(uuidString);
+                    if (playerSection == null) {
+                        DA.log.errorLog("Error while loading Player: " + uuidString);
+                        continue;
+                    }
+                    UUID uuid = UUID.fromString(uuidString);
+                    DAPlayer daPlayer = new DAPlayer(uuid);
+                    for (String drug : playerSection.getStringList("addictions")) {
+                        String[] split = drug.split("/");
+                        if (split.length == 2) {
+                            daPlayer.addDrug(split[0], Integer.parseInt(split[1]));
+                        } else {
+                            DA.log.errorLog("Error while loading Player: " + uuidString + " Drug: " + drug);
+                        }
+                    }
+                    DA.loader.addDaPlayer(daPlayer);
+                }
+            }
 
         } else {
             DA.loader.log("No data.yml found. Creating new one.");
