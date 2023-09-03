@@ -21,7 +21,7 @@
         <resources>
             <!-- Static resources -->
             <resource>
-                <directory>../src/resources</directory>
+                <directory>../src/java/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.*</include>
