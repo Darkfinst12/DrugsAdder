@@ -26,12 +26,16 @@ public class DAFurnaceRecipe extends DARecipe {
 
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
+        //TODO: FIX THIS - The itemMatchTypes are not used
         RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(Arrays.stream(this.getMaterials()).findFirst().get().getItemStack());
         Recipe recipe;
         switch (getRecipeType()) {
-            case FURNACE -> recipe = new FurnaceRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
-            case SMOKING -> recipe = new SmokingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
-            case BLASTING -> recipe = new BlastingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
+            case FURNACE ->
+                    recipe = new FurnaceRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
+            case SMOKING ->
+                    recipe = new SmokingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
+            case BLASTING ->
+                    recipe = new BlastingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
             default -> {
                 return false;
             }

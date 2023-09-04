@@ -32,7 +32,7 @@ public class DAEffect {
      */
     private final float probability;
 
-    //Only for Minecraft Potion Effects
+    //Only for Minecraft Potion Effects - Start
     /**
      * The name of the effect for possible names see {@link PotionEffectType}
      */
@@ -58,13 +58,15 @@ public class DAEffect {
      */
     @Nullable
     private final Boolean icon;
+    //Only for Minecraft Potion Effects - End
 
-    //Only for Screen Effects
+    //Only for Screen Effects - Start
     /**
      * The name of the screen effect
      */
     @Nullable
     private final String screenEffect;
+    //Only for Screen Effects - End
 
     @Getter(AccessLevel.NONE)
     private final SecureRandom secureRandom;

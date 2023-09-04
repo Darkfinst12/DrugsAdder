@@ -20,6 +20,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -85,6 +86,7 @@ public class DALoader {
         new FurnaceBurnEventListener();
         new FurnaceSmeltEventListener();
         new FurnaceStartSmeltEventListener();
+        new InventoryClickEventListener();
         new PlayerInteractEventListener();
         new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
@@ -115,6 +117,17 @@ public class DALoader {
 
     public DAStructure getStructure(Block block) {
         return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block)).findAny().orElse(null);
+    }
+
+    public DAStructure getStructure(Inventory inventory) {
+        return this.structureList.stream().filter(daStructure -> {
+            if (daStructure instanceof DABarrel daBarrel) {
+                return daBarrel.getInventory().equals(inventory);
+            } else if (daStructure instanceof DATable daTable) {
+                return daTable.getInventory().equals(inventory);
+            }
+            return false;
+        }).findAny().orElse(null);
     }
 
     public List<DAStructure> getStructures(World world) {

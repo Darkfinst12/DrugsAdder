@@ -20,9 +20,10 @@ public class DAConfig {
     private static final DALoader loader = DA.loader;
 
     public static boolean loadDataAsync;
-
     public static boolean returnBucket;
     public static boolean returnBottle;
+    public static String cancelRecipeItem;
+
 
     public static DACustomItemReader customItemReader;
     public static boolean logCustomItemLoadInfo;
@@ -123,6 +124,9 @@ public class DAConfig {
                 config = YamlConfiguration.loadConfiguration(file);
             }
         }
+
+        //Loads the CancelRecipeItem
+        cancelRecipeItem = config.getString("cancelRecipeItem", "drugsadder:cancel_recipe_item");
 
         //Loads the Data
         loadDataAsync = config.getBoolean("loadDataAsync", true);

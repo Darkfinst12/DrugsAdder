@@ -41,6 +41,11 @@ public class DAItem {
         this.namespacedID = namespacedID;
     }
 
+    public DAItem(ItemStack itemStack){
+        this.itemStack = itemStack;
+        this.namespacedID = itemStack.getType().name();
+    }
+
     @Override
     public String toString() {
         return "DAItem{" +

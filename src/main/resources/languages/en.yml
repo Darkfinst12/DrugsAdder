@@ -48,6 +48,7 @@ Load_Error_Recipes_RecipeNotRegistered: "The recipe: &v1 could not be registered
 Load_Error_Recipes_NoCookingTime: "The recipe: &v1 has no cooking time! - Please check the config.yml!"
 Load_Error_Recipes_MatchTypeWrongComposition: "The Recipe: &v1 has a wrong composition for its MatchTypes! - Please check the config.yml!"
 Load_Error_Recipe_IDAlreadyAssigned: "The recipe: &v1 has already been configured! - Please check the config.yml!"
+Load_Error_Recipes_NoFuel: "The recipe: &v1 has not enough fuel! Given &v2 required &v3 - Please check the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"

@@ -51,17 +51,6 @@ public abstract class DARecipe {
             }
         }
         return true;
-
-
-       /* for (ItemStack item : givenItems) {
-            for (DAItem material : this.getMaterials()) {
-                boolean contains = DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes());
-                if (contains) {
-                    return true;
-                }
-            }
-        }
-        return false;*/
     }
 
     public String getRecipeNamedID() {
