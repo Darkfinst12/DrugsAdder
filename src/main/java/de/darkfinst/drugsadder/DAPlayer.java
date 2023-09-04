@@ -70,12 +70,10 @@ public class DAPlayer {
 
     public void clearAddictions() {
         this.addicted.clear();
-        this.checkToRemove();
     }
 
     public void clearAddiction(DADrug daDrug) {
         this.addicted.remove(daDrug);
-        this.checkToRemove();
     }
 
     public void reduceAddiction(DADrug daDrug, boolean isAsync) {
@@ -110,13 +108,10 @@ public class DAPlayer {
                 }
             }
         }
-        this.checkToRemove();
     }
 
     private void checkToRemove() {
-        if (this.addicted.isEmpty()) {
-            DA.loader.removeDaPlayer(this);
-        }
+
     }
 
     public boolean isOnline() {
@@ -133,10 +128,16 @@ public class DAPlayer {
     }
 
     public static void save(ConfigurationSection players) {
-        DA.loader.getDaPlayerList().forEach(daPlayer -> {
-            DA.log.log("Saving player " + daPlayer.getUuid());
-            ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
-            daPlayer.addicted.forEach((daDrug, integer) -> player.set(daDrug.getID(), (daDrug.getID() + "/" + integer)));
-        });
+        for (DAPlayer daPlayer : DA.loader.getDaPlayerList()) {
+            if (daPlayer.addicted.isEmpty()) {
+                if (players.contains(daPlayer.getUuid().toString())) {
+                    players.set(daPlayer.getUuid().toString(), null);
+                }
+            } else {
+                DA.log.log("Saving player " + daPlayer.getUuid());
+                ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
+                daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
+            }
+        }
     }
 }

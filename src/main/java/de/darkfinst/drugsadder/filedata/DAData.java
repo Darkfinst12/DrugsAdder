@@ -69,13 +69,9 @@ public class DAData {
                     }
                     UUID uuid = UUID.fromString(uuidString);
                     DAPlayer daPlayer = new DAPlayer(uuid);
-                    for (String drug : playerSection.getStringList("addictions")) {
-                        String[] split = drug.split("/");
-                        if (split.length == 2) {
-                            daPlayer.addDrug(split[0], Integer.parseInt(split[1]));
-                        } else {
-                            DA.log.errorLog("Error while loading Player: " + uuidString + " Drug: " + drug);
-                        }
+                    for (String drug : playerSection.getKeys(false)) {
+                        int addiction = playerSection.getInt(drug);
+                        daPlayer.addDrug(drug, addiction);
                     }
                     DA.loader.addDaPlayer(daPlayer);
                 }
