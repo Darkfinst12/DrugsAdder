@@ -214,6 +214,13 @@ public class DALoader {
         this.daPlayerList.add(daPlayer);
     }
 
+    public String getTranslation(String fallback, String key, String... args) {
+        if (this.languageReader == null) {
+            return fallback;
+        }
+        return this.languageReader.get(key, args);
+    }
+
     public class DrugsAdderRunnable implements Runnable {
         @Override
         public void run() {

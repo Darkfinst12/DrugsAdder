@@ -1,3 +1,17 @@
+# ---- Commands ----
+Command_Args_Reload: "reload"
+Command_Args_GetCustomItem: "getCustomItem"
+Command_Args_List: "list"
+Command_Args_SetAddiction: "setAddiction"
+Command_Args_Recipes: "recipes"
+Command_Args_Drugs: "drugs"
+Command_Args_All: "all"
+Command_Args_Barrel: "barrel"
+Command_Args_Crafting: "crafting"
+Command_Args_Furnace: "furnace"
+Command_Args_Press: "press"
+Command_Args_Table: "table"
+
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
 Load_Error_Drug_NotConfigSection: "The Drug: &v1 is not properly configured in the config.yml!"
@@ -37,7 +51,6 @@ Load_Error_Recipe_IDAlreadyAssigned: "The recipe: &v1 has already been configure
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
 
-
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
 Perms_Barrel_NoOpen: "You have no permission to open a barrel!"
@@ -45,7 +58,6 @@ Perm_Press_NoCreate: "You have no permission to create a press!"
 Perm_Press_NoUse: "You have no permission to use a press!"
 Perm_Table_NoCreate: "You have no permission to create a table!"
 Perms_Table_NoOpen: "You have no permission to open a table!"
-
 
 # ---- Player ----
 Player_Barrel_Created: "The barrel was created"

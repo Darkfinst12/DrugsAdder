@@ -6,8 +6,8 @@ import de.darkfinst.drugsadder.api.events.drug.DrugReduceAddictionEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -110,8 +110,8 @@ public class DAPlayer {
         }
     }
 
-    private void checkToRemove() {
-
+    public boolean isAddicted(DADrug daDrug) {
+        return this.addicted.containsKey(daDrug);
     }
 
     public boolean isOnline() {

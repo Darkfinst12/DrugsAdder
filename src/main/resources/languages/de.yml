@@ -1,3 +1,17 @@
+# ---- Commands ----
+Command_Args_Reload: "reload"
+Command_Args_GetCustomItem: "getCustomItem"
+Command_Args_List: "list"
+Command_Args_SetAddiction: "setAddiction"
+Command_Args_Recipes: "recipes"
+Command_Args_Drugs: "drugs"
+Command_Args_All: "all"
+Command_Args_Barrel: "barrel"
+Command_Args_Crafting: "crafting"
+Command_Args_Furnace: "furnace"
+Command_Args_Press: "press"
+Command_Args_Table: "table"
+
 # ---- Load ----
 Load_Error_NoDrugs: "Es wurden keine Drogen in der config.yml konfiguriert!"
 Load_Error_Drug_NotConfigSection: "Die Droge: &v1 ist nicht korrekt in der config.yml konfiguriert!"
@@ -22,8 +36,20 @@ Load_Info_Recipes: "&v1 rezepte geladen!"
 Load_Error_Recipes_MatchTypeNotFound: "Der MatchType: &v1 des Rezeptes: &v2 ist kein gültiger MatchType! - Bitte überprüfe die config.yml!"
 Load_Error_Recipes_ItemNotFound: "Das Item: &v1 des Rezeptes: &v2 ist kein gültiges Item! - Bitte überprüfe die config.yml!"
 Load_Error_Recipes_NoMaterials: "Das Rezept: &v1 hat keine Materialien! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_NoMaterial: "Das Rezept: &v1 hat kein Material: &v2! - Bitte überprüfe die config.yml!"
 Load_Info_RecipeLoaded: "Das Rezept: &v1 wurde erfolgreich geladen!"
 Load_Error_Recipes_NotConfigSection: "Das Rezept: &v1 ist nicht korrekt in der config.yml konfiguriert!"
+Load_Error_Recipes_TooManyMaterials: "Das Rezept: &v1 hat zu viele Materialien! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_NoShape: "Das Rezept: &v1 hat keine Form! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_WrongShape: "Das Rezept: &v1 hat eine falsche Form! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_ShapeKeyNotFound: "In dem Rezept: &v1 wurde der ShapeKey: &v2 nicht gefunden!"
+Load_Error_Recipes_RecipeNotRegistered: "Das Rezept: &v1 konnte nicht vom Server registriert werden!"
+Load_Error_Recipes_NoCookingTime: "Das Rezept: &v1 hat keine Kochzeit! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_MatchTypeWrongComposition: "Das Rezept: &v1 hat eine falsche Zusammensetzung für seine MatchTypes! - Bitte überprüfe die config.yml!"
+Load_Error_Recipe_IDAlreadyAssigned: "Das Rezept: &v1 wurde bereits konfiguriert! - Bitte überprüfe die config.yml!"
+
+# ---- Errors ----
+Error_Recipes_NotFound: "Das Rezept: &v1 wurde nicht gefunden! - Spieler: &v2 hat versucht das Rezept zu verwenden!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "Du hast keine Berechtigung, um ein Fass erstellen zu können!"
@@ -32,7 +58,6 @@ Perm_Press_NoCreate: "Du hast keine Berechtigung, um eine Presse erstellen zu k�
 Perm_Press_NoUse: "Du hast keine Berechtigung, um eine Presse benutzen zu können!"
 Perm_Table_NoCreate: "Du hast keine Berechtigung, um ein Labortisch erstellen zu können!"
 Perms_Table_NoOpen: "Du hast keine Berechtigung ,um ein Labortisch öffnen zu können!"
-
 
 # ---- Player ----
 Player_Barrel_Created: "Das Fass wurde erfolgreich erstellt"
