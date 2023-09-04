@@ -47,7 +47,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                     player.sendMessage("Custom item not found");
                 }
             }
-        } else if (args.length == 3 && commandSender instanceof Player player) {
+        } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg())) {
                 if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
                     if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
@@ -63,7 +63,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 stringBuilder.append(material.getNamespacedID());
                                 stringBuilder.append(", ");
                             }
-                            DA.loader.msg(player, stringBuilder.toString());
+                            DA.loader.msg(commandSender, stringBuilder.toString());
                         }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
 
@@ -95,7 +95,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 stringBuilder.append(" - BukkitRegistered: ");
                                 NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, craftingRecipe.getNamedID());
                                 stringBuilder.append(Bukkit.getRecipe(namespacedKey) != null);
-                                DA.loader.msg(player, stringBuilder.toString());
+                                DA.loader.msg(commandSender, stringBuilder.toString());
                             }
                         }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
@@ -108,9 +108,9 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 } else if (args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
                     DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);
                     if (daDrug != null) {
-                        DA.loader.msg(player, daDrug.toString());
+                        DA.loader.msg(commandSender, daDrug.toString());
                     } else {
-                        player.sendMessage("Drug not found");
+                        commandSender.sendMessage("Drug not found");
                     }
                 }
             } else if (args[0].equalsIgnoreCase(PossibleArgs.SET_ADDICTION.getArg())) {

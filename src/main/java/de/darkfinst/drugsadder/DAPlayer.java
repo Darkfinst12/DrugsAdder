@@ -50,17 +50,24 @@ public class DAPlayer {
                 int[] keys = daDrug.getConsummation().keySet().stream().mapToInt(i -> i).toArray();
                 int closest = DAUtil.findClosest(keys, addictionPoints);
                 daDrug.getConsummation().get(closest).forEach(daEffect -> daEffect.applyEffect(player));
+            } else {
+                DA.log.errorLog("Consummation of drug " + daDrug.getID() + " is empty!");
             }
         } else {
             daDrug.getDaEffects().forEach(daEffect -> daEffect.applyEffect(player));
-            daDrug.getServerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(DA.getInstance.getServer().getConsoleSender(), commandLine.replace("%player%", player.getName())));
-            daDrug.getPlayerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(player, commandLine));
         }
         if (daDrug.getConsumeMessage() != null) {
-            DA.loader.msg(player, ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeMessage()), DrugsAdderSendMessageEvent.Type.PLAYER);
+            DA.loader.msg(player, ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeMessage().replace("%drug%", daDrug.getID())), DrugsAdderSendMessageEvent.Type.PLAYER);
         }
         if (daDrug.getConsumeTitle() != null) {
-            player.sendTitle(ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeTitle()), "", 10, 70, 20);
+            player.sendTitle(ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeTitle().replace("%drug%", daDrug.getID())), "", 10, 70, 20);
+        }
+
+        for (String serverCommand : daDrug.getServerCommands()) {
+            DA.getInstance.getServer().dispatchCommand(DA.getInstance.getServer().getConsoleSender(), serverCommand.replace("%player%", player.getName()).replace("%drug%", daDrug.getID()));
+        }
+        for (String playerCommand : daDrug.getPlayerCommands()) {
+            DA.getInstance.getServer().dispatchCommand(player, playerCommand.replace("%player%", player.getName()).replace("%drug%", daDrug.getID()));
         }
     }
 

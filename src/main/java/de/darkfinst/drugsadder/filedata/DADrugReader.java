@@ -181,12 +181,12 @@ public class DADrugReader {
             daAddiction.setReductionTime(reductionTime);
 
             if (daAddiction.isAddictionAble()) {
-                ConfigurationSection effectConfig = addictionConfig.getConfigurationSection("effects");
-                Map<Integer, List<DAEffect>> effectMap = this.loadAddictionEffects(drugConfig, effectConfig);
-                if (effectMap.isEmpty()) {
+                ConfigurationSection effectConfig = addictionConfig.getConfigurationSection("consummation");
+                Map<Integer, List<DAEffect>> consummationMap = this.loadAddictionEffects(drugConfig, effectConfig);
+                if (consummationMap.isEmpty()) {
                     this.logError("Load_Error_Drug_Addiction_EffectsEmpty", drugConfig.getName());
                 } else {
-                    daAddiction.getConsummation().putAll(effectMap);
+                    daAddiction.getConsummation().putAll(consummationMap);
                 }
 
                 ConfigurationSection deprivationConfig = addictionConfig.getConfigurationSection("deprivation");

@@ -19,6 +19,7 @@ Load_Error_Drug_ItemStack: "Von der Droge: &v1 ist der ItemStack: &v2 kein gült
 Load_Error_Drug_MatchType: "Von der Droge: &v1 ist der MatchType: &v2 kein gültiger MatchType!"
 Load_Error_Drug_Effect: "Von der Droge: &v1 ist der Effect: &v2 kein gültiger Effect!"
 Load_Error_Drug_Addiction: "Die addictionSettings der Droge: &v1 ist nicht korrekt in der config.yml konfiguriert! - Die Droge wird ohne addictionSettings geladen!"
+Load_Error_Drug_Addiction_Effects: "Die ein paar Effekte der Droge: &v1 konnten nicht geladen werden"
 Load_Error_Drug_Addiction_EffectsEmpty: "Die addictionSettings der Droge: &v1 hat keine Effekte! - Du hast wahrscheinlich vergessen Effekte hinzuzufügen!"
 Load_Error_Drug_Addiction_DeprivationEmpty: "Die addictionSettings der Droge: &v1 hat keine Entzugs Effekte! - Du hast wahrscheinlich vergessen Entzugs Effekte hinzuzufügen!"
 Load_Error_Drug_Addiction_Effects_EffectEmpty: "Die addictionSettings der Droge: &v1 hat keine Effekte für die addictionPoints: &v2! - Du hast wahrscheinlich vergessen Effekte für diesen addictionPoints hinzuzufügen!"

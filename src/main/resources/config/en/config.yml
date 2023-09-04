@@ -174,7 +174,7 @@ drugs:
       #If the reduction should only be online
       reductionOnlyOnline: true
       #Which effects you get when you are addicted
-      effects:
+      consummation:
         15:
           - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
         30:

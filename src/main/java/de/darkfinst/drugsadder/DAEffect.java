@@ -95,11 +95,37 @@ public class DAEffect {
         //TODO: Find out how screen Effects work (minecraft shaders)
     }
 
+    @Override
+    public String toString() {
+        return "DAEffect{" +
+                "effectType=" + (DAEffectType.POTION.equals(this.effectType) ? this.getPotionEffectString() : this.getScreenEffectString()) +
+                ", minDuration=" + minDuration +
+                ", maxDuration=" + maxDuration +
+                ", probability=" + probability +
+                '}';
+    }
+
+    private String getPotionEffectString() {
+        return "PotionEffect{" +
+                "effectName='" + effectName +
+                ", minLevel=" + minLevel +
+                ", maxLevel=" + maxLevel +
+                ", particles=" + particles +
+                ", icon=" + icon +
+                '}';
+
+    }
+
+    private String getScreenEffectString() {
+        return "ScreenEffect{" +
+                "effectName='" + effectName +
+                '}';
+
+    }
+
     public enum DAEffectType {
         POTION,
         SCREEN
 
     }
-
-
 }
