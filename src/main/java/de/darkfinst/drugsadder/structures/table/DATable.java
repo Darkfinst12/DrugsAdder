@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -76,6 +77,7 @@ public class DATable extends DAStructure implements InventoryHolder {
 
     public void open(Player player) {
         if (player.hasPermission("drugsadder.table.open")) {
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
@@ -96,7 +98,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     private void callRecipeCheck(@Nullable HumanEntity who) {
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
-            if (this.isThisRecipe(recipe)) {
+            if (!recipe.inProcess.containsKey(this) && this.isThisRecipe(recipe)) {
                 this.startRecipe(who, recipe);
             }
         }
@@ -154,7 +156,6 @@ public class DATable extends DAStructure implements InventoryHolder {
         return isValid;
     }
 
-
     public void handleInventoryClick(InventoryClickEvent event) {
         switch (event.getAction()) {
             case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
@@ -183,23 +184,22 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
-    private void cancelRecipe(HumanEntity who) {
-        List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
-        for (DATableRecipe recipe : recipes) {
-            if (recipe.getInProcess().containsKey(this)) {
-                //TODO: only if not enough materials
-                recipe.cancelProcess(this, "InvEvent", false);
-                TableCancelRecipeEvent tableCancelRecipeEvent = new TableCancelRecipeEvent(who, this, recipe);
-                Bukkit.getPluginManager().callEvent(tableCancelRecipeEvent);
-            }
-        }
-    }
-
     public void handleInventoryDrag(InventoryDragEvent event) {
         for (Integer rawSlot : event.getRawSlots()) {
             if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot) {
                 event.setCancelled(true);
                 return;
+            }
+        }
+    }
+
+    private void cancelRecipe(HumanEntity who) {
+        List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
+        for (DATableRecipe recipe : recipes) {
+            if (recipe.getInProcess().containsKey(this) && !this.isThisRecipe(recipe)) {
+                recipe.cancelProcess(this, "InvEvent", false);
+                TableCancelRecipeEvent tableCancelRecipeEvent = new TableCancelRecipeEvent(who, this, recipe);
+                Bukkit.getPluginManager().callEvent(tableCancelRecipeEvent);
             }
         }
     }

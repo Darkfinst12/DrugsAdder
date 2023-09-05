@@ -85,6 +85,7 @@ public class DATableRecipe extends DARecipe {
         if (this.inProcess.containsKey(daTable)) {
             Bukkit.getScheduler().cancelTask(this.inProcess.get(daTable).getSecond());
             DA.log.log("Recipe " + this.getRecipeNamedID() + " was canceled because " + reason, isAsync);
+            this.updateView(daTable, 0, isAsync);
             this.inProcess.remove(daTable);
             DAItem result = DAConfig.customItemReader.getItemByNamespacedID(DAConfig.cancelRecipeItem);
             ItemStack resultItem = result != null ? result.getItemStack() : null;
