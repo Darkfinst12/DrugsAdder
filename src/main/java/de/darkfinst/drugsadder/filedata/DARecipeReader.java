@@ -85,10 +85,15 @@ public class DARecipeReader {
             this.logError("Load_Error_Recipes_NoMaterials", barrelRID);
             return;
         }
+        if (materials.size() > 3) {
+            this.logError("Load_Error_Recipes_TooManyMaterials", barrelRID);
+            return;
+        }
 
-        int duration = recipeConfig.getInt("duration", 10);
+        Double duration = recipeConfig.getDouble("duration", 10D); //InMinutes
+        Double processOverdueAcceptance = recipeConfig.getDouble("processOverdueAcceptance", 10 * 60); //inMinutes
 
-        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, duration, result, materials.values().toArray(new DAItem[0]));
+        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, duration.longValue(), processOverdueAcceptance.longValue(), result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(barrelRecipe);
 
@@ -518,5 +523,9 @@ public class DARecipeReader {
 
     public List<DATableRecipe> getTableRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DATableRecipe).map(daRecipe -> (DATableRecipe) daRecipe).toList();
+    }
+
+    public List<DABarrelRecipe> getBarrelRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).map(daRecipe -> (DABarrelRecipe) daRecipe).toList();
     }
 }

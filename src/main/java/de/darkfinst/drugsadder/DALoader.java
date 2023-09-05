@@ -16,6 +16,7 @@ import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -90,6 +91,7 @@ public class DALoader {
         new FurnaceSmeltEventListener();
         new FurnaceStartSmeltEventListener();
         new InventoryClickEventListener();
+        new InventoryCloseEventListener();
         new InventoryDragEventListener();
         new PlayerInteractEventListener();
         new PlayerItemConsumeEventListener();
@@ -154,7 +156,7 @@ public class DALoader {
     public void openStructure(Block block, Player player) {
         DAStructure daStructure = this.getStructure(block);
         if (daStructure instanceof DABarrel daBarrel) {
-            daBarrel.open(player);
+            daBarrel.open(player, block);
         } else if (daStructure instanceof DATable daTable) {
             daTable.open(player);
         } else if (daStructure instanceof DAPress daPress) {

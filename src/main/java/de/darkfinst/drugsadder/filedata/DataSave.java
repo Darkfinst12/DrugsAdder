@@ -77,10 +77,10 @@ public class DataSave extends BukkitRunnable {
 
             //Start Save of Players
             if (!DA.loader.getDaPlayerList().isEmpty()) {
-                DA.log.log("Saving " + DA.loader.getDaPlayerList().size() + " Players");
+                DA.log.debugLog("Saving " + DA.loader.getDaPlayerList().size() + " Players");
                 DAPlayer.save(data.createSection("Players"));
             } else {
-                DA.log.log("No Players to save");
+                DA.log.debugLog("No Players to save");
             }
             //End Save of Players
 

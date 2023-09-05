@@ -108,7 +108,7 @@ public abstract class DAStructure {
         }
 
         if (oldData != null) {
-            DA.log.infoLog("Merging old data into new data");
+            DA.log.debugLog("Merging old data into new data");
             for (String world : oldData.getKeys(false)) {
                 ConfigurationSection structureSection = oldData.getConfigurationSection(world);
                 for (String structure : structureSection.getKeys(false)) {
@@ -121,7 +121,7 @@ public abstract class DAStructure {
                 }
             }
         } else {
-            DA.log.infoLog("No old data to merge");
+            DA.log.debugLog("No old data to merge");
         }
     }
 

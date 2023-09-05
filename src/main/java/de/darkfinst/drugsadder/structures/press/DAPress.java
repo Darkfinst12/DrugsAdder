@@ -10,6 +10,7 @@ import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAPressRecipe;
+import de.darkfinst.drugsadder.recipe.DARecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.barrel.DABarrelBody;
 import de.darkfinst.drugsadder.utils.DAUtil;
@@ -169,7 +170,7 @@ public class DAPress extends DAStructure {
                     if (duration < recipe.getDuration()) {
                         return;
                     }
-                    if (!this.hasMaterials(recipe, compressedItems)) {
+                    if (!recipe.hasMaterials(compressedItems)) {
                         return;
                     }
                     PressItemEvent pressItemEvent = new PressItemEvent(this, recipe);
@@ -181,7 +182,7 @@ public class DAPress extends DAStructure {
                         this.compressedItems.remove(recipe.getMold().getItemStack());
                     }
                     var fallback = 0;
-                    while (this.hasMaterials(recipe, this.compressedItems.toArray(new ItemStack[0]))) {
+                    while (recipe.hasMaterials(this.compressedItems.toArray(new ItemStack[0]))) {
                         if (fallback >= 100) {
                             break;
                         }
@@ -198,7 +199,7 @@ public class DAPress extends DAStructure {
     private void addResult(DAPressRecipe recipe) {
         for (DAItem material : recipe.getMaterials()) {
             for (ItemStack compressedItem : this.compressedItems) {
-                if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
+               if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
                     int newAmount = compressedItem.getAmount() - material.getAmount();
                     if (newAmount <= 0) {
                         this.compressedItems.remove(compressedItem);
@@ -212,21 +213,6 @@ public class DAPress extends DAStructure {
         this.compressedItems.add(recipe.getResult().getItemStack());
     }
 
-    private boolean hasMaterials(DAPressRecipe recipe, ItemStack[] compressedItems) {
-        for (DAItem material : recipe.getMaterials()) {
-            boolean contains = false;
-            for (ItemStack compressedItem : compressedItems) {
-                if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     @Override
     public void destroyInventory() {

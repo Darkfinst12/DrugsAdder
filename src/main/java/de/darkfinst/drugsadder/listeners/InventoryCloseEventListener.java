@@ -8,20 +8,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
-public class InventoryClickEventListener implements Listener {
+public class InventoryCloseEventListener implements Listener {
 
-    public InventoryClickEventListener() {
+    public InventoryCloseEventListener() {
         Bukkit.getPluginManager().registerEvents(this, DA.getInstance);
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClose(InventoryCloseEvent event) {
         DAStructure daStructure = DA.loader.getStructure(event.getInventory());
         if (daStructure instanceof DABarrel daBarrel) {
-            daBarrel.handleInventoryClick(event);
-        } else if (daStructure instanceof DATable daTable) {
-            daTable.handleInventoryClick(event);
+            daBarrel.handleInventoryClose(event);
         }
     }
 

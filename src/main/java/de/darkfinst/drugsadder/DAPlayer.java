@@ -141,7 +141,7 @@ public class DAPlayer {
                     players.set(daPlayer.getUuid().toString(), null);
                 }
             } else {
-                DA.log.log("Saving player " + daPlayer.getUuid());
+                DA.log.debugLog("Saving player " + daPlayer.getUuid());
                 ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
                 daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
             }

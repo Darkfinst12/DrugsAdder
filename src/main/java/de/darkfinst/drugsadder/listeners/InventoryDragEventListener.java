@@ -18,9 +18,7 @@ public class InventoryDragEventListener implements Listener {
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         DAStructure daStructure = DA.loader.getStructure(event.getInventory());
-        if (daStructure instanceof DABarrel daBarrel) {
-
-        } else if (daStructure instanceof DATable daTable) {
+        if (daStructure instanceof DATable daTable) {
             daTable.handleInventoryDrag(event);
         }
     }
