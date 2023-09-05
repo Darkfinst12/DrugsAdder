@@ -228,4 +228,15 @@ public class DAPress extends DAStructure {
         return true;
     }
 
+    @Override
+    public void destroyInventory() {
+        Block block = this.getBody().getPiston();
+        Block head = block.getRelative(((Piston) block.getBlockData()).getFacing());
+        this.dropItems(head);
+    }
+
+    @Override
+    public boolean hasInventory() {
+        return true;
+    }
 }

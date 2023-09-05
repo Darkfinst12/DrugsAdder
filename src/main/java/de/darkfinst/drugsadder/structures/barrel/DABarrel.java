@@ -4,10 +4,12 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class DABarrel extends DAStructure implements InventoryHolder {
@@ -61,5 +63,19 @@ public class DABarrel extends DAStructure implements InventoryHolder {
     @Override
     public Inventory getInventory() {
         return this.inventory;
+    }
+
+    @Override
+    public void destroyInventory() {
+        for (ItemStack content : this.inventory.getContents()) {
+            if (content != null && !content.getType().equals(Material.AIR)) {
+                this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
+            }
+        }
+    }
+
+    @Override
+    public boolean hasInventory() {
+        return true;
     }
 }

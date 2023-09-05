@@ -12,6 +12,7 @@ import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -96,11 +98,13 @@ public class DATable extends DAStructure implements InventoryHolder {
                 isValid = DAUtil.matchItems(recipe.getFilterOne().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterOne().getItemMatchTypes());
                 if (!isValid) {
                     DA.log.debugLog("FilterOne not valid");
+                    DA.log.debugLog("Required: " + recipe.getFilterOne().getItemStack());
+                    DA.log.debugLog("Actual: " + this.inventory.getItem(this.filterSlots[0]));
                     continue;
                 }
             }
             if (recipe.getFilterTwo() != null) {
-                isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterTwo().getItemMatchTypes());
+                isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[1]), recipe.getFilterTwo().getItemMatchTypes());
                 if (!isValid) {
                     DA.log.debugLog("FilterTwo not valid");
                     continue;
@@ -163,7 +167,9 @@ public class DATable extends DAStructure implements InventoryHolder {
                 if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot())) {
                     event.setCancelled(true);
                     return;
-                } else if (this.resultSlot != event.getSlot()) {
+                } else if (Arrays.stream(this.materialSlots).anyMatch(slot -> slot == event.getSlot())
+                        || Arrays.stream(this.filterSlots).anyMatch(slot -> slot == event.getSlot())
+                        || Arrays.stream(this.fuelSlots).anyMatch(slot -> slot == event.getSlot())) {
                     this.cancelRecipe(event.getWhoClicked());
                     return;
                 }
@@ -192,5 +198,19 @@ public class DATable extends DAStructure implements InventoryHolder {
                 return;
             }
         }
+    }
+
+    @Override
+    public void destroyInventory() {
+        for (ItemStack content : this.inventory.getContents()) {
+            if (content != null && !content.getType().equals(Material.AIR)) {
+                this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
+            }
+        }
+    }
+
+    @Override
+    public boolean hasInventory() {
+        return true;
     }
 }

@@ -107,7 +107,6 @@ public abstract class DAStructure {
             }
         }
 
-        //Todo: Save old data
         if (oldData != null) {
             DA.log.debugLog("Merging old data into new data");
             for (String world : oldData.getKeys(false)) {
@@ -128,5 +127,12 @@ public abstract class DAStructure {
         } else {
             DA.log.debugLog("No old data to merge");
         }
+    }
+
+    public void destroyInventory() {
+    }
+
+    public boolean hasInventory() {
+        return false;
     }
 }

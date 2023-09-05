@@ -117,6 +117,9 @@ public class DALoader {
     public void unregisterDAStructure(Block block) {
         DAStructure structure = this.getStructure(block);
         if (structure != null) {
+            if(structure.hasInventory()){
+                structure.destroyInventory();
+            }
             this.structureList.remove(structure);
         }
     }
