@@ -2,6 +2,8 @@ package de.darkfinst.drugsadder.structures.table;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
+import de.darkfinst.drugsadder.api.events.table.TableCancelRecipeEvent;
+import de.darkfinst.drugsadder.api.events.table.TableStartRecipeEvent;
 import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
@@ -9,9 +11,12 @@ import de.darkfinst.drugsadder.recipe.DATableRecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -29,7 +34,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     private final int[] blockedSlots = new int[]{5, 8};
     private final int resultSlot = 2;
     private final int[] materialSlots = new int[]{0, 1};
-    private final int[] fillSlots = new int[]{3, 4};
+    private final int[] filterSlots = new int[]{3, 4};
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
@@ -82,43 +87,50 @@ public class DATable extends DAStructure implements InventoryHolder {
         return this.inventory;
     }
 
-    private void callRecipe() {
+    private void callRecipe(HumanEntity who) {
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
+            DA.log.debugLog("Checking Recipe: " + recipe.getNamedID());
             boolean isValid = false;
             if (recipe.getFilterOne() != null) {
-                isValid = DAUtil.matchItems(recipe.getFilterOne().getItemStack(), this.inventory.getItem(this.fillSlots[0]), recipe.getFilterOne().getItemMatchTypes());
+                isValid = DAUtil.matchItems(recipe.getFilterOne().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterOne().getItemMatchTypes());
                 if (!isValid) {
+                    DA.log.debugLog("FilterOne not valid");
                     continue;
                 }
             }
             if (recipe.getFilterTwo() != null) {
-                isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.fillSlots[0]), recipe.getFilterTwo().getItemMatchTypes());
+                isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterTwo().getItemMatchTypes());
                 if (!isValid) {
+                    DA.log.debugLog("FilterTwo not valid");
                     continue;
                 }
             }
             if (recipe.getFuelOne() != null) {
                 isValid = DAUtil.matchItems(recipe.getFuelOne().getItemStack(), this.inventory.getItem(this.fuelSlots[0]), recipe.getFuelOne().getItemMatchTypes());
                 if (!isValid) {
+                    DA.log.debugLog("FuelOne not valid");
                     continue;
                 }
             }
             if (recipe.getFuelTwo() != null) {
                 isValid = DAUtil.matchItems(recipe.getFuelTwo().getItemStack(), this.inventory.getItem(this.fuelSlots[1]), recipe.getFuelTwo().getItemMatchTypes());
                 if (!isValid) {
+                    DA.log.debugLog("FuelTwo not valid");
                     continue;
                 }
             }
             if (recipe.getMaterialOne() != null) {
                 isValid = DAUtil.matchItems(recipe.getMaterialOne().getItemStack(), this.inventory.getItem(this.materialSlots[0]), recipe.getMaterialOne().getItemMatchTypes());
                 if (!isValid) {
+                    DA.log.debugLog("MaterialOne not valid");
                     continue;
                 }
             }
             if (recipe.getMaterialTwo() != null) {
                 isValid = DAUtil.matchItems(recipe.getMaterialTwo().getItemStack(), this.inventory.getItem(this.materialSlots[1]), recipe.getMaterialTwo().getItemMatchTypes());
                 if (!isValid) {
+                    DA.log.debugLog("MaterialTwo not valid");
                     continue;
                 }
             }
@@ -126,7 +138,11 @@ public class DATable extends DAStructure implements InventoryHolder {
                 DAItem fuelTwo = this.inventory.getItem(this.fuelSlots[1]) != null ? new DAItem(Objects.requireNonNull(this.inventory.getItem(this.fuelSlots[1]))) : null;
                 DAItem materialTwo = this.inventory.getItem(this.materialSlots[1]) != null ? new DAItem(Objects.requireNonNull(this.inventory.getItem(this.materialSlots[1]))) : null;
                 boolean hasSecondProcess = fuelTwo != null && materialTwo != null;
-                recipe.startProcess(this, hasSecondProcess);
+                TableStartRecipeEvent tableStartRecipeEvent = new TableStartRecipeEvent(who, this, recipe);
+                Bukkit.getPluginManager().callEvent(tableStartRecipeEvent);
+                if (!tableStartRecipeEvent.isCancelled()) {
+                    recipe.startProcess(this, hasSecondProcess);
+                }
             }
         }
     }
@@ -134,8 +150,11 @@ public class DATable extends DAStructure implements InventoryHolder {
 
     public void handleInventoryClick(InventoryClickEvent event) {
         switch (event.getAction()) {
-            case PLACE_ONE, PLACE_SOME, PLACE_ALL -> {
+            case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
                 if (event.getSlot() == this.resultSlot) {
+                    event.setCancelled(true);
+                    return;
+                } else if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot())) {
                     event.setCancelled(true);
                     return;
                 }
@@ -144,11 +163,34 @@ public class DATable extends DAStructure implements InventoryHolder {
                 if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot())) {
                     event.setCancelled(true);
                     return;
+                } else if (this.resultSlot != event.getSlot()) {
+                    this.cancelRecipe(event.getWhoClicked());
+                    return;
                 }
             }
         }
         if (this.inventory.equals(event.getClickedInventory())) {
-            this.callRecipe();
+            this.callRecipe(event.getWhoClicked());
+        }
+    }
+
+    private void cancelRecipe(HumanEntity who) {
+        List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
+        for (DATableRecipe recipe : recipes) {
+            if (recipe.getInProcess().containsKey(this)) {
+                recipe.cancelProcess(this);
+                TableCancelRecipeEvent tableCancelRecipeEvent = new TableCancelRecipeEvent(who, this, recipe);
+                Bukkit.getPluginManager().callEvent(tableCancelRecipeEvent);
+            }
+        }
+    }
+
+    public void handleInventoryDrag(InventoryDragEvent event) {
+        for (Integer rawSlot : event.getRawSlots()) {
+            if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot) {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 }

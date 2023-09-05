@@ -172,10 +172,10 @@ public class DARecipeReader {
         DAItem result = this.getResultItem(tableRID, recipeConfig);
         if (result == null) return;
 
-        DAItem filterOne = this.getResultItem(tableRID, "filterOne", recipeConfig);
-        DAItem filterTwo = this.getResultItem(tableRID, "filterTwo", recipeConfig);
-        DAItem fuelOne = this.getResultItem(tableRID, "fuelOne", recipeConfig);
-        DAItem fuelTwo = this.getResultItem(tableRID, "fuelTwo", recipeConfig);
+        DAItem filterOne = this.getItem(tableRID, "filterOne", recipeConfig);
+        DAItem filterTwo = this.getItem(tableRID, "filterTwo", recipeConfig);
+        DAItem fuelOne = this.getItem(tableRID, "fuelOne", recipeConfig);
+        DAItem fuelTwo = this.getItem(tableRID, "fuelTwo", recipeConfig);
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(tableRID, recipeConfig));
         if (materials.isEmpty()) {
@@ -361,11 +361,11 @@ public class DARecipeReader {
 
     @Nullable
     private DAItem getResultItem(String recipeID, ConfigurationSection recipeConfig) {
-        return this.getResultItem(recipeID, "result", recipeConfig);
+        return this.getItem(recipeID, "result", recipeConfig);
     }
 
     @Nullable
-    private DAItem getResultItem(String recipeID, String path, ConfigurationSection recipeConfig) {
+    private DAItem getItem(String recipeID, String path, ConfigurationSection recipeConfig) {
         String[] resultAmount = recipeConfig.getString(path, "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);

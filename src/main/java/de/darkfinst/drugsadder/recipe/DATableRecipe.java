@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class DATableRecipe extends DARecipe {
@@ -59,7 +60,12 @@ public class DATableRecipe extends DARecipe {
             this.inProcess.remove(daTable);
             DAItem result = DAConfig.customItemReader.getItemByNamespacedID(DAConfig.cancelRecipeItem);
             ItemStack resultItem = result != null ? result.getItemStack() : null;
-            daTable.getInventory().setItem(daTable.getResultSlot(), resultItem);
+            if (daTable.getInventory().getItem(daTable.getResultSlot()) == null) {
+                daTable.getInventory().setItem(daTable.getResultSlot(), resultItem);
+            } else if (resultItem != null) {
+                daTable.getWorld().dropItem(daTable.getBody().getSign().getLocation(), resultItem);
+            }
+
         }
 
     }
@@ -80,7 +86,15 @@ public class DATableRecipe extends DARecipe {
         @Override
         public void run() {
             try {
-                wait(1000, 0);
+                daTable.getInventory().remove(recipe.getFuelOne().getItemStack());
+                DA.log.log("MatOne Stage 1");
+                wait(TimeUnit.SECONDS.toMillis(10), 0);
+                DA.log.log("MatOne Stage 2");
+                wait(TimeUnit.SECONDS.toMillis(10), 0);
+                DA.log.log("MatOne Stage 3");
+                wait(TimeUnit.SECONDS.toMillis(10), 0);
+                daTable.getInventory().remove(recipe.getMaterialOne().getItemStack());
+                DA.log.log("MatOne Stage 4");
 
                 if (this.hasSecondProcess) {
                     this.recipe.startSecondProcess(this.daTable);
@@ -106,7 +120,16 @@ public class DATableRecipe extends DARecipe {
         @Override
         public void run() {
             try {
-                wait(1000, 0);
+                daTable.getInventory().remove(recipe.getFilterTwo().getItemStack());
+                DA.log.log("MatTwo Stage 1");
+                wait(TimeUnit.SECONDS.toMillis(10), 0);
+                DA.log.log("MatTwo Stage 2");
+                wait(TimeUnit.SECONDS.toMillis(10), 0);
+                DA.log.log("MatTwo Stage 3");
+                wait(TimeUnit.SECONDS.toMillis(10), 0);
+                daTable.getInventory().remove(recipe.getMaterialTwo().getItemStack());
+                DA.log.log("MatTwo Stage 4");
+
                 this.recipe.finishProcess(this.daTable);
             } catch (InterruptedException e) {
                 DA.log.logException(e);

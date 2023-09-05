@@ -2,16 +2,21 @@ package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAFurnaceRecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 
 public class DAConfig {
 
@@ -150,6 +155,16 @@ public class DAConfig {
         if (config.contains("customItems")) {
             customItemReader = new DACustomItemReader(config.getConfigurationSection("customItems"));
             customItemReader.loadItems();
+            if (!customItemReader.getRegisteredItems().containsKey("drugsadder:cancel_recipe_item")) {
+                ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setDisplayName("§cCancel Recipe");
+                itemMeta.setLore(List.of("§7This is the result of a cancelled recipe"));
+                itemMeta.setCustomModelData(1);
+                itemStack.setItemMeta(itemMeta);
+                DAItem cancelRecipeItem = new DAItem(itemStack, "Cancel Recipe", List.of("§7This is the result of a cancelled recipe"), 1, "drugsadder:cancel_recipe_item");
+                customItemReader.getRegisteredItems().put("drugsadder:cancel_recipe_item", cancelRecipeItem);
+            }
         } else {
             customItemReader = new DACustomItemReader();
         }

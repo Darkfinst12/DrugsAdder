@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
-    private static final Stream<String> MAIN_ARGS = Stream.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.SET_ADDICTION.getArg());
-    private static final Stream<String> LIST_ARGS = Stream.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg());
-    private static final Stream<String> LIST_RECIPES_ARGS = Stream.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
+    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.SET_ADDICTION.getArg());
+    private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg());
+    private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
 
 
     public void register() {
@@ -136,13 +136,13 @@ public class DACommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command
             command, @NotNull String commandLabel, @NotNull String[] args) {
         if (args.length == 1) {
-            return MAIN_ARGS.filter(s1 -> s1.contains(args[0])).toList();
+            return MAIN_ARGS.stream().filter(s1 -> s1.contains(args[0])).toList();
         }
         if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.GET_CUSTOM_ITEM.getArg())) {
             return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.contains(args[1])).toList();
         }
         if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg())) {
-            return LIST_ARGS.filter(s1 -> s1.contains(args[1])).toList();
+            return LIST_ARGS.stream().filter(s1 -> s1.contains(args[1])).toList();
         }
         if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.SET_ADDICTION.getArg())) {
             if (!args[1].isEmpty() || !args[1].isBlank()) {
@@ -152,7 +152,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
             }
         }
         if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
-            return LIST_RECIPES_ARGS.filter(s1 -> s1.contains(args[2])).toList();
+            return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.contains(args[2])).toList();
         }
         if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.SET_ADDICTION.getArg())) {
             var drugs = DAConfig.drugReader.getRegisteredDrugs().stream().filter(drug -> drug.getID().contains(args[2])).toList();

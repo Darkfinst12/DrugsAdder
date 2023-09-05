@@ -150,6 +150,21 @@ recipes:
           matchType: "ALL"
       result: 'drugsadder:cocaine_pills/1'
   table:
+    test:
+      filterOne: 'minecraft:paper/1'
+      fuelOne: 'minecraft:coal/1'
+      filterTwo: 'minecraft:paper/1'
+      fuelTwo: 'minecraft:coal/1'
+      materials:
+        1:
+          itemStack: 'drugsadder:dirty_cocaine'
+          amount: 1
+          matchType: "ALL"
+        2:
+          itemStack: 'drugsadder:dirty_cocaine'
+          amount: 1
+          matchType: "ALL"
+      result: 'drugsadder:cocaine_pills/1'
 
 #Drugs
 drugs:

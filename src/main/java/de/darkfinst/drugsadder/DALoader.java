@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -82,11 +83,13 @@ public class DALoader {
     }
 
     private void initListener() {
+        new BlockBreakEventListener();
         new CraftItemEventListener();
         new FurnaceBurnEventListener();
         new FurnaceSmeltEventListener();
         new FurnaceStartSmeltEventListener();
         new InventoryClickEventListener();
+        new InventoryDragEventListener();
         new PlayerInteractEventListener();
         new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
@@ -109,6 +112,13 @@ public class DALoader {
 
     public void unregisterDAStructure(DAStructure structure) {
         this.structureList.remove(structure);
+    }
+
+    public void unregisterDAStructure(Block block) {
+        DAStructure structure = this.getStructure(block);
+        if (structure != null) {
+            this.structureList.remove(structure);
+        }
     }
 
     public boolean isStructure(Block block) {
