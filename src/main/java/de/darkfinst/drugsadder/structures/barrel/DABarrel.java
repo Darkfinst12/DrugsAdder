@@ -17,7 +17,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
     private final Inventory inventory;
 
     public DABarrel() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, 9, "Barrel");
+        this.inventory = DA.getInstance.getServer().createInventory(this, 9, DA.loader.getTranslation("Barrel", "Structure_Name_Barrel"));
     }
 
     public void create(Block sign, Player player) {
