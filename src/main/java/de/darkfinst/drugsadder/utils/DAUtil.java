@@ -62,6 +62,7 @@ public class DAUtil {
                 case EXACT_LORE -> match = DAUtil.matchItemLore(stackA, stackB);
                 case CONTAINS_NAME -> match = DAUtil.matchItemNameContains(stackA, stackB);
                 case CONTAINS_LORE -> match = DAUtil.matchItemLoreContains(stackA, stackB);
+                case VANNILA -> match = stackA.isSimilar(stackB);
                 case ALL -> match = stackA.equals(stackB);
                 default -> match = true;
             }

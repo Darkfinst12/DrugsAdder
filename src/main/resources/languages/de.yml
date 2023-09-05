@@ -69,3 +69,7 @@ Player_Press_Created: "Die Presse wurde erfolgreich erstellt"
 Player_Press_NotValid: "Die Presse ist nicht korrekt gebaut!"
 Player_Table_Created: "Der Labortisch wurde erfolgreich erstellt"
 Player_Table_NotValid: "Der Labortisch ist nicht korrekt gebaut!"
+
+# ---- Structures ----
+Structure_Name_Table: "Labortisch"
+Structure_Name_Barrel: "Fass"

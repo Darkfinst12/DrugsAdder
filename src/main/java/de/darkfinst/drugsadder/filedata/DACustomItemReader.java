@@ -73,7 +73,7 @@ public class DACustomItemReader {
         }
         itemStack.setItemMeta(itemMeta);
         DAItem item = new DAItem(itemStack, name, lore, cmd, namespacedID);
-        item.setAmount(itemStack.getAmount());
+        item.setAmount(1);
 
         this.registeredItems.put(namespacedID, item);
         if (DAConfig.logCustomItemLoadInfo) {
@@ -102,7 +102,7 @@ public class DACustomItemReader {
     }
 
     public DAItem getItemByNamespacedID(String namespacedID) {
-        return this.registeredItems.get(namespacedID);
+        return this.registeredItems.get(namespacedID).clone();
     }
 
     public List<String> getCustomItemNames() {

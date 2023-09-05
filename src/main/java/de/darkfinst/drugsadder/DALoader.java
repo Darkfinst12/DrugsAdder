@@ -84,6 +84,7 @@ public class DALoader {
 
     private void initListener() {
         new BlockBreakEventListener();
+        new BlockPlaceEventListener();
         new CraftItemEventListener();
         new FurnaceBurnEventListener();
         new FurnaceSmeltEventListener();
@@ -117,7 +118,7 @@ public class DALoader {
     public void unregisterDAStructure(Block block) {
         DAStructure structure = this.getStructure(block);
         if (structure != null) {
-            if(structure.hasInventory()){
+            if (structure.hasInventory()) {
                 structure.destroyInventory();
             }
             this.structureList.remove(structure);

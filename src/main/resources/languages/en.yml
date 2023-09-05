@@ -70,3 +70,7 @@ Player_Press_Created: "The press was created"
 Player_Press_NotValid: "The press is not properly built"
 Player_Table_Created: "The laboratory table was created"
 Player_Table_NotValid: "The laboratory table was not properly built"
+
+# ---- Structures ----
+Structure_Name_Table: "Laboratory Table"
+Structure_Name_Barrel: "Barrel"

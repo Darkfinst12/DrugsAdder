@@ -204,6 +204,8 @@ public class DARecipeReader {
         }
 
         DATableRecipe tableRecipe = new DATableRecipe(tableRID, RecipeType.TABLE, filterOne, filterTwo, fuelOne, fuelTwo, result, materials.values().toArray(new DAItem[0]));
+        tableRecipe.setConsumeFilterOne(recipeConfig.getBoolean("consumeFilterOne", false));
+        tableRecipe.setConsumeFilterTwo(recipeConfig.getBoolean("consumeFilterTwo", false));
 
         this.registeredRecipes.add(tableRecipe);
 

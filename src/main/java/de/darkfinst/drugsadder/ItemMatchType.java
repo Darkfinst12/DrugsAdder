@@ -11,6 +11,8 @@ public enum ItemMatchType {
     EXACT_LORE,
     EXACT_NAME,
 
+    VANNILA,
+
     NULL,
 
 }

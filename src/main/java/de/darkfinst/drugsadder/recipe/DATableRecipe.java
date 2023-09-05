@@ -4,22 +4,29 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.table.DATable;
+import de.darkfinst.drugsadder.utils.Pair;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Getter
 public class DATableRecipe extends DARecipe {
 
-    private final Map<DATable, Integer> inProcess = new HashMap<>();
+    public final Map<DATable, Pair<Integer, Integer>> inProcess = new HashMap<>();
 
     private final DAItem filterOne;
+    @Setter
+    private boolean consumeFilterOne = false;
     private final DAItem filterTwo;
+    @Setter
+    private boolean consumeFilterTwo = false;
 
     private final DAItem fuelOne;
     private final DAItem fuelTwo;
@@ -38,25 +45,46 @@ public class DATableRecipe extends DARecipe {
     }
 
     public void startProcess(DATable daTable, boolean hasSecondProcess) {
-        ProccessMaterialOne proccessMaterialOne = new ProccessMaterialOne(daTable, this, hasSecondProcess);
-        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, proccessMaterialOne);
-        this.inProcess.put(daTable, task.getTaskId());
+        ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, hasSecondProcess, 0);
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialOne);
+        this.inProcess.put(daTable, Pair.of(0, task.getTaskId()));
     }
 
     public void startSecondProcess(DATable daTable) {
-        ProccessMaterialTwo proccessMaterialTwo = new ProccessMaterialTwo(daTable, this);
-        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, proccessMaterialTwo);
-        this.inProcess.put(daTable, task.getTaskId());
+        ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, 4);
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
+        this.inProcess.put(daTable, Pair.of(0, task.getTaskId()));
+    }
+
+    //TODO: After Restart
+    public void restartProcess(DATable daTable, int state) {
+        if (state >= 0 && state < 4) {
+            ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, true, state);
+            BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialOne);
+            this.inProcess.put(daTable, Pair.of(state, task.getTaskId()));
+        } else if (state >= 4 && state < 8) {
+            ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, state);
+            BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
+            this.inProcess.put(daTable, Pair.of(state, task.getTaskId()));
+        } else {
+            DA.log.errorLog("Invalid State: " + state);
+        }
+
     }
 
     public void finishProcess(DATable daTable) {
+        this.updateView(daTable, 0, true);
         daTable.getInventory().setItem(daTable.getResultSlot(), this.getResult().getItemStack());
         this.inProcess.remove(daTable);
+        if (daTable.isThisRecipe(this)) {
+            daTable.startRecipe(null, this);
+        }
     }
 
-    public void cancelProcess(DATable daTable) {
+    public void cancelProcess(DATable daTable, String reason, boolean isAsync) {
         if (this.inProcess.containsKey(daTable)) {
-            Bukkit.getScheduler().cancelTask(this.inProcess.get(daTable));
+            Bukkit.getScheduler().cancelTask(this.inProcess.get(daTable).getSecond());
+            DA.log.log("Recipe " + this.getRecipeNamedID() + " was canceled because " + reason, isAsync);
             this.inProcess.remove(daTable);
             DAItem result = DAConfig.customItemReader.getItemByNamespacedID(DAConfig.cancelRecipeItem);
             ItemStack resultItem = result != null ? result.getItemStack() : null;
@@ -70,69 +98,124 @@ public class DATableRecipe extends DARecipe {
 
     }
 
-    //TODO: Refresh Inventory
-    public class ProccessMaterialOne implements Runnable {
+    public static class ProcessMaterialOne implements Runnable {
 
+        private final int state;
         private final DATable daTable;
         private final DATableRecipe recipe;
         private final boolean hasSecondProcess;
 
-        public ProccessMaterialOne(DATable daTable, DATableRecipe recipe, boolean hasSecondProcess) {
+        public ProcessMaterialOne(DATable daTable, DATableRecipe recipe, boolean hasSecondProcess, int state) {
             this.daTable = daTable;
             this.recipe = recipe;
+            this.state = state;
             this.hasSecondProcess = hasSecondProcess;
         }
 
         @Override
         public void run() {
             try {
-                daTable.getInventory().remove(recipe.getFuelOne().getItemStack());
-                DA.log.log("MatOne Stage 1");
-                wait(TimeUnit.SECONDS.toMillis(10), 0);
-                DA.log.log("MatOne Stage 2");
-                wait(TimeUnit.SECONDS.toMillis(10), 0);
-                DA.log.log("MatOne Stage 3");
-                wait(TimeUnit.SECONDS.toMillis(10), 0);
-                daTable.getInventory().remove(recipe.getMaterialOne().getItemStack());
-                DA.log.log("MatOne Stage 4");
-
-                if (this.hasSecondProcess) {
-                    this.recipe.startSecondProcess(this.daTable);
+                if (state == 0) {
+                    if (daTable.getInventory().getItem(daTable.getFuelSlots()[0]) == null || daTable.getInventory().getItem(daTable.getFuelSlots()[0]).getAmount() < recipe.getFuelTwo().getAmount()) {
+                        recipe.cancelProcess(daTable, "Not enough Materials - State 0", true);
+                        return;
+                    }
+                    recipe.updateView(daTable, 1, true);
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> daTable.getInventory().getItem(daTable.getFuelSlots()[0]).setAmount(daTable.getInventory().getItem(daTable.getFuelSlots()[0]).getAmount() - recipe.getFuelOne().getAmount()));
+                    BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialOne(daTable, recipe, hasSecondProcess, 1), (10 * 20));
+                    recipe.inProcess.put(daTable, Pair.of(1, task.getTaskId()));
+                } else if (state == 1) {
+                    recipe.updateView(daTable, 2, true);
+                    BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialOne(daTable, recipe, hasSecondProcess, 2), (10 * 20));
+                    recipe.inProcess.put(daTable, Pair.of(2, task.getTaskId()));
+                } else if (state == 2) {
+                    recipe.updateView(daTable, 3, true);
+                    BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialOne(daTable, recipe, hasSecondProcess, 3), (10 * 20));
+                    recipe.inProcess.put(daTable, Pair.of(3, task.getTaskId()));
+                } else if (state == 3) {
+                    recipe.updateView(daTable, 4, true);
+                    if (daTable.getInventory().getItem(daTable.getMaterialSlots()[0]) == null || daTable.getInventory().getItem(daTable.getMaterialSlots()[0]).getAmount() < recipe.getMaterials()[0].getAmount()) {
+                        recipe.cancelProcess(daTable, "Not enough Materials  - State 3", true);
+                        return;
+                    }
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> daTable.getInventory().getItem(daTable.getMaterialSlots()[0]).setAmount(daTable.getInventory().getItem(daTable.getMaterialSlots()[0]).getAmount() - recipe.getMaterials()[0].getAmount()));
+                    if (recipe.consumeFilterOne) {
+                        Bukkit.getScheduler().runTask(DA.getInstance, () -> daTable.getInventory().getItem(daTable.getFilterSlots()[0]).setAmount(daTable.getInventory().getItem(daTable.getFilterSlots()[0]).getAmount() - 1));
+                    }
+                    if (this.hasSecondProcess) {
+                        this.recipe.startSecondProcess(this.daTable);
+                    } else {
+                        this.recipe.finishProcess(this.daTable);
+                    }
+                } else {
+                    DA.log.errorLog("Invalid State: " + state);
                 }
-            } catch (InterruptedException e) {
-                DA.log.logException(e);
+            } catch (Exception e) {
+                DA.log.logException(e, true);
             }
 
         }
     }
 
-    //TODO: Refresh Inventory
-    public class ProccessMaterialTwo implements Runnable {
+    public static class ProcessMaterialTwo implements Runnable {
 
+        private final int state;
         private final DATable daTable;
         private final DATableRecipe recipe;
 
-        public ProccessMaterialTwo(DATable daTable, DATableRecipe recipe) {
+        public ProcessMaterialTwo(DATable daTable, DATableRecipe recipe, int state) {
             this.daTable = daTable;
             this.recipe = recipe;
+            this.state = state;
         }
 
         @Override
         public void run() {
             try {
-                daTable.getInventory().remove(recipe.getFilterTwo().getItemStack());
-                DA.log.log("MatTwo Stage 1");
-                wait(TimeUnit.SECONDS.toMillis(10), 0);
-                DA.log.log("MatTwo Stage 2");
-                wait(TimeUnit.SECONDS.toMillis(10), 0);
-                DA.log.log("MatTwo Stage 3");
-                wait(TimeUnit.SECONDS.toMillis(10), 0);
-                daTable.getInventory().remove(recipe.getMaterialTwo().getItemStack());
-                DA.log.log("MatTwo Stage 4");
+                if (state == 4) {
+                    recipe.updateView(daTable, 5, true);
+                    if (daTable.getInventory().getItem(daTable.getFuelSlots()[1]) == null || daTable.getInventory().getItem(daTable.getFuelSlots()[1]).getAmount() < recipe.getFuelTwo().getAmount()) {
+                        recipe.cancelProcess(daTable, "Not enough Materials  - State 4", true);
+                        return;
+                    }
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> daTable.getInventory().getItem(daTable.getFuelSlots()[1]).setAmount(daTable.getInventory().getItem(daTable.getFuelSlots()[1]).getAmount() - recipe.getFuelTwo().getAmount()));
+                    BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialTwo(daTable, recipe, 5), (10 * 20));
+                    recipe.inProcess.put(daTable, Pair.of(5, task.getTaskId()));
+                } else if (state == 5) {
+                    recipe.updateView(daTable, 6, true);
+                    BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialTwo(daTable, recipe, 6), (10 * 20));
+                    recipe.inProcess.put(daTable, Pair.of(6, task.getTaskId()));
+                } else if (state == 6) {
+                    recipe.updateView(daTable, 7, true);
+                    BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialTwo(daTable, recipe, 7), (10 * 20));
+                    recipe.inProcess.put(daTable, Pair.of(7, task.getTaskId()));
+                } else if (state == 7) {
+                    recipe.updateView(daTable, 8, true);
+                    if (daTable.getInventory().getItem(daTable.getMaterialSlots()[1]) == null || daTable.getInventory().getItem(daTable.getMaterialSlots()[1]).getAmount() < recipe.getMaterials()[0].getAmount()) {
+                        recipe.cancelProcess(daTable, "Not enough Materials  - State 5", true);
+                        return;
+                    }
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> daTable.getInventory().getItem(daTable.getMaterialSlots()[1]).setAmount(daTable.getInventory().getItem(daTable.getMaterialSlots()[1]).getAmount() - recipe.getMaterials()[1].getAmount()));
+                    if (recipe.consumeFilterTwo) {
+                        Bukkit.getScheduler().runTask(DA.getInstance, () -> daTable.getInventory().getItem(daTable.getFilterSlots()[1]).setAmount(daTable.getInventory().getItem(daTable.getFilterSlots()[1]).getAmount() - 1));
+                    }
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> recipe.finishProcess(daTable));
+                } else {
+                    DA.log.errorLog("Invalid State: " + state);
+                }
+            } catch (Exception e) {
+                DA.log.logException(e, true);
+            }
+        }
+    }
 
-                this.recipe.finishProcess(this.daTable);
-            } catch (InterruptedException e) {
-                DA.log.logException(e);
+    public void updateView(DATable daTable, int state, boolean isAsync) {
+        for (HumanEntity viewer : daTable.getInventory().getViewers()) {
+            try {
+                InventoryView inventoryView = viewer.getOpenInventory();
+                inventoryView.setTitle("Lab Table - State: " + state);
+            } catch (Exception e) {
+                DA.log.logException(e, isAsync);
             }
         }
     }

@@ -152,8 +152,10 @@ recipes:
   table:
     test:
       filterOne: 'minecraft:paper/1'
+      consumeFilterOne: true
       fuelOne: 'minecraft:coal/1'
       filterTwo: 'minecraft:paper/1'
+      consumeFilterTwo: true
       fuelTwo: 'minecraft:coal/1'
       materials:
         1:
