@@ -35,7 +35,7 @@ public class DAData {
             long t1 = System.currentTimeMillis();
             FileConfiguration data = YamlConfiguration.loadConfiguration(file);
             long t2 = System.currentTimeMillis();
-            DA.log.debugLog("Loading data.yml: " + (t2 - t1) + "ms");
+            DA.log.infoLog("Loading data.yml: " + (t2 - t1) + "ms");
 
             // Check if data is the newest version
             String version = data.getString("Version", null);

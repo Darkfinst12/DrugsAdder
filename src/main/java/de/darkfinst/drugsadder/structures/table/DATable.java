@@ -96,7 +96,6 @@ public class DATable extends DAStructure implements InventoryHolder {
     private void callRecipeCheck(@Nullable HumanEntity who) {
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
-            DA.log.debugLog("Checking Recipe: " + recipe.getNamedID());
             if (this.isThisRecipe(recipe)) {
                 this.startRecipe(who, recipe);
             }
@@ -119,46 +118,36 @@ public class DATable extends DAStructure implements InventoryHolder {
         if (recipe.getFilterOne() != null) {
             isValid = DAUtil.matchItems(recipe.getFilterOne().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterOne().getItemMatchTypes());
             if (!isValid) {
-                DA.log.debugLog("FilterOne not valid");
-                DA.log.debugLog("Required: " + recipe.getFilterOne().getItemStack());
-                DA.log.debugLog("Actual: " + this.inventory.getItem(this.filterSlots[0]));
                 return isValid;
             }
         }
         if (recipe.getFilterTwo() != null) {
             isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[1]), recipe.getFilterTwo().getItemMatchTypes());
             if (!isValid) {
-                DA.log.debugLog("FilterTwo not valid");
                 return isValid;
             }
         }
         if (recipe.getFuelOne() != null) {
             isValid = DAUtil.matchItems(recipe.getFuelOne().getItemStack(), this.inventory.getItem(this.fuelSlots[0]), recipe.getFuelOne().getItemMatchTypes());
             if (!isValid) {
-                DA.log.debugLog("FuelOne not valid");
                 return isValid;
             }
         }
         if (recipe.getFuelTwo() != null) {
             isValid = DAUtil.matchItems(recipe.getFuelTwo().getItemStack(), this.inventory.getItem(this.fuelSlots[1]), recipe.getFuelTwo().getItemMatchTypes());
             if (!isValid) {
-                DA.log.debugLog("FuelTwo not valid");
                 return isValid;
             }
         }
         if (recipe.getMaterialOne() != null) {
             isValid = DAUtil.matchItems(recipe.getMaterialOne().getItemStack(), this.inventory.getItem(this.materialSlots[0]), recipe.getMaterialOne().getItemMatchTypes());
             if (!isValid) {
-                DA.log.debugLog("MaterialOne not valid");
                 return isValid;
             }
         }
         if (recipe.getMaterialTwo() != null) {
             isValid = DAUtil.matchItems(recipe.getMaterialTwo().getItemStack(), this.inventory.getItem(this.materialSlots[1]), recipe.getMaterialTwo().getItemMatchTypes());
             if (!isValid) {
-                DA.log.debugLog("MaterialTwo not valid");
-                DA.log.debugLog("Required: " + recipe.getMaterialTwo().getItemStack());
-                DA.log.debugLog("Actual: " + this.inventory.getItem(this.materialSlots[1]));
                 return isValid;
             }
         }

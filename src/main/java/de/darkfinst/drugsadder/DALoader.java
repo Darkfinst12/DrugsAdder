@@ -107,7 +107,6 @@ public class DALoader {
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
         if (!registerStructureEvent.isCancelled()) {
             this.structureList.add(structure);
-            DA.loader.debugLog("Registered Structure: " + structure.getClass().getSimpleName(), isAsync);
         }
     }
 
@@ -187,6 +186,14 @@ public class DALoader {
 
     public void log(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG, isAsync);
+    }
+
+    public void infoLog(String msg) {
+        this.infoLog(msg, false);
+    }
+
+    public void infoLog(String msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(41, 212, 3)) + "[Info] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.INFO, isAsync);
     }
 
     public void debugLog(String msg) {

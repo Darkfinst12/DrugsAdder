@@ -108,24 +108,20 @@ public abstract class DAStructure {
         }
 
         if (oldData != null) {
-            DA.log.debugLog("Merging old data into new data");
+            DA.log.infoLog("Merging old data into new data");
             for (String world : oldData.getKeys(false)) {
-                DA.log.debugLog("Merging old data for " + world);
                 ConfigurationSection structureSection = oldData.getConfigurationSection(world);
                 for (String structure : structureSection.getKeys(false)) {
                     ConfigurationSection structureData = structureSection.getConfigurationSection(structure);
                     for (String key : structureData.getKeys(false)) {
                         if (!config.contains(world + "." + structure + "." + key)) {
                             config.set(world + "." + structure + "." + key, oldData.get(world + "." + structure + "." + key));
-                            DA.log.debugLog("Merging old data for " + world + "." + structure + "." + key);
-                        } else {
-                            DA.log.debugLog("Not merging old data for " + world + "." + structure + "." + key + " because it already exists");
                         }
                     }
                 }
             }
         } else {
-            DA.log.debugLog("No old data to merge");
+            DA.log.infoLog("No old data to merge");
         }
     }
 

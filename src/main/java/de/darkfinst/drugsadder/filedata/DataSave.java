@@ -102,7 +102,7 @@ public class DataSave extends BukkitRunnable {
                 unloadingWorlds.clear();
             }
 
-            DA.log.debugLog("Saving: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - saveTime) + "ms");
+            DA.log.infoLog("Saving: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - saveTime) + "ms");
 
             if (DA.getInstance.isEnabled()) {
                 DA.getInstance.getServer().getScheduler().runTaskAsynchronously(DA.getInstance, new WriteData(data, worldData));
