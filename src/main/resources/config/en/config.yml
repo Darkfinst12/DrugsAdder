@@ -70,7 +70,8 @@ returnBottle: true
 recipes:
   barrel:
     dirty_cocaine:
-      duration: 100
+      duration: 10 #In Minutes
+      processOverdueAcceptance: 5.5 #In Minutes
       materials:
         1:
           itemStack: 'minecraft:coal'
