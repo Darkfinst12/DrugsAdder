@@ -16,7 +16,10 @@ public class PlayerInteractEventListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() != null && DA.loader.isStructure(event.getClickedBlock()) && EquipmentSlot.HAND.equals(event.getHand()) && event.getItem() == null) {
+        if (event.getClickedBlock() != null && DA.loader.isStructure(event.getClickedBlock()) && EquipmentSlot.HAND.equals(event.getHand())) {
+            if (Action.LEFT_CLICK_BLOCK.equals(event.getAction())) {
+                return;
+            }
             event.setCancelled(true);
             DA.loader.openStructure(event.getClickedBlock(), event.getPlayer());
         }

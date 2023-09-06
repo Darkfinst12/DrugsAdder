@@ -93,8 +93,10 @@ public class DABarrel extends DAStructure implements InventoryHolder {
     }
 
     public void handleInventoryClick(InventoryClickEvent event) {
-        this.removeTimeStamp(event.getCursor());
-        this.removeTimeStamp(event.getCurrentItem());
+        if (this.inventory.equals(event.getClickedInventory())) {
+            this.removeTimeStamp(event.getCursor());
+            this.removeTimeStamp(event.getCurrentItem());
+        }
     }
 
     public void addTimeStamp(ItemStack itemStack) {

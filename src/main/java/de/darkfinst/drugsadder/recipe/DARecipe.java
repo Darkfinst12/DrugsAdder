@@ -53,11 +53,11 @@ public abstract class DARecipe {
         return true;
     }
 
-    public boolean hasMaterials(ItemStack[] compressedItems) {
+    public boolean hasMaterials(ItemStack... givenItems) {
         for (DAItem material : this.getMaterials()) {
             boolean contains = false;
-            for (ItemStack compressedItem : compressedItems) {
-                if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
+            for (ItemStack itemStack : givenItems) {
+                if (DAUtil.matchItems(material.getItemStack(), itemStack, material.getItemMatchTypes())) {
                     contains = true;
                     break;
                 }
