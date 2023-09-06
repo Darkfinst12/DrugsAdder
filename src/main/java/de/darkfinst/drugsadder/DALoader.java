@@ -160,7 +160,7 @@ public class DALoader {
         } else if (daStructure instanceof DATable daTable) {
             daTable.open(player);
         } else if (daStructure instanceof DAPress daPress) {
-            daPress.usePress(player);
+            daPress.usePress(player, block);
         }
     }
 

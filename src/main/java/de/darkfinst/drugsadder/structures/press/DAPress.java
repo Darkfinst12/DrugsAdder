@@ -70,7 +70,10 @@ public class DAPress extends DAStructure {
         return (DAPressBody) super.getBody();
     }
 
-    public void usePress(Player player) {
+    public void usePress(Player player, Block block) {
+        if (Material.LEVER.equals(block.getType())) {
+            return;
+        }
         UsePressEvent usePressEvent = new UsePressEvent(this, player);
         Bukkit.getPluginManager().callEvent(usePressEvent);
         if (usePressEvent.isCancelled()) {
@@ -78,24 +81,24 @@ public class DAPress extends DAStructure {
         }
         if (player.hasPermission("drugsadder.press.use")) {
             try {
-                Block block = this.getBody().getPiston();
-                Piston piston = (Piston) block.getBlockData();
+                Block pBlock = this.getBody().getPiston();
+                Piston piston = (Piston) pBlock.getBlockData();
                 Block lever = this.getBody().getLever();
                 Powerable leverData = (Powerable) lever.getBlockData();
                 if (piston.isExtended()) {
                     this.pressItems();
-                    Block head = block.getRelative(piston.getFacing());
+                    Block head = pBlock.getRelative(piston.getFacing());
                     if (this.dropItems(head)) {
                         leverData.setPowered(false);
                         lever.setBlockData(leverData, false);
                         piston.setExtended(false);
-                        block.setBlockData(piston, false);
+                        pBlock.setBlockData(piston, false);
                         head.setType(Material.AIR);
                         this.pressActiveTime = null;
-                        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_PISTON_CONTRACT, 1, 1);
+                        pBlock.getWorld().playSound(pBlock.getLocation(), Sound.BLOCK_PISTON_CONTRACT, 1, 1);
                     }
                 } else {
-                    Block head = block.getRelative(piston.getFacing());
+                    Block head = pBlock.getRelative(piston.getFacing());
                     if (this.compressItems(head)) {
                         leverData.setPowered(true);
                         lever.setBlockData(leverData, false);
@@ -105,9 +108,9 @@ public class DAPress extends DAStructure {
                         head.setBlockData(headData, false);
 
                         piston.setExtended(true);
-                        block.setBlockData(piston, false);
+                        pBlock.setBlockData(piston, false);
                         this.pressActiveTime = System.currentTimeMillis();
-                        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
+                        pBlock.getWorld().playSound(pBlock.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
                     }
                 }
             } catch (Exception e) {
@@ -199,7 +202,7 @@ public class DAPress extends DAStructure {
     private void addResult(DAPressRecipe recipe) {
         for (DAItem material : recipe.getMaterials()) {
             for (ItemStack compressedItem : this.compressedItems) {
-               if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
+                if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
                     int newAmount = compressedItem.getAmount() - material.getAmount();
                     if (newAmount <= 0) {
                         this.compressedItems.remove(compressedItem);
