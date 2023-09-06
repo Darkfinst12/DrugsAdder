@@ -36,14 +36,16 @@ public class InventoryClickEventListener implements Listener {
 
     private void handelCrafting(InventoryClickEvent event) {
         if (event.getSlot() >= 1 && event.getSlot() <= 9) {
-            ItemStack ogItem = event.getInventory().getItem(event.getSlot());
-            if (ogItem != null) {
-                ItemStack itemStack = DAUtil.getDefaultItem(ogItem);
-                if (itemStack != null) {
-                    itemStack.setAmount(ogItem.getAmount());
-                    event.getInventory().setItem(event.getSlot(), itemStack);
+            Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> {
+                ItemStack ogItem = event.getInventory().getItem(event.getSlot());
+                if (ogItem != null) {
+                    ItemStack itemStack = DAUtil.getDefaultItem(ogItem);
+                    if (itemStack != null) {
+                        itemStack.setAmount(ogItem.getAmount());
+                        event.getInventory().setItem(event.getSlot(), itemStack);
+                    }
                 }
-            }
+            }, 1L);
         }
     }
 
