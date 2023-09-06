@@ -106,9 +106,6 @@ public class DAData {
         //Load Structures
         if (DAData.worldData.contains("Structures." + uuid)) {
             ConfigurationSection section = DAData.worldData.getConfigurationSection("Structures." + uuid);
-            int barrelsCount = 0;
-            int pressesCount = 0;
-            int tablesCount = 0;
             for (String structure : section.getKeys(false)) {
                 switch (structure.toLowerCase()) {
                     case "barrels" -> {
@@ -117,7 +114,6 @@ public class DAData {
                             ConfigurationSection barrelSection = barrels.getConfigurationSection(barrel);
                             DAData.loadBarrelData(world, barrelSection, isAsync);
                         }
-                        barrelsCount++;
                     }
                     case "presses" -> {
                         ConfigurationSection presses = section.getConfigurationSection("presses");
@@ -125,7 +121,6 @@ public class DAData {
                             ConfigurationSection pressSection = presses.getConfigurationSection(press);
                             DAData.loadPressData(world, pressSection, isAsync);
                         }
-                        pressesCount++;
                     }
                     case "tables" -> {
                         ConfigurationSection tables = section.getConfigurationSection("tables");
@@ -133,14 +128,11 @@ public class DAData {
                             ConfigurationSection tableSection = tables.getConfigurationSection(table);
                             DAData.loadTableData(world, tableSection, isAsync);
                         }
-                        tablesCount++;
                     }
-                    default -> {
-                        DA.log.errorLog("Unknown Structure: " + structure);
-                    }
+                    default -> DA.log.errorLog("Unknown Structure: " + structure);
                 }
             }
-            DA.log.log(String.format("Loaded Barrels: %s, Presses: %s, Tables: %s", barrelsCount, pressesCount, tablesCount), isAsync);
+            DA.log.log(String.format("Loaded Structures for World: %s", uuid), isAsync);
         } else {
             DA.log.log("No Structures found for World: " + world.getName(), isAsync);
         }
@@ -172,14 +164,8 @@ public class DAData {
                         DA.log.errorLog("Error while loading Barrel: " + barrel.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
                     }
-                } else {
-                    DA.log.errorLog("Block is not a WallSign: " + barrel.getCurrentPath(), isAsync);
                 }
-            } else {
-                DA.log.errorLog("Incomplete Block-Data in data.yml: " + barrel.getCurrentPath(), isAsync);
             }
-        } else {
-            DA.log.errorLog("Missing Block-Data in data.yml: " + barrel.getCurrentPath(), isAsync);
         }
     }
 
@@ -206,21 +192,14 @@ public class DAData {
                         DA.log.errorLog("Error while loading Press: " + press.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
                     }
-                } else {
-                    DA.log.errorLog("Block is not a WallSign: " + press.getCurrentPath(), isAsync);
                 }
-            } else {
-                DA.log.errorLog("Incomplete Block-Data in data.yml: " + press.getCurrentPath(), isAsync);
             }
-        } else {
-            DA.log.errorLog("Missing Block-Data in data.yml: " + press.getCurrentPath(), isAsync);
         }
     }
 
     private static void loadTableData(World world, ConfigurationSection table, boolean isAsync) {
         // Block split by ","
         String block = table.getString("sign");
-        DA.log.debugLog("Loading Table: " + table.getCurrentPath(), isAsync);
         if (block != null) {
             String[] split = block.split(",");
             if (split.length == 3) {
@@ -241,14 +220,8 @@ public class DAData {
                         DA.log.errorLog("Error while loading Table: " + table.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
                     }
-                } else {
-                    DA.log.errorLog("Block is not a WallSign: " + table.getCurrentPath(), isAsync);
                 }
-            } else {
-                DA.log.errorLog("Incomplete Block-Data in data.yml: " + table.getCurrentPath(), isAsync);
             }
-        } else {
-            DA.log.errorLog("Missing Block-Data in data.yml: " + table.getCurrentPath(), isAsync);
         }
     }
 

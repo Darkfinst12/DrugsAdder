@@ -138,7 +138,6 @@ public class DARecipeReader {
         boolean returnMold = recipeConfig.getBoolean("returnMold", true);
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(pressRID, recipeConfig));
-        DA.loader.debugLog(materials.toString());
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", pressRID);
             return;
@@ -527,5 +526,13 @@ public class DARecipeReader {
 
     public List<DABarrelRecipe> getBarrelRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).map(daRecipe -> (DABarrelRecipe) daRecipe).toList();
+    }
+
+    public List<DACraftingRecipe> getCraftingRecipes() {
+       return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).map(daRecipe -> (DACraftingRecipe) daRecipe).toList();
+    }
+
+    public List<DAFurnaceRecipe> getFurnaceRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe).map(daRecipe -> (DAFurnaceRecipe) daRecipe).toList();
     }
 }

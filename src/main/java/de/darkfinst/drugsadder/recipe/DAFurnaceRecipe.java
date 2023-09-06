@@ -26,7 +26,6 @@ public class DAFurnaceRecipe extends DARecipe {
 
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
-        //TODO: FIX THIS - The itemMatchTypes are not used
         RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(Arrays.stream(this.getMaterials()).findFirst().get().getItemStack());
         Recipe recipe;
         switch (getRecipeType()) {
@@ -51,5 +50,14 @@ public class DAFurnaceRecipe extends DARecipe {
         FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_f1"), result, Material.ACACIA_PLANKS, 0.1f, 200);
         boolean successf1 = Bukkit.addRecipe(furnaceRecipe);
         DA.loader.debugLog("FurnaceRecipe F1 - " + successf1);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DAFurnaceRecipe")
+                .replace("}", "") +
+                ", cookingTime=" + cookingTime +
+                ", experience=" + experience +
+                '}';
     }
 }

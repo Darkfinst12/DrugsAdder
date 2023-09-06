@@ -1,17 +1,26 @@
 package de.darkfinst.drugsadder.utils;
 
+import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
+import dev.lone.itemsadder.api.CustomStack;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,26 +29,64 @@ import java.util.Map;
 public class DAUtil {
 
     //Items
-    public static DAItem getItemStackByNamespacedID(String namespacedID) {
-        DAItem daItem = null;
+    public static @Nullable DAItem getItemStackByNamespacedID(@NotNull String namespacedID) {
         if (namespacedID.startsWith("minecraft:")) {
             Material material = Material.getMaterial(namespacedID.split(":")[1].toUpperCase());
             if (material != null) {
-                daItem = new DAItem(new ItemStack(material, 1), namespacedID);
+                return new DAItem(new ItemStack(material, 1), namespacedID);
             }
-        } else if (namespacedID.startsWith("drugsadder:")) {
-            daItem = DAConfig.customItemReader.getItemByNamespacedID(namespacedID);
+        } else {
+            DAItem item = DAConfig.customItemReader.getItemByNamespacedID(namespacedID);
+            if (item != null) {
+                return item;
+            }
+            DA.log.debugLog("Item not found in custom items: " + namespacedID);
+            if (DAConfig.hasItemsAdder) {
+                DA.log.debugLog("Searching in ItemsAdder: " + namespacedID);
+                if (DALoader.iaLoaded) {
+                    DA.log.debugLog("ItemsAdder loaded: " + namespacedID);
+                    CustomStack customStack = CustomStack.getInstance(namespacedID);
+                    if (customStack != null) {
+                        return new DAItem(customStack.getItemStack(), namespacedID);
+                    }
+                    DA.log.debugLog("ItemsAdder item not found: " + namespacedID);
+                } else {
+                    DA.log.debugLog("ItemsAdder not loaded: " + namespacedID);
+                    ItemStack itemStack = new ItemStack(Material.STICK);
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.setDisplayName("§cItemsAdder not loaded");
+                    itemStack.setItemMeta(itemMeta);
+                    return new DAItem(itemStack, namespacedID);
+                }
+            }
+            if (DAConfig.hasSlimefun) {
+                DA.log.debugLog("Searching in Slimefun: " + namespacedID);
+                SlimefunItem slimefunItem = SlimefunItem.getById(namespacedID.split(":")[1]);
+                if (slimefunItem != null) {
+                    return new DAItem(slimefunItem.getItem(), namespacedID);
+                }
+            }
         }
-        //TODO: Support: MMOItems - https://gitlab.com/phoenix-dvpmt/mmoitems
-        //TODO: Support: Slimefun4 - https://github.com/Slimefun/Slimefun4
-        //TODO: Support: ItemsAdder - https://github.com/LoneDev6/API-ItemsAdder
-        return daItem;
+        return null;
     }
 
-    public static ItemStack getDefaultItem(ItemStack item) {
+    public static @Nullable ItemStack getDefaultItem(ItemStack item) {
         DAItem daItem = DAConfig.customItemReader.getItemByItemStack(item);
         if (daItem != null) {
             return daItem.getItemStack();
+        }
+        if (DAConfig.hasItemsAdder) {
+            CustomStack customStack = CustomStack.byItemStack(item);
+            if (customStack != null) {
+                customStack = CustomStack.getInstance(customStack.getNamespacedID());
+                return customStack.getItemStack();
+            }
+        }
+        if (DAConfig.hasSlimefun) {
+            SlimefunItem slimefunItem = SlimefunItem.getByItem(item);
+            if (slimefunItem != null) {
+                return slimefunItem.getItem();
+            }
         }
         return null;
     }
@@ -111,8 +158,7 @@ public class DAUtil {
     }
 
     //Parse
-    @NotNull
-    public static Map<String, String> parsMap(@NotNull String string) {
+    public static @NotNull Map<String, String> parsMap(@NotNull String string) {
         String[] keyValues = string.split(",");
         HashMap<String, String> map = new HashMap<>();
 

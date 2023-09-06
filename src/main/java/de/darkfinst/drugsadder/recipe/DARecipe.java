@@ -77,4 +77,14 @@ public abstract class DARecipe {
     public DAItem getMaterial(@NotNull ItemStack item) {
         return Arrays.stream(this.materials).filter(material -> DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes())).findFirst().orElse(null);
     }
+
+    @Override
+    public String toString() {
+        return "DARecipe{" +
+                "namedID='" + namedID + '\'' +
+                ", recipeType=" + recipeType +
+                ", materials=" + Arrays.toString(materials) +
+                ", result=" + result +
+                '}';
+    }
 }

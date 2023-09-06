@@ -2,10 +2,8 @@ package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
-import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
-import de.darkfinst.drugsadder.recipe.DARecipe;
+import de.darkfinst.drugsadder.recipe.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.*;
@@ -14,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
@@ -52,58 +49,28 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
                     if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
                         for (DARecipe registeredRecipe : DAConfig.daRecipeReader.getRegisteredRecipes()) {
-                            StringBuilder stringBuilder = new StringBuilder("Recipe: ");
-                            stringBuilder.append(registeredRecipe.getRecipeNamedID());
-                            stringBuilder.append(" - Type: ");
-                            stringBuilder.append(registeredRecipe.getClass().getSimpleName());
-                            stringBuilder.append(" - Result: ");
-                            stringBuilder.append(registeredRecipe.getResult().getNamespacedID());
-                            stringBuilder.append(" - Materials: ");
-                            for (DAItem material : registeredRecipe.getMaterials()) {
-                                stringBuilder.append(material.getNamespacedID());
-                                stringBuilder.append(", ");
-                            }
-                            DA.loader.msg(commandSender, stringBuilder.toString());
+                            DA.loader.msg(commandSender, registeredRecipe.toString());
                         }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
-
+                        for (DABarrelRecipe barrelRecipe : DAConfig.daRecipeReader.getBarrelRecipes()) {
+                            DA.loader.msg(commandSender, barrelRecipe.toString());
+                        }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
-                        var list = DAConfig.daRecipeReader.getRegisteredRecipes().stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).toList();
-                        for (DARecipe daRecipe : list) {
-                            if (daRecipe instanceof DACraftingRecipe craftingRecipe) {
-                                StringBuilder stringBuilder = new StringBuilder("CraftingRecipe: ");
-                                stringBuilder.append(craftingRecipe.getNamedID());
-                                stringBuilder.append(" - Result: ");
-                                stringBuilder.append(" - ShapeType: ");
-                                stringBuilder.append(craftingRecipe.isShapeless() ? "Shapeless" : "Shaped");
-                                stringBuilder.append(" - Shape: ");
-                                for (String shape : craftingRecipe.getShape()) {
-                                    stringBuilder.append(shape);
-                                    stringBuilder.append(", ");
-                                }
-                                stringBuilder.append(craftingRecipe.getResult().getNamespacedID());
-                                stringBuilder.append(" - Materials: ");
-                                for (int i = 0; i < craftingRecipe.getShapeKeys().size() - 1; i++) {
-                                    String key = craftingRecipe.getShapeKeys().keySet().toArray(new String[0])[i];
-                                    stringBuilder.append(key);
-                                    stringBuilder.append(": ");
-                                    stringBuilder.append(craftingRecipe.getMaterials()[i].getNamespacedID());
-                                    if (i < craftingRecipe.getShapeKeys().size() - 1) {
-                                        stringBuilder.append(", ");
-                                    }
-                                }
-                                stringBuilder.append(" - BukkitRegistered: ");
-                                NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, craftingRecipe.getNamedID());
-                                stringBuilder.append(Bukkit.getRecipe(namespacedKey) != null);
-                                DA.loader.msg(commandSender, stringBuilder.toString());
-                            }
+                        for (DACraftingRecipe craftingRecipe : DAConfig.daRecipeReader.getCraftingRecipes()) {
+                            DA.loader.msg(commandSender, craftingRecipe.toString());
                         }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
-
+                        for (DAFurnaceRecipe furnaceRecipe : DAConfig.daRecipeReader.getFurnaceRecipes()) {
+                            DA.loader.msg(commandSender, furnaceRecipe.toString());
+                        }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
-
+                        for (DAPressRecipe pressRecipe : DAConfig.daRecipeReader.getPressRecipes()) {
+                            DA.loader.msg(commandSender, pressRecipe.toString());
+                        }
                     } else if (args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
-
+                        for (DATableRecipe tableRecipe : DAConfig.daRecipeReader.getTableRecipes()) {
+                            DA.loader.msg(commandSender, tableRecipe.toString());
+                        }
                     }
                 } else if (args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
                     DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);

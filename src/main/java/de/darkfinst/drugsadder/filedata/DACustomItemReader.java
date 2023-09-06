@@ -12,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -103,7 +105,7 @@ public class DACustomItemReader {
         }
     }
 
-    public DAItem getItemByNamespacedID(String namespacedID) {
+    public @Nullable DAItem getItemByNamespacedID(String namespacedID) {
         DAItem daItem = this.registeredItems.get(namespacedID);
         if (daItem != null) {
             daItem = daItem.clone();
@@ -111,11 +113,11 @@ public class DACustomItemReader {
         return daItem;
     }
 
-    public DAItem getItemByItemStack(ItemStack itemStack) {
+    public @Nullable DAItem getItemByItemStack(ItemStack itemStack) {
         return this.registeredItems.values().stream().filter(daItem -> DAUtil.matchItems(daItem.getItemStack(), itemStack, ItemMatchType.EXACT_CMD)).findFirst().orElse(null);
     }
 
-    public List<String> getCustomItemNames() {
+    public @NotNull List<String> getCustomItemNames() {
         List<String> names = new ArrayList<>();
         for (String key : this.registeredItems.keySet()) {
             names.add(key.replace("drugsadder:", ""));

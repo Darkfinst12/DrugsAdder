@@ -221,5 +221,20 @@ public class DATableRecipe extends DARecipe {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DATableRecipe")
+                .replace("}", "") +
+                ", filterOne=" + filterOne +
+                ", consumeFilterOne=" + consumeFilterOne +
+                ", filterTwo=" + filterTwo +
+                ", consumeFilterTwo=" + consumeFilterTwo +
+                ", fuelOne=" + fuelOne +
+                ", fuelTwo=" + fuelTwo +
+                ", materialOne=" + materialOne +
+                ", materialTwo=" + materialTwo +
+                '}';
+    }
+
 
 }

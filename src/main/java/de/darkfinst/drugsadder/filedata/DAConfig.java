@@ -5,7 +5,9 @@ import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAFurnaceRecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import dev.lone.itemsadder.api.ItemsAdder;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,6 +29,11 @@ public class DAConfig {
     public static boolean loadDataAsync;
     public static boolean returnBucket;
     public static boolean returnBottle;
+
+    public static boolean hasSlimefun;
+    public static boolean hasItemsAdder;
+
+
     public static String cancelRecipeItem;
 
 
@@ -130,6 +137,7 @@ public class DAConfig {
             }
         }
 
+
         //Loads the CancelRecipeItem
         cancelRecipeItem = config.getString("cancelRecipeItem", "drugsadder:cancel_recipe_item");
 
@@ -189,4 +197,9 @@ public class DAConfig {
 
     }
 
+    public static void clear() {
+        customItemReader = null;
+        daRecipeReader = null;
+        drugReader = null;
+    }
 }

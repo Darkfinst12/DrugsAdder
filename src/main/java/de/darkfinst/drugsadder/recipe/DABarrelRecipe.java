@@ -114,4 +114,12 @@ public class DABarrelRecipe extends DARecipe {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DABarrelRecipe")
+                .replace("}", "") +
+                ", processTime=" + processTime +
+                ", processOverdueAcceptance=" + processOverdueAcceptance +
+                "}";
+    }
 }

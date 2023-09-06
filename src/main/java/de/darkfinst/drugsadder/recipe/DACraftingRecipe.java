@@ -97,4 +97,14 @@ public class DACraftingRecipe extends DARecipe {
             Bukkit.addRecipe(shapedRecipe);
         }
     }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DACraftingRecipe")
+                .replace("}", "") +
+                ", shape=" + shape +
+                ", shapeKeys=" + shapeKeys +
+                ", isShapeless=" + isShapeless +
+                "}";
+    }
 }

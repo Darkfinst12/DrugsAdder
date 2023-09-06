@@ -11,12 +11,10 @@ import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -28,7 +26,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -36,28 +33,33 @@ public class DALoader {
 
     private final DA plugin;
 
-    private DAConfig daConfig;
-
     public LanguageReader languageReader;
     public String language;
 
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
     private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
 
+    @Setter
+    public static boolean iaLoaded = false;
 
     public DALoader(DA plugin) {
         this.plugin = plugin;
     }
 
     public void init() {
-        this.initConfig();
-        this.initData();
+        if (DAConfig.hasItemsAdder && !DALoader.iaLoaded) {
+            this.initConfig();
+            this.initData();
+        } else {
+            this.infoLog("ItemsAdder is not loaded, await finishing of the ItemsAdder loading process");
+        }
         this.initCommands();
         this.initListener();
         this.initRunnable();
     }
 
     private void initConfig() {
+
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
             if (config == null) {
@@ -93,6 +95,7 @@ public class DALoader {
         new InventoryClickEventListener();
         new InventoryCloseEventListener();
         new InventoryDragEventListener();
+        new ItemsAdderLoadDataEventListener();
         new PlayerInteractEventListener();
         new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
@@ -225,12 +228,19 @@ public class DALoader {
         this.errorLog(log.toString(), isAsync);
     }
 
-    public void reloadConfig() {
-        //TODO: fix this
-        DAConfig.customItemReader.getRegisteredItems().clear();
-        DAConfig.daRecipeReader.getRegisteredRecipes().clear();
-        DAConfig.drugReader.getRegisteredDrugs().clear();
+    public void reloadConfigIA() {
+        this.clearConfigData();
         this.initConfig();
+        this.initData();
+    }
+
+    public void reloadConfig() {
+        this.clearConfigData();
+        this.initConfig();
+    }
+
+    private void clearConfigData() {
+        DAConfig.clear();
     }
 
 
