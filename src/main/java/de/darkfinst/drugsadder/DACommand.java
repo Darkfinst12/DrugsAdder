@@ -3,11 +3,14 @@ package de.darkfinst.drugsadder;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.*;
+import de.darkfinst.drugsadder.utils.DAUtil;
+import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +19,7 @@ import java.util.List;
 public class DACommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.SET_ADDICTION.getArg());
-    private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg());
+    private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
     private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
 
 
@@ -41,7 +44,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 if (customItem != null) {
                     player.getInventory().addItem(customItem.getItemStack());
                 } else {
-                    player.sendMessage("Custom item not found");
+                    customItem = DAUtil.getItemStackByNamespacedID(args[1]);
+                    if (customItem != null) {
+                        player.getInventory().addItem(customItem.getItemStack());
+                    } else {
+                        commandSender.sendMessage("CustomItem not found + " + args[1]);
+                    }
                 }
             }
         } else if (args.length == 3) {
@@ -78,6 +86,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
                         DA.loader.msg(commandSender, daDrug.toString());
                     } else {
                         commandSender.sendMessage("Drug not found");
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
+                    if (args[2].equalsIgnoreCase(PossibleArgs.OWN.getArg())) {
+                        DA.loader.msg(commandSender, DAConfig.customItemReader.getCustomItemNames().toString());
+                    } else if (args[2].equalsIgnoreCase(PossibleArgs.OTHER.getArg())) {
+                        DA.loader.msg(commandSender, CustomStack.getNamespacedIdsInRegistry().toString());
                     }
                 }
             } else if (args[0].equalsIgnoreCase(PossibleArgs.SET_ADDICTION.getArg())) {
@@ -144,8 +158,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         CRAFTING(DA.loader.getTranslation("crafting", "Command_Args_Crafting")),
         FURNACE(DA.loader.getTranslation("furnace", "Command_Args_Furnace")),
         PRESS(DA.loader.getTranslation("press", "Command_Args_Press")),
-        TABLE(DA.loader.getTranslation("table", "Command_Args_Table"));
-
+        TABLE(DA.loader.getTranslation("table", "Command_Args_Table")),
+        OWN(DA.loader.getTranslation("own", "Command_Args_Own")),
+        OTHER(DA.loader.getTranslation("other", "Command_Args_Other")),
+        CUSTOM_ITEMS(DA.loader.getTranslation("customItems", "Command_Args_CustomItems")),
+        ;
         private final String arg;
 
         PossibleArgs(String arg) {
