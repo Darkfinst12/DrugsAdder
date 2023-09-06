@@ -36,6 +36,14 @@ public class DAUtil {
         return daItem;
     }
 
+    public static ItemStack getDefaultItem(ItemStack item) {
+        DAItem daItem = DAConfig.customItemReader.getItemByItemStack(item);
+        if (daItem != null) {
+            return daItem.getItemStack();
+        }
+        return null;
+    }
+
     public static boolean matchItems(ItemStack itemStackA, ItemStack itemStackB, ItemMatchType... matchTypes) {
         boolean match = false;
         if (!(itemStackA == null || itemStackB == null || matchTypes == null || matchTypes.length == 0)) {

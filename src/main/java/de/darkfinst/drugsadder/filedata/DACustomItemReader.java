@@ -2,7 +2,9 @@ package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.items.DAItem;
+import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -102,7 +104,15 @@ public class DACustomItemReader {
     }
 
     public DAItem getItemByNamespacedID(String namespacedID) {
-        return this.registeredItems.get(namespacedID).clone();
+        DAItem daItem = this.registeredItems.get(namespacedID);
+        if (daItem != null) {
+            daItem = daItem.clone();
+        }
+        return daItem;
+    }
+
+    public DAItem getItemByItemStack(ItemStack itemStack) {
+        return this.registeredItems.values().stream().filter(daItem -> DAUtil.matchItems(daItem.getItemStack(), itemStack, ItemMatchType.EXACT_CMD)).findFirst().orElse(null);
     }
 
     public List<String> getCustomItemNames() {
