@@ -40,13 +40,13 @@ public class DACommand implements CommandExecutor, TabCompleter {
             }
         } else if (args.length == 2 && commandSender instanceof Player player) {
             if (args[0].equalsIgnoreCase("getCustomItem")) {
-                DAItem customItem = DAConfig.customItemReader.getItemByNamespacedID("drugsadder:" + args[1]);
+                DAItem customItem = DAUtil.getItemStackByNamespacedID("drugsadder:" + args[1]);
                 if (customItem != null) {
                     player.getInventory().addItem(customItem.getItemStack());
                 } else {
-                    customItem = DAUtil.getItemStackByNamespacedID(args[1]);
-                    if (customItem != null) {
-                        player.getInventory().addItem(customItem.getItemStack());
+                    CustomStack customStack = CustomStack.getInstance(args[1]);
+                    if(customStack != null) {
+                        player.getInventory().addItem(customStack.getItemStack());
                     } else {
                         commandSender.sendMessage("CustomItem not found + " + args[1]);
                     }

@@ -40,18 +40,13 @@ public class DAUtil {
             if (item != null) {
                 return item;
             }
-            DA.log.debugLog("Item not found in custom items: " + namespacedID);
             if (DAConfig.hasItemsAdder) {
-                DA.log.debugLog("Searching in ItemsAdder: " + namespacedID);
                 if (DALoader.iaLoaded) {
-                    DA.log.debugLog("ItemsAdder loaded: " + namespacedID);
                     CustomStack customStack = CustomStack.getInstance(namespacedID);
                     if (customStack != null) {
                         return new DAItem(customStack.getItemStack(), namespacedID);
                     }
-                    DA.log.debugLog("ItemsAdder item not found: " + namespacedID);
                 } else {
-                    DA.log.debugLog("ItemsAdder not loaded: " + namespacedID);
                     ItemStack itemStack = new ItemStack(Material.STICK);
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     itemMeta.setDisplayName("§cItemsAdder not loaded");
@@ -60,7 +55,6 @@ public class DAUtil {
                 }
             }
             if (DAConfig.hasSlimefun) {
-                DA.log.debugLog("Searching in Slimefun: " + namespacedID);
                 SlimefunItem slimefunItem = SlimefunItem.getById(namespacedID.split(":")[1]);
                 if (slimefunItem != null) {
                     return new DAItem(slimefunItem.getItem(), namespacedID);

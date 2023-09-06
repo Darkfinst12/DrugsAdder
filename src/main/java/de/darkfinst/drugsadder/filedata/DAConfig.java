@@ -137,6 +137,11 @@ public class DAConfig {
             }
         }
 
+        // Check if Slimefun is installed
+        hasSlimefun = Bukkit.getPluginManager().isPluginEnabled("Slimefun");
+        //Check if ItemsAdder is installed
+        hasItemsAdder = Bukkit.getPluginManager().isPluginEnabled("ItemsAdder");
+
 
         //Loads the CancelRecipeItem
         cancelRecipeItem = config.getString("cancelRecipeItem", "drugsadder:cancel_recipe_item");

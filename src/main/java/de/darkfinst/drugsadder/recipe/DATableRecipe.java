@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.table.DATable;
+import de.darkfinst.drugsadder.utils.DAUtil;
 import de.darkfinst.drugsadder.utils.Pair;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,7 +88,7 @@ public class DATableRecipe extends DARecipe {
             DA.log.log("Recipe " + this.getRecipeNamedID() + " was canceled because " + reason, isAsync);
             this.updateView(daTable, 0, isAsync);
             this.inProcess.remove(daTable);
-            DAItem result = DAConfig.customItemReader.getItemByNamespacedID(DAConfig.cancelRecipeItem);
+            DAItem result = DAUtil.getItemStackByNamespacedID(DAConfig.cancelRecipeItem);
             ItemStack resultItem = result != null ? result.getItemStack() : null;
             if (daTable.getInventory().getItem(daTable.getResultSlot()) == null) {
                 daTable.getInventory().setItem(daTable.getResultSlot(), resultItem);
