@@ -6,8 +6,8 @@ import de.darkfinst.drugsadder.api.events.drug.DrugReduceAddictionEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -50,17 +50,24 @@ public class DAPlayer {
                 int[] keys = daDrug.getConsummation().keySet().stream().mapToInt(i -> i).toArray();
                 int closest = DAUtil.findClosest(keys, addictionPoints);
                 daDrug.getConsummation().get(closest).forEach(daEffect -> daEffect.applyEffect(player));
+            } else {
+                DA.log.errorLog("Consummation of drug " + daDrug.getID() + " is empty!");
             }
         } else {
             daDrug.getDaEffects().forEach(daEffect -> daEffect.applyEffect(player));
-            daDrug.getServerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(DA.getInstance.getServer().getConsoleSender(), commandLine.replace("%player%", player.getName())));
-            daDrug.getPlayerCommands().forEach(commandLine -> DA.getInstance.getServer().dispatchCommand(player, commandLine));
         }
         if (daDrug.getConsumeMessage() != null) {
-            DA.loader.msg(player, ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeMessage()), DrugsAdderSendMessageEvent.Type.PLAYER);
+            DA.loader.msg(player, ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeMessage().replace("%drug%", daDrug.getID())), DrugsAdderSendMessageEvent.Type.PLAYER);
         }
         if (daDrug.getConsumeTitle() != null) {
-            player.sendTitle(ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeTitle()), "", 10, 70, 20);
+            player.sendTitle(ChatColor.translateAlternateColorCodes('&', daDrug.getConsumeTitle().replace("%drug%", daDrug.getID())), "", 10, 70, 20);
+        }
+
+        for (String serverCommand : daDrug.getServerCommands()) {
+            DA.getInstance.getServer().dispatchCommand(DA.getInstance.getServer().getConsoleSender(), serverCommand.replace("%player%", player.getName()).replace("%drug%", daDrug.getID()));
+        }
+        for (String playerCommand : daDrug.getPlayerCommands()) {
+            DA.getInstance.getServer().dispatchCommand(player, playerCommand.replace("%player%", player.getName()).replace("%drug%", daDrug.getID()));
         }
     }
 
@@ -70,12 +77,10 @@ public class DAPlayer {
 
     public void clearAddictions() {
         this.addicted.clear();
-        this.checkToRemove();
     }
 
     public void clearAddiction(DADrug daDrug) {
         this.addicted.remove(daDrug);
-        this.checkToRemove();
     }
 
     public void reduceAddiction(DADrug daDrug, boolean isAsync) {
@@ -110,13 +115,10 @@ public class DAPlayer {
                 }
             }
         }
-        this.checkToRemove();
     }
 
-    private void checkToRemove() {
-        if (this.addicted.isEmpty()) {
-            DA.loader.removeDaPlayer(this);
-        }
+    public boolean isAddicted(DADrug daDrug) {
+        return this.addicted.containsKey(daDrug);
     }
 
     public boolean isOnline() {
@@ -133,10 +135,16 @@ public class DAPlayer {
     }
 
     public static void save(ConfigurationSection players) {
-        DA.loader.getDaPlayerList().forEach(daPlayer -> {
-            DA.log.log("Saving player " + daPlayer.getUuid());
-            ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
-            daPlayer.addicted.forEach((daDrug, integer) -> player.set(daDrug.getID(), (daDrug.getID() + "/" + integer)));
-        });
+        for (DAPlayer daPlayer : DA.loader.getDaPlayerList()) {
+            if (daPlayer.addicted.isEmpty()) {
+                if (players.contains(daPlayer.getUuid().toString())) {
+                    players.set(daPlayer.getUuid().toString(), null);
+                }
+            } else {
+                DA.log.debugLog("Saving player " + daPlayer.getUuid());
+                ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
+                daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
+            }
+        }
     }
 }

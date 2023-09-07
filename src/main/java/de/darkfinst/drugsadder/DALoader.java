@@ -7,12 +7,13 @@ import de.darkfinst.drugsadder.filedata.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -20,12 +21,12 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -33,28 +34,33 @@ public class DALoader {
 
     private final DA plugin;
 
-    private DAConfig daConfig;
-
     public LanguageReader languageReader;
     public String language;
 
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
     private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
 
+    @Setter
+    public static boolean iaLoaded = false;
 
     public DALoader(DA plugin) {
         this.plugin = plugin;
     }
 
     public void init() {
-        this.initConfig();
-        this.initData();
+        if (DAConfig.hasItemsAdder && !DALoader.iaLoaded) {
+            this.initConfig();
+            this.initData();
+        } else {
+            this.infoLog("ItemsAdder is not loaded, await finishing of the ItemsAdder loading process");
+        }
         this.initCommands();
         this.initListener();
         this.initRunnable();
     }
 
     private void initConfig() {
+
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
             if (config == null) {
@@ -81,40 +87,77 @@ public class DALoader {
     }
 
     private void initListener() {
+        new BlockBreakEventListener();
+        new BlockGrowEventListener();
+        new BlockPlaceEventListener();
         new CraftItemEventListener();
         new FurnaceBurnEventListener();
         new FurnaceSmeltEventListener();
         new FurnaceStartSmeltEventListener();
+        new InventoryClickEventListener();
+        new InventoryCloseEventListener();
+        new InventoryDragEventListener();
+        new ItemsAdderLoadDataEventListener();
         new PlayerInteractEventListener();
         new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
         new SignChangeEventListener();
-
+        new StructureGrowEventListener();
     }
 
     private void initRunnable() {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
     }
 
-    public void registerDAStructure(DAStructure structure, boolean isAsync) {
+    public boolean registerDAStructure(DAStructure structure, boolean isAsync) {
         RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
         if (!registerStructureEvent.isCancelled()) {
-            this.structureList.add(structure);
-            DA.loader.debugLog("Registered Structure: " + structure.getClass().getSimpleName(), isAsync);
+            return this.structureList.add(structure);
         }
+        return false;
     }
 
     public void unregisterDAStructure(DAStructure structure) {
         this.structureList.remove(structure);
     }
 
+    public boolean unregisterDAStructure(Player player, Block block) {
+        DAStructure structure = this.getStructure(block);
+        if (structure != null) {
+            if (structure.hasInventory()) {
+                structure.destroyInventory();
+            }
+            boolean success = this.structureList.remove(structure);
+            if (success) {
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName()), DrugsAdderSendMessageEvent.Type.PLAYER);
+            }
+
+        }
+        return this.structureList.contains(structure);
+    }
+
     public boolean isStructure(Block block) {
         return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block));
     }
 
+    public boolean isPlant(Block block) {
+        return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block));
+    }
+
     public DAStructure getStructure(Block block) {
         return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block)).findAny().orElse(null);
+    }
+
+    public DAStructure getStructure(Inventory inventory) {
+        return this.structureList.stream().filter(daStructure -> {
+            if (daStructure instanceof DABarrel daBarrel) {
+                return daBarrel.getInventory().equals(inventory);
+            } else if (daStructure instanceof DATable daTable) {
+                return daTable.getInventory().equals(inventory);
+            }
+            return false;
+        }).findAny().orElse(null);
     }
 
     public List<DAStructure> getStructures(World world) {
@@ -128,11 +171,13 @@ public class DALoader {
     public void openStructure(Block block, Player player) {
         DAStructure daStructure = this.getStructure(block);
         if (daStructure instanceof DABarrel daBarrel) {
-            daBarrel.open(player);
+            daBarrel.open(player, block);
         } else if (daStructure instanceof DATable daTable) {
             daTable.open(player);
         } else if (daStructure instanceof DAPress daPress) {
-            daPress.usePress(player);
+            daPress.usePress(player, block);
+        } else if (daStructure instanceof DAPlant daPlant) {
+            daPlant.checkHarvest(player);
         }
     }
 
@@ -162,6 +207,14 @@ public class DALoader {
         this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG, isAsync);
     }
 
+    public void infoLog(String msg) {
+        this.infoLog(msg, false);
+    }
+
+    public void infoLog(String msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(41, 212, 3)) + "[Info] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.INFO, isAsync);
+    }
+
     public void debugLog(String msg) {
         this.debugLog(msg, false);
     }
@@ -189,12 +242,19 @@ public class DALoader {
         this.errorLog(log.toString(), isAsync);
     }
 
-    public void reloadConfig() {
-        //TODO: fix this
-        DAConfig.customItemReader.getRegisteredItems().clear();
-        DAConfig.daRecipeReader.getRegisteredRecipes().clear();
-        DAConfig.drugReader.getRegisteredDrugs().clear();
+    public void reloadConfigIA() {
+        this.clearConfigData();
         this.initConfig();
+        this.initData();
+    }
+
+    public void reloadConfig() {
+        this.clearConfigData();
+        this.initConfig();
+    }
+
+    private void clearConfigData() {
+        DAConfig.clear();
     }
 
 
@@ -212,6 +272,13 @@ public class DALoader {
 
     public void addDaPlayer(DAPlayer daPlayer) {
         this.daPlayerList.add(daPlayer);
+    }
+
+    public String getTranslation(String fallback, String key, String... args) {
+        if (this.languageReader == null) {
+            return fallback;
+        }
+        return this.languageReader.get(key, args);
     }
 
     public class DrugsAdderRunnable implements Runnable {

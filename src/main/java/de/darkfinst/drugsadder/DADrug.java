@@ -81,7 +81,7 @@ public class DADrug extends DAAddiction {
 
         @Override
         public void run() {
-            for (DAPlayer daPlayer : DA.loader.getDaPlayerList()) {
+            for (DAPlayer daPlayer : DA.loader.getDaPlayerList().stream().filter(daPlayer -> daPlayer.isAddicted(this.daDrug)).toList()) {
                 if (this.daDrug.isReductionOnlyOnline() && daPlayer.isOnline()) {
                     daPlayer.reduceAddiction(this.daDrug, isAsync);
                 } else if (!this.daDrug.isReductionOnlyOnline()) {

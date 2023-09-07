@@ -4,4 +4,9 @@ import org.bukkit.event.Event;
 
 public abstract class BarrelEvent extends Event {
 
+    //Constructor
+    public BarrelEvent() {
+        super();
+    }
+
 }

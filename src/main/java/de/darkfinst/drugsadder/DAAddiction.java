@@ -34,6 +34,9 @@ public class DAAddiction {
             this.reductionTime = daAddiction.getReductionTime();
             this.reductionOnlyOnline = daAddiction.isReductionOnlyOnline();
 
+            this.consummation.clear();
+            this.consummation.putAll(daAddiction.getConsummation());
+
             this.deprivation.clear();
             this.deprivation.putAll(daAddiction.getDeprivation());
         }

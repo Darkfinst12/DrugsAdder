@@ -37,7 +37,7 @@ public abstract class DARecipe {
         return null;
     }
 
-    public boolean containsMaterials(@NotNull ItemStack... givenItems) {
+    public boolean containsMaterials(ItemStack... givenItems) {
         for (DAItem material : this.getMaterials()) {
             boolean contains = false;
             for (ItemStack item : givenItems) {
@@ -51,17 +51,22 @@ public abstract class DARecipe {
             }
         }
         return true;
+    }
 
-
-       /* for (ItemStack item : givenItems) {
-            for (DAItem material : this.getMaterials()) {
-                boolean contains = DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes());
-                if (contains) {
-                    return true;
+    public boolean hasMaterials(ItemStack... givenItems) {
+        for (DAItem material : this.getMaterials()) {
+            boolean contains = false;
+            for (ItemStack itemStack : givenItems) {
+                if (DAUtil.matchItems(material.getItemStack(), itemStack, material.getItemMatchTypes())) {
+                    contains = true;
+                    break;
                 }
             }
+            if (!contains) {
+                return false;
+            }
         }
-        return false;*/
+        return true;
     }
 
     public String getRecipeNamedID() {
@@ -71,5 +76,15 @@ public abstract class DARecipe {
     @Nullable
     public DAItem getMaterial(@NotNull ItemStack item) {
         return Arrays.stream(this.materials).filter(material -> DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes())).findFirst().orElse(null);
+    }
+
+    @Override
+    public String toString() {
+        return "DARecipe{" +
+                "namedID='" + namedID + '\'' +
+                ", recipeType=" + recipeType +
+                ", materials=" + Arrays.toString(materials) +
+                ", result=" + result +
+                '}';
     }
 }

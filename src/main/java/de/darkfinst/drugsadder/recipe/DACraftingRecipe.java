@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -44,7 +45,8 @@ public class DACraftingRecipe extends DARecipe {
             result.setAmount(this.getResult().getAmount());
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, result);
             for (DAItem material : this.getMaterials()) {
-                shapelessRecipe.addIngredient(material.getItemStack().getType());
+                RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(material.getItemStack());
+                shapelessRecipe.addIngredient(exactChoice);
             }
             if (shapelessRecipe.getIngredientList().contains(null)) {
                 return false;
@@ -59,8 +61,8 @@ public class DACraftingRecipe extends DARecipe {
                 for (int i = 0; i < s.length(); i++) {
                     char key = s.charAt(i);
                     if (this.shapeKeys.containsKey(key + "")) {
-                        Material material = this.shapeKeys.get(key + "").getItemStack().getType();
-                        shapedRecipe.setIngredient(key, material);
+                        RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(this.shapeKeys.get(key + "").getItemStack());
+                        shapedRecipe.setIngredient(key, exactChoice);
                     } else {
                         return false;
                     }
@@ -94,5 +96,15 @@ public class DACraftingRecipe extends DARecipe {
             shapedRecipe.setIngredient('C', Material.CHERRY_PLANKS);
             Bukkit.addRecipe(shapedRecipe);
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DACraftingRecipe")
+                .replace("}", "") +
+                ", shape=" + shape +
+                ", shapeKeys=" + shapeKeys +
+                ", isShapeless=" + isShapeless +
+                "}";
     }
 }

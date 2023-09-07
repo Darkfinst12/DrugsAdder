@@ -2,7 +2,9 @@ package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.items.DAItem;
+import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -10,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -73,7 +77,7 @@ public class DACustomItemReader {
         }
         itemStack.setItemMeta(itemMeta);
         DAItem item = new DAItem(itemStack, name, lore, cmd, namespacedID);
-        item.setAmount(itemStack.getAmount());
+        item.setAmount(1);
 
         this.registeredItems.put(namespacedID, item);
         if (DAConfig.logCustomItemLoadInfo) {
@@ -101,11 +105,19 @@ public class DACustomItemReader {
         }
     }
 
-    public DAItem getItemByNamespacedID(String namespacedID) {
-        return this.registeredItems.get(namespacedID);
+    public @Nullable DAItem getItemByNamespacedID(String namespacedID) {
+        DAItem daItem = this.registeredItems.get(namespacedID);
+        if (daItem != null) {
+            daItem = daItem.clone();
+        }
+        return daItem;
     }
 
-    public List<String> getCustomItemNames() {
+    public @Nullable DAItem getItemByItemStack(ItemStack itemStack) {
+        return this.registeredItems.values().stream().filter(daItem -> DAUtil.matchItems(daItem.getItemStack(), itemStack, ItemMatchType.EXACT_CMD)).findFirst().orElse(null);
+    }
+
+    public @NotNull List<String> getCustomItemNames() {
         List<String> names = new ArrayList<>();
         for (String key : this.registeredItems.keySet()) {
             names.add(key.replace("drugsadder:", ""));

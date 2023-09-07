@@ -2,16 +2,25 @@ package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAFurnaceRecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import dev.lone.itemsadder.api.ItemsAdder;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DAConfig {
 
@@ -20,9 +29,15 @@ public class DAConfig {
     private static final DALoader loader = DA.loader;
 
     public static boolean loadDataAsync;
-
     public static boolean returnBucket;
     public static boolean returnBottle;
+
+    public static boolean hasSlimefun;
+    public static boolean hasItemsAdder;
+
+
+    public static String cancelRecipeItem;
+
 
     public static DACustomItemReader customItemReader;
     public static boolean logCustomItemLoadInfo;
@@ -34,10 +49,17 @@ public class DAConfig {
     public static boolean logRecipeLoadComplete;
     public static boolean logRecipeLoadError;
 
+    public static Map<Integer, String> tableStates = new HashMap<>();
+
     public static DADrugReader drugReader;
     public static boolean logDrugLoadInfo;
     public static boolean logDrugLoadComplete;
     public static boolean logDrugLoadError;
+
+    public static DASeedReader seedReader;
+    public static boolean logSeedLoadInfo;
+    public static boolean logSeedLoadComplete;
+    public static boolean logSeedLoadError;
 
     public static boolean checkConfig() {
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
@@ -124,6 +146,15 @@ public class DAConfig {
             }
         }
 
+        // Check if Slimefun is installed
+        hasSlimefun = Bukkit.getPluginManager().isPluginEnabled("Slimefun");
+        //Check if ItemsAdder is installed
+        hasItemsAdder = Bukkit.getPluginManager().isPluginEnabled("ItemsAdder");
+
+
+        //Loads the CancelRecipeItem
+        cancelRecipeItem = config.getString("cancelRecipeItem", "drugsadder:cancel_recipe_item");
+
         //Loads the Data
         loadDataAsync = config.getBoolean("loadDataAsync", true);
 
@@ -141,11 +172,31 @@ public class DAConfig {
         logDrugLoadInfo = config.getBoolean("logDrugLoadInfo", true);
         logDrugLoadComplete = config.getBoolean("logDrugLoadComplete", true);
         logDrugLoadError = config.getBoolean("logDrugLoadError", true);
+        logSeedLoadInfo = config.getBoolean("logSeedLoadInfo", true);
+        logSeedLoadComplete = config.getBoolean("logSeedLoadComplete", true);
+        logSeedLoadError = config.getBoolean("logSeedLoadError", true);
+
+        //Loads the TableStates
+        if (config.contains("tableStates")) {
+            for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
+                tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
+            }
+        }
 
         //Loads the own CustomItems
         if (config.contains("customItems")) {
             customItemReader = new DACustomItemReader(config.getConfigurationSection("customItems"));
             customItemReader.loadItems();
+            if (!customItemReader.getRegisteredItems().containsKey("drugsadder:cancel_recipe_item")) {
+                ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setDisplayName("§cCancel Recipe");
+                itemMeta.setLore(List.of("§7This is the result of a cancelled recipe"));
+                itemMeta.setCustomModelData(1);
+                itemStack.setItemMeta(itemMeta);
+                DAItem cancelRecipeItem = new DAItem(itemStack, "Cancel Recipe", List.of("§7This is the result of a cancelled recipe"), 1, "drugsadder:cancel_recipe_item");
+                customItemReader.getRegisteredItems().put("drugsadder:cancel_recipe_item", cancelRecipeItem);
+            }
         } else {
             customItemReader = new DACustomItemReader();
         }
@@ -158,6 +209,13 @@ public class DAConfig {
             daRecipeReader = new DARecipeReader();
         }
 
+        //Loads the TableStates
+        if (config.contains("tableStates")) {
+            for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
+                tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
+            }
+        }
+
 
         //Loads the Drugs
         if (config.contains("drugs")) {
@@ -168,6 +226,20 @@ public class DAConfig {
             loader.errorLog(loader.languageReader.get("Load_Error_NoDrugs"));
         }
 
+        //Loads the Seeds
+        if (config.contains("seeds")) {
+            seedReader = new DASeedReader(config.getConfigurationSection("seeds"));
+            seedReader.loadSeeds();
+        } else {
+            seedReader = new DASeedReader();
+            loader.errorLog(loader.languageReader.get("Load_Error_NoSeeds"));
+        }
+
     }
 
+    public static void clear() {
+        customItemReader = null;
+        daRecipeReader = null;
+        drugReader = null;
+    }
 }

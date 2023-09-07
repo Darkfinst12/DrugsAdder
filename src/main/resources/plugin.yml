@@ -2,7 +2,7 @@ main: de.darkfinst.drugsadder.DA
 name: DrugsAdder
 version: 0.0.1
 api-version: 1.20
-softdepend: [ WorldGuard ]
+softdepend: [ WorldGuard, ItemsAdder, Slimefun ]
 author: Jarod Békési
 
 commands:

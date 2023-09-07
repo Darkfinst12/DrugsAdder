@@ -50,8 +50,9 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public enum Type{
+    public enum Type {
         DEBUG,
+        INFO,
         ERROR,
         LOG,
         NONE,

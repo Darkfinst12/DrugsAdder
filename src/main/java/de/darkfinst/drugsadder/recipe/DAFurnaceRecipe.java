@@ -29,9 +29,12 @@ public class DAFurnaceRecipe extends DARecipe {
         RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(Arrays.stream(this.getMaterials()).findFirst().get().getItemStack());
         Recipe recipe;
         switch (getRecipeType()) {
-            case FURNACE -> recipe = new FurnaceRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
-            case SMOKING -> recipe = new SmokingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
-            case BLASTING -> recipe = new BlastingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
+            case FURNACE ->
+                    recipe = new FurnaceRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
+            case SMOKING ->
+                    recipe = new SmokingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
+            case BLASTING ->
+                    recipe = new BlastingRecipe(namespacedKey, this.getResult().getItemStack(), exactChoice, this.getExperience(), this.getCookingTime());
             default -> {
                 return false;
             }
@@ -47,5 +50,14 @@ public class DAFurnaceRecipe extends DARecipe {
         FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_f1"), result, Material.ACACIA_PLANKS, 0.1f, 200);
         boolean successf1 = Bukkit.addRecipe(furnaceRecipe);
         DA.loader.debugLog("FurnaceRecipe F1 - " + successf1);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DAFurnaceRecipe")
+                .replace("}", "") +
+                ", cookingTime=" + cookingTime +
+                ", experience=" + experience +
+                '}';
     }
 }

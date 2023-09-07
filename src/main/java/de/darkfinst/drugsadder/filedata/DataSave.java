@@ -77,10 +77,10 @@ public class DataSave extends BukkitRunnable {
 
             //Start Save of Players
             if (!DA.loader.getDaPlayerList().isEmpty()) {
-                DA.log.log("Saving " + DA.loader.getDaPlayerList().size() + " Players");
+                DA.log.debugLog("Saving " + DA.loader.getDaPlayerList().size() + " Players");
                 DAPlayer.save(data.createSection("Players"));
             } else {
-                DA.log.log("No Players to save");
+                DA.log.debugLog("No Players to save");
             }
             //End Save of Players
 
@@ -102,7 +102,7 @@ public class DataSave extends BukkitRunnable {
                 unloadingWorlds.clear();
             }
 
-            DA.log.debugLog("Saving: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - saveTime) + "ms");
+            DA.log.infoLog("Saving: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - saveTime) + "ms");
 
             if (DA.getInstance.isEnabled()) {
                 DA.getInstance.getServer().getScheduler().runTaskAsynchronously(DA.getInstance, new WriteData(data, worldData));

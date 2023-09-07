@@ -1,3 +1,17 @@
+# ---- Commands ----
+Command_Args_Reload: "reload"
+Command_Args_GetCustomItem: "getCustomItem"
+Command_Args_List: "list"
+Command_Args_SetAddiction: "setAddiction"
+Command_Args_Recipes: "recipes"
+Command_Args_Drugs: "drugs"
+Command_Args_All: "all"
+Command_Args_Barrel: "barrel"
+Command_Args_Crafting: "crafting"
+Command_Args_Furnace: "furnace"
+Command_Args_Press: "press"
+Command_Args_Table: "table"
+
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
 Load_Error_Drug_NotConfigSection: "The Drug: &v1 is not properly configured in the config.yml!"
@@ -5,6 +19,7 @@ Load_Error_Drug_ItemStack: "Off the Drug: &v1 the ItemStack: &v2 is not a valid 
 Load_Error_Drug_MatchType: "Off the Drug: &v1 the MatchType: &v2 is not a valid MatchType!"
 Load_Error_Drug_Effect: "Off the Drug: &v1 the Effect: &v2 is not a valid Effect!"
 Load_Error_Drug_Addiction: "The addictionSettings of the Drug: &v1 is not properly configured in the config.yml! - The drug will be loaded without addictionSettings!"
+Load_Error_Drug_Addiction_Effects: "The some Effects of the Drug: &v1 could not be loaded"
 Load_Error_Drug_Addiction_EffectsEmpty: "The addictionSettings of the Drug: &v1 has no effects! - You probably forgot to add effects!"
 Load_Error_Drug_Addiction_DeprivationEmpty: "The addictionSettings of the Drug: &v1 has no deprivation effects! - You probably forgot to add deprivation effects!"
 Load_Error_Drug_Addiction_Effects_EffectEmpty: "The addictionSettings of the Drug: &v1 has no effects for the addictionPoints: &v2! - You probably forgot to add effects for this addictionPoints!"
@@ -33,10 +48,20 @@ Load_Error_Recipes_RecipeNotRegistered: "The recipe: &v1 could not be registered
 Load_Error_Recipes_NoCookingTime: "The recipe: &v1 has no cooking time! - Please check the config.yml!"
 Load_Error_Recipes_MatchTypeWrongComposition: "The Recipe: &v1 has a wrong composition for its MatchTypes! - Please check the config.yml!"
 Load_Error_Recipe_IDAlreadyAssigned: "The recipe: &v1 has already been configured! - Please check the config.yml!"
+Load_Error_Recipes_NoFuel: "The recipe: &v1 has not enough fuel! Given &v2 required &v3 - Please check the config.yml!"
+Load_Info_SeedsComplete: "See load completed! - &v1/&v2 Sees loaded!"
+Load_Info_Seed_Loaded: "The Seed: &v1 was successfully loaded!"
+Load_Error_Seed_NotConfigSection: "The Seed: &v1 is not properly configured in the config.yml!"
+Load_Error_Seed_IDAlreadyAssigned: "The Seed: &v1 has already been configured! - Please check the config.yml!"
+Load_Error_Seed_NotValid: "The Seed: &v1 is not a valid Seed!"
+Load_Error_Seed_MatchType: "Off the Seed: &v1 the MatchType: &v2 is not a valid MatchType!"
+Load_Error_Seed_Drop_ItemStack: "Off the Seed: &v1 the Drop: &v2 is not a valid ItemStack!"
+Load_Error_Seed_Drop_NotConfigSection: "Off the Seed: &v1 the Drop: &v2 is not properly configured in the config.yml!"
+Load_Error_Seed_Drop_Probability: "Off the Seed: &v1 in the Drop: &v2 the probability: &v3 is not a valid value! - It must be between 0 and 100 and must not have more than 6 digits!"
+Load_Error_NoSeeds: "No seeds were configured in the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
-
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
@@ -45,7 +70,8 @@ Perm_Press_NoCreate: "You have no permission to create a press!"
 Perm_Press_NoUse: "You have no permission to use a press!"
 Perm_Table_NoCreate: "You have no permission to create a table!"
 Perms_Table_NoOpen: "You have no permission to open a table!"
-
+Perms_Plant_NoCreate: "You have no permission to create a plant!"
+Perms_Plant_NoHarvest: "You have no permission to harvest a plant!"
 
 # ---- Player ----
 Player_Barrel_Created: "The barrel was created"
@@ -56,3 +82,12 @@ Player_Press_Created: "The press was created"
 Player_Press_NotValid: "The press is not properly built"
 Player_Table_Created: "The laboratory table was created"
 Player_Table_NotValid: "The laboratory table was not properly built"
+Player_Plant_Created: "The plant was created"
+Player_Plant_NotValid: "The plant is not proper plant"
+Player_Plant_NoReady: "The plant is not ready to harvest"
+Player_Structure_Destroyed: "&v1 was successfully destroyed!"
+Player_Plant_Harvested: "The plant was successfully harvested!"
+
+# ---- Structures ----
+Structure_Name_Table: "Laboratory Table"
+Structure_Name_Barrel: "Barrel"

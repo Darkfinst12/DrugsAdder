@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class DAItem {
+@Setter
+public class DAItem implements Cloneable{
 
     @NotNull
     private final ItemStack itemStack;
@@ -21,15 +22,19 @@ public class DAItem {
     private List<String> lore;
     @Nullable
     private Integer customModelData;
-    @Setter
-    private ItemMatchType[] itemMatchTypes = new ItemMatchType[]{ItemMatchType.EXACT_CMD};
-    @Setter
+
+    private ItemMatchType[] itemMatchTypes = new ItemMatchType[]{ItemMatchType.VANNILA};
     private int amount = 1;
 
     private final String namespacedID;
 
     public DAItem(@NotNull ItemStack itemStack, String namespacedID) {
         this.itemStack = itemStack;
+        if(itemStack.hasItemMeta()){
+            this.name = itemStack.getItemMeta().getDisplayName();
+            this.lore = itemStack.getItemMeta().getLore();
+            this.customModelData = itemStack.getItemMeta().getCustomModelData();
+        }
         this.namespacedID = namespacedID;
     }
 
@@ -39,6 +44,11 @@ public class DAItem {
         this.lore = lore;
         this.customModelData = customModelData;
         this.namespacedID = namespacedID;
+    }
+
+    public DAItem(ItemStack itemStack){
+        this.itemStack = itemStack;
+        this.namespacedID = itemStack.getType().name();
     }
 
     @Override
@@ -52,5 +62,16 @@ public class DAItem {
                 ", amount=" + amount +
                 ", namespacedID='" + namespacedID + '\'' +
                 '}';
+    }
+
+    @Override
+    public DAItem clone() {
+        try {
+            DAItem clone = (DAItem) super.clone();
+            clone.itemStack.setAmount(this.amount);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

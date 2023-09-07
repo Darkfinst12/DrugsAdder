@@ -17,6 +17,17 @@ logDrugLoadInfo: true
 logDrugLoadComplete: true
 logDrugLoadError: true
 
+#Table States
+tableStates:
+  0: "\uE000"
+  1: "\uE001"
+  2: "\uE002"
+  3: "\uE003"
+  4: "\uE004"
+  5: "\uE005"
+  6: "\uE006"
+  7: "\uE007"
+
 #Custom Items
 customItems:
   #Name of the Item - This is the ID of the Item, the NamespacedID is then drugsadder:ITEMNAME
@@ -70,7 +81,8 @@ returnBottle: true
 recipes:
   barrel:
     dirty_cocaine:
-      duration: 100
+      duration: 10 #In Minutes
+      processOverdueAcceptance: 5.5 #In Minutes
       materials:
         1:
           itemStack: 'minecraft:coal'
@@ -150,6 +162,23 @@ recipes:
           matchType: "ALL"
       result: 'drugsadder:cocaine_pills/1'
   table:
+    test:
+      filterOne: 'minecraft:paper/1'
+      consumeFilterOne: true
+      fuelOne: 'minecraft:coal/1'
+      filterTwo: 'minecraft:paper/1'
+      consumeFilterTwo: true
+      fuelTwo: 'minecraft:coal/1'
+      materials:
+        1:
+          itemStack: 'drugsadder:dirty_cocaine'
+          amount: 1
+          matchType: "ALL"
+        2:
+          itemStack: 'drugsadder:dirty_cocaine'
+          amount: 1
+          matchType: "ALL"
+      result: 'drugsadder:cocaine_pills/1'
 
 #Drugs
 drugs:
@@ -174,7 +203,7 @@ drugs:
       #If the reduction should only be online
       reductionOnlyOnline: true
       #Which effects you get when you are addicted
-      effects:
+      consummation:
         15:
           - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
         30:
@@ -194,3 +223,28 @@ drugs:
       - 'say Ich habe %drug% konsumiert'
     consumeMessage: 'Du hast %drug% konsumiert'
     consumeTitle: 'Du hast %drug% konsumiert'
+
+#Seeds
+seeds:
+  "minecraft:wheat_seeds":
+    destroyOnHarvest: true
+    growTime: 60 #In Seconds
+    matchType: "ALL"
+    drops:
+      1:
+        itemStack: 'drugsadder:coca'
+        amount: 1
+        probability: 100
+      2:
+        itemStack: 'drugsadder:shrooms'
+        amount: 1
+        probability: 50
+  "minecraft:tall_grass":
+    destroyOnHarvest: false
+    growTime: 60 #In Seconds
+    matchType: "ALL"
+    drops:
+      1:
+        itemStack: 'drugsadder:coca'
+        amount: 1
+        probability: 20

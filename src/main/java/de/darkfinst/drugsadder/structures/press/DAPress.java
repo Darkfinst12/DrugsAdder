@@ -10,6 +10,7 @@ import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAPressRecipe;
+import de.darkfinst.drugsadder.recipe.DARecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.barrel.DABarrelBody;
 import de.darkfinst.drugsadder.utils.DAUtil;
@@ -45,8 +46,10 @@ public class DAPress extends DAStructure {
                 boolean isValid = pressBody.isValidPress();
                 if (isValid) {
                     super.setBody(pressBody);
-                    DA.loader.registerDAStructure(this, false);
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    boolean success = DA.loader.registerDAStructure(this, false);
+                    if (success) {
+                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    }
                 }
             } catch (ValidateStructureException ignored) {
                 DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
@@ -69,7 +72,10 @@ public class DAPress extends DAStructure {
         return (DAPressBody) super.getBody();
     }
 
-    public void usePress(Player player) {
+    public void usePress(Player player, Block block) {
+        if (!(Material.LEVER.equals(block.getType()) || Material.PISTON.equals(block.getType()) || Material.PISTON_HEAD.equals(block.getType()))) {
+            return;
+        }
         UsePressEvent usePressEvent = new UsePressEvent(this, player);
         Bukkit.getPluginManager().callEvent(usePressEvent);
         if (usePressEvent.isCancelled()) {
@@ -77,24 +83,24 @@ public class DAPress extends DAStructure {
         }
         if (player.hasPermission("drugsadder.press.use")) {
             try {
-                Block block = this.getBody().getPiston();
-                Piston piston = (Piston) block.getBlockData();
+                Block pBlock = this.getBody().getPiston();
+                Piston piston = (Piston) pBlock.getBlockData();
                 Block lever = this.getBody().getLever();
                 Powerable leverData = (Powerable) lever.getBlockData();
                 if (piston.isExtended()) {
                     this.pressItems();
-                    Block head = block.getRelative(piston.getFacing());
+                    Block head = pBlock.getRelative(piston.getFacing());
                     if (this.dropItems(head)) {
                         leverData.setPowered(false);
                         lever.setBlockData(leverData, false);
                         piston.setExtended(false);
-                        block.setBlockData(piston, false);
+                        pBlock.setBlockData(piston, false);
                         head.setType(Material.AIR);
                         this.pressActiveTime = null;
-                        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_PISTON_CONTRACT, 1, 1);
+                        pBlock.getWorld().playSound(pBlock.getLocation(), Sound.BLOCK_PISTON_CONTRACT, 1, 1);
                     }
                 } else {
-                    Block head = block.getRelative(piston.getFacing());
+                    Block head = pBlock.getRelative(piston.getFacing());
                     if (this.compressItems(head)) {
                         leverData.setPowered(true);
                         lever.setBlockData(leverData, false);
@@ -104,9 +110,9 @@ public class DAPress extends DAStructure {
                         head.setBlockData(headData, false);
 
                         piston.setExtended(true);
-                        block.setBlockData(piston, false);
+                        pBlock.setBlockData(piston, false);
                         this.pressActiveTime = System.currentTimeMillis();
-                        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
+                        pBlock.getWorld().playSound(pBlock.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
                     }
                 }
             } catch (Exception e) {
@@ -169,7 +175,7 @@ public class DAPress extends DAStructure {
                     if (duration < recipe.getDuration()) {
                         return;
                     }
-                    if (!this.hasMaterials(recipe, compressedItems)) {
+                    if (!recipe.hasMaterials(compressedItems)) {
                         return;
                     }
                     PressItemEvent pressItemEvent = new PressItemEvent(this, recipe);
@@ -181,7 +187,7 @@ public class DAPress extends DAStructure {
                         this.compressedItems.remove(recipe.getMold().getItemStack());
                     }
                     var fallback = 0;
-                    while (this.hasMaterials(recipe, this.compressedItems.toArray(new ItemStack[0]))) {
+                    while (recipe.hasMaterials(this.compressedItems.toArray(new ItemStack[0]))) {
                         if (fallback >= 100) {
                             break;
                         }
@@ -212,20 +218,16 @@ public class DAPress extends DAStructure {
         this.compressedItems.add(recipe.getResult().getItemStack());
     }
 
-    private boolean hasMaterials(DAPressRecipe recipe, ItemStack[] compressedItems) {
-        for (DAItem material : recipe.getMaterials()) {
-            boolean contains = false;
-            for (ItemStack compressedItem : compressedItems) {
-                if (DAUtil.matchItems(material.getItemStack(), compressedItem, material.getItemMatchTypes())) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                return false;
-            }
-        }
-        return true;
+
+    @Override
+    public void destroyInventory() {
+        Block block = this.getBody().getPiston();
+        Block head = block.getRelative(((Piston) block.getBlockData()).getFacing());
+        this.dropItems(head);
     }
 
+    @Override
+    public boolean hasInventory() {
+        return true;
+    }
 }

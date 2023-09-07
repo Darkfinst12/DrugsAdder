@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.structures;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
@@ -36,6 +37,7 @@ public abstract class DAStructure {
             int barrelID = 0;
             int pressID = 0;
             int tableID = 0;
+            int plantID = 0;
             for (DAStructure structure : DA.loader.getStructureList()) {
                 if (structure instanceof DABarrel barrel) {
                     String worldName = barrel.getWorld().getUID().toString();
@@ -103,24 +105,28 @@ public abstract class DAStructure {
                         slot++;
                     }
                     tableID++;
+                } else if (structure instanceof DAPlant plant) {
+                    String worldName = plant.getWorld().getUID().toString();
+                    String prefix = worldName + "." + "plants." + plantID;
+
+                    Location loc = plant.getBody().getPlantBLock().getLocation();
+                    config.set(prefix + ".plant", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+                    config.set(prefix + ".seed", plant.getSeed().getNamespacedID());
+
+                    plantID++;
                 }
             }
         }
 
-        //Todo: Save old data
         if (oldData != null) {
             DA.log.debugLog("Merging old data into new data");
             for (String world : oldData.getKeys(false)) {
-                DA.log.debugLog("Merging old data for " + world);
                 ConfigurationSection structureSection = oldData.getConfigurationSection(world);
                 for (String structure : structureSection.getKeys(false)) {
                     ConfigurationSection structureData = structureSection.getConfigurationSection(structure);
                     for (String key : structureData.getKeys(false)) {
                         if (!config.contains(world + "." + structure + "." + key)) {
                             config.set(world + "." + structure + "." + key, oldData.get(world + "." + structure + "." + key));
-                            DA.log.debugLog("Merging old data for " + world + "." + structure + "." + key);
-                        } else {
-                            DA.log.debugLog("Not merging old data for " + world + "." + structure + "." + key + " because it already exists");
                         }
                     }
                 }
@@ -128,5 +134,12 @@ public abstract class DAStructure {
         } else {
             DA.log.debugLog("No old data to merge");
         }
+    }
+
+    public void destroyInventory() {
+    }
+
+    public boolean hasInventory() {
+        return false;
     }
 }

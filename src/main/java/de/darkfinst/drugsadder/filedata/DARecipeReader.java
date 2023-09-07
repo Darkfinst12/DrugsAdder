@@ -85,10 +85,15 @@ public class DARecipeReader {
             this.logError("Load_Error_Recipes_NoMaterials", barrelRID);
             return;
         }
+        if (materials.size() > 3) {
+            this.logError("Load_Error_Recipes_TooManyMaterials", barrelRID);
+            return;
+        }
 
-        int duration = recipeConfig.getInt("duration", 10);
+        Double duration = recipeConfig.getDouble("duration", 10D); //InMinutes
+        Double processOverdueAcceptance = recipeConfig.getDouble("processOverdueAcceptance", 10); //inMinutes
 
-        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, duration, result, materials.values().toArray(new DAItem[0]));
+        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, duration.longValue(), processOverdueAcceptance.longValue(), result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(barrelRecipe);
 
@@ -133,7 +138,6 @@ public class DARecipeReader {
         boolean returnMold = recipeConfig.getBoolean("returnMold", true);
 
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(pressRID, recipeConfig));
-        DA.loader.debugLog(materials.toString());
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", pressRID);
             return;
@@ -172,15 +176,42 @@ public class DARecipeReader {
         DAItem result = this.getResultItem(tableRID, recipeConfig);
         if (result == null) return;
 
+        DAItem filterOne = this.getItem(tableRID, "filterOne", recipeConfig);
+        DAItem filterTwo = this.getItem(tableRID, "filterTwo", recipeConfig);
+        DAItem fuelOne = this.getItem(tableRID, "fuelOne", recipeConfig);
+        DAItem fuelTwo = this.getItem(tableRID, "fuelTwo", recipeConfig);
+
         Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(tableRID, recipeConfig));
         if (materials.isEmpty()) {
             this.logError("Load_Error_Recipes_NoMaterials", tableRID);
             return;
         }
 
-        DATableRecipe tableRecipe = new DATableRecipe(tableRID, RecipeType.TABLE, result, null, materials.values().toArray(new DAItem[0]));
+        if (materials.size() > 2) {
+            this.logError("Load_Error_Recipes_TooManyMaterials", tableRID);
+            return;
+        }
 
-        //this.registeredRecipes.add();
+        if (materials.size() == 2) {
+            if (fuelOne == null || fuelTwo == null) {
+                int given = 0;
+                if (fuelOne != null) given++;
+                if (fuelTwo != null) given++;
+                this.logError("Load_Error_Recipes_NoFuel", tableRID, (given + ""), "2");
+                return;
+            }
+        } else {
+            if (fuelOne == null) {
+                this.logError("Load_Error_Recipes_NoFuel", tableRID, "0", "1");
+                return;
+            }
+        }
+
+        DATableRecipe tableRecipe = new DATableRecipe(tableRID, RecipeType.TABLE, filterOne, filterTwo, fuelOne, fuelTwo, result, materials.values().toArray(new DAItem[0]));
+        tableRecipe.setConsumeFilterOne(recipeConfig.getBoolean("consumeFilterOne", false));
+        tableRecipe.setConsumeFilterTwo(recipeConfig.getBoolean("consumeFilterTwo", false));
+
+        this.registeredRecipes.add(tableRecipe);
 
         if (DAConfig.logRecipeLoadInfo) {
             this.logInfo("Load_Info_RecipeLoaded", tableRID);
@@ -335,12 +366,17 @@ public class DARecipeReader {
     }
 
     @Nullable
-    private DAItem getResultItem(String pressRID, ConfigurationSection recipeConfig) {
-        String[] resultAmount = recipeConfig.getString("result", "null/1").split("/");
+    private DAItem getResultItem(String recipeID, ConfigurationSection recipeConfig) {
+        return this.getItem(recipeID, "result", recipeConfig);
+    }
+
+    @Nullable
+    private DAItem getItem(String recipeID, String path, ConfigurationSection recipeConfig) {
+        String[] resultAmount = recipeConfig.getString(path, "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
         if (result == null) {
-            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], pressRID);
+            this.logError("Load_Error_Recipes_ItemNotFound", resultAmount[0], recipeID);
             return null;
         }
         result.setAmount(amount);
@@ -482,5 +518,21 @@ public class DARecipeReader {
 
     public List<DAPressRecipe> getPressRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAPressRecipe).map(daRecipe -> (DAPressRecipe) daRecipe).toList();
+    }
+
+    public List<DATableRecipe> getTableRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DATableRecipe).map(daRecipe -> (DATableRecipe) daRecipe).toList();
+    }
+
+    public List<DABarrelRecipe> getBarrelRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).map(daRecipe -> (DABarrelRecipe) daRecipe).toList();
+    }
+
+    public List<DACraftingRecipe> getCraftingRecipes() {
+       return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).map(daRecipe -> (DACraftingRecipe) daRecipe).toList();
+    }
+
+    public List<DAFurnaceRecipe> getFurnaceRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe).map(daRecipe -> (DAFurnaceRecipe) daRecipe).toList();
     }
 }

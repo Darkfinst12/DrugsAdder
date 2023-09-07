@@ -57,4 +57,14 @@ public class DAPressRecipe extends DARecipe {
         }
         return super.getMaterial(item);
     }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DAPressRecipe")
+                .replace("}", "") +
+                ", mold=" + mold +
+                ", returnMold=" + returnMold +
+                ", duration=" + duration +
+                '}';
+    }
 }
