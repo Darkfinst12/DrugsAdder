@@ -39,20 +39,20 @@ customItems:
   #Name des CustomItems - Dies ist die ID des CustomItems, die NamespacedID ist dann drugsadder:CUSTOMITEM_NAME
   cocaine:
     #Displayname of the Item
-    #You can also use color codes with '&' - Example: '&7This is a Name'
-    #You can also use Unicode Characters - Example: '\uE000'
-    #But note that if your Name is too long it will be cut off from Minecraft and you will not see the full Name
+    #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: '&7This is a Name'.
+    #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
+    #Wenn der Name zu lang ist, wird er von Minecraft abgeschnitten und man sieht nicht den ganzen Namen.
     name: '&fCocaine'
-    #Material of the Item - Only items from Minecraft are allowed here
+    #Material des Gegenstandes - Hier sind nur Gegenstände aus Minecraft erlaubt
     material: 'paper'
-    #Lore of the Item - You can add as many lines as you want just add a '-' before the line
-    #You can also use color codes with '&' - Example: '&7This is a Lore'
-    #You can also use Unicode Characters - Example: '\uE000'
-    #But note that if your Lore is too long it will be cut off from Minecraft and you will not see the full Lore
+    #Die Beschreibung des Gegenstandes - Du kannst so viele Zeilen hinzufügen, wie du willst, füge einfach ein '-' vor der Zeile ein.
+    #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: '&7This is a Name'.
+    #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
+    #Wenn deine Lore zu lang ist, wird sie von Minecraft abgeschnitten und du wirst nicht die ganze Lore sehen.
     lore:
       - '&7Cocaine'
-    #CustomModelData of the Item
-    #Note the Model will be taken from the Users highest Resourcepack
+    #CustomModelData von dem Item
+    #Beachten, dass das Modell aus dem höchsten Texturenpacket des Benutzers entnommen wird, welches diese hat.
     customModelData: 1
   dirty_cocaine:
     name: '&fDirty Cocaine'
@@ -85,24 +85,24 @@ customItems:
       - '&7Shrooms'
     customModelData: 6
 
-#Whether a bucket should be returned when a filled one is used when crafting
+#Ob ein Eimer zurückgegeben werden soll, wenn ein gefüllter Eimer beim Basteln verwendet wird
 returnBucket: true
-#Whether a bottle should be returned when a filled one is used when crafting
+#Ob eine Flasche zurückgegeben werden sollte, wenn eine gefüllte Flasche beim Basteln verwendet wird
 returnBottle: true
 
 
-#Recipes
+#Rezepte
 recipes:
-  #The Section for the Barrel Recipes add here your Recipes
+  #Der Abschnitt für die Fassrezepte fügen hier deine Rezepte ein
   barrel:
-    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     dirty_cocaine:
-      #Duration of the Recipe - In Minutes
+      #Wie lande das Rezept dauert - In Minuten
       duration: 10
       #
       processOverdueAcceptance: 5.5 #In Minutes
-      #The Materials of the Recipe - You can add 3 Materials
-      #The position of the Material does not matter
+      #Die Materialien des Rezepts - Du kannst maximal 3 Materialien hinzufügen
+      #Die Position des Materials spielt keine Rolle.
       materials:
         1:
           #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem

@@ -52,7 +52,7 @@ customItems:
     lore:
       - '&7Cocaine'
     #CustomModelData of the Item
-    #Note the Model will be taken from the Users highest Resourcepack
+    #Note the Model will be taken from the Users highest Resourcepack, wich contains the Model
     customModelData: 1
   dirty_cocaine:
     name: '&fDirty Cocaine'
