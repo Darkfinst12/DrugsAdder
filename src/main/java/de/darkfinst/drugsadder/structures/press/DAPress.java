@@ -73,7 +73,7 @@ public class DAPress extends DAStructure {
     }
 
     public void usePress(Player player, Block block) {
-        if (!Material.LEVER.equals(block.getType())) {
+        if (!Material.LEVER.equals(block.getType()) || !Material.PISTON.equals(block.getType()) || !Material.PISTON_HEAD.equals(block.getType())) {
             return;
         }
         UsePressEvent usePressEvent = new UsePressEvent(this, player);
