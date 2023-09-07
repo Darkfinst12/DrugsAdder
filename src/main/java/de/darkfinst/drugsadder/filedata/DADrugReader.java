@@ -30,6 +30,9 @@ public class DADrugReader {
     }
 
 
+    /**
+     * This method loads all the Drugs from the config
+     */
     public void loadDrugs() {
         assert config != null;
         Set<String> drugs = config.getKeys(false);
@@ -42,6 +45,11 @@ public class DADrugReader {
         }
     }
 
+    /**
+     * This method loads a single drug from the config
+     *
+     * @param drugID The ID of the drug to load
+     */
     private void loadDrug(String drugID) {
         assert config != null;
         ConfigurationSection drugConfig = config.getConfigurationSection(drugID);
@@ -107,14 +115,32 @@ public class DADrugReader {
         }
     }
 
+    /**
+     * This method returns a drug by its itemStack
+     *
+     * @param item The itemStack to get the drug from
+     * @return The drug or null if no drug was found
+     */
     public DADrug getDrug(ItemStack item) {
         return this.registeredDrugs.stream().filter(drug -> DAUtil.matchItems(item, drug.getItemStack(), drug.getMatchTypes())).findFirst().orElse(null);
     }
 
+    /**
+     * This method returns a drug by its ID
+     *
+     * @param id The ID of the drug to get
+     * @return The drug or null if no drug was found
+     */
     public DADrug getDrug(String id) {
         return this.registeredDrugs.stream().filter(drug -> drug.getID().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
 
+    /**
+     * This method loads a single effect from a string
+     *
+     * @param effectString The string to load the effect from
+     * @return The loaded effect or null if the effect could not be loaded
+     */
     private DAEffect loadEffect(String effectString) {
         DAEffect effect = null;
         if (effectString.startsWith("PotionEffect")) {
@@ -126,6 +152,12 @@ public class DADrugReader {
         return effect;
     }
 
+    /**
+     * This method loads a potion effect from a string
+     *
+     * @param effectString The string to load the effect from
+     * @return The loaded effect or null if the effect could not be loaded
+     */
     private DAEffect loadPotionEffect(String effectString) {
         effectString = effectString.replace("PotionEffect{", "").replace("}", "");
         Map<String, String> map = DAUtil.parsMap(effectString);
@@ -145,6 +177,12 @@ public class DADrugReader {
         return new DAEffect(minDuration, maxDuration, probability, effectType.getName(), minLevel, maxLevel, particles, icon);
     }
 
+    /**
+     * This method loads a screen effect from a string
+     *
+     * @param effectString The string to load the effect from
+     * @return The loaded effect or null if the effect could not be loaded
+     */
     private DAEffect loadScreenEffect(String effectString) {
         effectString = effectString.replace("ScreenEffect{", "").replace("}", "");
         Map<String, String> map = DAUtil.parsMap(effectString);
@@ -161,6 +199,12 @@ public class DADrugReader {
         return new DAEffect(minDuration, maxDuration, probability, screenEffect);
     }
 
+    /**
+     * This method loads the addiction settings from the config
+     *
+     * @param drugConfig The config to load the settings from
+     * @return The loaded settings
+     */
     private DAAddiction loadAddictionSettings(ConfigurationSection drugConfig) {
         DAAddiction daAddiction = new DAAddiction(false);
         ConfigurationSection addictionConfig = drugConfig.getConfigurationSection("addictionSettings");
@@ -201,6 +245,14 @@ public class DADrugReader {
         return daAddiction;
     }
 
+
+    /**
+     * This method loads all the consummation effects from the config
+     *
+     * @param drugConfig   The config to load the effects from
+     * @param effectConfig The config section to load the effects from
+     * @return The loaded effects as a map with the addiction level as key
+     */
     private Map<Integer, List<DAEffect>> loadAddictionEffects(ConfigurationSection drugConfig, ConfigurationSection effectConfig) {
         Map<Integer, List<DAEffect>> effectMap = new HashMap<>();
         if (effectConfig == null) {
@@ -218,6 +270,13 @@ public class DADrugReader {
         return effectMap;
     }
 
+    /**
+     * This method loads all the deprivation effects from the config
+     *
+     * @param drugConfig        The config to load the effects from
+     * @param deprivationConfig The config section to load the effects from
+     * @return The loaded effects as a map with the deprivation level as key
+     */
     private Map<Integer, List<DAEffect>> loadAddictionDeprivations(ConfigurationSection drugConfig, ConfigurationSection deprivationConfig) {
         Map<Integer, List<DAEffect>> deprivationMap = new HashMap<>();
         if (deprivationConfig == null) {
@@ -235,6 +294,14 @@ public class DADrugReader {
         return deprivationMap;
     }
 
+    /**
+     * This method loads a map of effects from a list of effects
+     *
+     * @param drugConfig The config to load the effects from
+     * @param map        The map to load the effects into
+     * @param id         The ID of the effect
+     * @param effects    The list of effects to load
+     */
     private void loadEffectMap(ConfigurationSection drugConfig, Map<Integer, List<DAEffect>> map, String id, List<String> effects) {
         List<DAEffect> daEffects = new ArrayList<>();
         for (String effect : effects) {
@@ -248,6 +315,12 @@ public class DADrugReader {
         map.put(Integer.parseInt(id), daEffects);
     }
 
+    /**
+     * This method logs an error message to the console
+     *
+     * @param key  The key of the error message in the language file
+     * @param args The arguments for the error message (optional)
+     */
     private void logError(String key, String... args) {
         if (DAConfig.logDrugLoadError) {
             LanguageReader languageReader = DA.loader.getLanguageReader();
@@ -260,6 +333,12 @@ public class DADrugReader {
         }
     }
 
+    /**
+     * This method logs an info message to the console
+     *
+     * @param key  The key of the info message in the language file
+     * @param args The arguments for the info message (optional)
+     */
     private void logInfo(String key, String... args) {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;

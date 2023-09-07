@@ -38,6 +38,11 @@ public class DACraftingRecipe extends DARecipe {
         this.shapeKeys.putAll(shapeKeys);
     }
 
+    /**
+     * Registers the recipe in the server
+     *
+     * @return If the recipe was successfully registered
+     */
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
         if (this.isShapeless) {
@@ -75,6 +80,7 @@ public class DACraftingRecipe extends DARecipe {
         }
     }
 
+    @Deprecated(since = "1.0.0", forRemoval = false)
     public static void registerDEMORecipe(boolean isShapeless) {
         ItemStack result = new ItemStack(Material.STICK, 1);
         ItemMeta meta = result.getItemMeta();

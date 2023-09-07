@@ -25,6 +25,11 @@ public class DACustomItemReader {
     private final Map<String, DAItem> registeredItems = new HashMap<>();
     private int configItemCount = 0;
 
+    /**
+     * This constructor is used to load the items from the config
+     *
+     * @param config The config to load the items from
+     */
     public DACustomItemReader(ConfigurationSection config) {
         this.config = config;
     }
@@ -33,6 +38,9 @@ public class DACustomItemReader {
         this.config = null;
     }
 
+    /**
+     * This method loads all items from the config
+     */
     public void loadItems() {
         assert config != null;
         Set<String> items = config.getKeys(false);
@@ -45,6 +53,11 @@ public class DACustomItemReader {
         }
     }
 
+    /**
+     * This method loads a single item from the config
+     *
+     * @param itemID The ID of the item to load
+     */
     private void loadItem(String itemID) {
         assert config != null;
         ConfigurationSection itemConfig = config.getConfigurationSection(itemID);
@@ -85,6 +98,12 @@ public class DACustomItemReader {
         }
     }
 
+    /**
+     * This method logs an error to the console
+     *
+     * @param key  The key of the error message in the language file
+     * @param args The arguments for the error message (optional)
+     */
     private void logError(String key, String... args) {
         if (DAConfig.logCustomItemLoadError) {
             LanguageReader languageReader = DA.loader.getLanguageReader();
@@ -97,6 +116,12 @@ public class DACustomItemReader {
         }
     }
 
+    /**
+     * This method logs an info message to the console
+     *
+     * @param key  The key of the info message in the language file
+     * @param args The arguments for the info message (optional)
+     */
     private void logInfo(String key, String... args) {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;
@@ -105,6 +130,12 @@ public class DACustomItemReader {
         }
     }
 
+    /**
+     * This method returns a copy of the item with the given namespaced ID
+     *
+     * @param namespacedID The namespaced ID of the item to get
+     * @return The item with the given namespaced ID or null if no item with the given namespaced ID was found
+     */
     public @Nullable DAItem getItemByNamespacedID(String namespacedID) {
         DAItem daItem = this.registeredItems.get(namespacedID);
         if (daItem != null) {
@@ -113,10 +144,22 @@ public class DACustomItemReader {
         return daItem;
     }
 
+    /**
+     * This method returns a copy of the item with the given namespaced ID
+     *
+     * @param itemStack The item to get
+     * @return The found item or null if no item was found
+     */
     public @Nullable DAItem getItemByItemStack(ItemStack itemStack) {
         return this.registeredItems.values().stream().filter(daItem -> DAUtil.matchItems(daItem.getItemStack(), itemStack, ItemMatchType.EXACT_CMD)).findFirst().orElse(null);
     }
 
+
+    /**
+     * This method returns a list of all registered items
+     *
+     * @return A list of all registered items or an empty list if no items were registered
+     */
     public @NotNull List<String> getCustomItemNames() {
         List<String> names = new ArrayList<>();
         for (String key : this.registeredItems.keySet()) {

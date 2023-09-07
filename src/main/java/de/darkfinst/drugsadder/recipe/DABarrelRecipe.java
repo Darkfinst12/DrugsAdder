@@ -30,6 +30,11 @@ public class DABarrelRecipe extends DARecipe {
         this.processOverdueAcceptance = processOverdueAcceptance;
     }
 
+    /**
+     * Processes the materials in the barrel
+     *
+     * @param barrel The barrel to process
+     */
     public void processMaterials(DABarrel barrel) {
         List<ItemStack> lItems = this.getInventoryContents(barrel);
         if (this.hasMaterials(lItems.toArray(new ItemStack[0]))) {
@@ -54,8 +59,13 @@ public class DABarrelRecipe extends DARecipe {
         }
     }
 
-    @NotNull
-    private List<ItemStack> getInventoryContents(DABarrel barrel) {
+    /**
+     * Returns the contents of the barrel without the time stamps
+     *
+     * @param barrel The barrel to get the contents from
+     * @return The contents of the barrel without the time stamps
+     */
+    private @NotNull List<ItemStack> getInventoryContents(DABarrel barrel) {
         List<ItemStack> lItems = new ArrayList<>();
         for (ItemStack storageContent : barrel.getInventory().getContents().clone()) {
             if (storageContent != null && !Material.AIR.equals(storageContent.getType())) {
@@ -69,6 +79,15 @@ public class DABarrelRecipe extends DARecipe {
         return lItems;
     }
 
+    /**
+     * Adds the result to the barrel
+     *
+     * @param barrel  The barrel to add the result to
+     * @param current The current time
+     * @throws NotEnoughMaterialsException  If the recipe doesn't have enough materials
+     * @throws NotEnoughTimePassedException If the recipe hasn't processed long enough
+     * @throws TooMuchTimePassedException   If the recipe has processed too long
+     */
     private void addResult(DABarrel barrel, long current) throws NotEnoughMaterialsException, NotEnoughTimePassedException, TooMuchTimePassedException {
         Map<Integer, DAItem> modifiedSlots = new HashMap<>();
         for (DAItem material : this.getMaterials()) {

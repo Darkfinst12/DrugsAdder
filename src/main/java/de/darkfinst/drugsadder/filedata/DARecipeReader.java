@@ -34,6 +34,9 @@ public class DARecipeReader {
         this.config = null;
     }
 
+    /**
+     * This method loads all recipes from the config
+     */
     public void loadRecipes() {
         assert config != null;
         Set<String> recipes = config.getKeys(false);
@@ -56,6 +59,11 @@ public class DARecipeReader {
         this.completeLog();
     }
 
+    /**
+     * This method loads the Barrel recipes from the config
+     *
+     * @param configSec The config section to load the recipes from
+     */
     private void loadBarrelRecipes(ConfigurationSection configSec) {
         Set<String> recipes = configSec.getKeys(false);
         this.configBarrelCount = recipes.size();
@@ -67,6 +75,12 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method loads a single Barrel recipe from the config
+     *
+     * @param barrelRID The ID of the recipe to load
+     * @param barrelCon The config section to load the recipe from
+     */
     private void loadBarrelRecipe(String barrelRID, ConfigurationSection barrelCon) {
         ConfigurationSection recipeConfig = barrelCon.getConfigurationSection(barrelRID);
         if (recipeConfig == null) {
@@ -103,6 +117,11 @@ public class DARecipeReader {
 
     }
 
+    /**
+     * This method loads the Press recipes from the config
+     *
+     * @param configSec The config section to load the recipes from
+     */
     private void loadPressRecipes(ConfigurationSection configSec) {
         Set<String> recipes = configSec.getKeys(false);
         this.configPressCount = recipes.size();
@@ -114,6 +133,13 @@ public class DARecipeReader {
         }
     }
 
+
+    /**
+     * This method loads a single Press recipe from the config
+     *
+     * @param pressRID The ID of the recipe to load
+     * @param pressCon The config section to load the recipe from
+     */
     private void loadPressRecipe(String pressRID, ConfigurationSection pressCon) {
         ConfigurationSection recipeConfig = pressCon.getConfigurationSection(pressRID);
         if (recipeConfig == null) {
@@ -152,6 +178,11 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method loads the Table recipes from the config
+     *
+     * @param configSec The config section to load the recipes from
+     */
     private void loadTableRecipes(ConfigurationSection configSec) {
         Set<String> recipes = configSec.getKeys(false);
         this.configTableCount = recipes.size();
@@ -163,6 +194,12 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method loads a single Table recipe from the config
+     *
+     * @param tableRID The ID of the recipe to load
+     * @param tableSec The config section to load the recipe from
+     */
     private void loadTableRecipe(String tableRID, ConfigurationSection tableSec) {
         ConfigurationSection recipeConfig = tableSec.getConfigurationSection(tableRID);
         if (recipeConfig == null) {
@@ -218,6 +255,11 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method loads the Crafting recipes from the config
+     *
+     * @param configSec The config section to load the recipes from
+     */
     private void loadCraftingRecipes(ConfigurationSection configSec) {
         Set<String> recipes = configSec.getKeys(false);
         this.configCraftingCount = recipes.size();
@@ -229,6 +271,12 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method loads a single Crafting recipe from the config
+     *
+     * @param craftingRID The ID of the recipe to load
+     * @param craftingSec The config section to load the recipe from
+     */
     private void loadCraftingRecipe(String craftingRID, ConfigurationSection craftingSec) {
         ConfigurationSection recipeConfig = craftingSec.getConfigurationSection(craftingRID);
         if (recipeConfig == null) {
@@ -313,6 +361,11 @@ public class DARecipeReader {
 
     }
 
+    /**
+     * This method loads the Furnace recipes from the config
+     *
+     * @param configSec The config section to load the recipes from
+     */
     private void loadFurnaceRecipes(ConfigurationSection configSec) {
         Set<String> recipes = configSec.getKeys(false);
         this.configFurnaceCount = recipes.size();
@@ -324,6 +377,12 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method loads a single Furnace recipe from the config
+     *
+     * @param furnaceRID The ID of the recipe to load
+     * @param furnaceSec The config section to load the recipe from
+     */
     private void loadFurnaceRecipe(String furnaceRID, ConfigurationSection furnaceSec) {
         ConfigurationSection recipeConfig = furnaceSec.getConfigurationSection(furnaceRID);
         if (recipeConfig == null) {
@@ -365,13 +424,26 @@ public class DARecipeReader {
         }
     }
 
-    @Nullable
-    private DAItem getResultItem(String recipeID, ConfigurationSection recipeConfig) {
+    /**
+     * This method loads the result item of a recipe
+     *
+     * @param recipeID     The ID of the recipe
+     * @param recipeConfig The config section to load the item from
+     * @return The loaded item
+     */
+    private @Nullable DAItem getResultItem(String recipeID, ConfigurationSection recipeConfig) {
         return this.getItem(recipeID, "result", recipeConfig);
     }
 
-    @Nullable
-    private DAItem getItem(String recipeID, String path, ConfigurationSection recipeConfig) {
+    /**
+     * This method loads a single item from the config
+     *
+     * @param recipeID     The ID of the recipe
+     * @param path         The path to the item
+     * @param recipeConfig The config section to load the item from
+     * @return The loaded item
+     */
+    private @Nullable DAItem getItem(String recipeID, String path, ConfigurationSection recipeConfig) {
         String[] resultAmount = recipeConfig.getString(path, "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
@@ -383,6 +455,13 @@ public class DARecipeReader {
         return result;
     }
 
+    /**
+     * This method loads the material of a recipe
+     *
+     * @param recipeID     The ID of the recipe
+     * @param recipeConfig The config section to load the material from
+     * @return The loaded material
+     */
     private DAItem loadMaterial(String recipeID, ConfigurationSection recipeConfig) {
         ConfigurationSection materialConfig = recipeConfig.getConfigurationSection("material");
         if (materialConfig == null) {
@@ -404,6 +483,13 @@ public class DARecipeReader {
         return daItem;
     }
 
+    /**
+     * This method loads the materials of a recipe
+     *
+     * @param recipeID     The ID of the recipe
+     * @param recipeConfig The config section to load the materials from
+     * @return The loaded materials
+     */
     private Map<String, DAItem> loadMaterials(String recipeID, ConfigurationSection recipeConfig) {
         Map<String, DAItem> materials = new HashMap<>();
         ConfigurationSection materialsConfig = recipeConfig.getConfigurationSection("materials");
@@ -435,15 +521,22 @@ public class DARecipeReader {
         return materials;
     }
 
-    private List<ItemMatchType> loadMatchTypes(String recipeID, ConfigurationSection section) {
+    /**
+     * This method loads the match types of a recipe
+     *
+     * @param recipeID     The ID of the recipe
+     * @param recipeConfig The config section to load the match types from
+     * @return The loaded match types
+     */
+    private List<ItemMatchType> loadMatchTypes(String recipeID, ConfigurationSection recipeConfig) {
         List<ItemMatchType> matchTypes = new ArrayList<>();
-        String matchType = section.getString("matchType", "ALL").toUpperCase();
+        String matchType = recipeConfig.getString("matchType", "ALL").toUpperCase();
         if (matchType.contains(",")) {
             String[] types = matchType.split(",");
             for (String type : types) {
                 ItemMatchType itemMatchType = ItemMatchType.valueOf(type);
                 if (ItemMatchType.NULL.equals(itemMatchType)) {
-                    this.logError("Load_Error_Recipes_MatchTypeNotFound", type, section.getName());
+                    this.logError("Load_Error_Recipes_MatchTypeNotFound", type, recipeConfig.getName());
                     matchTypes.clear();
                     return matchTypes;
                 } else {
@@ -480,6 +573,9 @@ public class DARecipeReader {
         return matchTypes;
     }
 
+    /**
+     * This method logs the amount of loaded recipes
+     */
     private void completeLog() {
         if (DAConfig.logRecipeLoadComplete) {
             long barrelCount = this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).count();
@@ -492,6 +588,12 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method logs an error message to the console
+     *
+     * @param key  The key of the error message in the language file
+     * @param args The arguments for the error message (optional)
+     */
     private void logError(String key, String... args) {
         if (DAConfig.logRecipeLoadError) {
             LanguageReader languageReader = DA.loader.getLanguageReader();
@@ -504,6 +606,12 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method logs an info message to the console
+     *
+     * @param key  The key of the info message in the language file
+     * @param args The arguments for the info message (optional)
+     */
     private void logInfo(String key, String... args) {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;
@@ -512,26 +620,57 @@ public class DARecipeReader {
         }
     }
 
+    /**
+     * This method returns a copy of the item with the given namespaced ID
+     *
+     * @param recipe The namespaced ID of the item to get
+     * @return The recipe with the given namespacedID or null if no recipe with the given namespacedID was found
+     */
     public DARecipe getRecipe(String recipe) {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).findFirst().orElse(null);
     }
 
+    /**
+     * This method returns a list of all registered press recipes
+     *
+     * @return The list of all registered press recipes
+     */
     public List<DAPressRecipe> getPressRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAPressRecipe).map(daRecipe -> (DAPressRecipe) daRecipe).toList();
     }
 
+    /**
+     * This method returns a list of all registered table recipes
+     *
+     * @return The list of all registered table recipes
+     */
     public List<DATableRecipe> getTableRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DATableRecipe).map(daRecipe -> (DATableRecipe) daRecipe).toList();
     }
 
+    /**
+     * This method returns a list of all registered barrel recipes
+     *
+     * @return The list of all registered barrel recipes
+     */
     public List<DABarrelRecipe> getBarrelRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).map(daRecipe -> (DABarrelRecipe) daRecipe).toList();
     }
 
+    /**
+     * This method returns a list of all registered crafting recipes
+     *
+     * @return The list of all registered crafting recipes
+     */
     public List<DACraftingRecipe> getCraftingRecipes() {
-       return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).map(daRecipe -> (DACraftingRecipe) daRecipe).toList();
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).map(daRecipe -> (DACraftingRecipe) daRecipe).toList();
     }
 
+    /**
+     * This method returns a list of all registered furnace recipes
+     *
+     * @return The list of all registered furnace recipes
+     */
     public List<DAFurnaceRecipe> getFurnaceRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe).map(daRecipe -> (DAFurnaceRecipe) daRecipe).toList();
     }

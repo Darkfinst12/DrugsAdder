@@ -24,6 +24,13 @@ public class DAPressRecipe extends DARecipe {
         this.mold = mold;
     }
 
+
+    /**
+     * Processes the given materials
+     *
+     * @param givenMaterials The materials to process
+     * @return The result of the process
+     */
     @Override
     public DAItem processMaterials(DAItem... givenMaterials) {
         List<DAItem> gml = Arrays.asList(givenMaterials);
@@ -38,6 +45,12 @@ public class DAPressRecipe extends DARecipe {
         return null;
     }
 
+    /**
+     * Checks if the given items contain the mold
+     *
+     * @param givenItems The items to check
+     * @return If the given items contain the mold
+     */
     public boolean containsMold(ItemStack... givenItems) {
         boolean contains = false;
         for (ItemStack item : givenItems) {
@@ -49,9 +62,15 @@ public class DAPressRecipe extends DARecipe {
         return contains;
     }
 
-    @Nullable
+
+    /**
+     * Returns the material of the given item
+     *
+     * @param item The item to get the material from
+     * @return The material of the given item or null if the item is not a material
+     */
     @Override
-    public DAItem getMaterial(@NotNull ItemStack item) {
+    public @Nullable DAItem getMaterial(@NotNull ItemStack item) {
         if (DAUtil.matchItems(this.getMold().getItemStack(), item, this.getMold().getItemMatchTypes())) {
             return this.getMold();
         }

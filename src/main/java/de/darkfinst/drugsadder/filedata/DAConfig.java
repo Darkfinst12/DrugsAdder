@@ -61,6 +61,13 @@ public class DAConfig {
     public static boolean logSeedLoadComplete;
     public static boolean logSeedLoadError;
 
+    /**
+     * Checks if the config exists and creates it if not
+     * Also copies the default configs
+     * If the config is not valid, the plugin will be disabled
+     *
+     * @return true if the config is valid
+     */
     public static boolean checkConfig() {
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
         if (!file.exists()) {
@@ -91,6 +98,11 @@ public class DAConfig {
         return true;
     }
 
+    /**
+     * Copies the default configs into the plugins folder
+     *
+     * @param overwrite if true, the configs will be overwritten
+     */
     private static void copyDefaultConfigs(boolean overwrite) {
         File configs = new File(DA.getInstance.getDataFolder(), "configs");
         File languages = new File(DA.getInstance.getDataFolder(), "languages");
@@ -105,6 +117,11 @@ public class DAConfig {
 
     }
 
+    /**
+     * Loads the config file
+     *
+     * @return the config file or null if the config is not valid
+     */
     public static FileConfiguration loadConfigFile() {
         FileConfiguration fileConfiguration = null;
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
@@ -127,6 +144,13 @@ public class DAConfig {
         return fileConfiguration;
     }
 
+    /**
+     * Reads the config file and sets the variables
+     * Also loads the language file
+     * If the config is not valid, the plugin will be disabled
+     *
+     * @param config the config file
+     */
     public static void readConfig(FileConfiguration config) {
 
         //Set Language
@@ -237,6 +261,9 @@ public class DAConfig {
 
     }
 
+    /**
+     * Clears all the loaded data
+     */
     public static void clear() {
         customItemReader = null;
         daRecipeReader = null;
