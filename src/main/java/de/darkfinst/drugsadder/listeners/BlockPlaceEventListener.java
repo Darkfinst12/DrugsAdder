@@ -1,6 +1,9 @@
 package de.darkfinst.drugsadder.listeners;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.filedata.DAConfig;
+import de.darkfinst.drugsadder.items.DAPlantItem;
+import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +17,11 @@ public class BlockPlaceEventListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (DAConfig.seedReader.isSeed(event.getItemInHand())) {
+            DAPlantItem seed = DAConfig.seedReader.getSeed(event.getItemInHand());
+            DAPlant plant = new DAPlant(seed, seed.isCrop(), seed.isDestroyOnHarvest(), seed.getGrowTime(), seed.getDrops());
+            plant.create(event.getBlock(), event.getPlayer());
+        }
         if (DA.loader.isStructure(event.getBlock())) {
             event.setCancelled(true);
         }

@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DAConfig {
 
@@ -47,10 +49,17 @@ public class DAConfig {
     public static boolean logRecipeLoadComplete;
     public static boolean logRecipeLoadError;
 
+    public static Map<Integer, String> tableStates = new HashMap<>();
+
     public static DADrugReader drugReader;
     public static boolean logDrugLoadInfo;
     public static boolean logDrugLoadComplete;
     public static boolean logDrugLoadError;
+
+    public static DASeedReader seedReader;
+    public static boolean logSeedLoadInfo;
+    public static boolean logSeedLoadComplete;
+    public static boolean logSeedLoadError;
 
     public static boolean checkConfig() {
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
@@ -163,6 +172,9 @@ public class DAConfig {
         logDrugLoadInfo = config.getBoolean("logDrugLoadInfo", true);
         logDrugLoadComplete = config.getBoolean("logDrugLoadComplete", true);
         logDrugLoadError = config.getBoolean("logDrugLoadError", true);
+        logSeedLoadInfo = config.getBoolean("logSeedLoadInfo", true);
+        logSeedLoadComplete = config.getBoolean("logSeedLoadComplete", true);
+        logSeedLoadError = config.getBoolean("logSeedLoadError", true);
 
         //Loads the own CustomItems
         if (config.contains("customItems")) {
@@ -190,6 +202,13 @@ public class DAConfig {
             daRecipeReader = new DARecipeReader();
         }
 
+        //Loads the TableStates
+        if (config.contains("tableStates")) {
+            for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
+                tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
+            }
+        }
+
 
         //Loads the Drugs
         if (config.contains("drugs")) {
@@ -198,6 +217,15 @@ public class DAConfig {
         } else {
             drugReader = new DADrugReader();
             loader.errorLog(loader.languageReader.get("Load_Error_NoDrugs"));
+        }
+
+        //Loads the Seeds
+        if (config.contains("seeds")) {
+            seedReader = new DASeedReader(config.getConfigurationSection("seeds"));
+            seedReader.loadSeeds();
+        } else {
+            seedReader = new DASeedReader();
+            loader.errorLog(loader.languageReader.get("Load_Error_NoSeeds"));
         }
 
     }

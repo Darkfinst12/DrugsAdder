@@ -7,6 +7,7 @@ import de.darkfinst.drugsadder.filedata.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
@@ -107,12 +108,13 @@ public class DALoader {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
     }
 
-    public void registerDAStructure(DAStructure structure, boolean isAsync) {
+    public boolean registerDAStructure(DAStructure structure, boolean isAsync) {
         RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
         if (!registerStructureEvent.isCancelled()) {
-            this.structureList.add(structure);
+            return this.structureList.add(structure);
         }
+        return false;
     }
 
     public void unregisterDAStructure(DAStructure structure) {
@@ -131,6 +133,10 @@ public class DALoader {
 
     public boolean isStructure(Block block) {
         return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block));
+    }
+
+    public boolean isPlant(Block block) {
+        return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block));
     }
 
     public DAStructure getStructure(Block block) {
@@ -164,6 +170,8 @@ public class DALoader {
             daTable.open(player);
         } else if (daStructure instanceof DAPress daPress) {
             daPress.usePress(player, block);
+        } else if (daStructure instanceof DAPlant daPlant) {
+            daPlant.checkHarvest(player);
         }
     }
 

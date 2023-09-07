@@ -212,3 +212,19 @@ drugs:
       - 'say Ich habe %drug% konsumiert'
     consumeMessage: 'Du hast %drug% konsumiert'
     consumeTitle: 'Du hast %drug% konsumiert'
+
+#Seeds
+seeds:
+  "minecraft:wheat_seeds":
+    destroyOnHarvest: true
+    growTime: 60
+    matchType: "ALL"
+    drops:
+      1:
+        itemStack: 'drugsadder:coca'
+        amount: 1
+        probability: 100
+      2:
+        itemStack: 'drugsadder:shrooms'
+        amount: 1
+        probability: 50

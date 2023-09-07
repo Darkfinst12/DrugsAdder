@@ -45,7 +45,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DA.loader.getTranslation("Lab Table", "Structure_Name_Table"));
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DAConfig.tableStates.get(0));
     }
 
     public void create(Block sign, Player player) {
@@ -55,8 +55,10 @@ public class DATable extends DAStructure implements InventoryHolder {
                 boolean isValid = daTableBody.isValidTable();
                 if (isValid) {
                     super.setBody(daTableBody);
-                    DA.loader.registerDAStructure(this, false);
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    boolean success = DA.loader.registerDAStructure(this, false);
+                    if (success) {
+                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    }
                 }
             } catch (ValidateStructureException ignored) {
                 DA.loader.msg(player, DA.loader.languageReader.get("Player_Table_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);

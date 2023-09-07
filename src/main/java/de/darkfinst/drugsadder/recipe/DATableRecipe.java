@@ -8,6 +8,7 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import de.darkfinst.drugsadder.utils.Pair;
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryView;
@@ -192,7 +193,6 @@ public class DATableRecipe extends DARecipe {
                     BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new ProcessMaterialTwo(daTable, recipe, 7), (10 * 20));
                     recipe.inProcess.put(daTable, Pair.of(7, task.getTaskId()));
                 } else if (state == 7) {
-                    recipe.updateView(daTable, 8, true);
                     if (daTable.getInventory().getItem(daTable.getMaterialSlots()[1]) == null || daTable.getInventory().getItem(daTable.getMaterialSlots()[1]).getAmount() < recipe.getMaterials()[0].getAmount()) {
                         recipe.cancelProcess(daTable, "Not enough Materials  - State 5", true);
                         return;
@@ -215,7 +215,7 @@ public class DATableRecipe extends DARecipe {
         for (HumanEntity viewer : daTable.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle("Lab Table - State: " + state);
+                inventoryView.setTitle(ChatColor.RESET + DAConfig.tableStates.get(state));
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
             }

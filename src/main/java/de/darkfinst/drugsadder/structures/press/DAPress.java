@@ -46,8 +46,10 @@ public class DAPress extends DAStructure {
                 boolean isValid = pressBody.isValidPress();
                 if (isValid) {
                     super.setBody(pressBody);
-                    DA.loader.registerDAStructure(this, false);
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    boolean success = DA.loader.registerDAStructure(this, false);
+                    if (success) {
+                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    }
                 }
             } catch (ValidateStructureException ignored) {
                 DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);

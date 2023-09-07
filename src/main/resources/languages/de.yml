@@ -48,6 +48,16 @@ Load_Error_Recipes_RecipeNotRegistered: "Das Rezept: &v1 konnte nicht vom Server
 Load_Error_Recipes_NoCookingTime: "Das Rezept: &v1 hat keine Kochzeit! - Bitte überprüfe die config.yml!"
 Load_Error_Recipes_MatchTypeWrongComposition: "Das Rezept: &v1 hat eine falsche Zusammensetzung für seine MatchTypes! - Bitte überprüfe die config.yml!"
 Load_Error_Recipe_IDAlreadyAssigned: "Das Rezept: &v1 wurde bereits konfiguriert! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_NoFuel: "Das Rezept: &v1 hat nicht genug Brennstoff! Gegeben &v2 benötigt &v3 - Bitte überprüfe die config.yml!"
+Load_Info_SeedsComplete: "Samen laden abgeschlossen! - &v1/&v2 Samen geladen!"
+Load_Info_Seed_Loaded: "Der Samen: &v1 wurde erfolgreich geladen!"
+Load_Error_Seed_NotConfigSection: "Der Samen: &v1 ist nicht korrekt in der config.yml konfiguriert!"
+Load_Error_Seed_IDAlreadyAssigned: "Der Samen: &v1 wurde bereits konfiguriert! - Bitte überprüfe die config.yml!"
+Load_Error_Seed_NotValid: "Der Samen: &v1 ist kein gültiger Samen!"
+Load_Error_Seed_MatchType: "Von dem Samen: &v1 ist der MatchType: &v2 kein gültiger MatchType!"
+Load_Error_Seed_Drop_ItemStack: "Von dem Samen: &v1 ist der Drop: &v2 kein gültiger ItemStack!"
+Load_Error_Seed_Drop_NotConfigSection: "Von dem Samen: &v1 ist der Drop: &v2 ist nicht korrekt in der config.yml konfiguriert!"
+Load_Error_Seed_Drop_Probability: "Von dem Samen: &v1 im Drop: &v2 ist die Wahrscheinlichkeit: &v3 kein gültiger Wert! - Er muss zwischen 0 und 100 liegen und darf nicht mehr als 6 Stellen haben!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "Das Rezept: &v1 wurde nicht gefunden! - Spieler: &v2 hat versucht das Rezept zu verwenden!"
