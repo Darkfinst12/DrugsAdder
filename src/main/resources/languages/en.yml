@@ -58,6 +58,7 @@ Load_Error_Seed_MatchType: "Off the Seed: &v1 the MatchType: &v2 is not a valid 
 Load_Error_Seed_Drop_ItemStack: "Off the Seed: &v1 the Drop: &v2 is not a valid ItemStack!"
 Load_Error_Seed_Drop_NotConfigSection: "Off the Seed: &v1 the Drop: &v2 is not properly configured in the config.yml!"
 Load_Error_Seed_Drop_Probability: "Off the Seed: &v1 in the Drop: &v2 the probability: &v3 is not a valid value! - It must be between 0 and 100 and must not have more than 6 digits!"
+Load_Error_NoSeeds: "No seeds were configured in the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
@@ -83,6 +84,7 @@ Player_Table_Created: "The laboratory table was created"
 Player_Table_NotValid: "The laboratory table was not properly built"
 Player_Plant_Created: "The plant was created"
 Player_Plant_NotValid: "The plant is not proper plant"
+Player_Plant_NoReady: "The plant is not ready to harvest"
 
 # ---- Structures ----
 Structure_Name_Table: "Laboratory Table"

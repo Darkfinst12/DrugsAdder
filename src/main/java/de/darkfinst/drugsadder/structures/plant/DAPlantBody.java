@@ -1,10 +1,12 @@
 package de.darkfinst.drugsadder.structures.plant;
 
 import de.darkfinst.drugsadder.structures.DABody;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
+@Getter
 public class DAPlantBody extends DABody {
 
     private final DAPlant daPlant;
@@ -17,6 +19,7 @@ public class DAPlantBody extends DABody {
     }
 
     public boolean isValidPlant() {
+        this.blocks.add(this.plantBLock);
         boolean isValid = false;
         Material plantType = this.plantBLock.getType();
         if (Tag.CORAL_PLANTS.isTagged(plantType) || Tag.WALL_CORALS.isTagged(plantType) || Tag.SMALL_FLOWERS.isTagged(plantType) || Tag.FLOWERS.isTagged(plantType) || Tag.SAPLINGS.isTagged(plantType) || Tag.CROPS.isTagged(plantType)) {

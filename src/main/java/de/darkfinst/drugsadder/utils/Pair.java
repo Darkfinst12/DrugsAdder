@@ -15,7 +15,7 @@ public class Pair<F, S> {
 
     public static <F, S> Pair<F, S> of(F first, S second) {
         if (first != null && second != null) {
-            return new Pair(first, second);
+            return new Pair<>(first, second);
         } else {
             throw new IllegalArgumentException("Pair.of requires non null values.");
         }
@@ -24,10 +24,9 @@ public class Pair<F, S> {
     public boolean equals(Object other) {
         if (other == this) {
             return true;
-        } else if (!(other instanceof Pair)) {
+        } else if (!(other instanceof Pair<?, ?> rhs)) {
             return false;
         } else {
-            Pair<?, ?> rhs = (Pair) other;
             return this.first.equals(rhs.first) && this.second.equals(rhs.second);
         }
     }

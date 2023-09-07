@@ -3,7 +3,10 @@ package de.darkfinst.drugsadder.filedata;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DAPlayer;
 import de.darkfinst.drugsadder.api.events.DrugsAdderLoadDataEvent;
+import de.darkfinst.drugsadder.items.DAItem;
+import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
@@ -106,6 +109,7 @@ public class DAData {
         //Load Structures
         if (DAData.worldData.contains("Structures." + uuid)) {
             ConfigurationSection section = DAData.worldData.getConfigurationSection("Structures." + uuid);
+            DA.log.log(String.format("Load Structures for World: %s", uuid), isAsync);
             for (String structure : section.getKeys(false)) {
                 switch (structure.toLowerCase()) {
                     case "barrels" -> {
@@ -127,6 +131,13 @@ public class DAData {
                         for (String table : tables.getKeys(false)) {
                             ConfigurationSection tableSection = tables.getConfigurationSection(table);
                             DAData.loadTableData(world, tableSection, isAsync);
+                        }
+                    }
+                    case "plants" -> {
+                        ConfigurationSection plants = section.getConfigurationSection("plants");
+                        for (String plant : plants.getKeys(false)) {
+                            ConfigurationSection plantSection = plants.getConfigurationSection(plant);
+                            DAData.loadPlantData(world, plantSection, isAsync);
                         }
                     }
                     default -> DA.log.errorLog("Unknown Structure: " + structure);
@@ -218,6 +229,28 @@ public class DAData {
 
                     } catch (Exception e) {
                         DA.log.errorLog("Error while loading Table: " + table.getCurrentPath(), isAsync);
+                        DA.log.logException(e, isAsync);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void loadPlantData(World world, ConfigurationSection table, boolean isAsync) {
+        // Block split by ","
+        String block = table.getString("plant");
+        if (block != null) {
+            String[] split = block.split(",");
+            if (split.length == 3) {
+                Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
+                DAPlantItem seedItem = DAConfig.seedReader.getSeed(table.getString("seed", "NULL"));
+                if (seedItem != null) {
+                    try {
+                        DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowTime(), seedItem.getDrops());
+                        daPlant.create(worldBlock, isAsync);
+
+                    } catch (Exception e) {
+                        DA.log.errorLog("Error while loading Plant: " + table.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
                     }
                 }

@@ -45,7 +45,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DAConfig.tableStates.get(0));
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DAConfig.tableStates.get(0) + "");
     }
 
     public void create(Block sign, Player player) {

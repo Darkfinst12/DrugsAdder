@@ -88,6 +88,7 @@ public class DALoader {
 
     private void initListener() {
         new BlockBreakEventListener();
+        new BlockGrowEventListener();
         new BlockPlaceEventListener();
         new CraftItemEventListener();
         new FurnaceBurnEventListener();
@@ -101,7 +102,7 @@ public class DALoader {
         new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
         new SignChangeEventListener();
-
+        new StructureGrowEventListener();
     }
 
     private void initRunnable() {

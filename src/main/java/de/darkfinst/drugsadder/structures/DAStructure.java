@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.structures;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
@@ -36,6 +37,7 @@ public abstract class DAStructure {
             int barrelID = 0;
             int pressID = 0;
             int tableID = 0;
+            int plantID = 0;
             for (DAStructure structure : DA.loader.getStructureList()) {
                 if (structure instanceof DABarrel barrel) {
                     String worldName = barrel.getWorld().getUID().toString();
@@ -103,6 +105,15 @@ public abstract class DAStructure {
                         slot++;
                     }
                     tableID++;
+                } else if (structure instanceof DAPlant plant) {
+                    String worldName = plant.getWorld().getUID().toString();
+                    String prefix = worldName + "." + "plants." + plantID;
+
+                    Location loc = plant.getBody().getPlantBLock().getLocation();
+                    config.set(prefix + ".plant", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+                    config.set(prefix + ".seed", plant.getSeed().getNamespacedID());
+
+                    plantID++;
                 }
             }
         }

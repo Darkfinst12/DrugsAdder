@@ -58,6 +58,7 @@ Load_Error_Seed_MatchType: "Von dem Samen: &v1 ist der MatchType: &v2 kein gült
 Load_Error_Seed_Drop_ItemStack: "Von dem Samen: &v1 ist der Drop: &v2 kein gültiger ItemStack!"
 Load_Error_Seed_Drop_NotConfigSection: "Von dem Samen: &v1 ist der Drop: &v2 ist nicht korrekt in der config.yml konfiguriert!"
 Load_Error_Seed_Drop_Probability: "Von dem Samen: &v1 im Drop: &v2 ist die Wahrscheinlichkeit: &v3 kein gültiger Wert! - Er muss zwischen 0 und 100 liegen und darf nicht mehr als 6 Stellen haben!"
+Load_Error_NoSeeds: "Es wurden keine Samen in der config.yml konfiguriert!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "Das Rezept: &v1 wurde nicht gefunden! - Spieler: &v2 hat versucht das Rezept zu verwenden!"
@@ -79,6 +80,7 @@ Player_Press_Created: "Die Presse wurde erfolgreich erstellt"
 Player_Press_NotValid: "Die Presse ist nicht korrekt gebaut!"
 Player_Table_Created: "Der Labortisch wurde erfolgreich erstellt"
 Player_Table_NotValid: "Der Labortisch ist nicht korrekt gebaut!"
+Player_Plant_NoReady: "Die Pflanze ist noch nicht bereit zum ernten!"
 
 # ---- Structures ----
 Structure_Name_Table: "Labortisch"

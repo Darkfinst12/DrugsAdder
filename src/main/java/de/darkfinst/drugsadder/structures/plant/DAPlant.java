@@ -55,9 +55,11 @@ public class DAPlant extends DAStructure {
                     boolean success = DA.loader.registerDAStructure(this, false);
                     if (success) {
                         DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        this.canBeHarvested = false;
                         this.lastHarvest = System.currentTimeMillis();
-                        if (this.isCrop && getBody().blocks.get(0).getBlockData() instanceof Ageable ageable) {
-                            Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, (growTime / ageable.getMaximumAge())));
+                        if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable) {
+                            float tsp = (growTime / ageable.getMaximumAge());
+                            Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
                         }
                     }
                 }
@@ -69,21 +71,20 @@ public class DAPlant extends DAStructure {
         }
     }
 
-    public void create(Block plantBlock) {
-        try {
-            DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
-            boolean isValid = daPlantBody.isValidPlant();
-            if (isValid) {
-                super.setBody(daPlantBody);
-                boolean success = DA.loader.registerDAStructure(this, false);
-                if (success) {
-                    this.lastHarvest = System.currentTimeMillis();
-                    if (this.isCrop && this.getBody().blocks.get(0).getBlockData() instanceof Ageable ageable) {
-                        Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, (growTime / ageable.getMaximumAge())));
-                    }
+    public void create(Block plantBlock, boolean isAsync) {
+        DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
+        boolean isValid = daPlantBody.isValidPlant();
+        if (isValid) {
+            super.setBody(daPlantBody);
+            boolean success = DA.loader.registerDAStructure(this, isAsync);
+            if (success) {
+                this.canBeHarvested = false;
+                this.lastHarvest = System.currentTimeMillis();
+                if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() < ageable.getMaximumAge()) {
+                    float tsp = (growTime / ageable.getMaximumAge());
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
                 }
             }
-        } catch (ValidateStructureException ignored) {
         }
     }
 
@@ -94,8 +95,12 @@ public class DAPlant extends DAStructure {
             } else {
                 long time = System.currentTimeMillis() - this.lastHarvest;
                 long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
-                if (passedTime > this.growTime) {
+                if (passedTime > this.growTime && !this.isCrop) {
                     this.executeHarvest();
+                } else if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
+                    this.executeHarvest();
+                } else {
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             }
         } else {
@@ -118,15 +123,27 @@ public class DAPlant extends DAStructure {
         }
         this.canBeHarvested = false;
         this.lastHarvest = System.currentTimeMillis();
+        if (this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable) {
+            ageable.setAge(0);
+            this.getBody().getPlantBLock().setBlockData(ageable);
+            float tsp = (growTime / ageable.getMaximumAge());
+            Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, this.getBody().getPlantBLock(), tsp), ((long) tsp * 20));
+        }
     }
 
     public void destroy(Player player) {
         List<Item> items = new ArrayList<>();
         for (DAItem drop : this.drops) {
-            items.add(this.getBody().blocks.get(0).getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), drop.getItemStack()));
+            items.add(this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), drop.getItemStack()));
         }
         BlockDropItemEvent blockDropItemEvent = new BlockDropItemEvent(this.getBody().blocks.get(0), this.getBody().blocks.get(0).getState(), player, items);
         Bukkit.getPluginManager().callEvent(blockDropItemEvent);
+    }
+
+
+    @Override
+    public DAPlantBody getBody() {
+        return (DAPlantBody) super.getBody();
     }
 
 
@@ -147,14 +164,19 @@ public class DAPlant extends DAStructure {
             if (crop.getBlockData() instanceof Ageable ageable) {
                 int age = ageable.getAge();
                 if (age < ageable.getMaximumAge()) {
-                    ageable.setAge(age + 1);
+                    int newAge = age + 1;
+                    ageable.setAge(newAge);
                     Bukkit.getScheduler().runTask(DA.getInstance, () -> crop.setBlockData(ageable));
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, this, Math.max(Math.round((long) (growTime * 20)), 1));
+                    if (newAge < ageable.getMaximumAge()) {
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, this, Math.max(Math.round((long) (growTime * 20)), 1));
+                    } else {
+                        plant.canBeHarvested = true;
+                    }
                 } else {
-                    plant.canBeHarvested = true;
+                    DA.log.errorLog("Crop is already fully grown! - " + crop.getLocation(), true);
                 }
             } else {
-                DA.log.errorLog("Crop is not ageable! - " + crop.getLocation());
+                DA.log.errorLog("Crop is not ageable! - " + crop.getLocation(), true);
             }
         }
     }
