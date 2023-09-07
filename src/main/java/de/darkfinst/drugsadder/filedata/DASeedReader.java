@@ -143,7 +143,12 @@ public class DASeedReader {
         return this.registeredSeeds.stream().filter(drug -> drug.getNamespacedID().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
 
-
+    /**
+     * This method logs an error message to the console
+     *
+     * @param key  The key of the error message in the language file
+     * @param args The arguments for the error message (optional)
+     */
     private void logError(String key, String... args) {
         if (DAConfig.logDrugLoadError) {
             LanguageReader languageReader = DA.loader.getLanguageReader();
@@ -156,6 +161,12 @@ public class DASeedReader {
         }
     }
 
+    /**
+     * This method logs an info message to the console
+     *
+     * @param key  The key of the info message in the language file
+     * @param args The arguments for the info message (optional)
+     */
     private void logInfo(String key, String... args) {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;

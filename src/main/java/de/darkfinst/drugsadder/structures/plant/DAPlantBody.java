@@ -18,6 +18,12 @@ public class DAPlantBody extends DABody {
         this.plantBLock = plantBLock;
     }
 
+
+    /**
+     * Checks if the plant is valid
+     *
+     * @return true if the plant is valid otherwise false
+     */
     public boolean isValidPlant() {
         this.blocks.add(this.plantBLock);
         boolean isValid = false;

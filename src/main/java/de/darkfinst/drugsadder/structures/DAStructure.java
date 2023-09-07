@@ -30,6 +30,12 @@ public abstract class DAStructure {
         return this.body.getWorld();
     }
 
+    /**
+     * Saves the structure to the config file
+     *
+     * @param config  The config file to save the structure to
+     * @param oldData The old data to merge into the new data
+     */
     public static void save(ConfigurationSection config, ConfigurationSection oldData) {
         DAUtil.createWorldSections(config);
 

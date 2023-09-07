@@ -24,6 +24,11 @@ public class DAFurnaceRecipe extends DARecipe {
         super(namedID, recipeType, result, materials);
     }
 
+    /**
+     * Registers the recipe in the server
+     *
+     * @return If the recipe was successfully registered
+     */
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
         RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(Arrays.stream(this.getMaterials()).findFirst().get().getItemStack());
@@ -42,6 +47,7 @@ public class DAFurnaceRecipe extends DARecipe {
         return Bukkit.addRecipe(recipe);
     }
 
+    @Deprecated(since = "1.0.0", forRemoval = false)
     public static void registerDEMORecipe() {
         ItemStack result = new ItemStack(Material.STICK, 1);
         ItemMeta meta = result.getItemMeta();

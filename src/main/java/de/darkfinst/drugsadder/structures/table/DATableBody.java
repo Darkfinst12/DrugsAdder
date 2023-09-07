@@ -26,6 +26,12 @@ public class DATableBody extends DABody {
         this.sign = sign;
     }
 
+    /**
+     * Checks if the table is valid
+     *
+     * @return true, if the table is valid otherwise false
+     * @throws ValidateStructureException if the table is not valid
+     */
     //-x= west +x=east -z=north +z=south
     public boolean isValidTable() throws ValidateStructureException {
         this.blocks.add(this.sign);
@@ -63,6 +69,14 @@ public class DATableBody extends DABody {
         return true;
     }
 
+    /**
+     * Checks the blocks behind the sign of the table if they are valid - On the same Y line
+     *
+     * @param world      The world of the table
+     * @param stairBSign The stair behind the sign
+     * @param xz         The x and z values
+     * @param direction  The direction of the table
+     */
     private void checkBlockLineOne(World world, Block stairBSign, int[] xz, BlockFace direction) {
         boolean isValid;
         Block blockNStair = world.getBlockAt(stairBSign.getLocation().getBlockX() + xz[0], stairBSign.getLocation().getBlockY(), stairBSign.getLocation().getBlockZ() + xz[1]);
@@ -87,6 +101,14 @@ public class DATableBody extends DABody {
         this.blocks.add(blockNa2Stair);
     }
 
+    /**
+     * Checks the blocks behind the sign of the table if they are valid - Under the Y line
+     *
+     * @param world      The world of the table
+     * @param stairBSign The stair behind the sign
+     * @param xz         The x and z factors for more explanation see {@link #getXZValues(BlockFace)}
+     * @param direction  The direction of the table
+     */
     private void checkBlockLineTwo(World world, Block stairBSign, int[] xz, BlockFace direction) {
         boolean isValid;
         Block blockNUStair = world.getBlockAt(stairBSign.getLocation().getBlockX() + xz[0], stairBSign.getLocation().getBlockY() - 1, stairBSign.getLocation().getBlockZ() + xz[1]);
@@ -111,6 +133,12 @@ public class DATableBody extends DABody {
         this.blocks.add(blockNUa2Stair);
     }
 
+    /**
+     * Gets the direction of the table
+     *
+     * @param face The face of the sign
+     * @return The direction of the table
+     */
     private BlockFace getDirection(BlockFace face) {
         BlockFace direction;
         switch (face) {
@@ -123,6 +151,17 @@ public class DATableBody extends DABody {
         return direction;
     }
 
+    /**
+     * Gets the x and z values of the table
+     * <p>
+     * It is used to check the blocks behind the sign of the table
+     * <p>
+     * The values are -1, 0 or 1 depending on the direction of the table
+     * it will be added to the corresponding x or z value
+     *
+     * @param face The face of the sign
+     * @return The x and z values of the table
+     */
     private int[] getXZValues(BlockFace face) {
         int[] integers;
         switch (face) {

@@ -101,6 +101,10 @@ public class DATableRecipe extends DARecipe {
 
     }
 
+    /**
+     * Runnable for the first process
+     */
+    //TODO: Ad custom time for processing
     public static class ProcessMaterialOne implements Runnable {
 
         private final int state;
@@ -160,6 +164,10 @@ public class DATableRecipe extends DARecipe {
         }
     }
 
+    /**
+     * Runnable for the second process
+     */
+    //TODO: Ad custom time for processing
     public static class ProcessMaterialTwo implements Runnable {
 
         private final int state;
@@ -211,6 +219,12 @@ public class DATableRecipe extends DARecipe {
         }
     }
 
+    /**
+     * Updates the view of the table
+     *
+     * @param daTable The table to update
+     * @param state   The state to update to
+     */
     public void updateView(DATable daTable, int state, boolean isAsync) {
         for (HumanEntity viewer : daTable.getInventory().getViewers()) {
             try {

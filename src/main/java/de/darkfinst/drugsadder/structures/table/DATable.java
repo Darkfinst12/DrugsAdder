@@ -48,6 +48,14 @@ public class DATable extends DAStructure implements InventoryHolder {
         this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DAConfig.tableStates.get(0) + "");
     }
 
+    /**
+     * Creates a table
+     * <p>
+     * It checks if the player has the permission to create a table and if the table is valid
+     *
+     * @param sign   The sign of the table
+     * @param player The player who created the table
+     */
     public void create(Block sign, Player player) {
         if (player.hasPermission("drugsadder.table.create")) {
             DATableBody daTableBody = new DATableBody(this, sign);
@@ -68,6 +76,14 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Creates a table
+     * <p>
+     * It checks if the table is valid
+     *
+     * @param sign    The sign of the table
+     * @param isAsync If the table should be created, async
+     */
     public void create(Block sign, boolean isAsync) throws ValidateStructureException {
         DATableBody tableBody = new DATableBody(this, sign);
         boolean isValid = tableBody.isValidTable();
@@ -77,6 +93,13 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Opens the table inventory for the player
+     * <p>
+     * It checks if the player has the permission to open the table
+     *
+     * @param player The player who wants to open the table
+     */
     public void open(Player player) {
         if (player.hasPermission("drugsadder.table.open")) {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
@@ -96,6 +119,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     public Inventory getInventory() {
         return this.inventory;
     }
+
 
     private void callRecipeCheck(@Nullable HumanEntity who) {
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();

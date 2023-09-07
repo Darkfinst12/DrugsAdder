@@ -32,6 +32,9 @@ public class DAData {
     public static FileConfiguration worldData = null; // World Data Cache for consecutive loading of Worlds. Nulled after a data save
 
 
+    /**
+     * This method reads the data.yml file and loads all data from it
+     */
     public static void readData() {
         File file = new File(DA.getInstance.getDataFolder(), "data.yml");
         if (file.exists()) {
@@ -86,6 +89,13 @@ public class DAData {
 
     }
 
+    /**
+     * This method loads the data for a given world
+     *
+     * @param uuid    The UUID of the world
+     * @param world   The world
+     * @param isAsync Whether the method is called asynchronously or not
+     */
     public static void loadWorldData(String uuid, World world, boolean isAsync) {
         if (DAData.worldData == null) {
             File file = new File(DA.getInstance.getDataFolder(), "worlddata.yml");
@@ -152,6 +162,13 @@ public class DAData {
         Bukkit.getPluginManager().callEvent(event);
     }
 
+    /**
+     * This method loads the data for the Barrels
+     *
+     * @param world   The world
+     * @param barrel  The barrel config section
+     * @param isAsync Whether the method is called asynchronously or not
+     */
     private static void loadBarrelData(World world, ConfigurationSection barrel, boolean isAsync) {
         // Block split by ","
         String block = barrel.getString("sign");
@@ -180,6 +197,13 @@ public class DAData {
         }
     }
 
+    /**
+     * This method loads the data for the Presses
+     *
+     * @param world   The world
+     * @param press   The press config section
+     * @param isAsync Whether the method is called asynchronously or not
+     */
     private static void loadPressData(World world, ConfigurationSection press, boolean isAsync) {
         // Block split by ","
         String block = press.getString("sign");
@@ -208,6 +232,13 @@ public class DAData {
         }
     }
 
+    /**
+     * This method loads the data for the Tables
+     *
+     * @param world   The world
+     * @param table   The table config section
+     * @param isAsync Whether the method is called asynchronously or not
+     */
     private static void loadTableData(World world, ConfigurationSection table, boolean isAsync) {
         // Block split by ","
         String block = table.getString("sign");
@@ -236,6 +267,13 @@ public class DAData {
         }
     }
 
+    /**
+     * This method loads the data for the Plants
+     *
+     * @param world   The world
+     * @param table   The plant config section
+     * @param isAsync Whether the method is called asynchronously or not
+     */
     private static void loadPlantData(World world, ConfigurationSection table, boolean isAsync) {
         // Block split by ","
         String block = table.getString("plant");
@@ -258,6 +296,12 @@ public class DAData {
         }
     }
 
+    /**
+     * This method executes the load for the worlds
+     *
+     * @param worlds  The worlds to load
+     * @param isAsync Whether the method is called asynchronously or not
+     */
     public static void lwDataTask(List<World> worlds, boolean isAsync) {
         if (!acquireDataLoadMutex(isAsync)) return; // Tries for 60 sec
 

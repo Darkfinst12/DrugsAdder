@@ -30,6 +30,11 @@ public class LanguageReader {
         check(defaultPath);
     }
 
+    /**
+     * This method is used to check if the language file is up-to-date.
+     *
+     * @param defaultPath The path to the default language file.
+     */
     private void check(String defaultPath) {
         FileConfiguration defaults = null;
         String line;

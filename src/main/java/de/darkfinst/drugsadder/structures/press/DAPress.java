@@ -39,6 +39,14 @@ public class DAPress extends DAStructure {
     private final ConcurrentLinkedDeque<ItemStack> compressedItems = new ConcurrentLinkedDeque<>();
     private Long pressActiveTime = null;
 
+    /**
+     * Creates a press
+     * <p>
+     * It checks if the player has the permission to create a press and if the press is valid
+     *
+     * @param sign   The sign of the press
+     * @param player The player who created the press
+     */
     public void create(Block sign, Player player) {
         if (player.hasPermission("drugsadder.press.create")) {
             DAPressBody pressBody = new DAPressBody(this, sign);
@@ -59,6 +67,15 @@ public class DAPress extends DAStructure {
         }
     }
 
+    /**
+     * Creates a press
+     * <p>
+     * It checks if the press is valid
+     *
+     * @param sign    The sign of the press
+     * @param isAsync If the structure should be loaded async
+     * @throws ValidateStructureException If the press is not valid
+     */
     public void create(Block sign, boolean isAsync) throws ValidateStructureException {
         DAPressBody pressBody = new DAPressBody(this, sign);
         boolean isValid = pressBody.isValidPress();
@@ -72,6 +89,14 @@ public class DAPress extends DAStructure {
         return (DAPressBody) super.getBody();
     }
 
+    /**
+     * Uses the press if the player has the permission
+     * <p>
+     * Compresses the items and processes the recipes
+     *
+     * @param player Player, who uses the press
+     * @param block  Block of the press
+     */
     public void usePress(Player player, Block block) {
         if (!(Material.LEVER.equals(block.getType()) || Material.PISTON.equals(block.getType()) || Material.PISTON_HEAD.equals(block.getType()))) {
             return;
@@ -124,6 +149,12 @@ public class DAPress extends DAStructure {
         }
     }
 
+    /**
+     * Drops the items of the press
+     *
+     * @param block Block of the press
+     * @return true if the items were dropped otherwise false
+     */
     private boolean dropItems(Block block) {
         UnCompressItemsEvent unCompressItemsEvent = new UnCompressItemsEvent(this, this.compressedItems.stream().toList());
         Bukkit.getPluginManager().callEvent(unCompressItemsEvent);
@@ -137,6 +168,14 @@ public class DAPress extends DAStructure {
         return true;
     }
 
+    /**
+     * Compresses the items that are near the press
+     * <p>
+     * The items are added to the compressedItems list
+     *
+     * @param block Block from where the items should be compressed
+     * @return true if the items were compressed otherwise false
+     */
     private boolean compressItems(Block block) {
         Collection<Entity> entities = block.getWorld().getNearbyEntities(block.getLocation(), 0.8, 0.8, 0.8, entity -> entity instanceof Item);
         List<Item> items = new ArrayList<>();
@@ -162,6 +201,11 @@ public class DAPress extends DAStructure {
         this.compressedItems.add(itemStack);
     }
 
+    /**
+     * Processes the recipes
+     * <p>
+     * Checks if the press is active and if the recipe is valid
+     */
     private void pressItems() {
         if (this.pressActiveTime == null) {
             return;
@@ -201,6 +245,11 @@ public class DAPress extends DAStructure {
 
     }
 
+    /**
+     * Adds the result of the recipe to the compressedItems list
+     *
+     * @param recipe Recipe, which should be processed
+     */
     private void addResult(DAPressRecipe recipe) {
         for (DAItem material : recipe.getMaterials()) {
             for (ItemStack compressedItem : this.compressedItems) {

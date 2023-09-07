@@ -34,6 +34,14 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         this.inventory = DA.getInstance.getServer().createInventory(this, 9, DA.loader.getTranslation("Barrel", "Structure_Name_Barrel"));
     }
 
+    /**
+     * Creates a barrel
+     * <p>
+     * It checks if the player has the permission to create a barrel and if the barrel is valid
+     *
+     * @param sign   The sign of the barrel
+     * @param player The player who created the barrel
+     */
     public void create(Block sign, Player player) {
         if (player.hasPermission("drugsadder.barrel.create")) {
             DABarrelBody barrelBody = new DABarrelBody(this, sign);
@@ -54,6 +62,15 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Creates a barrel
+     * <p>
+     * It checks if the barrel is valid
+     *
+     * @param sign    The sign of the barrel
+     * @param isAsync If the barrel should be created, async
+     * @throws ValidateStructureException If the barrel is not valid
+     */
     public void create(Block sign, boolean isAsync) throws ValidateStructureException {
         DABarrelBody barrelBody = new DABarrelBody(this, sign);
         boolean isValid = barrelBody.isValidBarrel();
@@ -63,6 +80,15 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Opens the barrel inventory for the player
+     * <p>
+     * It checks if the player has the permission to open a barrel and if it is the right block to open
+     * Allowed blocks: BARREL and SIGN
+     *
+     * @param player The player who opens the barrel
+     * @param block  The block of the barrel
+     */
     public void open(Player player, Block block) {
         if (Material.SPRUCE_TRAPDOOR.equals(block.getType())) {
             return;

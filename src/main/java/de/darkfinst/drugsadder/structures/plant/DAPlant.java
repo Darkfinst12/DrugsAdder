@@ -46,6 +46,14 @@ public class DAPlant extends DAStructure {
         this.secureRandom = new SecureRandom();
     }
 
+    /**
+     * Creates the plant
+     * <p>
+     * Checks if the player has the permission to create the plant
+     *
+     * @param plantBlock Block of the plant
+     * @param player     Player, who wants to create the plant
+     */
     public void create(Block plantBlock, Player player) {
         if (player.hasPermission("drugsadder.plant.create")) {
             DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
@@ -72,6 +80,14 @@ public class DAPlant extends DAStructure {
         }
     }
 
+    /**
+     * Creates the plant
+     * <p>
+     * Checks if the plant is valid
+     *
+     * @param plantBlock Block of the plant
+     * @param isAsync    If the plant should be created, async
+     */
     public void create(Block plantBlock, boolean isAsync) {
         DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
         boolean isValid = daPlantBody.isValidPlant();
@@ -89,6 +105,12 @@ public class DAPlant extends DAStructure {
         }
     }
 
+    /**
+     * Checks if the player has the permission to harvest the plant.
+     * Also check if the plant is ready to harvest.
+     *
+     * @param player Player, who wants to harvest the plant
+     */
     public void checkHarvest(Player player) {
         if (player.hasPermission("drugsadder.plant.harvest")) {
             if (this.canBeHarvested) {
@@ -111,6 +133,11 @@ public class DAPlant extends DAStructure {
         }
     }
 
+    /**
+     * Executes the harvest of the plant.
+     * <p>
+     * Drops the items and destroys the plant if destroyOnHarvest is true
+     */
     private void executeHarvest() {
         Location location = this.getBody().blocks.get(0).getLocation();
         for (DAItem drop : this.drops) {
@@ -141,6 +168,12 @@ public class DAPlant extends DAStructure {
         }
     }
 
+    /**
+     * Destroys the plant
+     *
+     * @param player Player, who destroyed the plant
+     * @param block  Block of the plant
+     */
     public void destroy(Player player, Block block) {
         if (DA.loader.unregisterDAStructure(player, block)) {
             List<Item> items = new ArrayList<>();
@@ -159,6 +192,9 @@ public class DAPlant extends DAStructure {
     }
 
 
+    /**
+     * Runnable for growing the plant if it is a crop
+     */
     public static class GrowRunnable implements Runnable {
 
         private final DAPlant plant;
