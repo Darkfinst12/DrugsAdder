@@ -176,6 +176,13 @@ public class DAConfig {
         logSeedLoadComplete = config.getBoolean("logSeedLoadComplete", true);
         logSeedLoadError = config.getBoolean("logSeedLoadError", true);
 
+        //Loads the TableStates
+        if (config.contains("tableStates")) {
+            for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
+                tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
+            }
+        }
+
         //Loads the own CustomItems
         if (config.contains("customItems")) {
             customItemReader = new DACustomItemReader(config.getConfigurationSection("customItems"));

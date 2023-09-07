@@ -17,6 +17,17 @@ logDrugLoadInfo: true
 logDrugLoadComplete: true
 logDrugLoadError: true
 
+#Table States
+tableStates:
+  0: "\uE000"
+  1: "\uE001"
+  2: "\uE002"
+  3: "\uE003"
+  4: "\uE004"
+  5: "\uE005"
+  6: "\uE006"
+  7: "\uE007"
+
 #Custom Items
 customItems:
   #Name of the Item - This is the ID of the Item, the NamespacedID is then drugsadder:ITEMNAME
