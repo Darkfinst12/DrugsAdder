@@ -215,7 +215,9 @@ recipes:
       mold: 'drugsadder:pill_mold'
       #If the Mold should be returned after the pressing
       returnMold: true
-      #The Materials of the Recipe
+      #The Materials of the Recipe - You can add as many as you want
+      #The position of the Material does not matter
+      #It is not recommended to use more than 3 Materials
       materials:
         1:
           #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem

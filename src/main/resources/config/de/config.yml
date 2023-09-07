@@ -97,7 +97,7 @@ recipes:
   barrel:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     dirty_cocaine:
-      #Wie lande das Rezept dauert - In Minuten
+      #Wie lange das Rezept dauert - In Minuten
       duration: 10
       #
       processOverdueAcceptance: 5.5 #In Minutes
@@ -105,53 +105,53 @@ recipes:
       #Die Position des Materials spielt keine Rolle.
       materials:
         1:
-          #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+          #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
+          #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
           itemStack: 'minecraft:coal'
-          #The Amount of this Material that are required for this Recipe
+          #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
           amount: 1
-          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-          #For more Information about MatchTypes check the Wiki
+          #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+          #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+          #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         2:
           itemStack: 'drugsadder:coca'
           amount: 4
           matchType: "ALL"
-        #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+      #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:dirty_cocaine/1'
-  #The Section for the Crafting Recipes add here your Recipes
+  #Der Abschnitt für die Baurezepte (Werkbank) fügen hier deine Rezepte ein
   crafting:
-    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     dirty_cocaine:
-      #Whether the Recipe is Shaped or not
+      #Ob das Rezept geformt ist oder nicht
       isShaped: true
-      #The Shape of the Recipe - You musst add 3 Lines and 3 Characters per Line
+      #Die Form des Rezeptes - Du musst 3 Zeilen hinzufügen und 3 Zeichen pro Zeile
       shape:
         - 'XVX'
         - 'XVX'
         - 'XVX'
-      #The Materials of the Recipe - You can add 9 Materials
-      #The position of the Material does not matter but the Section must be in the Shape
+      #Die Materialien des Rezepts - Du kannst maximal 9 Materialien hinzufügen
+      #Die Position des Materials spielt keine Rolle, aber die Section muss in der Shape sein
       materials:
-        #The Shape Key
+        #Die Schlüssel sind die Zeichen in der From
         X:
-          #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+          #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
+          #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
           itemStack: 'minecraft:coal'
-          #The Amount of this Material that are required for this Recipe
+          #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
           amount: 1
-          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-          #For more Information about MatchTypes check the Wiki
+          #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+          #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+          #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         V:
           itemStack: 'drugsadder:coca'
           amount: 4
           matchType: "ALL"
-      #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+      #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:dirty_cocaine/6'
     shrooms:
       isShaped: false
@@ -169,23 +169,23 @@ recipes:
           amount: 1
           matchType: "ALL"
       result: 'drugsadder:shrooms/6'
-  #The Section for the Furnace Recipes add here your Recipes
+  #Der Abschnitt für die Ofenrezepte fügen hier deine Rezepte ein
   furnace:
-    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     cocaine:
-      #The Type of the Recipe - You can choose between FURNACE, BLASTING and SMOKING
+      #Der Typ des Rezeptes - Du kannst zwischen FURNACE, SMOKING, BLASTING wählen
       recipeType: "FURNACE"
-      #The Duration of the Recipe - In Seconds
+      #Wie lange das Rezept dauert - In Sekunden
       cookingTime: 100
-      #The Experience you receive for the Recipe
+      #Die Erfahrung, die der Spieler erhält, wenn er das Rezept ausführt
       exp: 0
-      #The Materials of the Recipe - You can only add 1 Material
+      #Das Material des Rezepts - Du kannst maximal 1 Material hinzufügen
       material:
-        #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-        #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-        #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+        #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+        #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
+        #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
         itemStack: 'drugsadder:dirty_cocaine'
-        #The Amount of this Material that are required for this Recipe
+        #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
         amount: 1
       #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
       result: 'drugsadder:cocaine/1'
@@ -205,30 +205,32 @@ recipes:
         itemStack: 'drugsadder:dirty_cocaine'
         amount: 1
       result: 'drugsadder:cocaine/1'
-  #The Section for the Press Recipes add here your Recipes
+  #Der Abschnitt für die Braurezepte fügen hier deine Rezepte ein
   press:
-    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     cocaine_pills:
-      #The Duration of the Recipe - In Seconds
+      #Wie lange das Rezept dauert - In Sekunden
       duration: 2.0
-      #The Mold of the Recipe - Just use a valid NamespacedID of an Item
+      #Die Form des Rezeptes - Verwende einfach ein gültiges NamespacedID eines Gegenstandes, es kann ein CustomItem sein
       mold: 'drugsadder:pill_mold'
-      #If the Mold should be returned after the pressing
+      #Ob die Form zurückgegeben werden soll, wenn das Rezept abgeschlossen ist
       returnMold: true
-      #The Materials of the Recipe
+      #Die Materialien des Rezepts - Du kannst so viele Materialien hinzufügen, wie du willst
+      #Die Position des Materials spielt keine Rolle
+      #Es Wird empfohlen nicht mehr als 3 Materialien zu verwenden
       materials:
         1:
-          #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+          #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
+          #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
           itemStack: 'drugsadder:dirty_cocaine'
-          #The Amount of this Material that are required for this Recipe
-          amount: 2
-          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-          #For more Information about MatchTypes check the Wiki
+          #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
+          amount: 1
+          #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+          #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+          #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
-      #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+      #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:cocaine_pills/1'
   table:
     test:
@@ -249,103 +251,104 @@ recipes:
           matchType: "ALL"
       result: 'drugsadder:cocaine_pills/1'
 
-#Drugs
+#Drogen
 drugs:
-  #Name of the Drug - This is the ID of the Drug, the NamespacedID is then drugsadder:DRUG_NAME
+  #Name der Droge - Dies ist die ID der Droge, die NamespacedID ist dann drugsadder:DRUG_NAME
   cocaine:
-    #Which Item is used for the Drug - Just use a valid NamespacedID of an Item it can be a CustomItem
-    #Note that the Item must be a consumable Item
+    #Welcher Gegenstand für die Droge verwendet wird - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+    #Beachte, dass der Gegenstand ein konsumierbarer Gegenstand sein muss
     itemStack: 'drugsadder:cocaine'
-    #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-    #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-    #For more Information about MatchTypes check the Wiki
-    #The MatchType will be used to check if the Item is a Drug on consume of an Item
+    #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+    #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+    #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
+    #Der MatchType wird verwendet, um zu überprüfen, ob der konsumierte Gegenstand der Droge entspricht
     matchType: "ALL"
-    #Here you can configure if a Drug is addictive or not
-    #If you want to disable the addiction just set addictionAble to false
+    #Hier kannst du konfigurieren, ob die Droge süchtig macht oder nicht
+    #Wenn du die Sucht deaktivieren möchtest, setze addictionAble auf false
     addictionSettings:
-      #Is the Drug addictive
+      #Ob die Droge süchtig macht oder nicht
       addictionAble: true
-      #The addictionPoints that are added to the player when the Drug is consumed
+      #Die addictionPoints werden dem Spieler hinzugefügt, wenn die Droge konsumiert wird
       addictionPoints: 10
       #Overdose
       overdose: 3
-      #The time it takes to reduce the addictionPoints in minutes
+      #Die Zeit, die benötigt wird, um die addictionPoints in Minuten zu reduzieren
       reductionTime: 10
-      #The amount of addictionPoints that are reduced when the reductionTime is over
+      #Die Anzahl der addictionPoints, die reduziert werden, wenn die Zeit abgelaufen ist
       reductionAmount: 1
-      #If the reduction should only be made if the player is online
+      #Ob die addictionPoints nur reduziert werden sollen, wenn der Spieler online ist
       reductionOnlyOnline: true
-      #Which effects you get when you are addicted to the Drug and consume it
-      #Just add a value of addictionPoints and then a List of effects
-      #The effects will be chosen by the players addictionPoints if it is not in the list it will be the closest value
-      #The effects are Minecraft PotionEffects - You can add as many as you want
-      #Example: 15: - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
-      #This means if the player has 15 addictionPoints he will get the effect
-      #If the player has 16 addictionPoints he will also get the effect
+      #Welche Effekte du bekommst, wenn du süchtig nach der Droge bist und sie konsumierst
+      #Füge einfach einen Wert von addictionPoints hinzu und dann eine Liste von Effekten
+      #Die Effekte werden von den addictionPoints des Spielers ausgewählt, wenn er nicht in der Liste ist, wird er der nächstgelegene Wert genommen
+      #Die Effekte sind Minecraft PotionEffects - Du kannst so viele hinzufügen, wie du willst
+      #Beispiel: 15: - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+      #Das bedeutet, wenn der Spieler 15 addictionPoints hat, erhält er den Effekt
+      #Wenn der Spieler 16 addictionPoints hat, erhält er auch den Effekt
       consummation:
         15:
           - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
         30:
           - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
-      #Which effects you get when the player is in deprivation
-      #Just add a value of addictionPoints and then a List of effects
-      #The effects will be chosen by the players addictionPoints if it is not in the list it will be the closest value
-      #The effects are Minecraft PotionEffects - You can add as many as you want
-      #Example: 15: - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
-      #This means if the player has 15 addictionPoints he will get the effect
-      #If the player has 16 addictionPoints he will also get the effect
+      #Welche Effekte du bekommst, wenn du süchtig nach der Droge bist und sie nicht konsumierst
+      #Füge einfach einen Wert von addictionPoints hinzu und dann eine Liste von Effekten
+      #Die Effekte werden von den addictionPoints des Spielers ausgewählt, wenn er nicht in der Liste ist, wird er der nächstgelegene Wert genommen
+      #Die Effekte sind Minecraft PotionEffects - Du kannst so viele hinzufügen, wie du willst
+      #Beispiel: 15: - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+      #Das bedeutet, wenn der Spieler 15 addictionPoints hat, erhält er den Effekt
+      #Wenn der Spieler 16 addictionPoints hat, erhält er auch den Effekt
       deprivation:
         15:
           - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
         30:
           - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
           - 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
-    #The Effects of the Drug - The effects are Minecraft PotionEffects - You can add as many as you want
+    #Die Effekte, die der Spieler erhält, wenn er die Droge konsumiert - Du kannst so viele hinzufügen, wie du willst
     effects:
       - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
-    #The Commands that are executed when the Drug is consumed - You can add as many as you want
-    #You can use the following Placeholders: %player%, %drug%
-    #You can also use color codes with '&' in your Command lines - Example: '&7This is a Command'
-    #You can also use Unicode Characters in your Command lines - Example: '\uE000'
-    #ServerCommands means that the Command will be executed by the Server
+    #Die Befehle welche ausgeführt werden, wenn die Droge konsumiert wird - Du kannst so viele hinzufügen, wie du willst
+    #Du kannst die folgenden Platzhalter verwenden: %player%, %drug%
+    #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: 'say &7TDas ist ein Befehl'.
+    #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
+    #Die Befehle werden vom Server ausgeführt
     serverCommands:
       - 'say %player% has %drug% consumed!'
-    #PlayerCommands means that the Command will be executed by the Player
-    #Note that the Player must have the Permission to execute the Command
+    #Spielerbefehle bedeutet, dass der Befehl vom Spieler ausgeführt wird
+    #Beachte, dass der Spieler die Berechtigung haben muss, den Befehl auszuführen
     playerCommands:
       - 'say Ich have %drug% consumed!'
-    #The Message that is sent to the Player when the Drug is consumed
-    #You can use the following Placeholders: %player%, %drug%
-    consumeMessage: 'You have %drug% consumed'
-    #The Title that is sent to the Player when the Drug is consumed
-    #You can use the following Placeholders: %player%, %drug%
-    consumeTitle: 'You have %drug% consumed'
+    #Die Nachricht, die an den Spieler gesendet wird, wenn die Droge konsumiert wird
+    #Du kannst die folgenden Platzhalter verwenden: %player%, %drug%
+    consumeMessage: 'Du hast %drug% konsumiert'
+    #Der Titel, der dem Spieler angezeigt wird, wenn die Droge konsumiert wird
+    #Du kannst die folgenden Platzhalter verwenden: %player%, %drug%
+    consumeTitle: 'Du has %drug% konsumiert'
 
-#Seeds
+#Samen
 seeds:
+  #Name des Samens - Dies ist die ID des Samens du kannst jede NamespacedID verwenden die eine unterstützte Pflanze ist
+  #Für unterstützte Pflanzen siehe in der Wiki nach
   #Name of the Seed - This is the ID of the Seed you can use any namespacedID that is a supported Plant
-  #For Plants check the Wiki
   "minecraft:wheat_seeds":
-    #If the Plant should be destroyed when it is harvested
+    #Ob die Pflanze beim Ernten zerstört werden soll
     destroyOnHarvest: true
-    #The time it takes to grow the Plant in Seconds
+    #Wie lange die Pflanze zum Wachsen braucht - In Minuten
     growTime: 60
-    #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-    #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-    #For more Information about MatchTypes check the Wiki
+    #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+    #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+    #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
     matchType: "ALL"
-    #The Drops of the Plant - You can add as many as you want
-    #The order of the Drops does not matter
+    #Die Drops, die die Pflanze fallen lässt, wenn sie geerntet wird - Du kannst so viele hinzufügen, wie du willst
+    #Die reihenfolge der Drops spielt keine Rolle
     drops:
       1:
-        #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
+        #Der ItemStack, der fallen gelassen wird - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
         itemStack: 'drugsadder:coca'
-        #The Amount of this Material that are dropped
+        #Wie viele Items fallen gelassen werden sollen
         amount: 1
-        #The Probability of the Drop - The Probability is in Percent - 100 means 100%
-        #The Probability must be between 0 and 100 - If the Probability is 0 the Drop will not be dropped
-        #The Probability can have 3 decimal places - Example: 50.333
+        #Die Wahrscheinlichkeit, dass der Drop fallen gelassen wird in Prozent - 100 bedeutet 100%
+        #Die Wahrscheinlichkeit muss zwischen 0 und 100 liegen - Wenn die Wahrscheinlichkeit 0 ist, wird der Drop nicht fallen gelassen
+        #Die Wahrscheinlichkeit kann 3 Nachkommastellen haben - Beispiel: 50.333
         probability: 100
       2:
         itemStack: 'drugsadder:shrooms'
