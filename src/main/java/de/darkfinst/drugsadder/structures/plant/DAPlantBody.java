@@ -22,9 +22,17 @@ public class DAPlantBody extends DABody {
         this.blocks.add(this.plantBLock);
         boolean isValid = false;
         Material plantType = this.plantBLock.getType();
-        if (Tag.CORAL_PLANTS.isTagged(plantType) || Tag.WALL_CORALS.isTagged(plantType) || Tag.SMALL_FLOWERS.isTagged(plantType) || Tag.FLOWERS.isTagged(plantType) || Tag.SAPLINGS.isTagged(plantType) || Tag.CROPS.isTagged(plantType)) {
+        if (Tag.CORAL_PLANTS.isTagged(plantType) || Tag.WALL_CORALS.isTagged(plantType)
+                || Tag.SMALL_FLOWERS.isTagged(plantType) || Tag.FLOWERS.isTagged(plantType)
+                || Tag.SAPLINGS.isTagged(plantType) || Tag.CROPS.isTagged(plantType)
+                || Material.NETHER_SPROUTS.equals(plantType)
+                || Material.SEAGRASS.equals(plantType) || Material.FERN.equals(plantType)
+        ) {
             isValid = true;
-        } else if (Tag.TALL_FLOWERS.isTagged(plantType)) {
+        } else if (Tag.TALL_FLOWERS.isTagged(plantType)
+                || Material.TALL_GRASS.equals(plantType) || Material.LARGE_FERN.equals(plantType)
+                || Material.TALL_SEAGRASS.equals(plantType)
+        ) {
             Block rel = this.plantBLock.getRelative(0, 1, 0);
             isValid = rel.getType().equals(plantType);
             super.blocks.add(rel);

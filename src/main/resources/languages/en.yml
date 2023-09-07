@@ -85,6 +85,8 @@ Player_Table_NotValid: "The laboratory table was not properly built"
 Player_Plant_Created: "The plant was created"
 Player_Plant_NotValid: "The plant is not proper plant"
 Player_Plant_NoReady: "The plant is not ready to harvest"
+Player_Structure_Destroyed: "&v1 was successfully destroyed!"
+Player_Plant_Harvested: "The plant was successfully harvested!"
 
 # ---- Structures ----
 Structure_Name_Table: "Laboratory Table"

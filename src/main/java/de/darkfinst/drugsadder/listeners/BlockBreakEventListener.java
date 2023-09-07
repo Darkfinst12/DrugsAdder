@@ -22,10 +22,9 @@ public class BlockBreakEventListener implements Listener {
         } else if (DA.loader.isPlant(event.getBlock()) && event.getPlayer().isSneaking()) {
             event.setDropItems(false);
             DAPlant daPlant = (DAPlant) DA.loader.getStructure(event.getBlock());
-            daPlant.destroy(event.getPlayer());
-            DA.loader.unregisterDAStructure(event.getBlock());
+            daPlant.destroy(event.getPlayer(), event.getBlock());
         } else if (DA.loader.isStructure(event.getBlock())) {
-            DA.loader.unregisterDAStructure(event.getBlock());
+            DA.loader.unregisterDAStructure(event.getPlayer(), event.getBlock());
         }
     }
 

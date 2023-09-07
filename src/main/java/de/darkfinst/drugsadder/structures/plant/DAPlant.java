@@ -97,8 +97,10 @@ public class DAPlant extends DAStructure {
                 long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
                 if (passedTime > this.growTime && !this.isCrop) {
                     this.executeHarvest();
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 } else if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
                     this.executeHarvest();
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 } else {
                     DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
@@ -131,13 +133,15 @@ public class DAPlant extends DAStructure {
         }
     }
 
-    public void destroy(Player player) {
-        List<Item> items = new ArrayList<>();
-        for (DAItem drop : this.drops) {
-            items.add(this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), drop.getItemStack()));
+    public void destroy(Player player, Block block) {
+        if (DA.loader.unregisterDAStructure(player, block)) {
+            List<Item> items = new ArrayList<>();
+            for (DAItem drop : this.drops) {
+                items.add(this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), drop.getItemStack()));
+            }
+            BlockDropItemEvent blockDropItemEvent = new BlockDropItemEvent(this.getBody().blocks.get(0), this.getBody().blocks.get(0).getState(), player, items);
+            Bukkit.getPluginManager().callEvent(blockDropItemEvent);
         }
-        BlockDropItemEvent blockDropItemEvent = new BlockDropItemEvent(this.getBody().blocks.get(0), this.getBody().blocks.get(0).getState(), player, items);
-        Bukkit.getPluginManager().callEvent(blockDropItemEvent);
     }
 
 

@@ -228,7 +228,7 @@ drugs:
 seeds:
   "minecraft:wheat_seeds":
     destroyOnHarvest: true
-    growTime: 60
+    growTime: 60 #In Seconds
     matchType: "ALL"
     drops:
       1:
@@ -239,3 +239,12 @@ seeds:
         itemStack: 'drugsadder:shrooms'
         amount: 1
         probability: 50
+  "minecraft:tall_grass":
+    destroyOnHarvest: false
+    growTime: 60 #In Seconds
+    matchType: "ALL"
+    drops:
+      1:
+        itemStack: 'drugsadder:coca'
+        amount: 1
+        probability: 20

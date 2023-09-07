@@ -124,7 +124,13 @@ public class DASeedReader {
         boolean isValid = false;
         if (itemStack != null) {
             Material plantType = itemStack.getType();
-            isValid = Tag.CORAL_PLANTS.isTagged(plantType) || Tag.WALL_CORALS.isTagged(plantType) || Tag.SMALL_FLOWERS.isTagged(plantType) || Tag.FLOWERS.isTagged(plantType) || Tag.SAPLINGS.isTagged(plantType) || Tag.ITEMS_VILLAGER_PLANTABLE_SEEDS.isTagged(plantType);
+            isValid = Tag.CORAL_PLANTS.isTagged(plantType) || Tag.WALL_CORALS.isTagged(plantType)
+                    || Tag.SMALL_FLOWERS.isTagged(plantType) || Tag.FLOWERS.isTagged(plantType)
+                    || Tag.SAPLINGS.isTagged(plantType) || Tag.ITEMS_VILLAGER_PLANTABLE_SEEDS.isTagged(plantType)
+                    || Material.NETHER_SPROUTS.equals(plantType) || Material.TALL_SEAGRASS.equals(plantType)
+                    || Material.SEAGRASS.equals(plantType) || Material.FERN.equals(plantType)
+                    || Material.TALL_GRASS.equals(plantType) || Material.LARGE_FERN.equals(plantType);
+
         }
         return isValid;
     }

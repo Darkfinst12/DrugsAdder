@@ -122,14 +122,19 @@ public class DALoader {
         this.structureList.remove(structure);
     }
 
-    public void unregisterDAStructure(Block block) {
+    public boolean unregisterDAStructure(Player player, Block block) {
         DAStructure structure = this.getStructure(block);
         if (structure != null) {
             if (structure.hasInventory()) {
                 structure.destroyInventory();
             }
-            this.structureList.remove(structure);
+            boolean success = this.structureList.remove(structure);
+            if (success) {
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName()), DrugsAdderSendMessageEvent.Type.PLAYER);
+            }
+
         }
+        return this.structureList.contains(structure);
     }
 
     public boolean isStructure(Block block) {

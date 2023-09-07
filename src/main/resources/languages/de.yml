@@ -81,6 +81,8 @@ Player_Press_NotValid: "Die Presse ist nicht korrekt gebaut!"
 Player_Table_Created: "Der Labortisch wurde erfolgreich erstellt"
 Player_Table_NotValid: "Der Labortisch ist nicht korrekt gebaut!"
 Player_Plant_NoReady: "Die Pflanze ist noch nicht bereit zum ernten!"
+Player_Structure_Destroyed: "&v1 wurde erfolgreich zerstört!"
+Player_Plant_Harvested: "Die Pflanze wurde erfolgreich geerntet!"
 
 # ---- Structures ----
 Structure_Name_Table: "Labortisch"
