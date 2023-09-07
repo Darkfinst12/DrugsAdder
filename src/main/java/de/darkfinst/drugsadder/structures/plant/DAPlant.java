@@ -9,6 +9,7 @@ import de.darkfinst.drugsadder.structures.DAStructure;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Item;
@@ -123,13 +124,20 @@ public class DAPlant extends DAStructure {
             itemStack.setAmount(drop.getAmount());
             location.getWorld().dropItemNaturally(location, itemStack);
         }
-        this.canBeHarvested = false;
-        this.lastHarvest = System.currentTimeMillis();
-        if (this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable) {
-            ageable.setAge(0);
-            this.getBody().getPlantBLock().setBlockData(ageable);
-            float tsp = (growTime / ageable.getMaximumAge());
-            Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, this.getBody().getPlantBLock(), tsp), ((long) tsp * 20));
+        if (this.destroyOnHarvest) {
+            DA.loader.unregisterDAStructure(this);
+            for (Block block : this.getBody().blocks) {
+                block.setType(Material.AIR);
+            }
+        } else {
+            this.canBeHarvested = false;
+            this.lastHarvest = System.currentTimeMillis();
+            if (this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable) {
+                ageable.setAge(0);
+                this.getBody().getPlantBLock().setBlockData(ageable);
+                float tsp = (growTime / ageable.getMaximumAge());
+                Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, this.getBody().getPlantBLock(), tsp), ((long) tsp * 20));
+            }
         }
     }
 
@@ -176,11 +184,7 @@ public class DAPlant extends DAStructure {
                     } else {
                         plant.canBeHarvested = true;
                     }
-                } else {
-                    DA.log.errorLog("Crop is already fully grown! - " + crop.getLocation(), true);
                 }
-            } else {
-                DA.log.errorLog("Crop is not ageable! - " + crop.getLocation(), true);
             }
         }
     }
