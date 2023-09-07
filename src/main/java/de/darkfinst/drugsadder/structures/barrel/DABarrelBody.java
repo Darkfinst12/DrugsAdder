@@ -24,6 +24,12 @@ public class DABarrelBody extends DABody {
         this.sign = sign;
     }
 
+    /**
+     * Checks if the barrel is valid
+     *
+     * @return true if the barrel is valid
+     * @throws ValidateStructureException if the barrel is not valid
+     */
     public boolean isValidBarrel() throws ValidateStructureException {
         this.blocks.add(this.sign);
         Location loc = this.sign.getLocation();
@@ -71,6 +77,16 @@ public class DABarrelBody extends DABody {
         return true;
     }
 
+
+    /**
+     * Checks if the barrel blocks are valid
+     *
+     * @param barrelBSign The barrel block behind the sign
+     * @param direction   the direction of the barrel
+     * @param addX        the X value to add
+     * @param addZ        the Z value to add
+     * @throws ValidateStructureException if the barrel blocks are not valid
+     */
     private void checkBarrelBlocks(Block barrelBSign, Vector direction, int addX, int addZ) throws ValidateStructureException {
         World world = this.sign.getWorld();
         Block trapBBarrel = barrelBSign.getRelative((direction.getBlockX() * -1), 0, (direction.getBlockZ() * -1));

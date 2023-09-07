@@ -28,6 +28,12 @@ public class DAPressBody extends DABody {
         this.sign = sign;
     }
 
+    /**
+     * Checks if the press is valid
+     *
+     * @return true, if the press is valid otherwise false
+     * @throws ValidateStructureException if the press is not valid
+     */
     //-x= west +x=east -z=north +z=south
     public boolean isValidPress() throws ValidateStructureException {
         this.blocks.add(this.sign);
@@ -42,6 +48,12 @@ public class DAPressBody extends DABody {
         return true;
     }
 
+    /**
+     * Checks the blocks over the sign of the press if they are valid
+     *
+     * @param world The world of the press
+     * @param face  The face of the sign
+     */
     private void checkBlocksOverSign(World world, BlockFace face) {
         Location loc = this.sign.getLocation();
         Block blockOSign = world.getBlockAt(loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ());
@@ -67,6 +79,12 @@ public class DAPressBody extends DABody {
         this.blocks.add(blockOSignY2);
     }
 
+    /**
+     * Checks the blocks behind the sign of the press if they are valid
+     *
+     * @param world The world of the press
+     * @param face  The face of the sign
+     */
     private void checkBlocksBehindSign(World world, BlockFace face) {
         Block anvilBSign = this.sign.getRelative(face.getOppositeFace());
         boolean isValid = Material.ANVIL.equals(anvilBSign.getType());
