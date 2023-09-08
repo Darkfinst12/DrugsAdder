@@ -2,7 +2,7 @@
 Command_Args_Reload: "reload"
 Command_Args_GetCustomItem: "getCustomItem"
 Command_Args_List: "list"
-Command_Args_SetAddiction: "setAddiction"
+Command_Args_Consume: "consume"
 Command_Args_Recipes: "recipes"
 Command_Args_Drugs: "drugs"
 Command_Args_All: "all"
@@ -11,6 +11,9 @@ Command_Args_Crafting: "crafting"
 Command_Args_Furnace: "furnace"
 Command_Args_Press: "press"
 Command_Args_Table: "table"
+Command_Error_NotPlayer: "You must be a player to execute this command!"
+Command_Error_PlayerNotFound: "The player: &v1 was not found!"
+Command_Error_DrugNotFound: "The drug: &v1 was not found!"
 
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
