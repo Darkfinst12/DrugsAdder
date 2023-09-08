@@ -11,6 +11,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +46,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                     player.getInventory().addItem(customItem.getItemStack());
                 } else {
                     CustomStack customStack = CustomStack.getInstance(args[1]);
-                    if(customStack != null) {
+                    if (customStack != null) {
                         player.getInventory().addItem(customStack.getItemStack());
                     } else {
                         commandSender.sendMessage("CustomItem not found + " + args[1]);

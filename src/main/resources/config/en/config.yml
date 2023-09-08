@@ -89,6 +89,10 @@ customItems:
 returnBucket: true
 #Whether a bottle should be returned when a filled one is used when crafting
 returnBottle: true
+#Whether Items in a CraftingBench should be reverted to their clean Version
+resetItemCrafting: true
+#Whether Items in a Furnace (smelting slot) should be reverted to their clean Version
+resetItemSmelting: true
 
 
 #Recipes
@@ -143,10 +147,11 @@ recipes:
           itemStack: 'minecraft:coal'
           #The Amount of this Material that are required for this Recipe
           amount: 1
-          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-          #For more Information about MatchTypes check the Wiki
-          matchType: "ALL"
+          #An MatchType is not needed
+          #All Items in a CraftingBench will be reverted to their clean Version
+          #That means if a Lore or a Name is added by a Player to the Item it will be removed
+          #For more Information check the Wiki
+          #You can disable this Option, just set resetItemCrafting to false
         V:
           itemStack: 'drugsadder:coca'
           amount: 4
@@ -163,11 +168,9 @@ recipes:
         E:
           itemStack: 'minecraft:sugar'
           amount: 1
-          matchType: "ALL"
         O:
           itemStack: 'drugsadder:coca'
           amount: 1
-          matchType: "ALL"
       result: 'drugsadder:shrooms/6'
   #The Section for the Furnace Recipes add here your Recipes
   furnace:
@@ -185,8 +188,12 @@ recipes:
         #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
         #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
         itemStack: 'drugsadder:dirty_cocaine'
-        #The Amount of this Material that are required for this Recipe
-        amount: 1
+        #The Amount is always 1
+        #An MatchType is not needed
+        #All Items in a Furnace (smelting slot) will be reverted to their clean Version
+        #That means if a Lore or a Name is added by a Player to the Item it will be removed
+        #For more Information check the Wiki
+        #You can disable this Option, just set resetItemSmelting to false
       #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
       result: 'drugsadder:cocaine/1'
     blast_cocaine:

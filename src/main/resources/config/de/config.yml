@@ -6,7 +6,7 @@ version: "0.1"
 #Language of the Messages and Commands
 language: de
 
-#Logging Einstellungen - Wenn du die Logs nicht brauchst stelle sie auf false
+#Logging Einstellungen - Wenn du die Logs nicht brauchst, stelle sie auf false
 logCustomItemLoadInfo: true
 logCustomItemLoadComplete: true
 logCustomItemLoadError: true
@@ -89,7 +89,10 @@ customItems:
 returnBucket: true
 #Ob eine Flasche zurückgegeben werden sollte, wenn eine gefüllte Flasche beim Basteln verwendet wird
 returnBottle: true
-
+#Ob Items in der Werkbank in ihre ursprüngliche Version zurückgesetzt werden sollen
+resetItemCrafting: true
+#Ob Items im Ofen in ihre ursprüngliche Version zurückgesetzt werden sollen
+resetItemSmelting: true
 
 #Rezepte
 recipes:
@@ -143,10 +146,11 @@ recipes:
           itemStack: 'minecraft:coal'
           #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
           amount: 1
-          #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
-          #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
-          #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
-          matchType: "ALL"
+          #Ein MatchType ist nicht erforderlich
+          #Alle Items, die in einer Werkbank verwendet werden, werden auf ihre ursprüngliche Version zurückgesetzt
+          #Das heißt, wenn eine Lore oder ein Name hinzugefügt wurde von einem Spieler oder einem Plugin, wird es entfernt
+          #Für weitere Informationen schaue in der Wiki nach
+          #Du kannst, diese Einstellung auch Deaktivieren, indem Du die Einstellung resetItemCrafting auf false setzt
         V:
           itemStack: 'drugsadder:coca'
           amount: 4
@@ -185,9 +189,13 @@ recipes:
         #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
         #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
         itemStack: 'drugsadder:dirty_cocaine'
-        #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
-        amount: 1
-      #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+        #Die Anzahl is immer 1
+        #Ein MatchType ist nicht erforderlich
+        #Alle Items, die in dem Ofenrezept verwendet werden, werden auf ihre ursprüngliche Version zurückgesetzt
+        #Das heißt, wenn eine Lore oder ein Name hinzugefügt wurde von einem Spieler oder einem Plugin, wird es entfernt
+        #Für weitere Informationen schaue in der Wiki nach
+        #Du kannst, diese Einstellung auch Deaktivieren, indem Du die Einstellung resetItemCrafting auf false setzt
+      #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:cocaine/1'
     blast_cocaine:
       recipeType: "BLASTING"

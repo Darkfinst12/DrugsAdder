@@ -12,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -83,6 +85,19 @@ public class DAUtil {
             }
         }
         return null;
+    }
+
+    public static void setSlotDefaultItem(InventoryEvent event, Integer slot) {
+        Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> {
+            ItemStack ogItem = event.getInventory().getItem(slot);
+            if (ogItem != null) {
+                ItemStack itemStack = DAUtil.getDefaultItem(ogItem);
+                if (itemStack != null) {
+                    itemStack.setAmount(ogItem.getAmount());
+                    event.getInventory().setItem(slot, itemStack);
+                }
+            }
+        }, 1L);
     }
 
     public static boolean matchItems(ItemStack itemStackA, ItemStack itemStackB, ItemMatchType... matchTypes) {

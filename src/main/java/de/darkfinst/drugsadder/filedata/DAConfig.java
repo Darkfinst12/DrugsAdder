@@ -31,6 +31,8 @@ public class DAConfig {
     public static boolean loadDataAsync;
     public static boolean returnBucket;
     public static boolean returnBottle;
+    public static boolean resetItemCrafting;
+    public static boolean resetItemSmelting;
 
     public static boolean hasSlimefun;
     public static boolean hasItemsAdder;
@@ -185,6 +187,9 @@ public class DAConfig {
         //Loads the return values
         returnBucket = config.getBoolean("returnBucket", true);
         returnBottle = config.getBoolean("returnBottle", true);
+        //Loads the reset values
+        resetItemCrafting = config.getBoolean("resetItemCrafting", true);
+        resetItemSmelting = config.getBoolean("resetItemSmelting", true);
 
         //Loads the Logging
         logCustomItemLoadInfo = config.getBoolean("logCustomItemLoadInfo", true);
