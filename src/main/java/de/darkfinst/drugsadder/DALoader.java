@@ -118,8 +118,9 @@ public class DALoader {
         return false;
     }
 
-    public void unregisterDAStructure(DAStructure structure) {
-        this.structureList.remove(structure);
+    public boolean unregisterDAStructure(DAStructure structure) {
+        structure.setForRemoval(true);
+        return this.getStructure(structure) == null;
     }
 
     public boolean unregisterDAStructure(Player player, Block block) {
@@ -128,7 +129,7 @@ public class DALoader {
             if (structure.hasInventory()) {
                 structure.destroyInventory();
             }
-            boolean success = this.structureList.remove(structure);
+            boolean success = this.unregisterDAStructure(structure);
             if (success) {
                 DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName()), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
@@ -142,11 +143,15 @@ public class DALoader {
     }
 
     public boolean isPlant(Block block) {
-        return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block));
+        return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block) && !daStructure.isForRemoval());
     }
 
     public DAStructure getStructure(Block block) {
-        return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block)).findAny().orElse(null);
+        return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval()).findAny().orElse(null);
+    }
+
+    public DAStructure getStructure(DAStructure structure) {
+        return this.structureList.stream().filter(daStructure -> daStructure.equals(structure) && !daStructure.isForRemoval()).findAny().orElse(null);
     }
 
     public DAStructure getStructure(Inventory inventory) {
@@ -157,11 +162,11 @@ public class DALoader {
                 return daTable.getInventory().equals(inventory);
             }
             return false;
-        }).findAny().orElse(null);
+        }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);
     }
 
     public List<DAStructure> getStructures(World world) {
-        return this.structureList.stream().filter(daStructure -> daStructure.getWorld().equals(world)).toList();
+        return this.structureList.stream().filter(daStructure -> daStructure.getWorld().equals(world) && !daStructure.isForRemoval()).toList();
     }
 
     public void unloadStructures(World world) {

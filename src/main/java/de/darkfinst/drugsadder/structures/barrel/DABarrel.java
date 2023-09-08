@@ -69,15 +69,17 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      *
      * @param sign    The sign of the barrel
      * @param isAsync If the barrel should be created, async
+     * @return True if the barrel was successfully created and registered
      * @throws ValidateStructureException If the barrel is not valid
      */
-    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException {
         DABarrelBody barrelBody = new DABarrelBody(this, sign);
         boolean isValid = barrelBody.isValidBarrel();
         if (isValid) {
             super.setBody(barrelBody);
-            DA.loader.registerDAStructure(this, isAsync);
+            return DA.loader.registerDAStructure(this, isAsync);
         }
+        return false;
     }
 
     /**

@@ -3,8 +3,11 @@
 #Version of the Config
 version: "0.1"
 
-#Language of the Messages and Commands
+#Sprache der Config und der Befehle
 language: de
+
+#Ob die Daten asynchron geladen werden sollen
+loadDataAsync: true
 
 #Logging Einstellungen - Wenn du die Logs nicht brauchst, stelle sie auf false
 logCustomItemLoadInfo: true

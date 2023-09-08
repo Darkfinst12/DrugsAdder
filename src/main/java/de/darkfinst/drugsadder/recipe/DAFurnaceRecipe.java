@@ -48,10 +48,6 @@ public class DAFurnaceRecipe extends DARecipe {
                 return false;
             }
         }
-        DA.loader.debugLog("Recipe " + this.getNamedID() + " registered");
-        if (recipe instanceof FurnaceRecipe furnaceRecipe) {
-            DA.log.debugLog(furnaceRecipe.getInputChoice().toString());
-        }
         return Bukkit.addRecipe(recipe);
     }
 

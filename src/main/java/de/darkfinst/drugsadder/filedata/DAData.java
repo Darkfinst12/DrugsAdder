@@ -10,9 +10,7 @@ import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.configuration.ConfigurationSection;
@@ -126,28 +124,40 @@ public class DAData {
                         ConfigurationSection barrels = section.getConfigurationSection("barrels");
                         for (String barrel : barrels.getKeys(false)) {
                             ConfigurationSection barrelSection = barrels.getConfigurationSection(barrel);
-                            DAData.loadBarrelData(world, barrelSection, isAsync);
+                            boolean success = DAData.loadBarrelData(world, barrelSection, isAsync);
+                            if (!success) {
+                                section.set("barrels." + barrel, null);
+                            }
                         }
                     }
                     case "presses" -> {
                         ConfigurationSection presses = section.getConfigurationSection("presses");
                         for (String press : presses.getKeys(false)) {
                             ConfigurationSection pressSection = presses.getConfigurationSection(press);
-                            DAData.loadPressData(world, pressSection, isAsync);
+                            boolean success = DAData.loadPressData(world, pressSection, isAsync);
+                            if (!success) {
+                                section.set("presses." + press, null);
+                            }
                         }
                     }
                     case "tables" -> {
                         ConfigurationSection tables = section.getConfigurationSection("tables");
                         for (String table : tables.getKeys(false)) {
                             ConfigurationSection tableSection = tables.getConfigurationSection(table);
-                            DAData.loadTableData(world, tableSection, isAsync);
+                            boolean success = DAData.loadTableData(world, tableSection, isAsync);
+                            if (!success) {
+                                section.set("tables." + table, null);
+                            }
                         }
                     }
                     case "plants" -> {
                         ConfigurationSection plants = section.getConfigurationSection("plants");
                         for (String plant : plants.getKeys(false)) {
                             ConfigurationSection plantSection = plants.getConfigurationSection(plant);
-                            DAData.loadPlantData(world, plantSection, isAsync);
+                            boolean success = DAData.loadPlantData(world, plantSection, isAsync);
+                            if (!success) {
+                                section.set("plants." + plant, null);
+                            }
                         }
                     }
                     default -> DA.log.errorLog("Unknown Structure: " + structure);
@@ -168,26 +178,30 @@ public class DAData {
      * @param world   The world
      * @param barrel  The barrel config section
      * @param isAsync Whether the method is called asynchronously or not
+     * @return True if the barrel was successfully loaded
      */
-    private static void loadBarrelData(World world, ConfigurationSection barrel, boolean isAsync) {
+    private static boolean loadBarrelData(World world, ConfigurationSection barrel, boolean isAsync) {
         // Block split by ","
         String block = barrel.getString("sign");
-        if (block != null) {
+        boolean forRemoval = barrel.getBoolean("forRemoval", false);
+        if (block != null && !forRemoval) {
             String[] split = block.split(",");
             if (split.length == 3) {
                 Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
-                if (worldBlock.getBlockData() instanceof WallSign) {
+                if (worldBlock.getBlockData() instanceof WallSign && Tag.WALL_SIGNS.isTagged(worldBlock.getType())) {
                     try {
                         DABarrel daBarrel = new DABarrel();
-                        daBarrel.create(worldBlock, isAsync);
+                        boolean success = daBarrel.create(worldBlock, isAsync);
 
-                        ConfigurationSection invSection = barrel.getConfigurationSection("inv");
-                        if (invSection != null) {
-                            for (String slot : invSection.getKeys(false)) {
-                                daBarrel.getInventory().setItem(DAUtil.parseInt(slot), invSection.getItemStack(slot));
+                        if (success) {
+                            ConfigurationSection invSection = barrel.getConfigurationSection("inv");
+                            if (invSection != null) {
+                                for (String slot : invSection.getKeys(false)) {
+                                    daBarrel.getInventory().setItem(DAUtil.parseInt(slot), invSection.getItemStack(slot));
+                                }
                             }
                         }
-
+                        return success;
                     } catch (Exception e) {
                         DA.log.errorLog("Error while loading Barrel: " + barrel.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
@@ -195,6 +209,7 @@ public class DAData {
                 }
             }
         }
+        return false;
     }
 
     /**
@@ -204,25 +219,27 @@ public class DAData {
      * @param press   The press config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static void loadPressData(World world, ConfigurationSection press, boolean isAsync) {
+    private static boolean loadPressData(World world, ConfigurationSection press, boolean isAsync) {
         // Block split by ","
         String block = press.getString("sign");
-        if (block != null) {
+        boolean forRemoval = press.getBoolean("forRemoval", false);
+        if (block != null && !forRemoval) {
             String[] split = block.split(",");
             if (split.length == 3) {
                 Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
                 if (worldBlock.getBlockData() instanceof WallSign) {
                     try {
                         DAPress daPress = new DAPress();
-                        daPress.create(worldBlock, isAsync);
-
-                        ConfigurationSection invSection = press.getConfigurationSection("inv");
-                        if (invSection != null) {
-                            for (String slot : invSection.getKeys(false)) {
-                                daPress.addCompressedItem(invSection.getItemStack(slot));
+                        boolean success = daPress.create(worldBlock, isAsync);
+                        if (success) {
+                            ConfigurationSection invSection = press.getConfigurationSection("inv");
+                            if (invSection != null) {
+                                for (String slot : invSection.getKeys(false)) {
+                                    daPress.addCompressedItem(invSection.getItemStack(slot));
+                                }
                             }
                         }
-
+                        return success;
                     } catch (Exception e) {
                         DA.log.errorLog("Error while loading Press: " + press.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
@@ -230,6 +247,7 @@ public class DAData {
                 }
             }
         }
+        return false;
     }
 
     /**
@@ -239,25 +257,28 @@ public class DAData {
      * @param table   The table config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static void loadTableData(World world, ConfigurationSection table, boolean isAsync) {
+    private static boolean loadTableData(World world, ConfigurationSection table, boolean isAsync) {
         // Block split by ","
         String block = table.getString("sign");
-        if (block != null) {
+        boolean forRemoval = table.getBoolean("forRemoval", false);
+        if (block != null && !forRemoval) {
             String[] split = block.split(",");
             if (split.length == 3) {
                 Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
                 if (worldBlock.getBlockData() instanceof WallSign) {
                     try {
                         DATable daTable = new DATable();
-                        daTable.create(worldBlock, isAsync);
+                        boolean success = daTable.create(worldBlock, isAsync);
 
-                        ConfigurationSection invSection = table.getConfigurationSection("inv");
-                        if (invSection != null) {
-                            for (String slot : invSection.getKeys(false)) {
-                                daTable.getInventory().setItem(DAUtil.parseInt(slot), invSection.getItemStack(slot));
+                        if (success) {
+                            ConfigurationSection invSection = table.getConfigurationSection("inv");
+                            if (invSection != null) {
+                                for (String slot : invSection.getKeys(false)) {
+                                    daTable.getInventory().setItem(DAUtil.parseInt(slot), invSection.getItemStack(slot));
+                                }
                             }
                         }
-
+                        return success;
                     } catch (Exception e) {
                         DA.log.errorLog("Error while loading Table: " + table.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
@@ -265,35 +286,39 @@ public class DAData {
                 }
             }
         }
+        return false;
     }
 
     /**
      * This method loads the data for the Plants
      *
      * @param world   The world
-     * @param table   The plant config section
+     * @param plant   The plant config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static void loadPlantData(World world, ConfigurationSection table, boolean isAsync) {
+    private static boolean loadPlantData(World world, ConfigurationSection plant, boolean isAsync) {
         // Block split by ","
-        String block = table.getString("plant");
-        if (block != null) {
+        String block = plant.getString("plant");
+        boolean forRemoval = plant.getBoolean("forRemoval", false);
+        if (block != null && !forRemoval) {
             String[] split = block.split(",");
             if (split.length == 3) {
                 Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
-                DAPlantItem seedItem = DAConfig.seedReader.getSeed(table.getString("seed", "NULL"));
+                DAPlantItem seedItem = DAConfig.seedReader.getSeed(plant.getString("seed", "NULL"));
                 if (seedItem != null) {
                     try {
                         DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowTime(), seedItem.getDrops());
-                        daPlant.create(worldBlock, isAsync);
+                        boolean success = daPlant.create(worldBlock, isAsync);
+                        return success;
 
                     } catch (Exception e) {
-                        DA.log.errorLog("Error while loading Plant: " + table.getCurrentPath(), isAsync);
+                        DA.log.errorLog("Error while loading Plant: " + plant.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
                     }
                 }
             }
         }
+        return false;
     }
 
     /**

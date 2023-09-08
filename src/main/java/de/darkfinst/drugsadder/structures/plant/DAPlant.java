@@ -87,8 +87,9 @@ public class DAPlant extends DAStructure {
      *
      * @param plantBlock Block of the plant
      * @param isAsync    If the plant should be created, async
+     * @return True if the plant was successfully created and registered
      */
-    public void create(Block plantBlock, boolean isAsync) {
+    public boolean create(Block plantBlock, boolean isAsync) {
         DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
         boolean isValid = daPlantBody.isValidPlant();
         if (isValid) {
@@ -102,7 +103,9 @@ public class DAPlant extends DAStructure {
                     Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
                 }
             }
+            return success;
         }
+        return false;
     }
 
     /**
@@ -177,9 +180,7 @@ public class DAPlant extends DAStructure {
     public void destroy(Player player, Block block) {
         if (DA.loader.unregisterDAStructure(player, block)) {
             List<Item> items = new ArrayList<>();
-            for (DAItem drop : this.drops) {
-                items.add(this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), drop.getItemStack()));
-            }
+            items.add(this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), this.seed.getItemStack()));
             BlockDropItemEvent blockDropItemEvent = new BlockDropItemEvent(this.getBody().blocks.get(0), this.getBody().blocks.get(0).getState(), player, items);
             Bukkit.getPluginManager().callEvent(blockDropItemEvent);
         }

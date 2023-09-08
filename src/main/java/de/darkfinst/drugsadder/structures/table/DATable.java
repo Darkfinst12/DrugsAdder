@@ -83,14 +83,16 @@ public class DATable extends DAStructure implements InventoryHolder {
      *
      * @param sign    The sign of the table
      * @param isAsync If the table should be created, async
+     * @return True if the table was successfully created and registered
      */
-    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException {
         DATableBody tableBody = new DATableBody(this, sign);
         boolean isValid = tableBody.isValidTable();
         if (isValid) {
             super.setBody(tableBody);
             DA.loader.registerDAStructure(this, isAsync);
         }
+        return isValid;
     }
 
     /**

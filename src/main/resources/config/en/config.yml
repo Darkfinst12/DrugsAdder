@@ -6,6 +6,9 @@ version: "0.1"
 #Language of the Messages and Commands
 language: en
 
+#If the Data should be loaded async
+loadDataAsync: true
+
 #Logging Settings - If you want to disable a log just set it to false
 logCustomItemLoadInfo: true
 logCustomItemLoadComplete: true

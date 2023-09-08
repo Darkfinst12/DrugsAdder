@@ -74,15 +74,17 @@ public class DAPress extends DAStructure {
      *
      * @param sign    The sign of the press
      * @param isAsync If the structure should be loaded async
+     * @return True, if the press is valid otherwise false
      * @throws ValidateStructureException If the press is not valid
      */
-    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException {
         DAPressBody pressBody = new DAPressBody(this, sign);
         boolean isValid = pressBody.isValidPress();
         if (isValid) {
             super.setBody(pressBody);
             DA.loader.registerDAStructure(this, isAsync);
         }
+        return isValid;
     }
 
     public DAPressBody getBody() {
