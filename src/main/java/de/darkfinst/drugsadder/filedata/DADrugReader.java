@@ -346,4 +346,12 @@ public class DADrugReader {
             loader.log(languageReader.get(key, args));
         }
     }
+
+    public List<String> getDrugNames() {
+        List<String> names = new ArrayList<>();
+        for (DADrug registeredDrug : this.registeredDrugs) {
+            names.add(registeredDrug.getID());
+        }
+        return names;
+    }
 }

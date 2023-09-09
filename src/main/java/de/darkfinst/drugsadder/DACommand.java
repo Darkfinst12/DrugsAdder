@@ -22,6 +22,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg());
     private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
     private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
+    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
 
 
     public void register() {
@@ -231,6 +232,20 @@ public class DACommand implements CommandExecutor, TabCompleter {
             command, @NotNull String commandLabel, @NotNull String[] args) {
         if (args.length == 1) {
             return MAIN_ARGS.stream().filter(s1 -> s1.contains(args[0])).toList();
+        } else if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg())) {
+            return LIST_ARGS.stream().filter(s1 -> s1.contains(args[1])).toList();
+        } else if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg())) {
+            return LIST_INFO_ARGS.stream().filter(s1 -> s1.contains(args[1])).toList();
+        } else if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
+            return DAConfig.drugReader.getDrugNames();
+        } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
+            return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.contains(args[2])).toList();
+        } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
+            return DAConfig.drugReader.getDrugNames();
+        } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
+            return DAConfig.customItemReader.getCustomItemNames();
+        } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.contains(args[3])).toList();
         }
         return null;
     }
