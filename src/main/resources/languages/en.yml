@@ -18,6 +18,7 @@ Command_Args_Info: "info"
 Command_Info_DAInfo: "Version: &v1 by &v2"
 Command_Info_ListItems: "All registered &v1:"
 Command_Error_RecipeNotFound: "The recipe: &v1 was not found!"
+Command_Args_Player: "player"
 
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"

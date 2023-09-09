@@ -117,6 +117,7 @@ public class DALoader {
         RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
         if (!registerStructureEvent.isCancelled()) {
+            //TODO: Check if on the same location is already a structure wich is marked for removal and is the same type
             return this.structureList.add(structure);
         }
         return false;
@@ -143,7 +144,7 @@ public class DALoader {
     }
 
     public boolean isStructure(Block block) {
-        return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block));
+        return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval());
     }
 
     public boolean isPlant(Block block) {

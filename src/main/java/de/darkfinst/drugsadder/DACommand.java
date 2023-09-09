@@ -22,7 +22,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg());
     private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
     private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
-    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
+    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.PLAYER.getArg());
 
 
     public void register() {
@@ -169,6 +169,15 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 String version = DA.getInstance.getDescription().getVersion();
                 String authors = DA.getInstance.getDescription().getAuthors().toString().replace("[", "").replace("]", "");
                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_DAInfo", version, authors), DrugsAdderSendMessageEvent.Type.COMMAND);
+            } else if (args.length == 2) {
+                if (args[1].equalsIgnoreCase(PossibleArgs.PLAYER.getArg()) && commandSender instanceof Player player) {
+                    DAPlayer daPlayer = DA.loader.getDaPlayer(player);
+                    if (daPlayer != null) {
+                        DA.loader.msg(commandSender, daPlayer.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_PlayerNotFound", player.getName());
+                    }
+                }
             } else if (args.length == 3) {
                 if (args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
                     DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);
@@ -230,21 +239,23 @@ public class DACommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command
             command, @NotNull String commandLabel, @NotNull String[] args) {
         if (args.length == 1) {
-            return MAIN_ARGS.stream().filter(s1 -> s1.contains(args[0])).toList();
+            return MAIN_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[0].toLowerCase())).toList();
         } else if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg())) {
-            return LIST_ARGS.stream().filter(s1 -> s1.contains(args[1])).toList();
+            return LIST_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[1].toLowerCase())).toList();
         } else if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg())) {
-            return LIST_INFO_ARGS.stream().filter(s1 -> s1.contains(args[1])).toList();
+            return LIST_INFO_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[1].toLowerCase())).toList();
         } else if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
-            return DAConfig.drugReader.getDrugNames();
+            return DAConfig.drugReader.getDrugNames().stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
-            return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.contains(args[2])).toList();
+            return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
-            return DAConfig.drugReader.getDrugNames();
+            return DAConfig.drugReader.getDrugNames().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
-            return DAConfig.customItemReader.getCustomItemNames();
+            return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.contains(args[3])).toList();
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         }
         return null;
     }
@@ -267,7 +278,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         OTHER(DA.loader.getTranslation("other", "Command_Args_Other")),
         CUSTOM_ITEMS(DA.loader.getTranslation("customItems", "Command_Args_CustomItems")),
         INFO(DA.loader.getTranslation("info", "Command_Args_Info")),
-        ;
+        PLAYER(DA.loader.getTranslation("player", "Command_Args_Player"));
         private final String arg;
 
         PossibleArgs(String arg) {
