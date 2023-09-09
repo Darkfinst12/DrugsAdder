@@ -99,36 +99,35 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkListRecipes(CommandSender commandSender, String[] args) {
         if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
             if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
-                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getRegisteredRecipes(), PossibleArgs.RECIPES);
+                String recipes = this.getRecipeList(DAConfig.daRecipeReader.getRegisteredRecipes(), PossibleArgs.RECIPES);
                 DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
-                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getBarrelRecipes(), PossibleArgs.BARREL);
+                String recipes = this.getRecipeList(DAConfig.daRecipeReader.getBarrelRecipes(), PossibleArgs.BARREL);
                 DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
-                TextComponent recipes = getRecipeList(DAConfig.daRecipeReader.getCraftingRecipes(), PossibleArgs.CRAFTING);
+                String recipes = getRecipeList(DAConfig.daRecipeReader.getCraftingRecipes(), PossibleArgs.CRAFTING);
                 DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
-                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getFurnaceRecipes(), PossibleArgs.FURNACE);
+                String recipes = this.getRecipeList(DAConfig.daRecipeReader.getFurnaceRecipes(), PossibleArgs.FURNACE);
                 DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
-                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getPressRecipes(), PossibleArgs.PRESS);
+                String recipes = this.getRecipeList(DAConfig.daRecipeReader.getPressRecipes(), PossibleArgs.PRESS);
                 DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
-                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getTableRecipes(), PossibleArgs.TABLE);
+                String recipes = this.getRecipeList(DAConfig.daRecipeReader.getTableRecipes(), PossibleArgs.TABLE);
                 DA.loader.msg(commandSender, recipes);
             }
         }
     }
 
-    private @NotNull TextComponent getRecipeList(List<?> recipeList, PossibleArgs recipeType) {
-        TextComponent recipes = new TextComponent(DA.loader.languageReader.get("Command_Info_ListItems", recipeType.getArg()) + "\n");
-        for (int i = 0; i < recipeList.size(); i++) {
-            DARecipe registeredRecipe = (DARecipe) recipeList.get(i);
-            TextComponent recipe = new TextComponent(registeredRecipe.getNamedID() + " - Type: " + registeredRecipe.getRecipeType() + (i == DAConfig.daRecipeReader.getPressRecipes().size() - 1 ? "" : "\n"));
-            recipe.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/drugsadder " + PossibleArgs.LIST.getArg() + " " + recipeType.getArg() + " " + registeredRecipe.getNamedID()));
-            recipes.addExtra(recipe);
+    private @NotNull String getRecipeList(List<?> recipeList, PossibleArgs recipeType) {
+        StringBuilder recipes = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", recipeType.getArg()) + "\n");
+        for (Object o : recipeList) {
+            DARecipe registeredRecipe = (DARecipe) o;
+            String s = "- ID:" + registeredRecipe.getNamedID() + " - Type: " + registeredRecipe.getRecipeType() + "\n";
+            recipes.append(s);
         }
-        return recipes;
+        return recipes.toString();
     }
 
     private void checkListDrugs(CommandSender commandSender, String[] args) {

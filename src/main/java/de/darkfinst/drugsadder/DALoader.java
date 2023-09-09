@@ -204,7 +204,7 @@ public class DALoader {
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
-            sender.sendMessage(this.prefix + sendMessageEvent.getMessage());
+            sender.sendMessage(this.prefix + sendMessageEvent.getMessage().getText());
         }
     }
 
@@ -217,13 +217,7 @@ public class DALoader {
     }
 
     public void msg(CommandSender sender, TextComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
-        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
-        this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
-        if (!sendMessageEvent.isCancelled()) {
-            TextComponent newText = new TextComponent(this.prefix);
-            newText.addExtra(sendMessageEvent.getMessage());
-            sender.sendMessage(newText);
-        }
+        this.msg(sender, msg.getText(), type, isAsync);
     }
 
     public void log(String msg) {
