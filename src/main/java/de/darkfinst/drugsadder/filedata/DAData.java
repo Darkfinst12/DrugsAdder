@@ -44,7 +44,6 @@ public class DAData {
             // Check if data is the newest version
             String version = data.getString("Version", null);
             if (version != null) {
-                /*
                 if (!version.equals(DataSave.dataVersion)) {
                     DA.log.log("Data File is being updated...");
                     File worldFile = new File(DA.getInstance.getDataFolder(), "worlddata.yml");
@@ -52,7 +51,6 @@ public class DAData {
                     data = YamlConfiguration.loadConfiguration(file);
                     DA.log.log("Data Updated to version: " + DataSave.dataVersion);
                 }
-                 */
             }
 
             final List<World> worlds = Bukkit.getWorlds();
