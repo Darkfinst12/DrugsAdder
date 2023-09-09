@@ -1,11 +1,14 @@
 package de.darkfinst.drugsadder;
 
+import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.*;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -16,7 +19,7 @@ import java.util.List;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg());
+    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg());
     private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
     private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
 
@@ -42,6 +45,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     private void checkArgs1(CommandSender commandSender, String[] args) {
         this.checkReload(commandSender, args);
+        this.checkInfo(commandSender, args);
     }
 
     private void checkReload(CommandSender commandSender, String[] args) {
@@ -94,31 +98,36 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkListRecipes(CommandSender commandSender, String[] args) {
         if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
             if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
-                for (DARecipe registeredRecipe : DAConfig.daRecipeReader.getRegisteredRecipes()) {
-                    DA.loader.msg(commandSender, registeredRecipe.toString());
-                }
+                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getRegisteredRecipes(), PossibleArgs.RECIPES);
+                DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
-                for (DABarrelRecipe barrelRecipe : DAConfig.daRecipeReader.getBarrelRecipes()) {
-                    DA.loader.msg(commandSender, barrelRecipe.toString());
-                }
+                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getBarrelRecipes(), PossibleArgs.BARREL);
+                DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
-                for (DACraftingRecipe craftingRecipe : DAConfig.daRecipeReader.getCraftingRecipes()) {
-                    DA.loader.msg(commandSender, craftingRecipe.toString());
-                }
+                TextComponent recipes = getRecipeList(DAConfig.daRecipeReader.getCraftingRecipes(), PossibleArgs.CRAFTING);
+                DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
-                for (DAFurnaceRecipe furnaceRecipe : DAConfig.daRecipeReader.getFurnaceRecipes()) {
-                    DA.loader.msg(commandSender, furnaceRecipe.toString());
-                }
+                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getFurnaceRecipes(), PossibleArgs.FURNACE);
+                DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
-                for (DAPressRecipe pressRecipe : DAConfig.daRecipeReader.getPressRecipes()) {
-                    DA.loader.msg(commandSender, pressRecipe.toString());
-                }
+                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getPressRecipes(), PossibleArgs.PRESS);
+                DA.loader.msg(commandSender, recipes);
             } else if (args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
-                for (DATableRecipe tableRecipe : DAConfig.daRecipeReader.getTableRecipes()) {
-                    DA.loader.msg(commandSender, tableRecipe.toString());
-                }
+                TextComponent recipes = this.getRecipeList(DAConfig.daRecipeReader.getTableRecipes(), PossibleArgs.TABLE);
+                DA.loader.msg(commandSender, recipes);
             }
         }
+    }
+
+    private @NotNull TextComponent getRecipeList(List<?> recipeList, PossibleArgs recipeType) {
+        TextComponent recipes = new TextComponent(DA.loader.languageReader.get("Command_Info_ListItems", recipeType.getArg()) + "\n");
+        for (int i = 0; i < recipeList.size(); i++) {
+            DARecipe registeredRecipe = (DARecipe) recipeList.get(i);
+            TextComponent recipe = new TextComponent(registeredRecipe.getNamedID() + " - Type: " + registeredRecipe.getRecipeType() + (i == DAConfig.daRecipeReader.getPressRecipes().size() - 1 ? "" : "\n"));
+            recipe.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/drugsadder " + PossibleArgs.LIST.getArg() + " " + recipeType.getArg() + " " + registeredRecipe.getNamedID()));
+            recipes.addExtra(recipe);
+        }
+        return recipes;
     }
 
     private void checkListDrugs(CommandSender commandSender, String[] args) {
@@ -151,6 +160,68 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkArgs3(CommandSender commandSender, String[] args) {
         this.checkList(commandSender, args);
         this.checkConsume(commandSender, args);
+        this.checkInfo(commandSender, args);
+    }
+
+    private void checkInfo(CommandSender commandSender, String[] args) {
+        if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg())) {
+            if (args.length == 1) {
+                String version = DA.getInstance.getDescription().getVersion();
+                String authors = DA.getInstance.getDescription().getAuthors().toString().replace("[", "").replace("]", "");
+                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_DAInfo", version, authors), DrugsAdderSendMessageEvent.Type.COMMAND);
+            } else if (args.length == 3) {
+                if (args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
+                    DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);
+                    if (daDrug != null) {
+                        DA.loader.msg(commandSender, daDrug.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_DrugNotFound", args[2]);
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
+                    DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(args[2]);
+                    if (daRecipe != null) {
+                        DA.loader.msg(commandSender, daRecipe.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]);
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
+                    DABarrelRecipe daBarrelRecipe = DAConfig.daRecipeReader.getBarrelRecipe(args[2]);
+                    if (daBarrelRecipe != null) {
+                        DA.loader.msg(commandSender, daBarrelRecipe.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]);
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
+                    DACraftingRecipe daCraftingRecipe = DAConfig.daRecipeReader.getCraftingRecipe(args[2]);
+                    if (daCraftingRecipe != null) {
+                        DA.loader.msg(commandSender, daCraftingRecipe.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]);
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
+                    DAFurnaceRecipe daFurnaceRecipe = DAConfig.daRecipeReader.getFurnaceRecipe(args[2]);
+                    if (daFurnaceRecipe != null) {
+                        DA.loader.msg(commandSender, daFurnaceRecipe.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]);
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
+                    DAPressRecipe daPressRecipe = DAConfig.daRecipeReader.getPressRecipe(args[2]);
+                    if (daPressRecipe != null) {
+                        DA.loader.msg(commandSender, daPressRecipe.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]);
+                    }
+                } else if (args[1].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
+                    DATableRecipe daTableRecipe = DAConfig.daRecipeReader.getTableRecipe(args[2]);
+                    if (daTableRecipe != null) {
+                        DA.loader.msg(commandSender, daTableRecipe.toString());
+                    } else {
+                        DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -160,29 +231,6 @@ public class DACommand implements CommandExecutor, TabCompleter {
             command, @NotNull String commandLabel, @NotNull String[] args) {
         if (args.length == 1) {
             return MAIN_ARGS.stream().filter(s1 -> s1.contains(args[0])).toList();
-        }
-        if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.GET_CUSTOM_ITEM.getArg())) {
-            return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.contains(args[1])).toList();
-        }
-        if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg())) {
-            return LIST_ARGS.stream().filter(s1 -> s1.contains(args[1])).toList();
-        }
-        if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
-            if (!args[1].isEmpty() || !args[1].isBlank()) {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(s1 -> s1.contains(args[1])).toList();
-            } else {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
-            }
-        }
-        if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
-            return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.contains(args[2])).toList();
-        }
-        if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
-            var drugs = DAConfig.drugReader.getRegisteredDrugs().stream().filter(drug -> drug.getID().contains(args[2])).toList();
-            return drugs.stream().map(DADrug::getID).toList();
-        }
-        if (args.length == 3 && args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
-            return DAConfig.drugReader.getRegisteredDrugs().stream().map(DADrug::getID).toList();
         }
         return null;
     }
@@ -204,6 +252,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         OWN(DA.loader.getTranslation("own", "Command_Args_Own")),
         OTHER(DA.loader.getTranslation("other", "Command_Args_Other")),
         CUSTOM_ITEMS(DA.loader.getTranslation("customItems", "Command_Args_CustomItems")),
+        INFO(DA.loader.getTranslation("info", "Command_Args_Info")),
         ;
         private final String arg;
 

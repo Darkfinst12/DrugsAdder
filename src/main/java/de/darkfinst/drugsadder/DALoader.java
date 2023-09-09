@@ -15,6 +15,7 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -22,6 +23,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.stringtemplate.v4.ST;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ public class DALoader {
 
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
     private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
+
+    public final String prefix = ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE;
 
     @Setter
     public static boolean iaLoaded = false;
@@ -187,7 +191,7 @@ public class DALoader {
     }
 
 
-    //Logging
+    //Logging and Messaging
     public void msg(CommandSender sender, String msg) {
         this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
     }
@@ -196,11 +200,29 @@ public class DALoader {
         this.msg(sender, msg, Type, false);
     }
 
-    public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type Type, boolean isAsync) {
-        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, Type);
+    public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
-            sender.sendMessage(ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE + sendMessageEvent.getMessage());
+            sender.sendMessage(this.prefix + sendMessageEvent.getMessage());
+        }
+    }
+
+    public void msg(CommandSender sender, TextComponent msg) {
+        this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
+    }
+
+    public void msg(CommandSender sender, TextComponent msg, DrugsAdderSendMessageEvent.Type Type) {
+        this.msg(sender, msg, Type, false);
+    }
+
+    public void msg(CommandSender sender, TextComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
+        this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
+        if (!sendMessageEvent.isCancelled()) {
+            TextComponent newText = new TextComponent(this.prefix);
+            newText.addExtra(sendMessageEvent.getMessage());
+            sender.sendMessage(newText);
         }
     }
 

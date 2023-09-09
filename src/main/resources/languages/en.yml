@@ -14,6 +14,10 @@ Command_Args_Table: "table"
 Command_Error_NotPlayer: "You must be a player to execute this command!"
 Command_Error_PlayerNotFound: "The player: &v1 was not found!"
 Command_Error_DrugNotFound: "The drug: &v1 was not found!"
+Command_Args_Info: "info"
+Command_Info_DAInfo: "Version: &v1 by &v2"
+Command_Info_ListItems: "All registered &v1:"
+Command_Error_RecipeNotFound: "The recipe: &v1 was not found!"
 
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
