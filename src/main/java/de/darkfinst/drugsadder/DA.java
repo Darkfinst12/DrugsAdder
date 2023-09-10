@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.awt.*;
+import java.security.SecureRandom;
 
 public class DA extends JavaPlugin {
 
@@ -13,11 +14,16 @@ public class DA extends JavaPlugin {
     public static DALoader log;
 
 
+    public static SecureRandom secureRandom;
+
+
     @Override
     public void onLoad() {
         getInstance = this;
         loader = new DALoader(this);
         log = loader;
+
+        secureRandom = new SecureRandom();
     }
 
     @Override

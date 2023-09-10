@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -17,7 +19,9 @@ public class DAPlantItem extends DAItem implements Cloneable {
 
     private float growTime;
     private boolean destroyOnHarvest;
+
     private DAItem[] drops;
+    private Map<String, Integer> allowedTools = new HashMap<>();
 
     public DAPlantItem(@NotNull ItemStack itemStack, String namespacedID) {
         super(itemStack, namespacedID);

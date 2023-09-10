@@ -67,9 +67,11 @@ Load_Error_Seed_Drop_ItemStack: "Off the Seed: &v1 the Drop: &v2 is not a valid 
 Load_Error_Seed_Drop_NotConfigSection: "Off the Seed: &v1 the Drop: &v2 is not properly configured in the config.yml!"
 Load_Error_Seed_Drop_Probability: "Off the Seed: &v1 in the Drop: &v2 the probability: &v3 is not a valid value! - It must be between 0 and 100 and must not have more than 6 digits!"
 Load_Error_NoSeeds: "No seeds were configured in the config.yml!"
+Load_Error_Seed_AllowedTools: "The Seed: &v1 has no allowed tools! - Please check the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
+Error_Structures_Register: "The structure: &v1 could not be registered by the Server! - Please contact the Server Administrator!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
@@ -95,6 +97,8 @@ Player_Plant_NotValid: "The plant is not proper plant"
 Player_Plant_NoReady: "The plant is not ready to harvest"
 Player_Structure_Destroyed: "&v1 was successfully destroyed!"
 Player_Plant_Harvested: "The plant was successfully harvested!"
+Player_Tool_NotEnoughDurability: "Your tool does not have enough durability to perform this action!"
+Player_Plant_WrongTool: "You are using the wrong tool (&v1) to harvest this plant!"
 
 # ---- Structures ----
 Structure_Name_Table: "Laboratory Table"

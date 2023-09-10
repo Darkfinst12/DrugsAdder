@@ -1,12 +1,10 @@
 package de.darkfinst.drugsadder.structures.barrel;
 
 import de.darkfinst.drugsadder.structures.DABody;
-import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import lombok.Getter;
-import net.minecraft.tags.BlockTags;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Bisected;

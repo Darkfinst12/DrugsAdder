@@ -4,7 +4,8 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.api.events.table.TableCancelRecipeEvent;
 import de.darkfinst.drugsadder.api.events.table.TableStartRecipeEvent;
-import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DATableRecipe;
@@ -56,7 +57,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param sign   The sign of the table
      * @param player The player who created the table
      */
-    public void create(Block sign, Player player) {
+    public void create(Block sign, Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.table.create")) {
             DATableBody daTableBody = new DATableBody(this, sign);
             try {
@@ -85,7 +86,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param isAsync If the table should be created, async
      * @return True if the table was successfully created and registered
      */
-    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DATableBody tableBody = new DATableBody(this, sign);
         boolean isValid = tableBody.isValidTable();
         if (isValid) {

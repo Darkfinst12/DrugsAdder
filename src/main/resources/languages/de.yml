@@ -67,9 +67,11 @@ Load_Error_Seed_Drop_ItemStack: "Von dem Samen: &v1 ist der Drop: &v2 kein gült
 Load_Error_Seed_Drop_NotConfigSection: "Von dem Samen: &v1 ist der Drop: &v2 ist nicht korrekt in der config.yml konfiguriert!"
 Load_Error_Seed_Drop_Probability: "Von dem Samen: &v1 im Drop: &v2 ist die Wahrscheinlichkeit: &v3 kein gültiger Wert! - Er muss zwischen 0 und 100 liegen und darf nicht mehr als 6 Stellen haben!"
 Load_Error_NoSeeds: "Es wurden keine Samen in der config.yml konfiguriert!"
+Load_Error_Seed_AllowedTools: "Der Samen: &v1 hat keine erlaubten Werkzeuge! - Bitte überprüfe die config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "Das Rezept: &v1 wurde nicht gefunden! - Spieler: &v2 hat versucht das Rezept zu verwenden!"
+Error_Structures_Register: "Die Struktur: &v1 konnte nicht vom Server registriert werden! - Bitte kontaktiere den Server Administrator!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "Du hast keine Berechtigung, um ein Fass erstellen zu können!"
@@ -91,6 +93,8 @@ Player_Table_NotValid: "Der Labortisch ist nicht korrekt gebaut!"
 Player_Plant_NoReady: "Die Pflanze ist noch nicht bereit zum ernten!"
 Player_Structure_Destroyed: "&v1 wurde erfolgreich zerstört!"
 Player_Plant_Harvested: "Die Pflanze wurde erfolgreich geerntet!"
+Player_Tool_NotEnoughDurability: "Dein Werkzeug hat nicht genug Haltbarkeit um diese Aktion auszuführen!"
+Player_Plant_WrongTool: "Du hast das falsche Werkzeug (&v1) benutzt um die Pflanze zu ernten!"
 
 # ---- Structures ----
 Structure_Name_Table: "Labortisch"

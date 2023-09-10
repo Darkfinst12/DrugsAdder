@@ -1,12 +1,12 @@
-package de.darkfinst.drugsadder.exceptions.Barrel;
+package de.darkfinst.drugsadder.exceptions;
 
-public abstract class BarrelException extends RuntimeException{
+public class DamageToolException extends RuntimeException{
 
     /**
      * Constructs an {@code ShopModifyStorageException} with no
      * detail message.
      */
-    public BarrelException() {
+    public DamageToolException() {
         super();
     }
 
@@ -16,7 +16,7 @@ public abstract class BarrelException extends RuntimeException{
      *
      * @param message The detail message.
      */
-    public BarrelException(String message) {
+    public DamageToolException(String message) {
         super(message);
     }
 
@@ -35,7 +35,7 @@ public abstract class BarrelException extends RuntimeException{
      *                is permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public BarrelException(String message, Throwable cause) {
+    public DamageToolException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -53,7 +53,7 @@ public abstract class BarrelException extends RuntimeException{
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public BarrelException(Throwable cause) {
+    public DamageToolException(Throwable cause) {
         super(cause);
     }
 

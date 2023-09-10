@@ -1,12 +1,12 @@
-package de.darkfinst.drugsadder.exceptions;
+package de.darkfinst.drugsadder.exceptions.Structures.Barrel;
 
-public class ValidateStructureException extends RuntimeException{
+public abstract class BarrelException extends RuntimeException{
 
     /**
      * Constructs an {@code ShopModifyStorageException} with no
      * detail message.
      */
-    public ValidateStructureException() {
+    public BarrelException() {
         super();
     }
 
@@ -16,7 +16,7 @@ public class ValidateStructureException extends RuntimeException{
      *
      * @param message The detail message.
      */
-    public ValidateStructureException(String message) {
+    public BarrelException(String message) {
         super(message);
     }
 
@@ -35,7 +35,7 @@ public class ValidateStructureException extends RuntimeException{
      *                is permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public ValidateStructureException(String message, Throwable cause) {
+    public BarrelException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -53,7 +53,7 @@ public class ValidateStructureException extends RuntimeException{
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public ValidateStructureException(Throwable cause) {
+    public BarrelException(Throwable cause) {
         super(cause);
     }
 

@@ -158,4 +158,12 @@ public abstract class DAStructure {
     public boolean hasInventory() {
         return false;
     }
+
+    public boolean isSimilar(DAStructure structure) {
+        boolean isSimilar = false;
+        if(structure == this){
+            isSimilar = true;
+        }
+        return isSimilar;
+    }
 }

@@ -306,6 +306,7 @@ public class DAData {
                 if (seedItem != null) {
                     try {
                         DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowTime(), seedItem.getDrops());
+                        daPlant.setAllowedTools(seedItem.getAllowedTools());
                         boolean success = daPlant.create(worldBlock, isAsync);
                         return success;
 

@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.filedata.DAData;
 import de.darkfinst.drugsadder.filedata.DataSave;
 import de.darkfinst.drugsadder.filedata.LanguageReader;
@@ -23,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.stringtemplate.v4.ST;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -113,12 +113,18 @@ public class DALoader {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
     }
 
-    public boolean registerDAStructure(DAStructure structure, boolean isAsync) {
+    public boolean registerDAStructure(DAStructure structure, boolean isAsync) throws RegisterStructureException {
         RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
         if (!registerStructureEvent.isCancelled()) {
-            //TODO: Check if on the same location is already a structure wich is marked for removal and is the same type
-            return this.structureList.add(structure);
+            DAStructure oldStructure = this.structureList.stream().filter(daStructure -> daStructure.isSimilar(structure)).findFirst().orElse(null);
+            if (oldStructure != null && oldStructure.isForRemoval()) {
+                oldStructure.setForRemoval(false);
+            } else if (oldStructure != null) {
+                throw new RegisterStructureException("Structure already registered");
+            } else {
+                return this.structureList.add(structure);
+            }
         }
         return false;
     }

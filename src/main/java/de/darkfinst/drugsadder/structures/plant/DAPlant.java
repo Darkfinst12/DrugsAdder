@@ -2,11 +2,15 @@ package de.darkfinst.drugsadder.structures.plant;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
-import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.exceptions.DamageToolException;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.items.DAProbabilityItem;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,7 +23,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -30,6 +36,8 @@ public class DAPlant extends DAStructure {
     private final float growTime;
     private final boolean destroyOnHarvest;
     private final DAItem[] drops;
+    @Setter
+    private Map<String, Integer> allowedTools = new HashMap<>();
 
     private long lastHarvest = 0;
     private boolean canBeHarvested = false;
@@ -54,7 +62,7 @@ public class DAPlant extends DAStructure {
      * @param plantBlock Block of the plant
      * @param player     Player, who wants to create the plant
      */
-    public void create(Block plantBlock, Player player) {
+    public void create(Block plantBlock, Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.plant.create")) {
             DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
             try {
@@ -89,7 +97,7 @@ public class DAPlant extends DAStructure {
      * @param isAsync    If the plant should be created, async
      * @return True if the plant was successfully created and registered
      */
-    public boolean create(Block plantBlock, boolean isAsync) {
+    public boolean create(Block plantBlock, boolean isAsync) throws RegisterStructureException {
         DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
         boolean isValid = daPlantBody.isValidPlant();
         if (isValid) {
@@ -116,24 +124,41 @@ public class DAPlant extends DAStructure {
      */
     public void checkHarvest(Player player) {
         if (player.hasPermission("drugsadder.plant.harvest")) {
-            if (this.canBeHarvested) {
-                this.executeHarvest();
-            } else {
-                long time = System.currentTimeMillis() - this.lastHarvest;
-                long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
-                if (passedTime > this.growTime && !this.isCrop) {
-                    this.executeHarvest();
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
-                } else if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
-                    this.executeHarvest();
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
-                } else {
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
+            String namespacedID = DAUtil.getNamespacedIDByItemStack(player.getInventory().getItemInMainHand());
+            if (this.hasTool(player)) {
+                try {
+                    int damage = this.allowedTools.getOrDefault(namespacedID, 0);
+                    ItemStack itemStack = DAUtil.damageTool(player.getInventory().getItemInMainHand(), damage);
+                    player.getInventory().setItemInMainHand(itemStack);
+                    if (this.canBeHarvested) {
+                        this.executeHarvest();
+                    } else {
+                        long time = System.currentTimeMillis() - this.lastHarvest;
+                        long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
+                        if (passedTime > this.growTime && !this.isCrop) {
+                            this.executeHarvest();
+                            DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        } else if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
+                            this.executeHarvest();
+                            DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        } else {
+                            DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        }
+                    }
+                } catch (DamageToolException e) {
+                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Tool_NotEnoughDurability"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
+            } else {
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_WrongTool", namespacedID), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perm_Plant_NoHarvest"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
+    }
+
+    public boolean hasTool(Player player) {
+        String namespacedID = DAUtil.getNamespacedIDByItemStack(player.getInventory().getItemInMainHand());
+        return this.allowedTools.containsKey(namespacedID);
     }
 
     /**

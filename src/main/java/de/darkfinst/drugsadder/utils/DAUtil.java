@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.utils;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.ItemMatchType;
+import de.darkfinst.drugsadder.exceptions.DamageToolException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import dev.lone.itemsadder.api.CustomStack;
@@ -12,9 +13,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,6 +67,27 @@ public class DAUtil {
             }
         }
         return null;
+    }
+
+    public static @Nullable String getNamespacedIDByItemStack(@NotNull ItemStack item) {
+        DAItem daItem = DAConfig.customItemReader.getItemByItemStack(item);
+        if (daItem != null) {
+            return daItem.getNamespacedID();
+        }
+        if (DAConfig.hasItemsAdder) {
+            CustomStack customStack = CustomStack.byItemStack(item);
+            if (customStack != null) {
+                customStack = CustomStack.getInstance(customStack.getNamespacedID());
+                return customStack.getNamespacedID();
+            }
+        }
+        if (DAConfig.hasSlimefun) {
+            SlimefunItem slimefunItem = SlimefunItem.getByItem(item);
+            if (slimefunItem != null) {
+                return slimefunItem.getId();
+            }
+        }
+        return item.getType().getKey().toString();
     }
 
     public static @Nullable ItemStack getDefaultItem(ItemStack item) {
@@ -165,6 +189,72 @@ public class DAUtil {
                 && itemStackA.getItemMeta().hasCustomModelData() && itemStackB.getItemMeta().hasCustomModelData()
                 && itemStackA.getItemMeta().getCustomModelData() == itemStackB.getItemMeta().getCustomModelData();
     }
+
+    public static ItemStack damageTool(ItemStack itemStack, int damage) throws DamageToolException {
+        if (itemStack == null || itemStack.getType().isAir()) {
+            return itemStack;
+        }
+        if (damage > 0) {
+            boolean applyDamage;
+            if (itemStack.getEnchantments().containsKey(Enchantment.DURABILITY)) {
+                int level = itemStack.getEnchantments().get(Enchantment.DURABILITY);
+                float random = DA.secureRandom.nextFloat();
+                float applyChance = 100f / (level + 1);
+                applyDamage = (random * 100) <= applyChance;
+            } else {
+                applyDamage = true;
+            }
+            if (applyDamage) {
+                if (DAUtil.canApplyDamage(itemStack, damage)) {
+                    return DAUtil.applyDamage(itemStack, damage);
+                } else {
+                    throw new DamageToolException();
+                }
+            }
+        }
+        return itemStack;
+    }
+
+    private static @Nullable ItemStack applyDamage(@NotNull ItemStack itemStack, int damage) {
+        ItemStack returnItem = itemStack.clone();
+        ItemMeta itemMeta = returnItem.getItemMeta();
+        if (CustomStack.byItemStack(itemStack) != null) {
+            CustomStack customStack = CustomStack.byItemStack(itemStack);
+            int newDurability = customStack.getDurability() - damage;
+            if (newDurability <= 0) {
+                returnItem = null;
+            } else {
+                customStack.setDurability(newDurability);
+                returnItem = customStack.getItemStack();
+            }
+        } else if (itemMeta instanceof Damageable damageable) {
+            int newDamage = damageable.getDamage() + damage;
+            if (newDamage >= itemStack.getType().getMaxDurability()) {
+                returnItem = null;
+            } else {
+                damageable.setDamage(newDamage);
+                returnItem.setItemMeta(itemMeta);
+            }
+        }
+        return returnItem;
+    }
+
+    private static boolean canApplyDamage(ItemStack itemStack, int damage) {
+        boolean canBeApplied = false;
+
+        if (CustomStack.byItemStack(itemStack) != null) {
+            CustomStack customStack = CustomStack.byItemStack(itemStack);
+            int newDurability = customStack.getDurability() - damage;
+            canBeApplied = newDurability >= 0;
+        } else if (itemStack.getItemMeta() instanceof Damageable damageable) {
+            int newDurability = damageable.getDamage() + damage;
+            canBeApplied = newDurability <= itemStack.getType().getMaxDurability();
+        }
+
+
+        return canBeApplied;
+    }
+
 
     //Parse
     public static @NotNull Map<String, String> parsMap(@NotNull String string) {
