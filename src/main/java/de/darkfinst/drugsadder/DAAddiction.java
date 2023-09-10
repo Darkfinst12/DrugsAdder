@@ -50,6 +50,7 @@ public class DAAddiction {
 
     public void addConsumed(DAPlayer daPlayer, long time) {
         if (this.overdose > 1) {
+            DA.log.debugLog("Adding consumed drug to player " + daPlayer.getUuid() + " at time " + time);
             List<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
             if (consumed == null) {
                 consumed = new ArrayList<>();
@@ -59,23 +60,31 @@ public class DAAddiction {
         }
     }
 
+    public void removeConsumed(DAPlayer daPlayer) {
+        this.lastConsummations.remove(daPlayer);
+    }
+
     public boolean isOverdose(DAPlayer daPlayer) {
         boolean isOverdose = false;
         if (this.overdose > 1 && this.overdoseTime > 1) {
+            DA.loader.debugLog("Checking overdose for player " + daPlayer.getUuid());
             List<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
             long time = System.currentTimeMillis();
 
             if (consumed != null) {
+                DA.log.debugLog("Consumed is not null");
                 consumed.iterator().forEachRemaining(consumeTime -> {
                     if (time - consumeTime >= TimeUnit.SECONDS.toMillis(this.overdoseTime)) {
                         consumed.remove(consumeTime);
                     }
                 });
+                DA.log.debugLog("Consumed: " + consumed);
                 if (consumed.size() > this.overdose) {
                     isOverdose = true;
                 }
             }
         }
+        DA.log.debugLog("Is overdose: " + isOverdose);
         return isOverdose;
     }
 

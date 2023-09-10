@@ -38,7 +38,9 @@ public class DAPlayer {
         if (daDrug.isAddictionAble()) {
             daDrug.addConsumed(this, System.currentTimeMillis());
             if (daDrug.isOverdose(this)) {
-                player.damage(player.getHealth() + 1, player);
+                DA.loader.msg(player, "Overdose");
+                player.setHealth(0);
+                daDrug.removeConsumed(this);
                 return;
             }
             int addictionPointsOld = this.addicted.getOrDefault(daDrug, 0);
