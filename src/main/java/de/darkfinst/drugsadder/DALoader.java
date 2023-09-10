@@ -64,7 +64,6 @@ public class DALoader {
     }
 
     private void initConfig() {
-
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
             if (config == null) {
@@ -277,7 +276,9 @@ public class DALoader {
     }
 
     public void reloadConfig() {
+        //TODO: Fix this
         this.clearConfigData();
+        this.initConfig();
         this.initConfig();
     }
 

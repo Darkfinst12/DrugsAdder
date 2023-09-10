@@ -270,8 +270,17 @@ public class DAConfig {
      * Clears all the loaded data
      */
     public static void clear() {
-        customItemReader = null;
-        daRecipeReader = null;
-        drugReader = null;
+        if (customItemReader != null) {
+            customItemReader.getRegisteredItems().clear();
+        }
+        if (daRecipeReader != null) {
+            daRecipeReader.getRegisteredRecipes().clear();
+        }
+        if (drugReader != null) {
+            drugReader.getRegisteredDrugs().clear();
+        }
+        if (seedReader != null) {
+            seedReader.getRegisteredSeeds().clear();
+        }
     }
 }
