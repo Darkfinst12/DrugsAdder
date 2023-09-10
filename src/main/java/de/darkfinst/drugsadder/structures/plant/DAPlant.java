@@ -19,6 +19,8 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.security.SecureRandom;
@@ -208,6 +210,27 @@ public class DAPlant extends DAStructure {
             items.add(this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), this.seed.getItemStack()));
             BlockDropItemEvent blockDropItemEvent = new BlockDropItemEvent(this.getBody().blocks.get(0), this.getBody().blocks.get(0).getState(), player, items);
             Bukkit.getPluginManager().callEvent(blockDropItemEvent);
+        }
+    }
+
+    /**
+     * Destroys the plant
+     */
+    public void destroy() {
+        if (DA.loader.unregisterDAStructure(this)) {
+            this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), this.seed.getItemStack());
+        }
+    }
+
+    public static void handelChange(Block block) {
+        if (Material.FARMLAND.equals(block.getType())) {
+            Block crop = block.getRelative(0, 1, 0);
+            if (DA.loader.isPlant(crop)) {
+                DAStructure plant = DA.loader.getStructure(crop);
+                if (plant instanceof DAPlant daPlant) {
+                    daPlant.destroy();
+                }
+            }
         }
     }
 
