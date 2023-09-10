@@ -281,8 +281,12 @@ drugs:
       addictionAble: true
       #Die addictionPoints werden dem Spieler hinzugefügt, wenn die Droge konsumiert wird
       addictionPoints: 10
-      #Overdose
+      #Wie oft der Spieler diese Droge konsumieren kann, bevor er eine Überdosis bekommt
+      #Für den Zeitraum, der Überdosis siehe overdoseTime
       overdose: 3
+      #Der Zeitraum, in dem der Spieler eine Überdosis bekommt, wenn er die Droge zu oft konsumiert
+      #BSP: 600 bedeutet 10 Minuten, in diesen 10 Minuten kann der Spieler die Droge dreimal konsumieren, ohne eine Überdosis zu bekommen
+      overdoseTime: 600
       #Die Zeit, die benötigt wird, um die addictionPoints in Minuten zu reduzieren
       reductionTime: 10
       #Die Anzahl der addictionPoints, die reduziert werden, wenn die Zeit abgelaufen ist
@@ -349,8 +353,19 @@ seeds:
     #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
     #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
     matchType: "ALL"
+    #Die Werkzeuge, die verwendet werden können, um die Pflanze zu ernten - Du kannst so viele hinzufügen, wie du willst
+    #Es wird wie folgt geschrieben: "NamespacedID": damage - Es können CustomItems verwendet werden
+    #Die Zahl repräsentiert den Schaden, welchen das Werkzeug erhält, wenn es die Pflanze erntet
+    #Wenn der Schaden größer ist als die Haltbarkeit des Werkzeugs, wird das Werkzeug zerstört
+    #Es können nur Werkzeuge schaden erhalten, die eine Haltbarkeit haben
+    #Wenn du möchtest das sie keinen Schaden erhalten, setze den Schaden auf 0
+    #Die Verzauberung Haltbarkeit wird berücksichtigt
+    allowedTools:
+      "minecraft:air": 0
+      "minecraft:diamond_hoe": 1
     #Die Drops, die die Pflanze fallen lässt, wenn sie geerntet wird - Du kannst so viele hinzufügen, wie du willst
     #Die reihenfolge der Drops spielt keine Rolle
+    #Die Verzauberung Glück wird nicht berücksichtigt
     drops:
       1:
         #Der ItemStack, der fallen gelassen wird - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein

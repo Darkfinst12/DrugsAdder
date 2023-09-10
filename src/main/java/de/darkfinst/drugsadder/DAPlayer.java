@@ -36,6 +36,11 @@ public class DAPlayer {
             return;
         }
         if (daDrug.isAddictionAble()) {
+            daDrug.addConsumed(this, System.currentTimeMillis());
+            if (daDrug.isOverdose(this)) {
+                player.damage(player.getHealth() + 1, player);
+                return;
+            }
             int addictionPointsOld = this.addicted.getOrDefault(daDrug, 0);
             int addictionPoints = addictionPointsOld + daDrug.getAddictionPoints();
             DrugAddAddictionEvent drugAddAddictionEvent = new DrugAddAddictionEvent(daDrug, addictionPointsOld, addictionPoints);

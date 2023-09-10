@@ -280,11 +280,15 @@ drugs:
       addictionAble: true
       #The addictionPoints that are added to the player when the Drug is consumed
       addictionPoints: 10
-      #Overdose
+      #How much of this Drug can be consumed before the player overdoses
+      #For the timespan of the overdose check the overdoseTime
       overdose: 3
+      #The timespan in wich the player overdoses, if the drug is consumed to often
+      #example: 600 means 10 Minutes, in thies 10 minutes the player can consume three times the Drug without overdosing
+      overdoseTime: 600
       #The time it takes to reduce the addictionPoints in minutes
       reductionTime: 10
-      #The amount of addictionPoints that are reduced when the reductionTime is over
+      #The amount of addictionPoints that is reduced when the reductionTime is over
       reductionAmount: 1
       #If the reduction should only be made if the player is online
       reductionOnlyOnline: true
@@ -347,8 +351,19 @@ seeds:
     #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
     #For more Information about MatchTypes check the Wiki
     matchType: "ALL"
+    #The Tools that are allowed to harvest the Plant - You can add as many as you want
+    #It is written like this: "NamespacedID": damage - You can use CustomItems here
+    #The Number represents the damage the Item takes when it is used to harvest the Plant
+    #Be reminded that the Item will be destroyed when the damage is higher than the maxDamage of the Item
+    #Also only Items that are damageable will receive damage
+    #If you want to disable the damage just set the damage to 0
+    #The enchantment durability will be considered when the damage is calculated
+    allowedTools:
+      "minecraft:air": 0
+      "minecraft:diamond_hoe": 1
     #The Drops of the Plant - You can add as many as you want
     #The order of the Drops does not matter
+    #The enchantment fortune will not be considered when the drops are calculated
     drops:
       1:
         #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
@@ -367,8 +382,23 @@ seeds:
     destroyOnHarvest: false
     growTime: 60
     matchType: "ALL"
+    allowedTools:
+      "minecraft:air": 0
+      "minecraft:diamond_hoe": 1
     drops:
       1:
         itemStack: 'drugsadder:coca'
         amount: 1
         probability: 20
+  "jahollde:rice_seeds":
+    destroyOnHarvest: false
+    growTime: 60 #In Seconds
+    matchType: "ALL"
+    allowedTools:
+      "minecraft:air": 0
+      "minecraft:diamond_hoe": 1
+    drops:
+      1:
+        itemStack: 'drugsadder:coca'
+        amount: 1
+        probability: 50

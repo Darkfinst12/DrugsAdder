@@ -215,12 +215,14 @@ public class DADrugReader {
             boolean reductionOnlyOnline = addictionConfig.getBoolean("reductionOnlyOnline", false);
             int addictionPoints = addictionConfig.getInt("addictionPoints", -1);
             int overdose = addictionConfig.getInt("overdose", -1);
+            long overdoseTime = addictionConfig.getLong("overdoseTime", -1);
             int reductionAmount = addictionConfig.getInt("reductionAmount", -1);
             int reductionTime = addictionConfig.getInt("reductionTime", -1);
             daAddiction.setAddictionAble(isAddictionAble);
             daAddiction.setReductionOnlyOnline(reductionOnlyOnline);
             daAddiction.setAddictionPoints(addictionPoints);
             daAddiction.setOverdose(overdose);
+            daAddiction.setOverdoseTime(overdoseTime);
             daAddiction.setReductionAmount(reductionAmount);
             daAddiction.setReductionTime(reductionTime);
 
