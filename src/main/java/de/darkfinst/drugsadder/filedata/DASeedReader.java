@@ -118,7 +118,6 @@ public class DASeedReader {
         plantItem.setDestroyOnHarvest(destroyOnHarvest);
         plantItem.setGrowTime(growTime);
         plantItem.setDrops(drops.toArray(new DAItem[0]));
-        DA.log.debugLog(allowedTools.toString());
         plantItem.setAllowedTools(allowedTools);
 
 

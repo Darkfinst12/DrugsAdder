@@ -73,6 +73,7 @@ public class DAAddiction {
 
             if (consumed != null) {
                 DA.log.debugLog("Consumed is not null");
+                //TOD: fix this
                 consumed.iterator().forEachRemaining(consumeTime -> {
                     if (time - consumeTime >= TimeUnit.SECONDS.toMillis(this.overdoseTime)) {
                         consumed.remove(consumeTime);
