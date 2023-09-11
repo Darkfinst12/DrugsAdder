@@ -28,14 +28,14 @@ logSeedLoadError: true
 #Du kannst jeden Unicode Character verwenden - Es ist nicht empfohlen Unicode Characters mehrfach zu verwenden
 #Ebenso wird empfohlen die standard Unicode Characters zu verwenden mit dem DrugsAdder Texturenpacket
 tableStates:
-  0: "\uE000"
-  1: "\uE001"
-  2: "\uE002"
-  3: "\uE003"
-  4: "\uE004"
-  5: "\uE005"
-  6: "\uE006"
-  7: "\uE007"
+  0: "\uF000"
+  1: "\uF001"
+  2: "\uF002"
+  3: "\uF003"
+  4: "\uF004"
+  5: "\uF005"
+  6: "\uF006"
+  7: "\uF007"
 
 #CustomItems
 customItems:
