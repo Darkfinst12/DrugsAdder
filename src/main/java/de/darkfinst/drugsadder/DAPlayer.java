@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class DAPlayer {
@@ -153,5 +155,21 @@ public class DAPlayer {
                 daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
             }
         }
+    }
+
+    private Map<String, Integer> getAddictionString() {
+        Map<String, Integer> addictionString = new HashMap<>();
+        for (DADrug daDrug : this.addicted.keySet()) {
+            addictionString.put(daDrug.getID(), this.addicted.get(daDrug));
+        }
+        return addictionString;
+    }
+
+    @Override
+    public String toString() {
+        return "DAPlayer{" +
+                "uuid=" + uuid +
+                ", addicted=" + this.getAddictionString() +
+                '}';
     }
 }
