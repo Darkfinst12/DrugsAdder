@@ -14,6 +14,7 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -46,7 +47,8 @@ public class DATable extends DAStructure implements InventoryHolder {
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DAConfig.tableStates.get(0) + "");
+        //TODO: FIX Text offset
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DA.loader.languageReader.get("Structure_Name_Table") + ChatColor.WHITE + DAConfig.tableStates.get(0));
     }
 
     /**
@@ -209,7 +211,7 @@ public class DATable extends DAStructure implements InventoryHolder {
             }
         }
         if (this.inventory.equals(event.getClickedInventory()) && !event.isCancelled()) {
-            Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked()), 5);
+            Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked()), 1);
         }
     }
 
