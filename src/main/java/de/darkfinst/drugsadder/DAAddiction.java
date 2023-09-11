@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -24,7 +25,7 @@ public class DAAddiction {
     private final Map<Integer, List<DAEffect>> deprivation = new HashMap<>();
     private final Map<Integer, List<DAEffect>> consummation = new HashMap<>();
 
-    private final Map<DAPlayer, List<Long>> lastConsummations = new HashMap<>();
+    private final Map<DAPlayer, ConcurrentLinkedDeque<Long>> lastConsummations = new HashMap<>();
 
     public DAAddiction(Boolean addictionAble) {
         this.addictionAble = addictionAble;
@@ -51,9 +52,9 @@ public class DAAddiction {
     public void addConsumed(DAPlayer daPlayer, long time) {
         if (this.overdose > 1) {
             DA.log.debugLog("Adding consumed drug to player " + daPlayer.getUuid() + " at time " + time);
-            List<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
+            ConcurrentLinkedDeque<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
             if (consumed == null) {
-                consumed = new ArrayList<>();
+                consumed = new ConcurrentLinkedDeque<>();
             }
             consumed.add(time);
             this.lastConsummations.put(daPlayer, consumed);
@@ -67,25 +68,16 @@ public class DAAddiction {
     public boolean isOverdose(DAPlayer daPlayer) {
         boolean isOverdose = false;
         if (this.overdose > 1 && this.overdoseTime > 1) {
-            DA.loader.debugLog("Checking overdose for player " + daPlayer.getUuid());
-            List<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
+            ConcurrentLinkedDeque<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
             long time = System.currentTimeMillis();
 
-            if (consumed != null) {
-                DA.log.debugLog("Consumed is not null");
-                //TOD: fix this
-                consumed.iterator().forEachRemaining(consumeTime -> {
-                    if (time - consumeTime >= TimeUnit.SECONDS.toMillis(this.overdoseTime)) {
-                        consumed.remove(consumeTime);
-                    }
-                });
-                DA.log.debugLog("Consumed: " + consumed);
+            if (!consumed.isEmpty()) {
+                consumed.removeIf(consumeTime -> time - consumeTime >= TimeUnit.SECONDS.toMillis(this.overdoseTime));
                 if (consumed.size() > this.overdose) {
                     isOverdose = true;
                 }
             }
         }
-        DA.log.debugLog("Is overdose: " + isOverdose);
         return isOverdose;
     }
 
