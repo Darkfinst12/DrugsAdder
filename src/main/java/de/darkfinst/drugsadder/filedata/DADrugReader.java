@@ -8,7 +8,6 @@ import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
-import org.stringtemplate.v4.ST;
 
 import java.util.*;
 
@@ -83,7 +82,7 @@ public class DADrugReader {
         String consumeMessage = drugConfig.getString("consumeMessage", null);
         String consumeTitle = drugConfig.getString("consumeTitle", null);
 
-        DADrug drug = new DADrug(drugID, item.getItemStack(), consumeMessage, consumeTitle, matchTypes.toArray(new ItemMatchType[0]));
+        DADrug drug = new DADrug(drugID, item, consumeMessage, consumeTitle, matchTypes.toArray(new ItemMatchType[0]));
         List<String> serverCommands = drugConfig.getStringList("serverCommands");
         drug.getServerCommands().addAll(serverCommands);
         List<String> playerCommands = drugConfig.getStringList("playerCommands");
@@ -122,7 +121,7 @@ public class DADrugReader {
      * @return The drug or null if no drug was found
      */
     public DADrug getDrug(ItemStack item) {
-        return this.registeredDrugs.stream().filter(drug -> DAUtil.matchItems(item, drug.getItemStack(), drug.getMatchTypes())).findFirst().orElse(null);
+        return this.registeredDrugs.stream().filter(drug -> DAUtil.matchItems(item, drug.getItem().getItemStack(), drug.getMatchTypes())).findFirst().orElse(null);
     }
 
     /**

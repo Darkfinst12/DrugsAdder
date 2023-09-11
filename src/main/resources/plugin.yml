@@ -33,6 +33,7 @@ permissions:
   #*
   drugsadder.*:
     description: Gives Access to every Permission
+    default: false
     children:
       drugsadder.admin: true
       drugsadder.cmd: true
@@ -89,14 +90,74 @@ permissions:
   # -- Commands --
   drugsadder.cmd:
     description: Gives access to all DrugsAdder Commands
+    default: false
     children:
       drugsadder.cmd.reload: true
       drugsadder.cmd.help: true
+      drugsadder.cmd.info: true
+      drugsadder.cmd.list: true
   drugsadder.cmd.reload:
     description: Reload config
   drugsadder.cmd.help:
     description: Get help for the Plugin and its Commands
   drugsadder.cmd.info:
-    description: Information about your own addictions
-  drugsadder.cmd.infoOther:
+    description: Information about the Plugin
+    children:
+      drugsadder.cmd.info.plugin: true
+      drugsadder.cmd.info.player: true
+      drugsadder.cmd.info.drugs: true
+      drugsadder.cmd.info.recipes: true
+  drugsadder.cmd.info.player:
+    description: Information about the addictions of a Player
+    children:
+      drugsadder.cmd.info.player.other: true
+  drugsadder.cmd.info.player.other:
     description: Information about the addictions of another Player
+  drugsadder.cmd.info.drugs:
+    description: Information about a specific Drug
+  drugsadder.cmd.info.recipes:
+    description: Information about a specific Recipe
+    children:
+      drugsadder.cmd.info.recipes.barrel: true
+      drugsadder.cmd.info.recipes.press: true
+      drugsadder.cmd.info.recipes.table: true
+      drugsadder.cmd.info.recipes.crafting: true
+      drugsadder.cmd.info.recipes.furnace: true
+  drugsadder.cmd.info.recipes.barrel:
+    description: Information about a specific Barrel Recipe
+  drugsadder.cmd.info.recipes.press:
+    description: Information about a specific Press Recipe
+  drugsadder.cmd.info.recipes.table:
+    description: Information about a specific Table Recipe
+  drugsadder.cmd.info.recipes.crafting:
+    description: Information about a specific Crafting Recipe
+  drugsadder.cmd.info.recipes.furnace:
+    description: Information about a specific Furnace Recipe
+  drugsadder.cmd.list:
+    description: List all Drugs,Recipes or CustomItems
+    children:
+      drugsadder.cmd.list.drugs: true
+      drugsadder.cmd.list.recipes: true
+      drugsadder.cmd.list.customitems: true
+  drugsadder.cmd.list.drugs:
+    description: List all Drugs
+  drugsadder.cmd.list.recipes:
+    description: List all Recipes
+    children:
+      drugsadder.cmd.list.recipes.barrel: true
+      drugsadder.cmd.list.recipes.press: true
+      drugsadder.cmd.list.recipes.table: true
+      drugsadder.cmd.list.recipes.crafting: true
+      drugsadder.cmd.list.recipes.furnace: true
+  drugsadder.cmd.list.recipes.barrel:
+    description: List all Barrel Recipes
+  drugsadder.cmd.list.recipes.press:
+    description: List all Press Recipes
+  drugsadder.cmd.list.recipes.table:
+    description: List all Table Recipes
+  drugsadder.cmd.list.recipes.crafting:
+    description: List all Crafting Recipes
+  drugsadder.cmd.list.recipes.furnace:
+    description: List all Furnace Recipes
+  drugsadder.cmd.list.customitems:
+    description: List all CustomItems

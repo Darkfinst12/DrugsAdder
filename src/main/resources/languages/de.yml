@@ -19,6 +19,7 @@ Command_Info_DAInfo: "Version: &v1 von &v2"
 Command_Info_ListItems: "Alle registrierten &v1:"
 Command_Error_RecipeNotFound: "Das Rezept: &v1 wurde nicht gefunden!"
 Command_Args_Player: "Spieler"
+Command_Error_NoPermission: "Du hast keine Berechtigung, um diesen Befehl ausführen zu können!"
 
 # ---- Load ----
 Load_Error_NoDrugs: "Es wurden keine Drogen in der config.yml konfiguriert!"
