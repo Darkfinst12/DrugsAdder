@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stringtemplate.v4.ST;
 
 import java.io.File;
 import java.io.IOException;
@@ -389,6 +390,61 @@ public class DAUtil {
             return val2;
         else
             return val1;
+    }
+
+    //Spaces
+
+    /**
+     * Note this works only with the <a href="https://github.com/AmberWat/NegativeSpaceFont/tree/master">NegativeSpaceFont</a> from <a href="https://github.com/AmberWat">AmberWat</a>
+     *
+     * <br>
+     * <table>
+     *     <tr>
+     *         <th>Width</th>
+     *         <th>Minecraft Code</th>
+     *     </tr>
+     *     <tr>
+     *         <td>8192</td>
+     *         <td>\#uDB08\#uDC00</td>
+     *     </tr>
+     *     <tr>
+     *         <td>...</td>
+     *         <td>...</td>
+     *     </tr>
+     *     <tr>
+     *         <td>1</td>
+     *         <td>\#uDB00\#uDC01</td>
+     *     </tr>
+     *     <tr>
+     *         <td>0</td>
+     *         <td>\#uDB00\#uDC00</td>
+     *     </tr>
+     *     <tr>
+     *         <td>-1</td>
+     *         <td>\#uDAFF\#uDFFF</td>
+     *     </tr>
+     *     <tr>
+     *         <td>...</td>
+     *         <td>...</td>
+     *     </tr>
+     *     <tr>
+     *         <td>-8192</td>
+     *         <td>\#uDAF8\#uDC00</td>
+     *     </tr>
+     * </table>
+     * Ignore the # in the code it is only there to prevent the code from being converted
+     *
+     * @param width The width of the space
+     * @return The needed Minecraft Code
+     */
+    public static String convertWidthToMinecraftCode(int width) {
+        if (width < -8192 || width > 8192) {
+            throw new IllegalArgumentException("Width must be between -8192 and 8192");
+        }
+        int code = 0xD0000 + width;
+        int highSurrogate = 0xD800 + ((code - 0x10000) >> 10);
+        int lowSurrogate = 0xDC00 + ((code - 0x10000) & 0x3FF);
+        return new String(new int[]{highSurrogate, lowSurrogate}, 0, 2);
     }
 
 }

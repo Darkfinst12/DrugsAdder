@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -29,6 +30,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stringtemplate.v4.ST;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +50,12 @@ public class DATable extends DAStructure implements InventoryHolder {
 
     public DATable() {
         //TODO: FIX Text offset
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DA.loader.languageReader.get("Structure_Name_Table") + ChatColor.WHITE + DAConfig.tableStates.get(0));
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle() + ChatColor.WHITE + DAConfig.tableStates.get(0));
+    }
+
+    public String getTitle() {
+        String title = DA.loader.languageReader.get("Structure_Name_Table");
+        return DAUtil.convertWidthToMinecraftCode(title.length()*2) + title;
     }
 
     /**

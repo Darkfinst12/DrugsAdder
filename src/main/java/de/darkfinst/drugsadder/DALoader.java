@@ -16,6 +16,7 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -210,20 +211,25 @@ public class DALoader {
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
-            sender.sendMessage(this.prefix + sendMessageEvent.getMessage().getText());
+            sender.sendMessage(this.prefix + sendMessageEvent.getMessage());
         }
     }
 
-    public void msg(CommandSender sender, TextComponent msg) {
+    public void msg(CommandSender sender, BaseComponent msg) {
         this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
     }
 
-    public void msg(CommandSender sender, TextComponent msg, DrugsAdderSendMessageEvent.Type Type) {
+    public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type Type) {
         this.msg(sender, msg, Type, false);
     }
 
-    public void msg(CommandSender sender, TextComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
-        this.msg(sender, msg.getText(), type, isAsync);
+    public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
+        this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
+        if (!sendMessageEvent.isCancelled()) {
+            assert sendMessageEvent.getComponent() != null;
+            sender.spigot().sendMessage(sendMessageEvent.getComponent());
+        }
     }
 
     public void log(String msg) {

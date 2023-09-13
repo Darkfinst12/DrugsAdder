@@ -4,11 +4,13 @@ import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.*;
+import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -19,6 +21,7 @@ import org.stringtemplate.v4.ST;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
@@ -67,6 +70,9 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkArgs2(CommandSender commandSender, String[] args) {
         this.checkCustomItem(commandSender, args);
         this.checkConsume(commandSender, args);
+        if ("test".equalsIgnoreCase(args[0])) {
+            DA.loader.msg(commandSender, DAUtil.convertWidthToMinecraftCode(Integer.parseInt(args[1])) + "Test width + " + args[1], DrugsAdderSendMessageEvent.Type.COMMAND);
+        }
     }
 
     private void checkCustomItem(CommandSender commandSender, String[] args) {
