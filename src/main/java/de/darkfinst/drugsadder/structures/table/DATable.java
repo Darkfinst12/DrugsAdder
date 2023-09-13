@@ -50,12 +50,13 @@ public class DATable extends DAStructure implements InventoryHolder {
 
     public DATable() {
         //TODO: FIX Text offset
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle() + ChatColor.WHITE + DAConfig.tableStates.get(0));
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle(5, 1, 10, 0, 0));
     }
 
-    public String getTitle() {
+    public String getTitle(int m1, int m2, int m3, int m4, int state) {
         String title = DA.loader.languageReader.get("Structure_Name_Table");
-        return DAUtil.convertWidthToMinecraftCode(title.length()*2) + title;
+
+        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * m1) - m2) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * m3) + m4) + title;
     }
 
     /**

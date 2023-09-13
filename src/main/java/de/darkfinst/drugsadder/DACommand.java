@@ -13,7 +13,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stringtemplate.v4.ST;
@@ -46,6 +48,21 @@ public class DACommand implements CommandExecutor, TabCompleter {
             this.checkArgs2(commandSender, args);
         } else if (args.length == 3) {
             this.checkArgs3(commandSender, args);
+        } else if (args.length == 5) {
+            if ("test".equalsIgnoreCase(args[0])) {
+                List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
+                for (DATable table : tables) {
+                    String title = table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0);
+                    for (HumanEntity viewer : table.getInventory().getViewers()) {
+                        try {
+                            InventoryView inventoryView = viewer.getOpenInventory();
+                            inventoryView.setTitle(title);
+                        } catch (Exception e) {
+                            DA.log.logException(e);
+                        }
+                    }
+                }
+            }
         }
         return true;
     }
