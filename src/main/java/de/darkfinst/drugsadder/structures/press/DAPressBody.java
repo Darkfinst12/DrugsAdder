@@ -17,9 +17,21 @@ import org.bukkit.block.data.type.WallSign;
 @Getter
 public class DAPressBody extends DABody {
 
+    /**
+     * The press of the body
+     */
     private final DAPress press;
+    /**
+     * The sign of the press
+     */
     private final Block sign;
+    /**
+     * The piston of the press
+     */
     private Block piston;
+    /**
+     * The lever of the press
+     */
     private Block lever;
 
     public DAPressBody(DAPress press, Block sign) {

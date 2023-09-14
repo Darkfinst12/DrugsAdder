@@ -14,23 +14,62 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class DAAddiction {
 
+    /**
+     * Whether the drug is addiction able or not
+     */
     private boolean addictionAble;
+    /**
+     * The points, which are added to the addiction, when the drug is consumed
+     */
     private int addictionPoints = -1;
+    /**
+     * The amount of consummations, which are needed to get an overdose
+     */
     private int overdose = -1;
+    /**
+     * The points, which are removed when the reduction time is over
+     */
     private int reductionAmount = -1;
+    /**
+     * The time, which has to pass, until the reduction amount is removed
+     */
     private int reductionTime = -1;
+    /**
+     * The timespan in which the player overdoses, if the drug is consumed to often
+     */
     private long overdoseTime = -1;
+    /**
+     * Whether the reduction should only be applied when the player is online or not
+     */
     private boolean reductionOnlyOnline = false;
 
+    /**
+     * The effects, which are applied to the player, when he is addicted and the drug is not consumed
+     * <br>
+     * It will be accessed by the reduction timer
+     */
     private final Map<Integer, List<DAEffect>> deprivation = new HashMap<>();
+    /**
+     * The effects, which are applied to the player, when the drug is consumed
+     */
     private final Map<Integer, List<DAEffect>> consummation = new HashMap<>();
 
+    /**
+     * The last consummations of the players
+     * <br>
+     * In {@link DAAddiction#isOverdose(DAPlayer)} explained as logs
+     */
     private final Map<DAPlayer, ConcurrentLinkedDeque<Long>> lastConsummations = new HashMap<>();
 
     public DAAddiction(Boolean addictionAble) {
         this.addictionAble = addictionAble;
     }
 
+    /**
+     * Sets the addiction to the given addiction
+     *
+     * @param daAddiction The addiction to set
+     */
     public void setAddiction(DAAddiction daAddiction) {
         if (!this.equals(daAddiction)) {
             this.addictionAble = daAddiction.isAddictionAble();
@@ -49,6 +88,12 @@ public class DAAddiction {
         }
     }
 
+    /**
+     * Adds a log of a player, which consumed the drug with this addiction
+     *
+     * @param daPlayer The player, which consumed the drug
+     * @param time     The time, when the player consumed the drug
+     */
     public void addConsumed(DAPlayer daPlayer, long time) {
         if (this.overdose > 1) {
             DA.log.debugLog("Adding consumed drug to player " + daPlayer.getUuid() + " at time " + time);
@@ -61,10 +106,25 @@ public class DAAddiction {
         }
     }
 
+    /**
+     * Removes the log of a player, which consumed the drug with this addiction
+     *
+     * @param daPlayer The player, which consumed the drug
+     */
     public void removeConsumed(DAPlayer daPlayer) {
         this.lastConsummations.remove(daPlayer);
     }
 
+    /**
+     * Checks if the player has an overdose
+     * <p>
+     * Also updates the logs of the player if they are outdated
+     * <br>
+     * If the player has an overdose, the logs will be cleared
+     *
+     * @param daPlayer The player to check
+     * @return true, if the player has an overdose otherwise false
+     */
     public boolean isOverdose(DAPlayer daPlayer) {
         boolean isOverdose = false;
         if (this.overdose > 1 && this.overdoseTime > 1) {

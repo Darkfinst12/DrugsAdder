@@ -11,6 +11,9 @@ import java.util.List;
 @Setter
 public class DAProbabilityItem extends DAItem {
 
+    /**
+     * The probability to receive the item
+     */
     private double probability;
 
     public DAProbabilityItem(@NotNull ItemStack itemStack, String namespacedID) {

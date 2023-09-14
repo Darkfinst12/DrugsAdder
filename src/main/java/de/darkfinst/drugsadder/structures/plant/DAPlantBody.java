@@ -9,7 +9,13 @@ import org.bukkit.block.Block;
 @Getter
 public class DAPlantBody extends DABody {
 
+    /**
+     * The plant of the body
+     */
     private final DAPlant daPlant;
+    /**
+     * The block of the plant
+     */
     private final Block plantBLock;
 
     public DAPlantBody(DAPlant daPlant, Block plantBLock) {

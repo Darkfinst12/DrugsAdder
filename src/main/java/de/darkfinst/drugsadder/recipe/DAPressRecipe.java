@@ -13,8 +13,17 @@ import java.util.List;
 @Getter
 public class DAPressRecipe extends DARecipe {
 
+    /**
+     * The mold of the recipe
+     */
     private final DAItem mold;
+    /**
+     * If the mold should be returned
+     */
     private final boolean returnMold;
+    /**
+     * The duration of the process in seconds
+     */
     private final double duration;
 
     public DAPressRecipe(String namedID, RecipeType recipeType, double duration, DAItem mold, boolean returnMold, DAItem result, DAItem... materials) {

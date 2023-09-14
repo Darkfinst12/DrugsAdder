@@ -19,11 +19,16 @@ import java.util.UUID;
 
 public class DAPlayer {
 
+    /**
+     * The UUID of the player
+     */
     @Getter
     @NotNull
     private final UUID uuid;
 
-
+    /**
+     * The drugs, which the player is addicted to
+     */
     private final HashMap<DADrug, Integer> addicted = new HashMap<>();
 
 
@@ -31,6 +36,11 @@ public class DAPlayer {
         this.uuid = uuid;
     }
 
+    /**
+     * Consumes the drug for the player
+     *
+     * @param daDrug The drug, which should be consumed
+     */
     public void consumeDrug(DADrug daDrug) {
         Player player = Bukkit.getPlayer(this.uuid);
         if (player == null) {
@@ -80,23 +90,51 @@ public class DAPlayer {
         }
     }
 
+    /**
+     * Reduces the addictions of the player
+     */
     public void reduceAddictions() {
         this.addicted.forEach((daDrug, integer) -> reduceAddiction(daDrug, false));
     }
 
+    /**
+     * Clears all addictions of the player
+     */
     public void clearAddictions() {
         this.addicted.clear();
     }
 
+    /**
+     * Clears the addiction of the player for the drug
+     *
+     * @param daDrug The drug, which addiction should be cleared
+     */
     public void clearAddiction(DADrug daDrug) {
         this.addicted.remove(daDrug);
     }
 
+    /**
+     * Reduces the addiction of the player for the drug
+     * <p>
+     * It executes {@link #reduceAddiction(DADrug, Integer, boolean)} with the current addiction points
+     *
+     * @param daDrug  The drug, which addiction should be reduced
+     * @param isAsync If the reduction should be async
+     */
     public void reduceAddiction(DADrug daDrug, boolean isAsync) {
         int addictionPoints = this.addicted.getOrDefault(daDrug, 0);
         reduceAddiction(daDrug, addictionPoints, isAsync);
     }
 
+    /**
+     * Reduces the addiction of the player for the drug
+     * <p>
+     * If the addiction points are less than zero, the addiction will be removed
+     *
+     * @param daDrug          The drug, which addiction should be reduced
+     * @param addictionPoints The addiction points, which should be reduced
+     * @param isAsync         If the reduction should be async
+     */
     private void reduceAddiction(DADrug daDrug, Integer addictionPoints, boolean isAsync) {
         if (addictionPoints > 0) {
             addictionPoints -= daDrug.getReductionAmount();
@@ -126,14 +164,29 @@ public class DAPlayer {
         }
     }
 
+    /**
+     * Checks if the player is addicted to the drug
+     *
+     * @param daDrug The drug, which should be checked
+     * @return If the player is addicted to the drug
+     */
     public boolean isAddicted(DADrug daDrug) {
         return this.addicted.containsKey(daDrug);
     }
 
+    /**
+     * @return If this DAPlayer is online
+     */
     public boolean isOnline() {
         return Bukkit.getOfflinePlayer(this.uuid).isOnline();
     }
 
+    /**
+     * Adds the drug to the player
+     *
+     * @param drugID          The ID of the drug
+     * @param addictionPoints The addiction points of the drug
+     */
     public void addDrug(String drugID, int addictionPoints) {
         DADrug daDrug = DAConfig.drugReader.getDrug(drugID);
         if (daDrug == null) {
@@ -143,6 +196,11 @@ public class DAPlayer {
         this.addicted.put(daDrug, addictionPoints);
     }
 
+    /**
+     * Saves the player to the config
+     *
+     * @param players The config to save the player to
+     */
     public static void save(ConfigurationSection players) {
         for (DAPlayer daPlayer : DA.loader.getDaPlayerList()) {
             if (daPlayer.addicted.isEmpty()) {

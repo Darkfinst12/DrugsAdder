@@ -12,14 +12,28 @@ import java.util.Arrays;
 @Getter
 public abstract class DARecipe {
 
-    private final String namedID;
+    /**
+     * The id of the recipe
+     */
+    private final String ID;
+    /**
+     * The type of the recipe
+     *
+     * @see RecipeType
+     */
     private final RecipeType recipeType;
 
+    /**
+     * The materials of the recipe
+     */
     private final DAItem[] materials;
+    /**
+     * The result of the recipe
+     */
     private final DAItem result;
 
-    protected DARecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
-        this.namedID = namedID;
+    protected DARecipe(String ID, RecipeType recipeType, DAItem result, DAItem... materials) {
+        this.ID = ID;
         this.recipeType = recipeType;
         this.result = result;
         this.materials = materials;
@@ -37,27 +51,17 @@ public abstract class DARecipe {
         return null;
     }
 
-    public boolean containsMaterials(ItemStack... givenItems) {
-        for (DAItem material : this.getMaterials()) {
-            boolean contains = false;
-            for (ItemStack item : givenItems) {
-                contains = DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes());
-                if (contains) {
-                    break;
-                }
-            }
-            if (!contains) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    /**
+     * Checks if the given items are materials of the recipe
+     *
+     * @param givenItems The items to check
+     * @return If the given items are materials of the recipe
+     */
     public boolean hasMaterials(ItemStack... givenItems) {
         for (DAItem material : this.getMaterials()) {
             boolean contains = false;
-            for (ItemStack itemStack : givenItems) {
-                if (DAUtil.matchItems(material.getItemStack(), itemStack, material.getItemMatchTypes())) {
+            for (ItemStack item : givenItems) {
+                if (DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes())) {
                     contains = true;
                     break;
                 }
@@ -69,10 +73,23 @@ public abstract class DARecipe {
         return true;
     }
 
+    /**
+     * Returns the named id of the recipe in the format of {@code <recipeType>:<namedID>}
+     * <p>
+     * Dose the same as {@link RecipeType#getNamedRecipeID(RecipeType, String)}
+     *
+     * @return The named id of the recipe
+     */
     public String getRecipeNamedID() {
-        return this.recipeType.name().toLowerCase() + ":" + this.namedID;
+        return this.recipeType.name().toLowerCase() + ":" + this.ID;
     }
 
+    /**
+     * Returns the material of the given item
+     *
+     * @param item The item to get the material from
+     * @return The material of the given item or null if the item is not a material
+     */
     @Nullable
     public DAItem getMaterial(@NotNull ItemStack item) {
         return Arrays.stream(this.materials).filter(material -> DAUtil.matchItems(material.getItemStack(), item, material.getItemMatchTypes())).findFirst().orElse(null);
@@ -81,7 +98,7 @@ public abstract class DARecipe {
     @Override
     public String toString() {
         return "DARecipe{" +
-                "namedID='" + namedID + '\'' +
+                "namedID='" + ID + '\'' +
                 ", recipeType=" + recipeType +
                 ", materials=" + Arrays.toString(materials) +
                 ", result=" + result +

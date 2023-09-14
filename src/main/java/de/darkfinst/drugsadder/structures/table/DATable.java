@@ -37,19 +37,43 @@ import java.util.Objects;
 @Getter
 public class DATable extends DAStructure implements InventoryHolder {
 
+    /**
+     * The inventory of the table
+     */
     @Setter(AccessLevel.NONE)
     protected Inventory inventory;
 
+    /**
+     * The slots which are blocked
+     */
     private final int[] blockedSlots = new int[]{5, 8};
+    /**
+     * The slot of the result
+     */
     private final int resultSlot = 2;
+    /**
+     * The slots of the materials
+     */
     private final int[] materialSlots = new int[]{3, 4};
+    /**
+     * The slots of the filters
+     */
     private final int[] filterSlots = new int[]{0, 1};
+    /**
+     * The slots of the fuels
+     */
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
         this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle(0));
     }
 
+    /**
+     * Gets the title of the table with the given state
+     *
+     * @param state The state of the table
+     * @return The title of the table
+     */
     public String getTitle(int state) {
         String title = DA.loader.languageReader.get("Structure_Name_Table");
         int[] titleArray = DAConfig.tableTitleArray;
@@ -58,6 +82,18 @@ public class DATable extends DAStructure implements InventoryHolder {
         return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * titleArray[0]) - titleArray[1]) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * titleArray[2]) + titleArray[3]) + title;
     }
 
+    /**
+     * Gets the title of the table with the given state
+     * <p>
+     * Note this is a debug method
+     *
+     * @param m1    The first multiplier
+     * @param m2    The first subtractor
+     * @param m3    The second multiplier
+     * @param m4    The second adder
+     * @param state The state of the table
+     * @return The title of the table
+     */
     public String getTitle(int m1, int m2, int m3, int m4, int state) {
         String title = DA.loader.languageReader.get("Structure_Name_Table");
 
@@ -127,11 +163,17 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * @return The body of the table
+     */
     public DATableBody getBody() {
         return (DATableBody) super.getBody();
     }
 
 
+    /**
+     * @return The inventory of the table
+     */
     @NotNull
     @Override
     public Inventory getInventory() {
@@ -139,6 +181,13 @@ public class DATable extends DAStructure implements InventoryHolder {
     }
 
 
+    /**
+     * Checks if the table is in a process for the given recipe and starts the process if it is not
+     * <p>
+     * Starts the process only if the recipe is valid for more information see {@link DATable#isThisRecipe(DATableRecipe)}
+     *
+     * @param who The player who clicked the table
+     */
     private void callRecipeCheck(@Nullable HumanEntity who) {
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
@@ -148,6 +197,12 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Starts the process of the given recipe
+     *
+     * @param who    The player who started the recipe, can be null
+     * @param recipe The recipe to start
+     */
     public void startRecipe(@Nullable HumanEntity who, @NotNull DATableRecipe recipe) {
         DAItem fuelTwo = this.inventory.getItem(this.fuelSlots[1]) != null ? new DAItem(Objects.requireNonNull(this.inventory.getItem(this.fuelSlots[1]))) : null;
         DAItem materialTwo = this.inventory.getItem(this.materialSlots[1]) != null ? new DAItem(Objects.requireNonNull(this.inventory.getItem(this.materialSlots[1]))) : null;
@@ -159,6 +214,12 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Checks if the table has all items for the given recipe
+     *
+     * @param recipe The recipe to check
+     * @return True if the table has all items for the recipe otherwise false
+     */
     public boolean isThisRecipe(@NotNull DATableRecipe recipe) {
         boolean isValid = false;
         if (recipe.getFilterOne() != null) {
@@ -200,6 +261,13 @@ public class DATable extends DAStructure implements InventoryHolder {
         return isValid;
     }
 
+    /**
+     * Handles the inventory click event
+     * <p>
+     * Depending on the action, it cancels the event or calls the recipe check
+     *
+     * @param event The event to handle
+     */
     public void handleInventoryClick(InventoryClickEvent event) {
         switch (event.getAction()) {
             case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
@@ -228,6 +296,11 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Handles the inventory drag event
+     *
+     * @param event The event to handle
+     */
     public void handleInventoryDrag(InventoryDragEvent event) {
         for (Integer rawSlot : event.getRawSlots()) {
             if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot) {
@@ -237,6 +310,13 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Cancels the recipe of the table
+     * <p>
+     * Calls the {@link TableCancelRecipeEvent}
+     *
+     * @param who The player who canceled the recipe
+     */
     private void cancelRecipe(HumanEntity who) {
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
@@ -248,6 +328,9 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Drops the inventory of the table
+     */
     @Override
     public void destroyInventory() {
         for (ItemStack content : this.inventory.getContents()) {
@@ -257,6 +340,11 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * It is an override of {@link DAStructure#hasInventory()}
+     *
+     * @return true
+     */
     @Override
     public boolean hasInventory() {
         return true;

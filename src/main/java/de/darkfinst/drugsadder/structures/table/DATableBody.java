@@ -17,7 +17,13 @@ import org.bukkit.block.data.type.WallSign;
 @Getter
 public class DATableBody extends DABody {
 
+    /**
+     * The table of the body
+     */
     private final DATable table;
+    /**
+     * The sign of the table
+     */
     private final Block sign;
 
     public DATableBody(DATable table, Block sign) {

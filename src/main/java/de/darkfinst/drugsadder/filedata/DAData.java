@@ -3,7 +3,6 @@ package de.darkfinst.drugsadder.filedata;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DAPlayer;
 import de.darkfinst.drugsadder.api.events.DrugsAdderLoadDataEvent;
-import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
@@ -16,8 +15,6 @@ import org.bukkit.block.data.type.WallSign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.stringtemplate.v4.ST;
 
 import java.io.File;
 import java.util.List;
@@ -305,7 +302,7 @@ public class DAData {
                 DAPlantItem seedItem = DAConfig.seedReader.getSeed(plant.getString("seed", "NULL"));
                 if (seedItem != null) {
                     try {
-                        DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowTime(), seedItem.getDrops());
+                        DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowthTime(), seedItem.getDrops());
                         daPlant.setAllowedTools(seedItem.getAllowedTools());
                         boolean success = daPlant.create(worldBlock, isAsync);
                         return success;

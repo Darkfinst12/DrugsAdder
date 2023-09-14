@@ -10,8 +10,14 @@ import java.util.List;
 
 public abstract class DABody {
 
+    /**
+     * The world of the body
+     */
     @Getter
     public final World world;
+    /**
+     * The blocks of the body
+     */
     public final List<Block> blocks = new ArrayList<>();
 
     public DABody(World world) {

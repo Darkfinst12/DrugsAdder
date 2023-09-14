@@ -12,25 +12,46 @@ import java.util.List;
 
 @Getter
 @Setter
-public class DAItem implements Cloneable{
+public class DAItem implements Cloneable {
 
+    /**
+     * The item, which represents the DAItem
+     */
     @NotNull
     private final ItemStack itemStack;
+    /**
+     * The name of the item
+     */
     @Nullable
     private String name;
+    /**
+     * The lore of the item
+     */
     @Nullable
     private List<String> lore;
+    /**
+     * The custom model data of the item
+     */
     @Nullable
     private Integer customModelData;
 
+    /**
+     * The match types, which should be used to match the item
+     */
     private ItemMatchType[] itemMatchTypes = new ItemMatchType[]{ItemMatchType.VANNILA};
+    /**
+     * The amount of the item
+     */
     private int amount = 1;
 
+    /**
+     * The namespaced ID of the item
+     */
     private final String namespacedID;
 
     public DAItem(@NotNull ItemStack itemStack, String namespacedID) {
         this.itemStack = itemStack;
-        if(itemStack.hasItemMeta()){
+        if (itemStack.hasItemMeta()) {
             this.name = itemStack.getItemMeta().getDisplayName();
             this.lore = itemStack.getItemMeta().getLore();
             this.customModelData = itemStack.getItemMeta().getCustomModelData();
@@ -46,7 +67,7 @@ public class DAItem implements Cloneable{
         this.namespacedID = namespacedID;
     }
 
-    public DAItem(ItemStack itemStack){
+    public DAItem(ItemStack itemStack) {
         this.itemStack = itemStack;
         this.namespacedID = itemStack.getType().name();
     }

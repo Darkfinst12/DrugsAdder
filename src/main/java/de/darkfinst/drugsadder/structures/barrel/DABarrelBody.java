@@ -15,7 +15,13 @@ import org.bukkit.util.Vector;
 @Getter
 public class DABarrelBody extends DABody {
 
+    /**
+     * The barrel of the body
+     */
     private final DABarrel barrel;
+    /**
+     * The sign of the barrel
+     */
     private final Block sign;
 
     public DABarrelBody(DABarrel barrel, Block sign) {
