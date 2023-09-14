@@ -39,7 +39,7 @@ tableStates:
 
 #Table Title Array
 #Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
-tableTitleArray: "-3,2,8,-12"
+tableTitleArray: "-7,-4,12,-2"
 
 #CustomItems
 customItems:
