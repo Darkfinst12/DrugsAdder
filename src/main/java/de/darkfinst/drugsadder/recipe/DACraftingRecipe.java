@@ -19,8 +19,17 @@ import java.util.*;
 @Getter
 public class DACraftingRecipe extends DARecipe {
 
+    /**
+     * The shape of the recipe
+     */
     private final List<String> shape = new ArrayList<>(3);
+    /**
+     * The keys of the shape
+     */
     private final Map<String, DAItem> shapeKeys = new HashMap<>();
+    /**
+     * Whether the recipe is shapeless or not
+     */
     @Setter
     private boolean isShapeless = false;
 
@@ -44,7 +53,7 @@ public class DACraftingRecipe extends DARecipe {
      * @return If the recipe was successfully registered
      */
     public boolean registerRecipe() {
-        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
+        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getID());
         if (this.isShapeless) {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());

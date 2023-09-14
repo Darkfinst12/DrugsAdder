@@ -35,16 +35,39 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class DALoader {
 
+    /**
+     * The instance of the plugin
+     */
     private final DA plugin;
 
+    /**
+     * The language reader for the language files
+     */
     public LanguageReader languageReader;
+    /**
+     * The language, which is used for the language files
+     */
     public String language;
 
+    /**
+     * The list of all registered structures
+     */
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
+    /**
+     * The list of all registered players
+     */
     private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
 
+    /**
+     * The prefix, which is used for all messages
+     */
     public final String prefix = ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE;
 
+    /**
+     * Whether the ItemsAdder plugin is loaded or not
+     * <br>
+     * Can be ignored if the ItemsAdder plugin is not used
+     */
     @Setter
     public static boolean iaLoaded = false;
 
@@ -52,6 +75,9 @@ public class DALoader {
         this.plugin = plugin;
     }
 
+    /**
+     * Initializes the plugin and all its components
+     */
     public void init() {
         if (DAConfig.hasItemsAdder && !DALoader.iaLoaded) {
             this.initConfig();
@@ -64,6 +90,9 @@ public class DALoader {
         this.initRunnable();
     }
 
+    /**
+     * Initializes the config
+     */
     private void initConfig() {
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
@@ -78,6 +107,9 @@ public class DALoader {
         }
     }
 
+    /**
+     * Initializes the data
+     */
     private void initData() {
         try {
             DAData.readData();
@@ -86,10 +118,16 @@ public class DALoader {
         }
     }
 
+    /**
+     * Initializes the commands
+     */
     private void initCommands() {
         new DACommand().register();
     }
 
+    /**
+     * Initializes the listeners
+     */
     private void initListener() {
         new BlockBreakEventListener();
         new BlockGrowEventListener();
@@ -109,10 +147,21 @@ public class DALoader {
         new StructureGrowEventListener();
     }
 
+    /**
+     * Initializes the runnable
+     */
     private void initRunnable() {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
     }
 
+    /**
+     * Registers a structure
+     *
+     * @param structure The structure to register
+     * @param isAsync   Whether the event should be called async or not
+     * @return Whether the structure was registered or not
+     * @throws RegisterStructureException If the structure is already registered
+     */
     public boolean registerDAStructure(DAStructure structure, boolean isAsync) throws RegisterStructureException {
         RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
@@ -129,11 +178,24 @@ public class DALoader {
         return false;
     }
 
+    /**
+     * Unregisters a structure
+     *
+     * @param structure The structure to unregister
+     * @return Whether the structure was unregistered or not
+     */
     public boolean unregisterDAStructure(DAStructure structure) {
         structure.setForRemoval(true);
         return this.getStructure(structure) == null;
     }
 
+    /**
+     * Unregisters a structure
+     *
+     * @param player The player, which wants to unregister the structure
+     * @param block  The block, which is part of the structure
+     * @return Whether the structure was unregistered or not
+     */
     public boolean unregisterDAStructure(Player player, Block block) {
         DAStructure structure = this.getStructure(block);
         if (structure != null) {
@@ -149,14 +211,32 @@ public class DALoader {
         return this.structureList.contains(structure);
     }
 
+    /**
+     * Checks if the block is part of a structure
+     *
+     * @param block The block to check
+     * @return Whether the block is part of a structure or not
+     */
     public boolean isStructure(Block block) {
         return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval());
     }
 
+    /**
+     * Checks if the block is part of a plant
+     *
+     * @param block The block to check
+     * @return Whether the block is part of a plant or not
+     */
     public boolean isPlant(Block block) {
         return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block) && !daStructure.isForRemoval());
     }
 
+    /**
+     * Get a structure by a block
+     *
+     * @param block The block, which is part of the structure
+     * @return The structure, which contains the block or null if no structure was found
+     */
     public DAStructure getStructure(Block block) {
         return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval()).findAny().orElse(null);
     }
@@ -165,6 +245,14 @@ public class DALoader {
         return this.structureList.stream().filter(daStructure -> daStructure.equals(structure) && !daStructure.isForRemoval()).findAny().orElse(null);
     }
 
+    /**
+     * Get a structure by an inventory of the structure
+     * <br>
+     * Works only for structures, which have an inventory like barrels or tables otherwise null will always be returned
+     *
+     * @param inventory The inventory of the structure
+     * @return The structure, which contains the inventory or null if no structure was found
+     */
     public DAStructure getStructure(Inventory inventory) {
         return this.structureList.stream().filter(daStructure -> {
             if (daStructure instanceof DABarrel daBarrel) {
@@ -180,10 +268,21 @@ public class DALoader {
         return this.structureList.stream().filter(daStructure -> daStructure.getWorld().equals(world) && !daStructure.isForRemoval()).toList();
     }
 
+    /**
+     * Unloads all structures of a world
+     *
+     * @param world The world, which structures should be unloaded
+     */
     public void unloadStructures(World world) {
         this.structureList.removeIf(daStructure -> daStructure.getWorld().equals(world));
     }
 
+    /**
+     * Opens a structure for a player
+     *
+     * @param block  The block, which is part of the structure
+     * @param player The player, which opens the structure
+     */
     public void openStructure(Block block, Player player) {
         DAStructure daStructure = this.getStructure(block);
         if (daStructure instanceof DABarrel daBarrel) {
@@ -199,14 +298,48 @@ public class DALoader {
 
 
     //Logging and Messaging
+
+    /**
+     * Sends a message to a CommandSender
+     * <br>
+     * CommandSender can be a Player or the Console
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, String, DrugsAdderSendMessageEvent.Type)} wit the type {@link DrugsAdderSendMessageEvent.Type#NONE}
+     *
+     * @param sender The CommandSender to send the message to
+     * @param msg    The message to send
+     */
     public void msg(CommandSender sender, String msg) {
         this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
     }
 
+    /**
+     * Sends a message to a CommandSender
+     * <br>
+     * CommandSender can be a Player or the Console
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, String, DrugsAdderSendMessageEvent.Type, boolean)} and sets isAsync to false
+     *
+     * @param sender The CommandSender to send the message to
+     * @param msg    The message to send
+     * @param Type   The type of the message
+     */
     public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type Type) {
         this.msg(sender, msg, Type, false);
     }
 
+    /**
+     * Sends a message to a CommandSender
+     * <br>
+     * CommandSender can be a Player or the Console
+     * <p>
+     * It calls the {@link DrugsAdderSendMessageEvent} and sends the message to the CommandSender if the event is not canceled
+     *
+     * @param sender  The CommandSender to send the message to
+     * @param msg     The message to send
+     * @param type    The type of the message
+     * @param isAsync Whether the event should be called async or not
+     */
     public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
@@ -215,14 +348,47 @@ public class DALoader {
         }
     }
 
+    /**
+     * Sends a message to a CommandSender
+     * <br>
+     * CommandSender can be a Player or the Console
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, BaseComponent, DrugsAdderSendMessageEvent.Type)} wit the type {@link DrugsAdderSendMessageEvent.Type#NONE}
+     *
+     * @param sender The CommandSender to send the message to
+     * @param msg    The message to send
+     */
     public void msg(CommandSender sender, BaseComponent msg) {
         this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
     }
 
+    /**
+     * Sends a message to a CommandSender
+     * <br>
+     * CommandSender can be a Player or the Console
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, BaseComponent, DrugsAdderSendMessageEvent.Type, boolean)} and sets isAsync to false
+     *
+     * @param sender The CommandSender to send the message to
+     * @param msg    The message to send
+     * @param Type   The type of the message
+     */
     public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type Type) {
         this.msg(sender, msg, Type, false);
     }
 
+    /**
+     * Sends a message to a CommandSender
+     * <br>
+     * CommandSender can be a Player or the Console
+     * <p>
+     * It calls the {@link DrugsAdderSendMessageEvent} and sends the message to the CommandSender if the event is not canceled
+     *
+     * @param sender  The CommandSender to send the message to
+     * @param msg     The message to send
+     * @param type    The type of the message
+     * @param isAsync Whether the event should be called async or not
+     */
     public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
@@ -232,42 +398,129 @@ public class DALoader {
         }
     }
 
+    /**
+     * Logs a message to the console
+     * <p>
+     * It executes {@link DALoader#log(String, boolean)} and sets isAsync to false
+     *
+     * @param msg The message to log
+     */
     public void log(String msg) {
         this.log(msg, false);
     }
 
+    /**
+     * Logs a messsage to the console
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, String, DrugsAdderSendMessageEvent.Type, boolean)} and sets the sender to the console and the type to {@link DrugsAdderSendMessageEvent.Type#LOG}
+     *
+     * @param msg     The message to log
+     * @param isAsync Whether the event should be called async or not
+     */
     public void log(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG, isAsync);
     }
 
+    /**
+     * Logs a message to the console
+     * <br>
+     * The message receives the prefix [Info]
+     * <p>
+     * It executes {@link DALoader#infoLog(String, boolean)} and sets isAsync to false
+     *
+     * @param msg The message to log
+     */
     public void infoLog(String msg) {
         this.infoLog(msg, false);
     }
 
+    /**
+     * Logs a message to the console
+     * <br>
+     * The message receives the prefix [Info]
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, String, DrugsAdderSendMessageEvent.Type, boolean)} and sets the sender to the console and the type to {@link DrugsAdderSendMessageEvent.Type#INFO}
+     *
+     * @param msg     The message to log
+     * @param isAsync Whether the event should be called async or not
+     */
     public void infoLog(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(41, 212, 3)) + "[Info] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.INFO, isAsync);
     }
 
+    /**
+     * Logs a message to the console
+     * <br>
+     * The message receives the prefix [Debug]
+     * <p>
+     * It executes {@link DALoader#debugLog(String, boolean)} and sets isAsync to false
+     *
+     * @param msg The message to log
+     */
     public void debugLog(String msg) {
         this.debugLog(msg, false);
     }
 
+    /**
+     * Logs a message to the console
+     * <br>
+     * The message receives the prefix [Debug]
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, String, DrugsAdderSendMessageEvent.Type, boolean)} and sets the sender to the console and the type to {@link DrugsAdderSendMessageEvent.Type#DEBUG}
+     *
+     * @param msg     The message to log
+     * @param isAsync Whether the event should be called async or not
+     */
     public void debugLog(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
     }
 
+    /**
+     * Logs a message to the console
+     * <br>
+     * The message receives the prefix [ERROR]
+     * <p>
+     * It executes {@link DALoader#errorLog(String, boolean)} and sets isAsync to false
+     *
+     * @param msg The message to log
+     */
     public void errorLog(String msg) {
         this.errorLog(msg, false);
     }
 
+    /**
+     * Logs a message to the console
+     * <br>
+     * The message receives the prefix [ERROR]
+     * <p>
+     * It executes {@link DALoader#msg(CommandSender, String, DrugsAdderSendMessageEvent.Type, boolean)} and sets the sender to the console and the type to {@link DrugsAdderSendMessageEvent.Type#ERROR}
+     *
+     * @param msg     The message to log
+     * @param isAsync Whether the event should be called async or not
+     */
     public void errorLog(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR, isAsync);
     }
 
+    /**
+     * Logs an exception to the console
+     * <p>
+     * It executes {@link DALoader#logException(Exception, boolean)} and sets isAsync to false
+     *
+     * @param e The exception to log
+     */
     public void logException(Exception e) {
         this.logException(e, false);
     }
 
+    /**
+     * Logs an exception to the console
+     * <p>
+     * It executes {@link DALoader#errorLog(String, boolean)} and sets the message to the exception message
+     *
+     * @param e       The exception to log
+     * @param isAsync Whether the event should be called async or not
+     */
     public void logException(Exception e, boolean isAsync) {
         String s = e.getMessage() == null ? "null" : e.getMessage();
         StringBuilder log = new StringBuilder(s);
@@ -292,11 +545,19 @@ public class DALoader {
         DAConfig.clear();
     }
 
-
+    /**
+     * What should be done when the plugin is unloaded
+     */
     public void unload() {
         DataSave.save(true);
     }
 
+    /**
+     * Get a DAPlayer by a player
+     *
+     * @param player The player, which is part of the DAPlayer
+     * @return The DAPlayer, which contains the player or null if no DAPlayer was found
+     */
     public DAPlayer getDaPlayer(Player player) {
         return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
     }
@@ -305,10 +566,23 @@ public class DALoader {
         this.daPlayerList.remove(daPlayer);
     }
 
+    /**
+     * Adds a DAPlayer to the list of DAPlayers
+     *
+     * @param daPlayer The DAPlayer to add
+     */
     public void addDaPlayer(DAPlayer daPlayer) {
         this.daPlayerList.add(daPlayer);
     }
 
+    /**
+     * Gets a translation from the language files
+     *
+     * @param fallback The fallback, if the language reader is null
+     * @param key      The key of the translation
+     * @param args     The arguments for the translation
+     * @return The translation or the fallback if the language reader is null
+     */
     public String getTranslation(String fallback, String key, String... args) {
         if (this.languageReader == null) {
             return fallback;
@@ -316,6 +590,9 @@ public class DALoader {
         return this.languageReader.get(key, args);
     }
 
+    /**
+     * The HartBeat runnable, which saves the data
+     */
     public class DrugsAdderRunnable implements Runnable {
         @Override
         public void run() {

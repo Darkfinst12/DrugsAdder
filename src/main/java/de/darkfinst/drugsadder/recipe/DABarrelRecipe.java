@@ -20,7 +20,13 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class DABarrelRecipe extends DARecipe {
 
+    /**
+     * The time the recipe needs to process
+     */
     private final long processTime;
+    /**
+     * The time the recipe can process longer than the process time
+     */
     private final long processOverdueAcceptance;
 
     public DABarrelRecipe(String namedID, RecipeType recipeType, long processTime, long processOverdueAcceptance, DAItem result, DAItem... materials) {

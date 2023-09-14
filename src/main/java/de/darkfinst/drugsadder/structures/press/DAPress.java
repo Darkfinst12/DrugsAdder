@@ -34,8 +34,14 @@ import java.util.concurrent.TimeUnit;
 
 public class DAPress extends DAStructure {
 
+    /**
+     * The compressed items of the press
+     */
     @Getter
     private final ConcurrentLinkedDeque<ItemStack> compressedItems = new ConcurrentLinkedDeque<>();
+    /**
+     * The time the press was activated
+     */
     private Long pressActiveTime = null;
 
     /**
@@ -215,7 +221,7 @@ public class DAPress extends DAStructure {
         ItemStack[] compressedItems = this.compressedItems.toArray(new ItemStack[0]);
         for (DAPressRecipe recipe : recipes) {
             if ((recipe.containsMold(compressedItems))) {
-                if (recipe.containsMaterials(compressedItems)) {
+                if (recipe.hasMaterials(compressedItems)) {
                     long duration = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - this.pressActiveTime);
                     if (duration < recipe.getDuration()) {
                         return;
@@ -269,6 +275,9 @@ public class DAPress extends DAStructure {
     }
 
 
+    /**
+     * Drops all items of the press
+     */
     @Override
     public void destroyInventory() {
         Block block = this.getBody().getPiston();
@@ -276,6 +285,11 @@ public class DAPress extends DAStructure {
         this.dropItems(head);
     }
 
+    /**
+     * It is an override of {@link DAStructure#hasInventory()}
+     *
+     * @return true
+     */
     @Override
     public boolean hasInventory() {
         return true;

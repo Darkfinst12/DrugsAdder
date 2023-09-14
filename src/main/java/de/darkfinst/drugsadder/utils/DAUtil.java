@@ -35,6 +35,13 @@ import java.util.Map;
 public class DAUtil {
 
     //Items
+
+    /**
+     * Gets the DAItem by the namespaced id
+     *
+     * @param namespacedID The namespaced id of the item
+     * @return The DAItem or null if the item was not found
+     */
     public static @Nullable DAItem getItemStackByNamespacedID(@NotNull String namespacedID) {
         if (namespacedID.startsWith("minecraft:")) {
             Material material = Material.getMaterial(namespacedID.split(":")[1].toUpperCase());
@@ -70,7 +77,13 @@ public class DAUtil {
         return null;
     }
 
-    public static @Nullable String getNamespacedIDByItemStack(@NotNull ItemStack item) {
+    /**
+     * Gets the namespaced id of the item
+     *
+     * @param item The item to get the namespaced id from
+     * @return The namespaced id of the item
+     */
+    public static @NotNull String getNamespacedIDByItemStack(@NotNull ItemStack item) {
         DAItem daItem = DAConfig.customItemReader.getItemByItemStack(item);
         if (daItem != null) {
             return daItem.getNamespacedID();
@@ -91,6 +104,14 @@ public class DAUtil {
         return item.getType().getKey().toString();
     }
 
+    /**
+     * Gets the default item of the item, but only for custom items
+     * <br>
+     * If the Item has a lore or a display name, it will be removed and replaced with the default values
+     *
+     * @param item The item to get the default item from
+     * @return The default item of the item or null if the item is not a custom item
+     */
     public static @Nullable ItemStack getDefaultItem(ItemStack item) {
         DAItem daItem = DAConfig.customItemReader.getItemByItemStack(item);
         if (daItem != null) {
@@ -112,6 +133,12 @@ public class DAUtil {
         return null;
     }
 
+    /**
+     * Sets on a slot the default item of the item, but only for custom items
+     *
+     * @param event The event to get the inventory from
+     * @param slot  The slot to set the default item
+     */
     public static void setSlotDefaultItem(InventoryEvent event, Integer slot) {
         Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> {
             ItemStack ogItem = event.getInventory().getItem(slot);
@@ -125,6 +152,14 @@ public class DAUtil {
         }, 1L);
     }
 
+    /**
+     * Matches two items with the given match types
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @param matchTypes The match types
+     * @return If the items match
+     */
     public static boolean matchItems(ItemStack itemStackA, ItemStack itemStackB, ItemMatchType... matchTypes) {
         boolean match = false;
         if (!(itemStackA == null || itemStackB == null || matchTypes == null || matchTypes.length == 0)) {
@@ -138,6 +173,14 @@ public class DAUtil {
         return match;
     }
 
+    /**
+     * Matches two items with the given match type
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @param matchType  The match type
+     * @return If the items match, according to the match type
+     */
     public static boolean matchItems(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB, @NotNull ItemMatchType matchType) {
         boolean match = false;
         ItemStack stackA = itemStackA.clone();
@@ -159,6 +202,15 @@ public class DAUtil {
         return match;
     }
 
+    /**
+     * Matches two items with their lore
+     * <br>
+     * The lore of the item must contain the lore of the other item
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @return If the items match
+     */
     private static boolean matchItemLoreContains(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
         if (itemStackA.hasItemMeta() && itemStackB.hasItemMeta() && itemStackA.getItemMeta().hasLore() && itemStackB.getItemMeta().hasLore()) {
             return new HashSet<>(itemStackB.getItemMeta().getLore()).containsAll(itemStackA.getItemMeta().getLore()) || new HashSet<>(itemStackA.getItemMeta().getLore()).containsAll(itemStackB.getItemMeta().getLore());
@@ -166,6 +218,15 @@ public class DAUtil {
         return false;
     }
 
+    /**
+     * Matches two items with their name
+     * <br>
+     * The name of the item must contain the name of the other item
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @return If the items match
+     */
     private static boolean matchItemNameContains(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
         return itemStackA.hasItemMeta() && itemStackB.hasItemMeta()
                 && itemStackA.getItemMeta().hasDisplayName() && itemStackB.getItemMeta().hasDisplayName()
@@ -173,6 +234,15 @@ public class DAUtil {
                 || itemStackB.getItemMeta().getDisplayName().contains(itemStackA.getItemMeta().getDisplayName()));
     }
 
+    /**
+     * Matches two items with their Lore
+     * <br>
+     * The lore of the item must be the same as the lore of the other item
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @return If the items match
+     */
     private static boolean matchItemLore(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
         if (itemStackA.hasItemMeta() && itemStackB.hasItemMeta() && itemStackA.getItemMeta().hasLore() && itemStackB.getItemMeta().hasLore()) {
             return new HashSet<>(itemStackB.getItemMeta().getLore()).equals(new HashSet<>(itemStackA.getItemMeta().getLore()));
@@ -180,17 +250,45 @@ public class DAUtil {
         return false;
     }
 
+    /**
+     * Matches two items with their name
+     * <br>
+     * The name of the item must be the same as the name of the other item
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @return If the items match
+     */
     private static boolean matchItemName(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
         return itemStackA.hasItemMeta() && itemStackB.hasItemMeta()
                 && itemStackA.getItemMeta().getDisplayName().equals(itemStackB.getItemMeta().getDisplayName());
     }
 
+    /**
+     * Matches two items with their custom model data
+     * <br>
+     * The custom model data of the item must be the same as the custom model data of the other item
+     *
+     * @param itemStackA The first item
+     * @param itemStackB The second item
+     * @return If the items match
+     */
     public static boolean matchItemCMD(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
         return itemStackA.hasItemMeta() && itemStackB.hasItemMeta()
                 && itemStackA.getItemMeta().hasCustomModelData() && itemStackB.getItemMeta().hasCustomModelData()
                 && itemStackA.getItemMeta().getCustomModelData() == itemStackB.getItemMeta().getCustomModelData();
     }
 
+    /**
+     * Damages the given item stack if it is damageable
+     * <p>
+     * If it is damageable, it executes {@link DAUtil#applyDamage(ItemStack, int)}
+     *
+     * @param itemStack The item stack to damage
+     * @param damage    The damage to apply
+     * @return The damaged item stack
+     * @throws DamageToolException If the item stack is not damageable
+     */
     public static ItemStack damageTool(ItemStack itemStack, int damage) throws DamageToolException {
         if (itemStack == null || itemStack.getType().isAir()) {
             return itemStack;
@@ -216,6 +314,13 @@ public class DAUtil {
         return itemStack;
     }
 
+    /**
+     * Applies the damage to the item stack
+     *
+     * @param itemStack The item stack to apply the damage to
+     * @param damage    The damage to apply
+     * @return The damaged item stack or null if the item stack is broken
+     */
     private static @Nullable ItemStack applyDamage(@NotNull ItemStack itemStack, int damage) {
         ItemStack returnItem = itemStack.clone();
         ItemMeta itemMeta = returnItem.getItemMeta();
@@ -240,6 +345,13 @@ public class DAUtil {
         return returnItem;
     }
 
+    /**
+     * Checks if the item stack can be damaged
+     *
+     * @param itemStack The item stack to check
+     * @param damage    The damage to apply
+     * @return If the item stack can be damaged
+     */
     private static boolean canApplyDamage(ItemStack itemStack, int damage) {
         boolean canBeApplied = false;
 
@@ -258,6 +370,13 @@ public class DAUtil {
 
 
     //Parse
+
+    /**
+     * Creates a Map with key value pairs from a string like "key1=value1,key2=value2"
+     *
+     * @param string The string to parse
+     * @return The map with the key value pairs
+     */
     public static @NotNull Map<String, String> parsMap(@NotNull String string) {
         String[] keyValues = string.split(",");
         HashMap<String, String> map = new HashMap<>();
@@ -281,6 +400,15 @@ public class DAUtil {
         return !config.contains(name) && (config.get(name) == null || !type.isInstance(config.get(name)));
     }
 
+    /**
+     * Saves a file from the resources to the dest file
+     *
+     * @param in        The input stream of the file
+     * @param dest      The destination file
+     * @param name      The name of the file
+     * @param overwrite If the file should be overwritten
+     * @throws IOException If an error occurs while saving the file
+     */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void saveFile(InputStream in, File dest, String name, boolean overwrite) throws IOException {
         if (in == null) return;
@@ -309,6 +437,11 @@ public class DAUtil {
         out.close();
     }
 
+    /**
+     * Creates the world sections in the config
+     *
+     * @param section The section to create the world sections in
+     */
     public static void createWorldSections(ConfigurationSection section) {
         for (World world : Bukkit.getWorlds()) {
             String worldName = world.getUID().toString();
@@ -317,6 +450,13 @@ public class DAUtil {
     }
 
     //Pars
+
+    /**
+     * Parses a string to an integer
+     *
+     * @param string The string to parse
+     * @return The parsed integer or 0 if the string is null or not a number
+     */
     public static int parseInt(String string) {
         if (string == null) {
             return 0;
@@ -328,6 +468,12 @@ public class DAUtil {
         }
     }
 
+    /**
+     * Parses a string to a double
+     *
+     * @param string The string to parse
+     * @return The parsed double or 0 if the string is null or not a number
+     */
     public static double parseDouble(String string) {
         if (string == null) {
             return 0;
@@ -339,6 +485,12 @@ public class DAUtil {
         }
     }
 
+    /**
+     * Parses a string to a float
+     *
+     * @param string The string to parse
+     * @return The parsed float or 0 if the string is null or not a number
+     */
     public static float parseFloat(String string) {
         if (string == null) {
             return 0;
@@ -352,7 +504,15 @@ public class DAUtil {
 
 
     //Binary Search
-    public static int findClosest(int arr[], int target) {
+
+    /**
+     * Finds the closest value to the target in the array
+     *
+     * @param arr    The array to search in
+     * @param target The target to search for
+     * @return The closest value to the target in the array or the target if it is in the array
+     */
+    public static int findClosest(int[] arr, int target) {
         int n = arr.length;
 
         if (target <= arr[0])
@@ -384,6 +544,14 @@ public class DAUtil {
         return arr[mid];
     }
 
+    /**
+     * Gets the closest value to the target
+     *
+     * @param val1   The first value
+     * @param val2   The second value
+     * @param target The target
+     * @return The closest value to the target
+     */
     public static int getClosest(int val1, int val2,
                                  int target) {
         if (target - val1 >= val2 - target)

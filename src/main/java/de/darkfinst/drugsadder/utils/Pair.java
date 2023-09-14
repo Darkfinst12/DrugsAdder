@@ -2,10 +2,16 @@ package de.darkfinst.drugsadder.utils;
 
 import lombok.Getter;
 
+/**
+ * A pair of two values
+ *
+ * @param <F> The first value
+ * @param <S> The second value
+ */
 @Getter
 public class Pair<F, S> {
-    public final F first;
 
+    public final F first;
     public final S second;
 
     protected Pair(F first, S second) {
@@ -13,6 +19,13 @@ public class Pair<F, S> {
         this.second = second;
     }
 
+    /**
+     * Creates a new pair
+     *
+     * @param first  The first value
+     * @param second The second value
+     * @return The new pair
+     */
     public static <F, S> Pair<F, S> of(F first, S second) {
         if (first != null && second != null) {
             return new Pair<>(first, second);
@@ -21,6 +34,12 @@ public class Pair<F, S> {
         }
     }
 
+    /**
+     * Checks if the pair is equal to another object
+     *
+     * @param other The other object
+     * @return true, if the pair is equal to the other object otherwise false
+     */
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -31,6 +50,9 @@ public class Pair<F, S> {
         }
     }
 
+    /**
+     * @return The hash code of the pair
+     */
     public int hashCode() {
         return this.first.hashCode() * 37 + this.second.hashCode();
     }

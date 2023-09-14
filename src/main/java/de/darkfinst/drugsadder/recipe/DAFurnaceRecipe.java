@@ -16,8 +16,13 @@ import java.util.Arrays;
 @Setter
 public class DAFurnaceRecipe extends DARecipe {
 
-
+    /**
+     * The cooking time of the recipe
+     */
     private int cookingTime;
+    /**
+     * The experience that is received by finishing the recipe
+     */
     private float experience;
 
     public DAFurnaceRecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
@@ -30,7 +35,7 @@ public class DAFurnaceRecipe extends DARecipe {
      * @return If the recipe was successfully registered
      */
     public boolean registerRecipe() {
-        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
+        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getID());
         DAItem daItem = Arrays.stream(this.getMaterials()).findFirst().orElse(null);
         if (daItem == null) {
             return false;

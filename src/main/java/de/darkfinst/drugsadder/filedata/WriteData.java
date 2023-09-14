@@ -7,7 +7,13 @@ import java.io.File;
 
 public class WriteData implements Runnable {
 
+    /**
+     * The data to save
+     */
     private FileConfiguration data;
+    /**
+     * The world data to save
+     */
     private FileConfiguration worldData;
 
     public WriteData(FileConfiguration data, FileConfiguration worldData) {
@@ -15,6 +21,9 @@ public class WriteData implements Runnable {
         this.worldData = worldData;
     }
 
+    /**
+     * Saves the data to the data file
+     */
     @Override
     public void run() {
         File datafile = new File(DA.getInstance.getDataFolder(), "data.yml");

@@ -23,6 +23,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class DABarrel extends DAStructure implements InventoryHolder {
 
+    /**
+     * The inventory of the barrel
+     */
     private final Inventory inventory;
 
     public DABarrel() {
@@ -99,16 +102,27 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Processes the materials in the barrel
+     */
     private void processMaterials() {
         for (DABarrelRecipe barrelRecipe : DAConfig.daRecipeReader.getBarrelRecipes()) {
             barrelRecipe.processMaterials(this);
         }
     }
 
+    /**
+     * @return The body of the barrel
+     */
     public DABarrelBody getBody() {
         return (DABarrelBody) super.getBody();
     }
 
+    /**
+     * Handles the inventory close event
+     *
+     * @param event The event to handle
+     */
     public void handleInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1);
@@ -117,6 +131,11 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Handles the inventory click event
+     *
+     * @param event The event to handle
+     */
     public void handleInventoryClick(InventoryClickEvent event) {
         if (this.inventory.equals(event.getClickedInventory())) {
             this.removeTimeStamp(event.getCursor());
@@ -124,6 +143,15 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Adds a time stamp to the item stack
+     * <p>
+     * When the item was added to the barrel
+     * <br>
+     * It is needed to check if the item can be processed
+     *
+     * @param itemStack
+     */
     public void addTimeStamp(ItemStack itemStack) {
         if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {
             NamespacedKey key = new NamespacedKey(DA.getInstance, "brew_timestamp");
@@ -135,6 +163,12 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Returns the time stamp of the item stack
+     *
+     * @param itemStack The item stack to get the time stamp from
+     * @return The time stamp of the item stack or the current time if the item stack has no time stamp
+     */
     public long getTimeStamp(ItemStack itemStack) {
         if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {
             NamespacedKey key = new NamespacedKey(DA.getInstance, "brew_timestamp");
@@ -151,6 +185,11 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         return System.currentTimeMillis();
     }
 
+    /**
+     * Removes the time stamp from the item stack
+     *
+     * @param itemStack The item stack to remove the time stamp from
+     */
     public void removeTimeStamp(ItemStack itemStack) {
         if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {
             NamespacedKey key = new NamespacedKey(DA.getInstance, "brew_timestamp");
@@ -160,13 +199,18 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
-
+    /**
+     * @return The inventory of the barrel
+     */
     @NotNull
     @Override
     public Inventory getInventory() {
         return this.inventory;
     }
 
+    /**
+     * Drops the inventory of the barrel
+     */
     @Override
     public void destroyInventory() {
         for (ItemStack content : this.inventory.getContents()) {
@@ -176,6 +220,11 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * It is an override of {@link DAStructure#hasInventory()}
+     *
+     * @return true
+     */
     @Override
     public boolean hasInventory() {
         return true;

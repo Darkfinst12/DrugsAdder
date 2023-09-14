@@ -59,7 +59,7 @@ customItems:
     lore:
       - '&7Cocaine'
     #CustomModelData of the Item
-    #Note the Model will be taken from the Users highest Resourcepack, wich contains the Model
+    #Note the Model will be taken from the Users highest Resourcepack, which contains the Model
     customModelData: 1
   dirty_cocaine:
     name: '&fDirty Cocaine'
@@ -287,7 +287,7 @@ drugs:
       #How much of this Drug can be consumed before the player overdoses
       #For the timespan of the overdose check the overdoseTime
       overdose: 3
-      #The timespan in wich the player overdoses, if the drug is consumed to often
+      #The timespan in which the player overdoses, if the drug is consumed to often
       #example: 600 means 10 Minutes, in thies 10 minutes the player can consume three times the Drug without overdosing
       overdoseTime: 600
       #The time it takes to reduce the addictionPoints in minutes

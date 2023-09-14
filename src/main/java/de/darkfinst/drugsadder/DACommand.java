@@ -8,9 +8,6 @@ import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
@@ -18,12 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.ST;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
@@ -199,7 +192,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         StringBuilder recipes = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", recipeType.getArg()) + "\n");
         for (Object o : recipeList) {
             DARecipe registeredRecipe = (DARecipe) o;
-            String s = "- ID:" + registeredRecipe.getNamedID() + " - Type: " + registeredRecipe.getRecipeType() + "\n";
+            String s = "- ID:" + registeredRecipe.getID() + " - Type: " + registeredRecipe.getRecipeType() + "\n";
             recipes.append(s);
         }
         return recipes.toString();

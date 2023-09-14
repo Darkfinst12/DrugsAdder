@@ -21,19 +21,49 @@ import java.util.Map;
 @Getter
 public class DATableRecipe extends DARecipe {
 
-    public final Map<DATable, Pair<Integer, Integer>> inProcess = new HashMap<>(); // <Table, <State, TaskID>>
+    /**
+     * Which Tables currently process the recipe and in which state they are
+     * <p>
+     * {@code Map<Table, <State, TaskID>>}
+     */
+    public final Map<DATable, Pair<Integer, Integer>> inProcess = new HashMap<>();
 
+    /**
+     * The filter for the first material
+     */
     private final DAItem filterOne;
+    /**
+     * If the filter should be consumed
+     */
     @Setter
     private boolean consumeFilterOne = false;
+
+    /**
+     * The filter for the second material
+     */
     private final DAItem filterTwo;
+    /**
+     * If the filter should be consumed
+     */
     @Setter
     private boolean consumeFilterTwo = false;
 
+    /**
+     * The fuel for the first material
+     */
     private final DAItem fuelOne;
+    /**
+     * The fuel for the second material
+     */
     private final DAItem fuelTwo;
 
+    /**
+     * The first material
+     */
     private final DAItem materialOne;
+    /**
+     * The second material
+     */
     private final DAItem materialTwo;
 
     public DATableRecipe(String namedID, RecipeType recipeType, DAItem filterOne, DAItem filterTwo, DAItem fuelOne, DAItem fuelTwo, DAItem result, DAItem... materials) {
@@ -46,12 +76,23 @@ public class DATableRecipe extends DARecipe {
         this.materialTwo = materials[1];
     }
 
+    /**
+     * Starts the process of the recipe
+     *
+     * @param daTable          The table to start the process on
+     * @param hasSecondProcess If the recipe has a second process
+     */
     public void startProcess(DATable daTable, boolean hasSecondProcess) {
         ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, hasSecondProcess, 0);
         BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialOne);
         this.inProcess.put(daTable, Pair.of(0, task.getTaskId()));
     }
 
+    /**
+     * Starts the second process of the recipe (only if it has one)
+     *
+     * @param daTable The table to start the process on
+     */
     public void startSecondProcess(DATable daTable) {
         ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, 4);
         BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
@@ -59,6 +100,13 @@ public class DATableRecipe extends DARecipe {
     }
 
     //TODO: After Restart
+
+    /**
+     * Restarts the process of the recipe
+     *
+     * @param daTable The table to restart the process on
+     * @param state   The state to restart the process on
+     */
     public void restartProcess(DATable daTable, int state) {
         if (state >= 0 && state < 4) {
             ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, true, state);
@@ -74,6 +122,15 @@ public class DATableRecipe extends DARecipe {
 
     }
 
+    /**
+     * Finishes the process of the recipe
+     * <b>
+     * Sets the result in the result slot of the table and removes the recipe from the inProcess map
+     * <p>
+     * If enough materials are in the table, the recipe will start again
+     *
+     * @param daTable The table to finish the process on and to start the recipe again
+     */
     public void finishProcess(DATable daTable) {
         this.updateView(daTable, 0, true);
         daTable.getInventory().setItem(daTable.getResultSlot(), this.getResult().getItemStack());
@@ -83,6 +140,13 @@ public class DATableRecipe extends DARecipe {
         }
     }
 
+    /**
+     * Cancels the process of the recipe
+     *
+     * @param daTable The table to cancel the process on
+     * @param reason  The reason why the process was canceled
+     * @param isAsync If the method is called async
+     */
     public void cancelProcess(DATable daTable, String reason, boolean isAsync) {
         if (this.inProcess.containsKey(daTable)) {
             Bukkit.getScheduler().cancelTask(this.inProcess.get(daTable).getSecond());

@@ -19,15 +19,29 @@ import org.bukkit.inventory.ItemStack;
 @Getter
 public abstract class DAStructure {
 
-
+    /**
+     * The body of the structure
+     */
     private DABody body;
 
+    /**
+     * If the structure should be removed on the next server start
+     */
     private boolean forRemoval = false;
 
+    /**
+     * Checks if the block is a body part of the structure
+     *
+     * @param block The block to check
+     * @return true, if the block is a body part otherwise false
+     */
     public boolean isBodyPart(Block block) {
         return this.body.blocks.contains(block);
     }
 
+    /**
+     * @return The world of the structure
+     */
     public World getWorld() {
         return this.body.getWorld();
     }
@@ -159,9 +173,15 @@ public abstract class DAStructure {
         return false;
     }
 
+    /**
+     * Checks if the structure is similar to the given structure
+     *
+     * @param structure The structure to check
+     * @return true, if the structure is similar otherwise false
+     */
     public boolean isSimilar(DAStructure structure) {
         boolean isSimilar = false;
-        if(structure == this){
+        if (structure == this) {
             isSimilar = true;
         }
         return isSimilar;

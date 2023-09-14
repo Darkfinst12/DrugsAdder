@@ -19,8 +19,6 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDropItemEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.security.SecureRandom;
@@ -33,24 +31,51 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class DAPlant extends DAStructure {
 
+    /**
+     * The seed of the plant
+     */
     private final DAItem seed;
+    /**
+     * If the plant is a crop
+     */
     private final boolean isCrop;
-    private final float growTime;
+    /**
+     * The time the plant needs to grow in seconds
+     */
+    private final float growthTime;
+    /**
+     * Whether the plant should be destroyed on harvest
+     */
     private final boolean destroyOnHarvest;
+    /**
+     * The drops of the plant
+     */
     private final DAItem[] drops;
+    /**
+     * The allowed tools to harvest the plant
+     */
     @Setter
     private Map<String, Integer> allowedTools = new HashMap<>();
 
+    /**
+     * The last harvest time of the plant
+     */
     private long lastHarvest = 0;
+    /**
+     * Whether the plant can be harvested
+     */
     private boolean canBeHarvested = false;
 
+    /**
+     * The secure random for the calculation of the probability items
+     */
     private final SecureRandom secureRandom;
 
-    public DAPlant(DAItem seed, boolean isCrop, boolean destroyOnHarvest, float growTime, DAItem... drops) {
+    public DAPlant(DAItem seed, boolean isCrop, boolean destroyOnHarvest, float growthTime, DAItem... drops) {
         this.seed = seed;
         this.isCrop = isCrop;
         this.destroyOnHarvest = destroyOnHarvest;
-        this.growTime = growTime;
+        this.growthTime = growthTime;
         this.drops = drops;
 
         this.secureRandom = new SecureRandom();
@@ -77,7 +102,7 @@ public class DAPlant extends DAStructure {
                         this.canBeHarvested = false;
                         this.lastHarvest = System.currentTimeMillis();
                         if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable) {
-                            float tsp = (growTime / ageable.getMaximumAge());
+                            float tsp = (growthTime / ageable.getMaximumAge());
                             Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
                         }
                     }
@@ -109,7 +134,7 @@ public class DAPlant extends DAStructure {
                 this.canBeHarvested = false;
                 this.lastHarvest = System.currentTimeMillis();
                 if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() < ageable.getMaximumAge()) {
-                    float tsp = (growTime / ageable.getMaximumAge());
+                    float tsp = (growthTime / ageable.getMaximumAge());
                     Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
                 }
             }
@@ -137,7 +162,7 @@ public class DAPlant extends DAStructure {
                     } else {
                         long time = System.currentTimeMillis() - this.lastHarvest;
                         long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
-                        if (passedTime > this.growTime && !this.isCrop) {
+                        if (passedTime > this.growthTime && !this.isCrop) {
                             this.executeHarvest();
                             DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
                         } else if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
@@ -192,7 +217,7 @@ public class DAPlant extends DAStructure {
             if (this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable) {
                 ageable.setAge(0);
                 this.getBody().getPlantBLock().setBlockData(ageable);
-                float tsp = (growTime / ageable.getMaximumAge());
+                float tsp = (growthTime / ageable.getMaximumAge());
                 Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, this.getBody().getPlantBLock(), tsp), ((long) tsp * 20));
             }
         }

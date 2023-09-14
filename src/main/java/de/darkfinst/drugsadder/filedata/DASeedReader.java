@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.stringtemplate.v4.ST;
 
 import java.util.*;
 
@@ -116,7 +115,7 @@ public class DASeedReader {
 
         DAPlantItem plantItem = new DAPlantItem(item.getItemStack(), seedID);
         plantItem.setDestroyOnHarvest(destroyOnHarvest);
-        plantItem.setGrowTime(growTime);
+        plantItem.setGrowthTime(growTime);
         plantItem.setDrops(drops.toArray(new DAItem[0]));
         plantItem.setAllowedTools(allowedTools);
 
