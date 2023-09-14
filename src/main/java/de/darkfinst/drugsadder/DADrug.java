@@ -1,5 +1,6 @@
 package de.darkfinst.drugsadder;
 
+import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +17,7 @@ public class DADrug extends DAAddiction {
     @NotNull
     private final String ID;
     @NotNull
-    private final ItemStack itemStack;
+    private final DAItem item;
     private final List<String> serverCommands = new ArrayList<>();
     private final List<String> playerCommands = new ArrayList<>();
     private final List<DAEffect> daEffects = new ArrayList<>();
@@ -27,10 +28,10 @@ public class DADrug extends DAAddiction {
     @NotNull
     private final ItemMatchType[] matchTypes;
 
-    public DADrug(@NotNull String ID, @NotNull ItemStack itemStack, @Nullable String consumeMessage, @Nullable String consumeTitle, @NotNull ItemMatchType... matchTypes) {
+    public DADrug(@NotNull String ID, @NotNull DAItem item, @Nullable String consumeMessage, @Nullable String consumeTitle, @NotNull ItemMatchType... matchTypes) {
         super(false);
         this.ID = ID;
-        this.itemStack = itemStack;
+        this.item = item;
         this.consumeMessage = consumeMessage;
         this.consumeTitle = consumeTitle;
         this.matchTypes = matchTypes;
@@ -58,7 +59,7 @@ public class DADrug extends DAAddiction {
     public String toString() {
         return "DADrug{" +
                 "ID='" + ID + '\'' +
-                ", itemStack=" + itemStack +
+                ", itemStack=" + item.getNamespacedID() +
                 ", serverCommands=" + serverCommands +
                 ", playerCommands=" + playerCommands +
                 ", daEffects=" + daEffects +

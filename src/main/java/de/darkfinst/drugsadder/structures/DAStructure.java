@@ -22,6 +22,8 @@ public abstract class DAStructure {
 
     private DABody body;
 
+    private boolean forRemoval = false;
+
     public boolean isBodyPart(Block block) {
         return this.body.blocks.contains(block);
     }
@@ -52,6 +54,8 @@ public abstract class DAStructure {
                     Location loc = barrel.getBody().getSign().getLocation();
                     config.set(prefix + ".sign", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
 
+                    config.set(prefix + ".forRemoval", barrel.isForRemoval());
+
                     int slot = 0;
                     ItemStack item;
                     ConfigurationSection invConfig = null;
@@ -78,6 +82,8 @@ public abstract class DAStructure {
                     Location loc = press.getBody().getSign().getLocation();
                     config.set(prefix + ".sign", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
 
+                    config.set(prefix + ".forRemoval", press.isForRemoval());
+
                     ConfigurationSection invConfig = config.createSection(prefix + ".inv");
                     int slot = 0;
                     for (ItemStack compressedItem : press.getCompressedItems()) {
@@ -93,6 +99,8 @@ public abstract class DAStructure {
 
                     Location loc = table.getBody().getSign().getLocation();
                     config.set(prefix + ".sign", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+
+                    config.set(prefix + ".forRemoval", table.isForRemoval());
 
                     int slot = 0;
                     ItemStack item;
@@ -114,6 +122,8 @@ public abstract class DAStructure {
                 } else if (structure instanceof DAPlant plant) {
                     String worldName = plant.getWorld().getUID().toString();
                     String prefix = worldName + "." + "plants." + plantID;
+
+                    config.set(prefix + ".forRemoval", plant.isForRemoval());
 
                     Location loc = plant.getBody().getPlantBLock().getLocation();
                     config.set(prefix + ".plant", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
@@ -147,5 +157,13 @@ public abstract class DAStructure {
 
     public boolean hasInventory() {
         return false;
+    }
+
+    public boolean isSimilar(DAStructure structure) {
+        boolean isSimilar = false;
+        if(structure == this){
+            isSimilar = true;
+        }
+        return isSimilar;
     }
 }

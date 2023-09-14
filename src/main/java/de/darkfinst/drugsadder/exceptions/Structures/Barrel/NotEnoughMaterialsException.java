@@ -1,4 +1,4 @@
-package de.darkfinst.drugsadder.exceptions.Barrel;
+package de.darkfinst.drugsadder.exceptions.Structures.Barrel;
 
 public class NotEnoughMaterialsException extends BarrelException {
 

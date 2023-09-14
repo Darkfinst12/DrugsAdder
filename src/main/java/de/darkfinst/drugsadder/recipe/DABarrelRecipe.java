@@ -1,11 +1,10 @@
 package de.darkfinst.drugsadder.recipe;
 
-import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.barrel.BarrelProcessMaterialsEvent;
-import de.darkfinst.drugsadder.exceptions.Barrel.BarrelException;
-import de.darkfinst.drugsadder.exceptions.Barrel.NotEnoughMaterialsException;
-import de.darkfinst.drugsadder.exceptions.Barrel.NotEnoughTimePassedException;
-import de.darkfinst.drugsadder.exceptions.Barrel.TooMuchTimePassedException;
+import de.darkfinst.drugsadder.exceptions.Structures.Barrel.BarrelException;
+import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughMaterialsException;
+import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughTimePassedException;
+import de.darkfinst.drugsadder.exceptions.Structures.Barrel.TooMuchTimePassedException;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.utils.DAUtil;

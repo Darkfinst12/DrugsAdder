@@ -15,8 +15,10 @@ public class ItemsAdderLoadDataEventListener implements Listener {
 
     @EventHandler
     public void onItemsAdderLoadDataEvent(ItemsAdderLoadDataEvent event) {
-        DA.loader.log("ItemsAdder has loaded its data, reloading DrugsAdder...");
-        DALoader.setIaLoaded(true);
-        DA.loader.reloadConfigIA();
+        if (ItemsAdderLoadDataEvent.Cause.FIRST_LOAD.equals(event.getCause())) {
+            DA.loader.log("ItemsAdder has loaded its data, reloading DrugsAdder...");
+            DALoader.setIaLoaded(true);
+            DA.loader.reloadConfigIA();
+        }
     }
 }
