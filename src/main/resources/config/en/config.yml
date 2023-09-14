@@ -23,6 +23,10 @@ logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
 
+#Table Title Array
+#It must have four Values - For detailed Information check the Wiki
+tableTitleArray: "-3,2,8,-12"
+
 #Table States
 #It must be eight States
 #You can use any Unicode Character you Want - It is not recommended to use the same Character twice

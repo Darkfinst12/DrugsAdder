@@ -37,6 +37,10 @@ tableStates:
   6: "\uF006"
   7: "\uF007"
 
+#Table Title Array
+#Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
+tableTitleArray: "-3,2,8,-12"
+
 #CustomItems
 customItems:
   #Name des CustomItems - Dies ist die ID des CustomItems, die NamespacedID ist dann drugsadder:CUSTOMITEM_NAME

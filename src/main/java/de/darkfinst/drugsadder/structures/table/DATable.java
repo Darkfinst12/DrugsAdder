@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,7 +29,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.ST;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +47,15 @@ public class DATable extends DAStructure implements InventoryHolder {
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
-        //TODO: FIX Text offset
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle(5, 1, 10, 0, 0));
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle(0));
+    }
+
+    public String getTitle(int state) {
+        String title = DA.loader.languageReader.get("Structure_Name_Table");
+        int[] titleArray = DAConfig.tableTitleArray;
+
+
+        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * titleArray[0]) - titleArray[1]) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * titleArray[2]) + titleArray[3]) + title;
     }
 
     public String getTitle(int m1, int m2, int m3, int m4, int state) {

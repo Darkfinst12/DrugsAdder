@@ -229,7 +229,7 @@ public class DATableRecipe extends DARecipe {
         for (HumanEntity viewer : daTable.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(daTable.getTitle(-2, 5, 8, 0, state));
+                inventoryView.setTitle(daTable.getTitle(state));
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
             }

@@ -3,9 +3,7 @@ package de.darkfinst.drugsadder.filedata;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.items.DAItem;
-import de.darkfinst.drugsadder.recipe.DAFurnaceRecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import dev.lone.itemsadder.api.ItemsAdder;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -62,6 +60,8 @@ public class DAConfig {
     public static boolean logSeedLoadInfo;
     public static boolean logSeedLoadComplete;
     public static boolean logSeedLoadError;
+
+    public static int[] tableTitleArray = new int[]{0, 0, 0, 0};
 
     /**
      * Checks if the config exists and creates it if not
@@ -191,6 +191,12 @@ public class DAConfig {
         resetItemCrafting = config.getBoolean("resetItemCrafting", true);
         resetItemSmelting = config.getBoolean("resetItemSmelting", true);
 
+        //Title Array
+        tableTitleArray = Arrays.stream(config.getString("tableTitleArray", "120,4,1,-10").split(",")).mapToInt(Integer::parseInt).toArray();
+        if (tableTitleArray.length != 4) {
+            tableTitleArray = new int[]{0, 0, 0, 0};
+        }
+
         //Loads the Logging
         logCustomItemLoadInfo = config.getBoolean("logCustomItemLoadInfo", true);
         logCustomItemLoadComplete = config.getBoolean("logCustomItemLoadComplete", true);
@@ -283,4 +289,5 @@ public class DAConfig {
             seedReader.getRegisteredSeeds().clear();
         }
     }
+
 }
