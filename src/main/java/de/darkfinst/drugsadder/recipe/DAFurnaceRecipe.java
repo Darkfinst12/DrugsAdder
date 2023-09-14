@@ -31,7 +31,11 @@ public class DAFurnaceRecipe extends DARecipe {
      */
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getNamedID());
-        RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(Arrays.stream(this.getMaterials()).findFirst().get().getItemStack());
+        DAItem daItem = Arrays.stream(this.getMaterials()).findFirst().orElse(null);
+        if (daItem == null) {
+            return false;
+        }
+        RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(daItem.getItemStack());
         Recipe recipe;
         switch (getRecipeType()) {
             case FURNACE ->

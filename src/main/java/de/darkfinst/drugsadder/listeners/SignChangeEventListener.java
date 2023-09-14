@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.listeners;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -20,18 +22,22 @@ public class SignChangeEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
         String[] lines = event.getLines();
-
-        if (hasBarrelLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
-            DABarrel daBarrel = new DABarrel();
-            daBarrel.create(event.getBlock(), event.getPlayer());
-
-        } else if (hasPressLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
-            DAPress daPress = new DAPress();
-            daPress.create(event.getBlock(), event.getPlayer());
-        } else if (hasTableLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
-            DATable daTable = new DATable();
-            daTable.create(event.getBlock(), event.getPlayer());
+        try {
+            if (hasBarrelLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
+                DABarrel daBarrel = new DABarrel();
+                daBarrel.create(event.getBlock(), event.getPlayer());
+            } else if (hasPressLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
+                DAPress daPress = new DAPress();
+                daPress.create(event.getBlock(), event.getPlayer());
+            } else if (hasTableLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
+                DATable daTable = new DATable();
+                daTable.create(event.getBlock(), event.getPlayer());
+            }
+        } catch (RegisterStructureException e) {
+            DA.loader.msg(event.getPlayer(), DA.loader.languageReader.get("Player_Barrel_NotValid"), DrugsAdderSendMessageEvent.Type.ERROR);
+            DA.log.logException(e);
         }
+
     }
 
     private boolean hasBarrelLine(String[] lines) {

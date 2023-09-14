@@ -4,7 +4,8 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.api.events.table.TableCancelRecipeEvent;
 import de.darkfinst.drugsadder.api.events.table.TableStartRecipeEvent;
-import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DATableRecipe;
@@ -13,6 +14,7 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -45,7 +47,21 @@ public class DATable extends DAStructure implements InventoryHolder {
     private final int[] fuelSlots = new int[]{6, 7};
 
     public DATable() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, DAConfig.tableStates.get(0) + "");
+        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle(0));
+    }
+
+    public String getTitle(int state) {
+        String title = DA.loader.languageReader.get("Structure_Name_Table");
+        int[] titleArray = DAConfig.tableTitleArray;
+
+
+        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * titleArray[0]) - titleArray[1]) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * titleArray[2]) + titleArray[3]) + title;
+    }
+
+    public String getTitle(int m1, int m2, int m3, int m4, int state) {
+        String title = DA.loader.languageReader.get("Structure_Name_Table");
+
+        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * m1) - m2) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * m3) + m4) + title;
     }
 
     /**
@@ -56,7 +72,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param sign   The sign of the table
      * @param player The player who created the table
      */
-    public void create(Block sign, Player player) {
+    public void create(Block sign, Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.table.create")) {
             DATableBody daTableBody = new DATableBody(this, sign);
             try {
@@ -83,14 +99,16 @@ public class DATable extends DAStructure implements InventoryHolder {
      *
      * @param sign    The sign of the table
      * @param isAsync If the table should be created, async
+     * @return True if the table was successfully created and registered
      */
-    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DATableBody tableBody = new DATableBody(this, sign);
         boolean isValid = tableBody.isValidTable();
         if (isValid) {
             super.setBody(tableBody);
             DA.loader.registerDAStructure(this, isAsync);
         }
+        return isValid;
     }
 
     /**
@@ -206,7 +224,7 @@ public class DATable extends DAStructure implements InventoryHolder {
             }
         }
         if (this.inventory.equals(event.getClickedInventory()) && !event.isCancelled()) {
-            Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked()), 5);
+            Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked()), 1);
         }
     }
 

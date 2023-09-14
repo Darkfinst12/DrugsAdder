@@ -21,7 +21,7 @@ import java.util.Map;
 @Getter
 public class DATableRecipe extends DARecipe {
 
-    public final Map<DATable, Pair<Integer, Integer>> inProcess = new HashMap<>();
+    public final Map<DATable, Pair<Integer, Integer>> inProcess = new HashMap<>(); // <Table, <State, TaskID>>
 
     private final DAItem filterOne;
     @Setter
@@ -229,7 +229,7 @@ public class DATableRecipe extends DARecipe {
         for (HumanEntity viewer : daTable.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(ChatColor.RESET + DAConfig.tableStates.get(state));
+                inventoryView.setTitle(daTable.getTitle(state));
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
             }

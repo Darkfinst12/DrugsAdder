@@ -1,12 +1,14 @@
-package de.darkfinst.drugsadder.exceptions.Barrel;
+package de.darkfinst.drugsadder.exceptions.Structures;
 
-public class NotEnoughTimePassedException extends BarrelException {
+import de.darkfinst.drugsadder.exceptions.DrugsAdderException;
+
+public class ValidateStructureException extends DrugsAdderException {
 
     /**
      * Constructs an {@code ShopModifyStorageException} with no
      * detail message.
      */
-    public NotEnoughTimePassedException() {
+    public ValidateStructureException() {
         super();
     }
 
@@ -16,7 +18,7 @@ public class NotEnoughTimePassedException extends BarrelException {
      *
      * @param message The detail message.
      */
-    public NotEnoughTimePassedException(String message) {
+    public ValidateStructureException(String message) {
         super(message);
     }
 
@@ -35,7 +37,7 @@ public class NotEnoughTimePassedException extends BarrelException {
      *                is permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public NotEnoughTimePassedException(String message, Throwable cause) {
+    public ValidateStructureException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -53,7 +55,7 @@ public class NotEnoughTimePassedException extends BarrelException {
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public NotEnoughTimePassedException(Throwable cause) {
+    public ValidateStructureException(Throwable cause) {
         super(cause);
     }
 

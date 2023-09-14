@@ -23,7 +23,7 @@ public class BlockPlaceEventListener implements Listener {
             Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> plant.create(event.getBlock(), event.getPlayer()), 1L);
         }
         if (DA.loader.isStructure(event.getBlock())) {
-            event.setCancelled(true);
+            DA.log.unregisterDAStructure(event.getPlayer(), event.getBlock());
         }
     }
 }

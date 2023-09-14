@@ -2,7 +2,7 @@
 Command_Args_Reload: "reload"
 Command_Args_GetCustomItem: "getCustomItem"
 Command_Args_List: "list"
-Command_Args_SetAddiction: "setAddiction"
+Command_Args_Consume: "consume"
 Command_Args_Recipes: "recipes"
 Command_Args_Drugs: "drugs"
 Command_Args_All: "all"
@@ -11,6 +11,15 @@ Command_Args_Crafting: "crafting"
 Command_Args_Furnace: "furnace"
 Command_Args_Press: "press"
 Command_Args_Table: "table"
+Command_Error_NotPlayer: "You must be a player to execute this command!"
+Command_Error_PlayerNotFound: "The player: &v1 was not found!"
+Command_Error_DrugNotFound: "The drug: &v1 was not found!"
+Command_Args_Info: "info"
+Command_Info_DAInfo: "Version: &v1 by &v2"
+Command_Info_ListItems: "All registered &v1:"
+Command_Error_RecipeNotFound: "The recipe: &v1 was not found!"
+Command_Args_Player: "player"
+Command_Error_NoPermission: "You have no permission to execute this command!"
 
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
@@ -59,9 +68,11 @@ Load_Error_Seed_Drop_ItemStack: "Off the Seed: &v1 the Drop: &v2 is not a valid 
 Load_Error_Seed_Drop_NotConfigSection: "Off the Seed: &v1 the Drop: &v2 is not properly configured in the config.yml!"
 Load_Error_Seed_Drop_Probability: "Off the Seed: &v1 in the Drop: &v2 the probability: &v3 is not a valid value! - It must be between 0 and 100 and must not have more than 6 digits!"
 Load_Error_NoSeeds: "No seeds were configured in the config.yml!"
+Load_Error_Seed_AllowedTools: "The Seed: &v1 has no allowed tools! - Please check the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
+Error_Structures_Register: "The structure: &v1 could not be registered by the Server! - Please contact the Server Administrator!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
@@ -87,6 +98,8 @@ Player_Plant_NotValid: "The plant is not proper plant"
 Player_Plant_NoReady: "The plant is not ready to harvest"
 Player_Structure_Destroyed: "&v1 was successfully destroyed!"
 Player_Plant_Harvested: "The plant was successfully harvested!"
+Player_Tool_NotEnoughDurability: "Your tool does not have enough durability to perform this action!"
+Player_Plant_WrongTool: "You are using the wrong tool (&v1) to harvest this plant!"
 
 # ---- Structures ----
 Structure_Name_Table: "Laboratory Table"

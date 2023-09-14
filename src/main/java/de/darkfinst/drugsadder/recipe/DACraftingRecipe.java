@@ -56,7 +56,12 @@ public class DACraftingRecipe extends DARecipe {
             if (shapelessRecipe.getIngredientList().contains(null)) {
                 return false;
             }
-            return Bukkit.addRecipe(shapelessRecipe);
+            if (!shapelessRecipe.equals(Bukkit.getRecipe(namespacedKey))) {
+                Bukkit.removeRecipe(namespacedKey);
+                return Bukkit.addRecipe(shapelessRecipe);
+            } else {
+                return true;
+            }
         } else {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
@@ -76,8 +81,18 @@ public class DACraftingRecipe extends DARecipe {
             if (shapedRecipe.getIngredientMap().containsValue(null)) {
                 return false;
             }
-            return Bukkit.addRecipe(shapedRecipe);
+            if (!shapedRecipe.equals(Bukkit.getRecipe(namespacedKey))) {
+                Bukkit.removeRecipe(namespacedKey);
+                return Bukkit.addRecipe(shapedRecipe);
+            } else {
+                return true;
+            }
         }
+    }
+
+    private void ifRegisteredUnregister(NamespacedKey namespacedKey) {
+        Bukkit.removeRecipe(namespacedKey);
+
     }
 
     @Deprecated(since = "1.0.0", forRemoval = false)

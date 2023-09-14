@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.filedata.DAData;
 import de.darkfinst.drugsadder.filedata.DataSave;
 import de.darkfinst.drugsadder.filedata.LanguageReader;
@@ -15,6 +16,8 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -40,6 +43,8 @@ public class DALoader {
     private final ArrayList<DAStructure> structureList = new ArrayList<>();
     private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
 
+    public final String prefix = ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE;
+
     @Setter
     public static boolean iaLoaded = false;
 
@@ -60,7 +65,6 @@ public class DALoader {
     }
 
     private void initConfig() {
-
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
             if (config == null) {
@@ -109,17 +113,25 @@ public class DALoader {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
     }
 
-    public boolean registerDAStructure(DAStructure structure, boolean isAsync) {
+    public boolean registerDAStructure(DAStructure structure, boolean isAsync) throws RegisterStructureException {
         RegisterStructureEvent registerStructureEvent = new RegisterStructureEvent(isAsync, structure);
         this.plugin.getServer().getPluginManager().callEvent(registerStructureEvent);
         if (!registerStructureEvent.isCancelled()) {
-            return this.structureList.add(structure);
+            DAStructure oldStructure = this.structureList.stream().filter(daStructure -> daStructure.isSimilar(structure)).findFirst().orElse(null);
+            if (oldStructure != null && oldStructure.isForRemoval()) {
+                oldStructure.setForRemoval(false);
+            } else if (oldStructure != null) {
+                throw new RegisterStructureException("Structure already registered");
+            } else {
+                return this.structureList.add(structure);
+            }
         }
         return false;
     }
 
-    public void unregisterDAStructure(DAStructure structure) {
-        this.structureList.remove(structure);
+    public boolean unregisterDAStructure(DAStructure structure) {
+        structure.setForRemoval(true);
+        return this.getStructure(structure) == null;
     }
 
     public boolean unregisterDAStructure(Player player, Block block) {
@@ -128,7 +140,7 @@ public class DALoader {
             if (structure.hasInventory()) {
                 structure.destroyInventory();
             }
-            boolean success = this.structureList.remove(structure);
+            boolean success = this.unregisterDAStructure(structure);
             if (success) {
                 DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName()), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
@@ -138,15 +150,19 @@ public class DALoader {
     }
 
     public boolean isStructure(Block block) {
-        return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block));
+        return this.structureList.stream().anyMatch(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval());
     }
 
     public boolean isPlant(Block block) {
-        return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block));
+        return this.structureList.stream().anyMatch(daStructure -> daStructure instanceof DAPlant daPlant && daPlant.isBodyPart(block) && !daStructure.isForRemoval());
     }
 
     public DAStructure getStructure(Block block) {
-        return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block)).findAny().orElse(null);
+        return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval()).findAny().orElse(null);
+    }
+
+    public DAStructure getStructure(DAStructure structure) {
+        return this.structureList.stream().filter(daStructure -> daStructure.equals(structure) && !daStructure.isForRemoval()).findAny().orElse(null);
     }
 
     public DAStructure getStructure(Inventory inventory) {
@@ -157,11 +173,11 @@ public class DALoader {
                 return daTable.getInventory().equals(inventory);
             }
             return false;
-        }).findAny().orElse(null);
+        }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);
     }
 
     public List<DAStructure> getStructures(World world) {
-        return this.structureList.stream().filter(daStructure -> daStructure.getWorld().equals(world)).toList();
+        return this.structureList.stream().filter(daStructure -> daStructure.getWorld().equals(world) && !daStructure.isForRemoval()).toList();
     }
 
     public void unloadStructures(World world) {
@@ -182,7 +198,7 @@ public class DALoader {
     }
 
 
-    //Logging
+    //Logging and Messaging
     public void msg(CommandSender sender, String msg) {
         this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
     }
@@ -191,11 +207,28 @@ public class DALoader {
         this.msg(sender, msg, Type, false);
     }
 
-    public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type Type, boolean isAsync) {
-        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, Type);
+    public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
-            sender.sendMessage(ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE + sendMessageEvent.getMessage());
+            sender.sendMessage(this.prefix + sendMessageEvent.getMessage());
+        }
+    }
+
+    public void msg(CommandSender sender, BaseComponent msg) {
+        this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
+    }
+
+    public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type Type) {
+        this.msg(sender, msg, Type, false);
+    }
+
+    public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
+        this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
+        if (!sendMessageEvent.isCancelled()) {
+            assert sendMessageEvent.getComponent() != null;
+            sender.spigot().sendMessage(sendMessageEvent.getComponent());
         }
     }
 
@@ -249,7 +282,9 @@ public class DALoader {
     }
 
     public void reloadConfig() {
+        //TODO: Fix this
         this.clearConfigData();
+        this.initConfig();
         this.initConfig();
     }
 

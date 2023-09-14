@@ -6,13 +6,12 @@ import de.darkfinst.drugsadder.api.events.press.CompressItemsEvent;
 import de.darkfinst.drugsadder.api.events.press.PressItemEvent;
 import de.darkfinst.drugsadder.api.events.press.UnCompressItemsEvent;
 import de.darkfinst.drugsadder.api.events.press.UsePressEvent;
-import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DAPressRecipe;
-import de.darkfinst.drugsadder.recipe.DARecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
-import de.darkfinst.drugsadder.structures.barrel.DABarrelBody;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -47,7 +46,7 @@ public class DAPress extends DAStructure {
      * @param sign   The sign of the press
      * @param player The player who created the press
      */
-    public void create(Block sign, Player player) {
+    public void create(Block sign, Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.press.create")) {
             DAPressBody pressBody = new DAPressBody(this, sign);
             try {
@@ -74,15 +73,17 @@ public class DAPress extends DAStructure {
      *
      * @param sign    The sign of the press
      * @param isAsync If the structure should be loaded async
+     * @return True, if the press is valid otherwise false
      * @throws ValidateStructureException If the press is not valid
      */
-    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DAPressBody pressBody = new DAPressBody(this, sign);
         boolean isValid = pressBody.isValidPress();
         if (isValid) {
             super.setBody(pressBody);
             DA.loader.registerDAStructure(this, isAsync);
         }
+        return isValid;
     }
 
     public DAPressBody getBody() {

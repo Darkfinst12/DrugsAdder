@@ -47,8 +47,8 @@ public class DASeedReader {
 
     private void loadSeed(String seedID) {
         assert config != null;
-        ConfigurationSection drugConfig = config.getConfigurationSection(seedID);
-        if (drugConfig == null) {
+        ConfigurationSection seedConfig = config.getConfigurationSection(seedID);
+        if (seedConfig == null) {
             this.logError("Load_Error_Seed_NotConfigSection", seedID);
             return;
         }
@@ -62,7 +62,7 @@ public class DASeedReader {
             return;
         }
         List<ItemMatchType> matchTypes = new ArrayList<>();
-        String matchTypeCon = drugConfig.getString("matchType", "NULL");
+        String matchTypeCon = seedConfig.getString("matchType", "NULL");
         if (matchTypeCon.contains(",")) {
             for (String matchType : matchTypeCon.split(",")) {
                 ItemMatchType itemMatchType = ItemMatchType.valueOf(matchType);
@@ -77,7 +77,7 @@ public class DASeedReader {
         item.setItemMatchTypes(matchTypes.toArray(new ItemMatchType[0]));
 
         List<DAItem> drops = new ArrayList<>();
-        ConfigurationSection dropsConfig = drugConfig.getConfigurationSection("drops");
+        ConfigurationSection dropsConfig = seedConfig.getConfigurationSection("drops");
         if (dropsConfig != null) {
             Set<String> dropIDs = dropsConfig.getKeys(false);
             for (String dropID : dropIDs) {
@@ -105,13 +105,20 @@ public class DASeedReader {
             }
         }
 
-        boolean destroyOnHarvest = drugConfig.getBoolean("destroyOnHarvest", false);
-        int growTime = drugConfig.getInt("growTime", 60);
+        boolean destroyOnHarvest = seedConfig.getBoolean("destroyOnHarvest", false);
+        int growTime = seedConfig.getInt("growTime", 60);
+
+        Map<String, Integer> allowedTools = this.getAllowedTools(seedConfig);
+        if (allowedTools.isEmpty()) {
+            this.logError("Load_Error_Seed_AllowedTools", seedID);
+            return;
+        }
 
         DAPlantItem plantItem = new DAPlantItem(item.getItemStack(), seedID);
         plantItem.setDestroyOnHarvest(destroyOnHarvest);
         plantItem.setGrowTime(growTime);
         plantItem.setDrops(drops.toArray(new DAItem[0]));
+        plantItem.setAllowedTools(allowedTools);
 
 
         registeredSeeds.add(plantItem);
@@ -141,6 +148,19 @@ public class DASeedReader {
 
     public DAPlantItem getSeed(String id) {
         return this.registeredSeeds.stream().filter(drug -> drug.getNamespacedID().equalsIgnoreCase(id)).findFirst().orElse(null);
+    }
+
+    public Map<String, Integer> getAllowedTools(ConfigurationSection seedConfig) {
+        Map<String, Integer> allowedTools = new HashMap<>();
+        if (seedConfig != null) {
+            ConfigurationSection allowedToolsConfig = seedConfig.getConfigurationSection("allowedTools");
+            if (allowedToolsConfig != null) {
+                for (String allowedToolID : allowedToolsConfig.getKeys(false)) {
+                    allowedTools.put(allowedToolID, allowedToolsConfig.getInt(allowedToolID));
+                }
+            }
+        }
+        return allowedTools;
     }
 
     /**

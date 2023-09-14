@@ -2,12 +2,11 @@ package de.darkfinst.drugsadder.structures.barrel;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
-import de.darkfinst.drugsadder.exceptions.ValidateStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DABarrelRecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -15,16 +14,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class DABarrel extends DAStructure implements InventoryHolder {
 
@@ -42,7 +37,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      * @param sign   The sign of the barrel
      * @param player The player who created the barrel
      */
-    public void create(Block sign, Player player) {
+    public void create(Block sign, Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.barrel.create")) {
             DABarrelBody barrelBody = new DABarrelBody(this, sign);
             try {
@@ -69,15 +64,17 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      *
      * @param sign    The sign of the barrel
      * @param isAsync If the barrel should be created, async
+     * @return True if the barrel was successfully created and registered
      * @throws ValidateStructureException If the barrel is not valid
      */
-    public void create(Block sign, boolean isAsync) throws ValidateStructureException {
+    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DABarrelBody barrelBody = new DABarrelBody(this, sign);
         boolean isValid = barrelBody.isValidBarrel();
         if (isValid) {
             super.setBody(barrelBody);
-            DA.loader.registerDAStructure(this, isAsync);
+            return DA.loader.registerDAStructure(this, isAsync);
         }
+        return false;
     }
 
     /**

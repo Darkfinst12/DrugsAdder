@@ -639,6 +639,14 @@ public class DARecipeReader {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAPressRecipe).map(daRecipe -> (DAPressRecipe) daRecipe).toList();
     }
 
+    public List<String> getPressRecipeIDs() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAPressRecipe).map(DARecipe::getRecipeNamedID).toList();
+    }
+
+    public DAPressRecipe getPressRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAPressRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DAPressRecipe) daRecipe).findFirst().orElse(null);
+    }
+
     /**
      * This method returns a list of all registered table recipes
      *
@@ -646,6 +654,14 @@ public class DARecipeReader {
      */
     public List<DATableRecipe> getTableRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DATableRecipe).map(daRecipe -> (DATableRecipe) daRecipe).toList();
+    }
+
+    public List<String> getTableRecipeIDs() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DATableRecipe).map(DARecipe::getRecipeNamedID).toList();
+    }
+
+    public DATableRecipe getTableRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DATableRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DATableRecipe) daRecipe).findFirst().orElse(null);
     }
 
     /**
@@ -657,6 +673,14 @@ public class DARecipeReader {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).map(daRecipe -> (DABarrelRecipe) daRecipe).toList();
     }
 
+    public List<String> getBarrelRecipeIDs() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe).map(DARecipe::getRecipeNamedID).toList();
+    }
+
+    public DABarrelRecipe getBarrelRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DABarrelRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DABarrelRecipe) daRecipe).findFirst().orElse(null);
+    }
+
     /**
      * This method returns a list of all registered crafting recipes
      *
@@ -664,6 +688,14 @@ public class DARecipeReader {
      */
     public List<DACraftingRecipe> getCraftingRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).map(daRecipe -> (DACraftingRecipe) daRecipe).toList();
+    }
+
+    public List<String> getCraftingRecipeIDs() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe).map(DARecipe::getRecipeNamedID).toList();
+    }
+
+    public DACraftingRecipe getCraftingRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACraftingRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DACraftingRecipe) daRecipe).findFirst().orElse(null);
     }
 
     /**
@@ -674,4 +706,13 @@ public class DARecipeReader {
     public List<DAFurnaceRecipe> getFurnaceRecipes() {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe).map(daRecipe -> (DAFurnaceRecipe) daRecipe).toList();
     }
+
+    public List<String> getFurnaceRecipeIDs() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe).map(DARecipe::getRecipeNamedID).toList();
+    }
+
+    public DAFurnaceRecipe getFurnaceRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DAFurnaceRecipe) daRecipe).findFirst().orElse(null);
+    }
+
 }

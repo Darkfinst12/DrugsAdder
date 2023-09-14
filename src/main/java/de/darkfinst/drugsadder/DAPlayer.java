@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class DAPlayer {
@@ -36,6 +38,13 @@ public class DAPlayer {
             return;
         }
         if (daDrug.isAddictionAble()) {
+            daDrug.addConsumed(this, System.currentTimeMillis());
+            if (daDrug.isOverdose(this)) {
+                DA.loader.msg(player, "Overdose");
+                player.setHealth(0);
+                daDrug.removeConsumed(this);
+                return;
+            }
             int addictionPointsOld = this.addicted.getOrDefault(daDrug, 0);
             int addictionPoints = addictionPointsOld + daDrug.getAddictionPoints();
             DrugAddAddictionEvent drugAddAddictionEvent = new DrugAddAddictionEvent(daDrug, addictionPointsOld, addictionPoints);
@@ -146,5 +155,21 @@ public class DAPlayer {
                 daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
             }
         }
+    }
+
+    private Map<String, Integer> getAddictionString() {
+        Map<String, Integer> addictionString = new HashMap<>();
+        for (DADrug daDrug : this.addicted.keySet()) {
+            addictionString.put(daDrug.getID(), this.addicted.get(daDrug));
+        }
+        return addictionString;
+    }
+
+    @Override
+    public String toString() {
+        return "DAPlayer{" +
+                "uuid=" + uuid +
+                ", addicted=" + this.getAddictionString() +
+                '}';
     }
 }
