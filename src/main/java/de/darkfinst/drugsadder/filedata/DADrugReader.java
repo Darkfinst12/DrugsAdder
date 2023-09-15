@@ -157,7 +157,7 @@ public class DADrugReader {
      * @param effectString The string to load the effect from
      * @return The loaded effect or null if the effect could not be loaded
      */
-    private DAEffect loadPotionEffect(String effectString) {
+    private DAEffect loadPotionEffect(String effectString) throws NumberFormatException {
         effectString = effectString.replace("PotionEffect{", "").replace("}", "");
         Map<String, String> map = DAUtil.parsMap(effectString);
 
@@ -182,7 +182,7 @@ public class DADrugReader {
      * @param effectString The string to load the effect from
      * @return The loaded effect or null if the effect could not be loaded
      */
-    private DAEffect loadScreenEffect(String effectString) {
+    private DAEffect loadScreenEffect(String effectString) throws NumberFormatException {
         effectString = effectString.replace("ScreenEffect{", "").replace("}", "");
         Map<String, String> map = DAUtil.parsMap(effectString);
 
@@ -303,7 +303,7 @@ public class DADrugReader {
      * @param id         The ID of the effect
      * @param effects    The list of effects to load
      */
-    private void loadEffectMap(ConfigurationSection drugConfig, Map<Integer, List<DAEffect>> map, String id, List<String> effects) {
+    private void loadEffectMap(ConfigurationSection drugConfig, Map<Integer, List<DAEffect>> map, String id, List<String> effects) throws NumberFormatException {
         List<DAEffect> daEffects = new ArrayList<>();
         for (String effect : effects) {
             DAEffect daEffect = this.loadEffect(effect);

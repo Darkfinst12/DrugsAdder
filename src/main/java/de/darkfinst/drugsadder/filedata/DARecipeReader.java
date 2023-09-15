@@ -244,9 +244,15 @@ public class DARecipeReader {
             }
         }
 
-        DATableRecipe tableRecipe = new DATableRecipe(tableRID, RecipeType.TABLE, filterOne, filterTwo, fuelOne, fuelTwo, result, materials.values().toArray(new DAItem[0]));
+        double processingTimeOne = recipeConfig.getDouble("processingTimeOne", 10D);
+        DATableRecipe tableRecipe = new DATableRecipe(tableRID, RecipeType.TABLE, result, filterOne, fuelOne, materials.values().toArray(new DAItem[0])[0], processingTimeOne);
         tableRecipe.setConsumeFilterOne(recipeConfig.getBoolean("consumeFilterOne", false));
-        tableRecipe.setConsumeFilterTwo(recipeConfig.getBoolean("consumeFilterTwo", false));
+        if (materials.size() == 2) {
+            double processingTimeTwo = recipeConfig.getDouble("processingTimeTwo", 10D);
+            tableRecipe.addSecondMaterial(materials.values().toArray(new DAItem[0])[1], filterTwo, fuelTwo, processingTimeTwo);
+            tableRecipe.setConsumeFilterTwo(recipeConfig.getBoolean("consumeFilterTwo", false));
+        }
+
 
         this.registeredRecipes.add(tableRecipe);
 
@@ -443,7 +449,7 @@ public class DARecipeReader {
      * @param recipeConfig The config section to load the item from
      * @return The loaded item
      */
-    private @Nullable DAItem getItem(String recipeID, String path, ConfigurationSection recipeConfig) {
+    private @Nullable DAItem getItem(String recipeID, String path, ConfigurationSection recipeConfig) throws NumberFormatException {
         String[] resultAmount = recipeConfig.getString(path, "null/1").split("/");
         int amount = Integer.parseInt(resultAmount[1]);
         DAItem result = DAUtil.getItemStackByNamespacedID(resultAmount[0]);
@@ -574,7 +580,7 @@ public class DARecipeReader {
     }
 
     /**
-     * This method logs the amount of loaded recipes
+     * This method logs the number of loaded recipes
      */
     private void completeLog() {
         if (DAConfig.logRecipeLoadComplete) {

@@ -6,6 +6,7 @@ import de.darkfinst.drugsadder.filedata.DAData;
 import de.darkfinst.drugsadder.filedata.DataSave;
 import de.darkfinst.drugsadder.filedata.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
+import de.darkfinst.drugsadder.recipe.DATableRecipe;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
@@ -13,6 +14,7 @@ import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
+import de.darkfinst.drugsadder.structures.table.DATableProcess;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
@@ -30,6 +32,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -153,6 +157,8 @@ public class DALoader {
     private void initRunnable() {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
     }
+
+    //Structures
 
     /**
      * Registers a structure
@@ -294,6 +300,75 @@ public class DALoader {
         } else if (daStructure instanceof DAPlant daPlant) {
             daPlant.checkHarvest(player);
         }
+    }
+
+    //DAPlayer
+
+    /**
+     * Get a DAPlayer by a player
+     *
+     * @param player The player, which is part of the DAPlayer
+     * @return The DAPlayer, which contains the player or null if no DAPlayer was found
+     */
+    public DAPlayer getDaPlayer(Player player) {
+        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
+    }
+
+    public void removeDaPlayer(DAPlayer daPlayer) {
+        this.daPlayerList.remove(daPlayer);
+    }
+
+    /**
+     * Adds a DAPlayer to the list of DAPlayers
+     *
+     * @param daPlayer The DAPlayer to add
+     */
+    public void addDaPlayer(DAPlayer daPlayer) {
+        this.daPlayerList.add(daPlayer);
+    }
+
+    //Language
+
+    /**
+     * Gets a translation from the language files
+     *
+     * @param fallback The fallback, if the language reader is null
+     * @param key      The key of the translation
+     * @param args     The arguments for the translation
+     * @return The translation or the fallback if the language reader is null
+     */
+    public String getTranslation(String fallback, String key, String... args) {
+        if (this.languageReader == null) {
+            return fallback;
+        }
+        return this.languageReader.get(key, args);
+    }
+
+
+    //Config
+
+    public void reloadConfigIA() {
+        this.clearConfigData();
+        this.initConfig();
+        this.initData();
+    }
+
+    public void reloadConfig() {
+        //TODO: Fix this
+        this.clearConfigData();
+        this.initConfig();
+        this.initConfig();
+    }
+
+    private void clearConfigData() {
+        DAConfig.clear();
+    }
+
+    /**
+     * What should be done when the plugin is unloaded
+     */
+    public void unload() {
+        DataSave.save(true);
     }
 
 
@@ -528,67 +603,7 @@ public class DALoader {
         this.errorLog(log.toString(), isAsync);
     }
 
-    public void reloadConfigIA() {
-        this.clearConfigData();
-        this.initConfig();
-        this.initData();
-    }
-
-    public void reloadConfig() {
-        //TODO: Fix this
-        this.clearConfigData();
-        this.initConfig();
-        this.initConfig();
-    }
-
-    private void clearConfigData() {
-        DAConfig.clear();
-    }
-
-    /**
-     * What should be done when the plugin is unloaded
-     */
-    public void unload() {
-        DataSave.save(true);
-    }
-
-    /**
-     * Get a DAPlayer by a player
-     *
-     * @param player The player, which is part of the DAPlayer
-     * @return The DAPlayer, which contains the player or null if no DAPlayer was found
-     */
-    public DAPlayer getDaPlayer(Player player) {
-        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
-    }
-
-    public void removeDaPlayer(DAPlayer daPlayer) {
-        this.daPlayerList.remove(daPlayer);
-    }
-
-    /**
-     * Adds a DAPlayer to the list of DAPlayers
-     *
-     * @param daPlayer The DAPlayer to add
-     */
-    public void addDaPlayer(DAPlayer daPlayer) {
-        this.daPlayerList.add(daPlayer);
-    }
-
-    /**
-     * Gets a translation from the language files
-     *
-     * @param fallback The fallback, if the language reader is null
-     * @param key      The key of the translation
-     * @param args     The arguments for the translation
-     * @return The translation or the fallback if the language reader is null
-     */
-    public String getTranslation(String fallback, String key, String... args) {
-        if (this.languageReader == null) {
-            return fallback;
-        }
-        return this.languageReader.get(key, args);
-    }
+    //Runnable
 
     /**
      * The HartBeat runnable, which saves the data

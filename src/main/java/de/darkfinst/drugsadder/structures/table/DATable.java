@@ -21,6 +21,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -46,26 +47,31 @@ public class DATable extends DAStructure implements InventoryHolder {
     /**
      * The slots which are blocked
      */
-    private final int[] blockedSlots = new int[]{5, 8};
+    private final int[] blockedSlots = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 39, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     /**
      * The slot of the result
      */
-    private final int resultSlot = 2;
+    private final int resultSlot = 31;
+    private final int finishSlot = 22;
     /**
      * The slots of the materials
      */
-    private final int[] materialSlots = new int[]{3, 4};
+    private final int[] materialSlots = new int[]{19, 25};
     /**
      * The slots of the filters
      */
-    private final int[] filterSlots = new int[]{0, 1};
+    private final int[] filterSlots = new int[]{10, 16};
     /**
      * The slots of the fuels
      */
-    private final int[] fuelSlots = new int[]{6, 7};
+    private final int[] fuelSlots = new int[]{37, 43};
+    /**
+     * The slots wich starts the recipe for the corresponding side
+     */
+    private final int[] startSlots = new int[]{38, 42};
 
     public DATable() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, InventoryType.DISPENSER, this.getTitle(0));
+        this.inventory = DA.getInstance.getServer().createInventory(this, 54, this.getTitle(0));
     }
 
     /**
@@ -110,7 +116,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      */
     public void create(Block sign, Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.table.create")) {
-            DATableBody daTableBody = new DATableBody(this, sign);
+            DATableBody daTableBody = new DATableBody(sign);
             try {
                 boolean isValid = daTableBody.isValidTable();
                 if (isValid) {
@@ -138,7 +144,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @return True if the table was successfully created and registered
      */
     public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
-        DATableBody tableBody = new DATableBody(this, sign);
+        DATableBody tableBody = new DATableBody(sign);
         boolean isValid = tableBody.isValidTable();
         if (isValid) {
             super.setBody(tableBody);
@@ -158,6 +164,7 @@ public class DATable extends DAStructure implements InventoryHolder {
         if (player.hasPermission("drugsadder.table.open")) {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
+            player.getOpenInventory().setTitle(this.getTitle(this.getProcess().getState()));
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
@@ -168,6 +175,10 @@ public class DATable extends DAStructure implements InventoryHolder {
      */
     public DATableBody getBody() {
         return (DATableBody) super.getBody();
+    }
+
+    public DATableProcess getProcess() {
+        return this.getBody().getProcess();
     }
 
 
@@ -184,15 +195,26 @@ public class DATable extends DAStructure implements InventoryHolder {
     /**
      * Checks if the table is in a process for the given recipe and starts the process if it is not
      * <p>
-     * Starts the process only if the recipe is valid for more information see {@link DATable#isThisRecipe(DATableRecipe)}
+     * Starts the process only if the recipe is valid for more information see {@link DATable#isThisRecipe(DATableRecipe, int)}
      *
      * @param who The player who clicked the table
      */
-    private void callRecipeCheck(@Nullable HumanEntity who) {
+    private void callRecipeCheck(@Nullable HumanEntity who, int side) {
+        DATableProcess process = this.getProcess();
+        if (process.getTaskID() != -1) {
+            return;
+        }
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
-            if (!recipe.inProcess.containsKey(this) && this.isThisRecipe(recipe)) {
-                this.startRecipe(who, recipe);
+            if (this.isThisRecipe(recipe, side)) {
+                if (side == 0 && recipe.equals(process.getRecipeOne())) {
+                    return;
+                }
+                if (side == 1 && recipe.equals(process.getRecipeTwo())) {
+                    return;
+                }
+                this.startRecipe(who, recipe, side);
+                return;
             }
         }
     }
@@ -203,14 +225,11 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param who    The player who started the recipe, can be null
      * @param recipe The recipe to start
      */
-    public void startRecipe(@Nullable HumanEntity who, @NotNull DATableRecipe recipe) {
-        DAItem fuelTwo = this.inventory.getItem(this.fuelSlots[1]) != null ? new DAItem(Objects.requireNonNull(this.inventory.getItem(this.fuelSlots[1]))) : null;
-        DAItem materialTwo = this.inventory.getItem(this.materialSlots[1]) != null ? new DAItem(Objects.requireNonNull(this.inventory.getItem(this.materialSlots[1]))) : null;
-        boolean hasSecondProcess = fuelTwo != null && materialTwo != null;
+    public void startRecipe(@Nullable HumanEntity who, @NotNull DATableRecipe recipe, int side) {
         TableStartRecipeEvent tableStartRecipeEvent = new TableStartRecipeEvent(who, this, recipe);
         Bukkit.getPluginManager().callEvent(tableStartRecipeEvent);
         if (!tableStartRecipeEvent.isCancelled()) {
-            recipe.startProcess(this, hasSecondProcess);
+            recipe.startProcess(this, side);
         }
     }
 
@@ -220,16 +239,17 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param recipe The recipe to check
      * @return True if the table has all items for the recipe otherwise false
      */
-    public boolean isThisRecipe(@NotNull DATableRecipe recipe) {
+    public boolean isThisRecipe(@NotNull DATableRecipe recipe, int side) throws IllegalArgumentException {
+        if (side > 1 || side < 0) {
+            throw new IllegalArgumentException("Side must be 0 or 1");
+        }
+        return side == 0 ? this.isThisRecipeOne(recipe) : this.isThisRecipeTwo(recipe);
+    }
+
+    public boolean isThisRecipeOne(@NotNull DATableRecipe recipe) {
         boolean isValid = false;
         if (recipe.getFilterOne() != null) {
             isValid = DAUtil.matchItems(recipe.getFilterOne().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterOne().getItemMatchTypes());
-            if (!isValid) {
-                return isValid;
-            }
-        }
-        if (recipe.getFilterTwo() != null) {
-            isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[1]), recipe.getFilterTwo().getItemMatchTypes());
             if (!isValid) {
                 return isValid;
             }
@@ -240,14 +260,25 @@ public class DATable extends DAStructure implements InventoryHolder {
                 return isValid;
             }
         }
-        if (recipe.getFuelTwo() != null) {
-            isValid = DAUtil.matchItems(recipe.getFuelTwo().getItemStack(), this.inventory.getItem(this.fuelSlots[1]), recipe.getFuelTwo().getItemMatchTypes());
+        if (recipe.getMaterialOne() != null) {
+            isValid = DAUtil.matchItems(recipe.getMaterialOne().getItemStack(), this.inventory.getItem(this.materialSlots[0]), recipe.getMaterialOne().getItemMatchTypes());
             if (!isValid) {
                 return isValid;
             }
         }
-        if (recipe.getMaterialOne() != null) {
-            isValid = DAUtil.matchItems(recipe.getMaterialOne().getItemStack(), this.inventory.getItem(this.materialSlots[0]), recipe.getMaterialOne().getItemMatchTypes());
+        return isValid;
+    }
+
+    public boolean isThisRecipeTwo(@NotNull DATableRecipe recipe) {
+        boolean isValid = false;
+        if (recipe.getFilterTwo() != null) {
+            isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[1]), recipe.getFilterTwo().getItemMatchTypes());
+            if (!isValid) {
+                return isValid;
+            }
+        }
+        if (recipe.getFuelTwo() != null) {
+            isValid = DAUtil.matchItems(recipe.getFuelTwo().getItemStack(), this.inventory.getItem(this.fuelSlots[1]), recipe.getFuelTwo().getItemMatchTypes());
             if (!isValid) {
                 return isValid;
             }
@@ -273,27 +304,45 @@ public class DATable extends DAStructure implements InventoryHolder {
             case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
                 if (event.getSlot() == this.resultSlot) {
                     event.setCancelled(true);
-                    return;
-                } else if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                } else if ((Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                    return;
                 }
             }
             default -> {
                 if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                    return;
                 } else if (Arrays.stream(this.materialSlots).anyMatch(slot -> slot == event.getSlot())
                         || Arrays.stream(this.filterSlots).anyMatch(slot -> slot == event.getSlot())
                         || Arrays.stream(this.fuelSlots).anyMatch(slot -> slot == event.getSlot())) {
-                    this.cancelRecipe(event.getWhoClicked());
-                    return;
+                    int side = getClickedSide(event.getSlot());
+                    if (side == this.getProcess().getSide()) {
+                        this.cancelRecipe(event.getWhoClicked());
+                    }
+                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                    event.setCancelled(true);
+                    int side = this.startSlots[0] == event.getSlot() ? 0 : 1;
+                    Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
+                } else if (this.finishSlot == event.getSlot() && event.getClickedInventory() == this.inventory) {
+                    event.setCancelled(true);
+                    if(!this.getProcess().isProcessing()) {
+                        Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
+                    }
+                } else if (ClickType.SHIFT_LEFT.equals(event.getClick()) || ClickType.SHIFT_RIGHT.equals(event.getClick())) {
+                    event.setCancelled(true);
                 }
             }
         }
-        if (this.inventory.equals(event.getClickedInventory()) && !event.isCancelled()) {
-            Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked()), 1);
+    }
+
+    private int getClickedSide(int slot) {
+        if (materialSlots[0] == slot || filterSlots[0] == slot || fuelSlots[0] == slot) {
+            return 0;
+        } else if (materialSlots[1] == slot || filterSlots[1] == slot || fuelSlots[1] == slot) {
+            return 1;
+        } else {
+            return -1;
         }
+
     }
 
     /**
@@ -303,7 +352,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      */
     public void handleInventoryDrag(InventoryDragEvent event) {
         for (Integer rawSlot : event.getRawSlots()) {
-            if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot) {
+            if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot || this.finishSlot == rawSlot) {
                 event.setCancelled(true);
                 return;
             }
@@ -318,14 +367,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param who The player who canceled the recipe
      */
     private void cancelRecipe(HumanEntity who) {
-        List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
-        for (DATableRecipe recipe : recipes) {
-            if (recipe.getInProcess().containsKey(this) && !this.isThisRecipe(recipe)) {
-                recipe.cancelProcess(this, "InvEvent", false);
-                TableCancelRecipeEvent tableCancelRecipeEvent = new TableCancelRecipeEvent(who, this, recipe);
-                Bukkit.getPluginManager().callEvent(tableCancelRecipeEvent);
-            }
-        }
+
     }
 
     /**
