@@ -80,15 +80,17 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkArgs2(CommandSender commandSender, String[] args) {
         this.checkCustomItem(commandSender, args);
         this.checkConsume(commandSender, args);
-        List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
-        for (DATable table : tables) {
-            String title = table.getTitle(Integer.parseInt(args[1]));
-            for (HumanEntity viewer : table.getInventory().getViewers()) {
-                try {
-                    InventoryView inventoryView = viewer.getOpenInventory();
-                    inventoryView.setTitle(title);
-                } catch (Exception e) {
-                    DA.log.logException(e);
+        if (args[0].equalsIgnoreCase("test")) {
+            List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
+            for (DATable table : tables) {
+                String title = table.getTitle(Integer.parseInt(args[1]));
+                for (HumanEntity viewer : table.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
                 }
             }
         }

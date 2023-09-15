@@ -21,6 +21,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -303,12 +304,12 @@ public class DATable extends DAStructure implements InventoryHolder {
             case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
                 if (event.getSlot() == this.resultSlot) {
                     event.setCancelled(true);
-                } else if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) {
+                } else if ((Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                 }
             }
             default -> {
-                if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot())) {
+                if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                 } else if (Arrays.stream(this.materialSlots).anyMatch(slot -> slot == event.getSlot())
                         || Arrays.stream(this.filterSlots).anyMatch(slot -> slot == event.getSlot())
@@ -317,13 +318,15 @@ public class DATable extends DAStructure implements InventoryHolder {
                     if (side == this.getProcess().getSide()) {
                         this.cancelRecipe(event.getWhoClicked());
                     }
-                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) {
+                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                     int side = this.startSlots[0] == event.getSlot() ? 0 : 1;
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
-                } else if (this.finishSlot == event.getSlot()) {
+                } else if (this.finishSlot == event.getSlot() && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
+                } else if (ClickType.SHIFT_LEFT.equals(event.getClick()) || ClickType.SHIFT_RIGHT.equals(event.getClick())) {
+                    event.setCancelled(true);
                 }
             }
         }
