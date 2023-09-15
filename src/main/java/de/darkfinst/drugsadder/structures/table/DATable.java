@@ -303,12 +303,12 @@ public class DATable extends DAStructure implements InventoryHolder {
             case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
                 if (event.getSlot() == this.resultSlot) {
                     event.setCancelled(true);
-                } else if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                } else if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) {
                     event.setCancelled(true);
                 }
             }
             default -> {
-                if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot())) {
                     event.setCancelled(true);
                 } else if (Arrays.stream(this.materialSlots).anyMatch(slot -> slot == event.getSlot())
                         || Arrays.stream(this.filterSlots).anyMatch(slot -> slot == event.getSlot())
@@ -317,11 +317,11 @@ public class DATable extends DAStructure implements InventoryHolder {
                     if (side == this.getProcess().getSide()) {
                         this.cancelRecipe(event.getWhoClicked());
                     }
-                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) {
                     event.setCancelled(true);
                     int side = this.startSlots[0] == event.getSlot() ? 0 : 1;
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
-                } else if (this.finishSlot == event.getSlot() && event.getClickedInventory() == this.inventory) {
+                } else if (this.finishSlot == event.getSlot()) {
                     event.setCancelled(true);
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
                 }
@@ -347,7 +347,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      */
     public void handleInventoryDrag(InventoryDragEvent event) {
         for (Integer rawSlot : event.getRawSlots()) {
-            if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot) {
+            if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == rawSlot) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == rawSlot) || this.resultSlot == rawSlot || this.finishSlot == rawSlot) {
                 event.setCancelled(true);
                 return;
             }
