@@ -324,7 +324,9 @@ public class DATable extends DAStructure implements InventoryHolder {
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
                 } else if (this.finishSlot == event.getSlot() && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                    Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
+                    if(!this.getProcess().isProcessing()) {
+                        Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
+                    }
                 } else if (ClickType.SHIFT_LEFT.equals(event.getClick()) || ClickType.SHIFT_RIGHT.equals(event.getClick())) {
                     event.setCancelled(true);
                 }
