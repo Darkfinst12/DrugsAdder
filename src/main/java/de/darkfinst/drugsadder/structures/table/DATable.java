@@ -51,8 +51,8 @@ public class DATable extends DAStructure implements InventoryHolder {
     /**
      * The slot of the result
      */
-    private final int resultSlot = 22;
-    private final int finishSlot = 31;
+    private final int resultSlot = 31;
+    private final int finishSlot = 22;
     /**
      * The slots of the materials
      */
