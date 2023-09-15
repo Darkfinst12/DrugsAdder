@@ -153,7 +153,7 @@ public class DAConfig {
      *
      * @param config the config file
      */
-    public static void readConfig(FileConfiguration config) {
+    public static void readConfig(FileConfiguration config) throws NumberFormatException {
 
         //Set Language
         loader.language = config.getString("language", "en");
