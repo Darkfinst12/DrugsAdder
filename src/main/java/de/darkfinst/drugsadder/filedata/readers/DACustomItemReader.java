@@ -96,12 +96,14 @@ public class DACustomItemReader {
         }
         itemStack.setItemMeta(itemMeta);
         if (itemStack.getItemMeta() instanceof PotionMeta potionMeta) {
-            potionMeta = this.loadPotionMeta(itemID, potionMeta, itemConfig, itemStack);
+            potionMeta = this.loadPotionMeta(itemID, potionMeta, itemConfig);
             if (potionMeta == null) {
                 return;
             } else {
                 itemStack.setItemMeta(potionMeta);
             }
+        } else {
+            itemStack.setItemMeta(itemMeta);
         }
         DAItem item = new DAItem(itemStack, name, lore, cmd, namespacedID);
         item.setAmount(1);
@@ -112,7 +114,7 @@ public class DACustomItemReader {
         }
     }
 
-    private PotionMeta loadPotionMeta(String itemID, PotionMeta potionMeta, ConfigurationSection itemConfig, ItemStack itemStack) {
+    private PotionMeta loadPotionMeta(String itemID, PotionMeta potionMeta, ConfigurationSection itemConfig) {
         ConfigurationSection potionConfig = itemConfig.getConfigurationSection("potionMeta");
         if (potionConfig == null) {
             this.logError("Load_Error_CustomItem_PotionMeta", itemID);

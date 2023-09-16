@@ -78,7 +78,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
     }
 
     private void checkArgs2(CommandSender commandSender, String[] args) {
-        this.checkCustomItem(commandSender, args);
+        this.checkGetCustomItem(commandSender, args);
         this.checkConsume(commandSender, args);
         if (args[0].equalsIgnoreCase("test")) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
@@ -96,7 +96,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void checkCustomItem(CommandSender commandSender, String[] args) {
+    private void checkGetCustomItem(CommandSender commandSender, String[] args) {
         if (args[0].equalsIgnoreCase(PossibleArgs.GET_CUSTOM_ITEM.getArg())) {
             if (commandSender instanceof Player player) {
                 DAItem customItem = DAUtil.getItemStackByNamespacedID("drugsadder:" + args[1]);
@@ -393,7 +393,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
             return LIST_INFO_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[1].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
             return DAConfig.drugReader.getDrugNames().stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.GET_CUSTOM_ITEM.getArg())) {
             return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
         } else {
             return null;

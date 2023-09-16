@@ -23,12 +23,10 @@ logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
 
-#Table Title Array
-#It must have four Values - For detailed Information check the Wiki
-tableTitleArray: "-3,2,8,-12"
+tableTitleArray: "0,8,10,-10"
 
 #Table States
-#It must be eight States
+#It must be 8 States
 #You can use any Unicode Character you Want - It is not recommended to use the same Character twice
 #It is also recommended to use the default Unicode Characters with the DrugsAdder Resourcepack
 tableStates:
@@ -40,6 +38,10 @@ tableStates:
   5: "\uF005"
   6: "\uF006"
   7: "\uF007"
+  8: "\uF008"
+  9: "\uF009"
+  10: "\uF00A"
+  11: "\uF00B"
 
 #Custom Items
 customItems:
@@ -59,7 +61,7 @@ customItems:
     lore:
       - '&7Cocaine'
     #CustomModelData of the Item
-    #Note the Model will be taken from the Users highest Resourcepack, which contains the Model
+    #Note the Model will be taken from the Users highest Resourcepack, wich contains the Model
     customModelData: 1
   dirty_cocaine:
     name: '&fDirty Cocaine'
@@ -91,6 +93,16 @@ customItems:
     lore:
       - '&7Shrooms'
     customModelData: 6
+  sus_potion:
+    name: '&cSus Potion'
+    material: 'potion'
+    lore:
+      - '&7SUS Potion'
+    customModelData: 0
+    potionMeta:
+      color: "255,0,255,0"
+      effects:
+        - 'PotionEffect{type=SPEED, duration=600, level=2, particles=true, icon=true}'
 
 #Whether a bucket should be returned when a filled one is used when crafting
 returnBucket: true
@@ -251,9 +263,11 @@ recipes:
       filterOne: 'minecraft:paper/1'
       consumeFilterOne: true
       fuelOne: 'minecraft:coal/1'
+      processingTimeOne: 20.0
       filterTwo: 'minecraft:paper/1'
       consumeFilterTwo: true
       fuelTwo: 'minecraft:coal/1'
+      processingTimeTwo: 20.0
       materials:
         1:
           itemStack: 'drugsadder:dirty_cocaine'
@@ -287,9 +301,9 @@ drugs:
       #How much of this Drug can be consumed before the player overdoses
       #For the timespan of the overdose check the overdoseTime
       overdose: 3
-      #The timespan in which the player overdoses, if the drug is consumed to often
+      #The timespan in wich the player overdoses, if the drug is consumed to often
       #example: 600 means 10 Minutes, in thies 10 minutes the player can consume three times the Drug without overdosing
-      overdoseTime: 600
+      overdoseTime: 120
       #The time it takes to reduce the addictionPoints in minutes
       reductionTime: 10
       #The amount of addictionPoints that is reduced when the reductionTime is over
@@ -356,18 +370,16 @@ seeds:
     #For more Information about MatchTypes check the Wiki
     matchType: "ALL"
     #The Tools that are allowed to harvest the Plant - You can add as many as you want
-    #It is written like this: "NamespacedID": damage - You can use CustomItems here
+    #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
     #The Number represents the damage the Item takes when it is used to harvest the Plant
     #Be reminded that the Item will be destroyed when the damage is higher than the maxDamage of the Item
     #Also only Items that are damageable will receive damage
     #If you want to disable the damage just set the damage to 0
-    #The enchantment durability will be considered when the damage is calculated
     allowedTools:
       "minecraft:air": 0
       "minecraft:diamond_hoe": 1
     #The Drops of the Plant - You can add as many as you want
     #The order of the Drops does not matter
-    #The enchantment fortune will not be considered when the drops are calculated
     drops:
       1:
         #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
