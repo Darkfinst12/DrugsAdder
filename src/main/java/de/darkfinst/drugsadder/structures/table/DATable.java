@@ -311,14 +311,7 @@ public class DATable extends DAStructure implements InventoryHolder {
             default -> {
                 if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                } else if (Arrays.stream(this.materialSlots).anyMatch(slot -> slot == event.getSlot())
-                        || Arrays.stream(this.filterSlots).anyMatch(slot -> slot == event.getSlot())
-                        || Arrays.stream(this.fuelSlots).anyMatch(slot -> slot == event.getSlot())) {
-                    int side = getClickedSide(event.getSlot());
-                    if (side == this.getProcess().getSide()) {
-                        this.cancelRecipe(event.getWhoClicked());
-                    }
-                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                }else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                     int side = this.startSlots[0] == event.getSlot() ? 0 : 1;
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
@@ -360,17 +353,6 @@ public class DATable extends DAStructure implements InventoryHolder {
                 return;
             }
         }
-    }
-
-    /**
-     * Cancels the recipe of the table
-     * <p>
-     * Calls the {@link TableCancelRecipeEvent}
-     *
-     * @param who The player who canceled the recipe
-     */
-    private void cancelRecipe(HumanEntity who) {
-
     }
 
     /**
