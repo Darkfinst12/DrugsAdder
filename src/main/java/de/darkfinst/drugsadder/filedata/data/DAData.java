@@ -1,8 +1,9 @@
-package de.darkfinst.drugsadder.filedata;
+package de.darkfinst.drugsadder.filedata.data;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DAPlayer;
 import de.darkfinst.drugsadder.api.events.DrugsAdderLoadDataEvent;
+import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;

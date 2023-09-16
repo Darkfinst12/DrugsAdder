@@ -1,4 +1,4 @@
-package de.darkfinst.drugsadder.filedata;
+package de.darkfinst.drugsadder.filedata.data;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DAPlayer;

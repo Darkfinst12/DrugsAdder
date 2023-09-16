@@ -2,11 +2,10 @@ package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
-import de.darkfinst.drugsadder.filedata.DAData;
-import de.darkfinst.drugsadder.filedata.DataSave;
-import de.darkfinst.drugsadder.filedata.LanguageReader;
+import de.darkfinst.drugsadder.filedata.data.DAData;
+import de.darkfinst.drugsadder.filedata.data.DataSave;
+import de.darkfinst.drugsadder.filedata.readers.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
-import de.darkfinst.drugsadder.recipe.DATableRecipe;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
@@ -14,12 +13,10 @@ import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import de.darkfinst.drugsadder.structures.table.DATableProcess;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -32,8 +29,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 @Getter
