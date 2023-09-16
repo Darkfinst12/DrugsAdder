@@ -300,7 +300,6 @@ public class DATableRecipe extends DARecipe {
         for (HumanEntity viewer : daTable.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
-                DA.loader.debugLog("Updating view of " + viewer.getUniqueId() + " to " + state, isAsync);
                 inventoryView.setTitle(daTable.getTitle(state));
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
