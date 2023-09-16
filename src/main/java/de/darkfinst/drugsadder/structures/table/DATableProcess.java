@@ -43,11 +43,11 @@ public class DATableProcess {
         this.taskID = -1;
     }
 
-    public void finish(DATable daTable) {
+    public void finish(DATable daTable, boolean isAsync) {
         if (this.recipeOne != null) {
-            this.recipeOne.finishProcess(daTable);
+            this.recipeOne.finishProcess(daTable, isAsync);
         } else if (this.recipeTwo != null) {
-            this.recipeTwo.finishProcess(daTable);
+            this.recipeTwo.finishProcess(daTable, isAsync);
         }
     }
 }

@@ -44,7 +44,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     /**
      * The slots which are blocked
      */
-    private final int[] blockedSlots = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,20,21,23,24,26,27,29,30,32,33,35,36,37,39,40,41,43,44,45,47,48,49,50,51,53};
+    private final int[] blockedSlots = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20, 21, 23, 24, 26, 27, 29, 30, 32, 33, 35, 36, 37, 39, 40, 41, 43, 44, 45, 47, 48, 49, 50, 51, 53};
     /**
      * The slot of the result
      */
@@ -326,7 +326,7 @@ public class DATable extends DAStructure implements InventoryHolder {
                     event.setCancelled(true);
                     if (this.getProcess().isFinished()) {
                         ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.UI_BUTTON_CLICK, 80, 1);
-                        Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
+                        Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this, false), 1);
                     }
                 } else if (ClickType.SHIFT_LEFT.equals(event.getClick()) || ClickType.SHIFT_RIGHT.equals(event.getClick())) {
                     event.setCancelled(true);

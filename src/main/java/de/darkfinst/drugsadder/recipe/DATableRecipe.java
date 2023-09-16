@@ -118,8 +118,8 @@ public class DATableRecipe extends DARecipe {
      *
      * @param daTable The table to finish the process on and to start the recipe again
      */
-    public void finishProcess(DATable daTable) {
-        this.updateView(daTable, 0, true);
+    public void finishProcess(DATable daTable, boolean isAsync) {
+        this.updateView(daTable, 0, isAsync);
         if (this.equals(daTable.getProcess().getRecipeOne()) && this.equals(daTable.getProcess().getRecipeTwo())) {
             daTable.getInventory().setItem(daTable.getResultSlot(), this.getResult().getItemStack());
         } else {
