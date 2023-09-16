@@ -69,6 +69,9 @@ Load_Error_Seed_Drop_NotConfigSection: "Von dem Samen: &v1 ist der Drop: &v2 ist
 Load_Error_Seed_Drop_Probability: "Von dem Samen: &v1 im Drop: &v2 ist die Wahrscheinlichkeit: &v3 kein gültiger Wert! - Er muss zwischen 0 und 100 liegen und darf nicht mehr als 6 Stellen haben!"
 Load_Error_NoSeeds: "Es wurden keine Samen in der config.yml konfiguriert!"
 Load_Error_Seed_AllowedTools: "Der Samen: &v1 hat keine erlaubten Werkzeuge! - Bitte überprüfe die config.yml!"
+Load_Error_CustomItem_PotionMeta: "Das CustomItem: &v1 hat kein PotionMeta! - Bitte überprüfe die config.yml!"
+Load_Error_CustomItem_PotionColor: "Von dem CustomItem: &v1 is die PotionColor nicht ein ARGB Wert - Es wird der Standard verwendet!"
+Load_Error_CustomItem_PotionEffect: "Vom CustomItem: &v1 ist der PotionEffect: &v2 kein gültiger PotionEffect! - Bitte überprüfe die config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "Das Rezept: &v1 wurde nicht gefunden! - Spieler: &v2 hat versucht das Rezept zu verwenden!"

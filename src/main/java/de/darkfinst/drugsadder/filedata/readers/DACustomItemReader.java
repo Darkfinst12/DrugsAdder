@@ -121,11 +121,13 @@ public class DACustomItemReader {
             return null;
         }
         String argb = potionConfig.getString("color", "255,255,255,255");
-        String[] argbSplit = argb.split(",");
-        if (argbSplit.length != 4) {
+
+        if (argb.split(",").length != 4) {
             this.logError("Load_Error_CustomItem_PotionColor", itemID);
-            return null;
+        } else {
+            argb = "255,255,255,255";
         }
+        String[] argbSplit = argb.split(",");
 
         int alpha = Integer.parseInt(argbSplit[0]);
         int red = Integer.parseInt(argbSplit[1]);
