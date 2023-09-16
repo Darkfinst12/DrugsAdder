@@ -7,7 +7,6 @@ import de.darkfinst.drugsadder.api.events.table.TableStartRecipeEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DATableRecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.utils.DAUtil;
@@ -24,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 public class DATable extends DAStructure implements InventoryHolder {
@@ -47,7 +44,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     /**
      * The slots which are blocked
      */
-    private final int[] blockedSlots = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 39, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
+    private final int[] blockedSlots = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,20,21,23,24,26,27,29,30,32,33,35,36,37,39,40,41,43,44,45,47,48,49,50,51,53};
     /**
      * The slot of the result
      */
@@ -56,15 +53,15 @@ public class DATable extends DAStructure implements InventoryHolder {
     /**
      * The slots of the materials
      */
-    private final int[] materialSlots = new int[]{19, 25};
+    private final int[] materialSlots = new int[]{28, 34};
     /**
      * The slots of the filters
      */
-    private final int[] filterSlots = new int[]{10, 16};
+    private final int[] filterSlots = new int[]{19, 25};
     /**
      * The slots of the fuels
      */
-    private final int[] fuelSlots = new int[]{37, 43};
+    private final int[] fuelSlots = new int[]{46, 52};
     /**
      * The slots wich starts the recipe for the corresponding side
      */
@@ -204,14 +201,17 @@ public class DATable extends DAStructure implements InventoryHolder {
         if (process.getTaskID() != -1) {
             return;
         }
+        if (side == 0 && process.getRecipeOne() != null) {
+            return;
+        }
+        if (side == 1 && process.getRecipeTwo() != null) {
+            return;
+        }
         List<DATableRecipe> recipes = DAConfig.daRecipeReader.getTableRecipes();
         for (DATableRecipe recipe : recipes) {
             if (this.isThisRecipe(recipe, side)) {
-                if (side == 0 && recipe.equals(process.getRecipeOne())) {
-                    return;
-                }
-                if (side == 1 && recipe.equals(process.getRecipeTwo())) {
-                    return;
+                if (who != null) {
+                    ((Player) who).playSound(who.getLocation(), Sound.UI_BUTTON_CLICK, 80, 1);
                 }
                 this.startRecipe(who, recipe, side);
                 return;
@@ -302,7 +302,7 @@ public class DATable extends DAStructure implements InventoryHolder {
     public void handleInventoryClick(InventoryClickEvent event) {
         switch (event.getAction()) {
             case PLACE_ONE, PLACE_SOME, PLACE_ALL, SWAP_WITH_CURSOR, HOTBAR_SWAP -> {
-                if (event.getSlot() == this.resultSlot) {
+                if ((event.getSlot() == this.resultSlot || event.getSlot() == this.finishSlot) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                 } else if ((Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) || Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot())) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
@@ -324,11 +324,14 @@ public class DATable extends DAStructure implements InventoryHolder {
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
                 } else if (this.finishSlot == event.getSlot() && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                    if(!this.getProcess().isProcessing()) {
+                    if (this.getProcess().isFinished()) {
+                        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.UI_BUTTON_CLICK, 80, 1);
                         Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.getProcess().finish(this), 1);
                     }
                 } else if (ClickType.SHIFT_LEFT.equals(event.getClick()) || ClickType.SHIFT_RIGHT.equals(event.getClick())) {
                     event.setCancelled(true);
+                } else if (event.getSlot() == this.resultSlot && event.getClickedInventory() == this.inventory) {
+                    event.setCancelled(false);
                 }
             }
         }

@@ -24,7 +24,7 @@ logSeedLoadComplete: true
 logSeedLoadError: true
 
 #Table States
-#Es muss immer 8 States geben
+#Es muss immer dies 20 States geben
 #Du kannst jeden Unicode Character verwenden - Es ist nicht empfohlen Unicode Characters mehrfach zu verwenden
 #Ebenso wird empfohlen die standard Unicode Characters zu verwenden mit dem DrugsAdder Texturenpacket
 tableStates:
@@ -36,6 +36,18 @@ tableStates:
   5: "\uF005"
   6: "\uF006"
   7: "\uF007"
+  8: "\uF008"
+  9: "\uF009"
+  10: "\uF00A"
+  11: "\uF00B"
+  12: "\uF00C"
+  13: "\uF00D"
+  14: "\uF00E"
+  16: "\uF00F"
+  17: "\uF011"
+  18: "\uF012"
+  19: "\uF013"
+  20: "\uF014"
 
 #Table Title Array
 #Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
@@ -91,6 +103,16 @@ customItems:
     lore:
       - '&7Shrooms'
     customModelData: 6
+  suspicious_potion:
+    name: '&cSus Potion'
+    material: 'potion'
+    lore:
+      - '&7SUS Potion'
+    customModelData: 0
+    potionMeta:
+      color: "255,10,255,125"
+      effects:
+        - 'PotionEffect{type=SPEED, duration=600, level=2, particles=true, icon=true}'
 
 #Ob ein Eimer zurückgegeben werden soll, wenn ein gefüllter Eimer beim Basteln verwendet wird
 returnBucket: true
@@ -100,6 +122,9 @@ returnBottle: true
 resetItemCrafting: true
 #Ob Items im Ofen in ihre ursprüngliche Version zurückgesetzt werden sollen
 resetItemSmelting: true
+
+cancelRecipeItem: "drugsadder:cancel_recipe_item"
+suspiciousPotionItem: "drugsadder:suspicious_potion"
 
 #Rezepte
 recipes:

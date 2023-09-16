@@ -26,7 +26,7 @@ logSeedLoadError: true
 tableTitleArray: "0,8,10,-10"
 
 #Table States
-#It must be 8 States
+#It must be 11 States
 #You can use any Unicode Character you Want - It is not recommended to use the same Character twice
 #It is also recommended to use the default Unicode Characters with the DrugsAdder Resourcepack
 tableStates:
@@ -42,6 +42,14 @@ tableStates:
   9: "\uF009"
   10: "\uF00A"
   11: "\uF00B"
+  12: "\uF00C"
+  13: "\uF00D"
+  14: "\uF00E"
+  16: "\uF00F"
+  17: "\uF011"
+  18: "\uF012"
+  19: "\uF013"
+  20: "\uF014"
 
 #Custom Items
 customItems:
@@ -93,14 +101,14 @@ customItems:
     lore:
       - '&7Shrooms'
     customModelData: 6
-  sus_potion:
+  suspicious_potion:
     name: '&cSus Potion'
     material: 'potion'
     lore:
       - '&7SUS Potion'
     customModelData: 0
     potionMeta:
-      color: "255,0,255,0"
+      color: "255,10,255,125"
       effects:
         - 'PotionEffect{type=SPEED, duration=600, level=2, particles=true, icon=true}'
 
@@ -112,6 +120,9 @@ returnBottle: true
 resetItemCrafting: true
 #Whether Items in a Furnace (smelting slot) should be reverted to their clean Version
 resetItemSmelting: true
+
+cancelRecipeItem: "drugsadder:cancel_recipe_item"
+suspiciousPotionItem: "drugsadder:suspicious_potion"
 
 
 #Recipes

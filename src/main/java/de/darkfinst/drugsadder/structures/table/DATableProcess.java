@@ -18,11 +18,12 @@ public class DATableProcess {
     private int state = 0;
     private int taskID = -1;
 
-    public DATableProcess() {
+    public boolean isFinished() {
+        return this.taskID == -1 && (this.state == 20 || this.state == 10 || this.state == 5);
     }
 
     public boolean isProcessing() {
-        return this.recipeOne != null && this.recipeTwo != null && this.state != -1;
+        return this.taskID != -1;
     }
 
     public int getSide() {

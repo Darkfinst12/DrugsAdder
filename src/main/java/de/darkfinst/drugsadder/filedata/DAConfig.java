@@ -38,6 +38,7 @@ public class DAConfig {
 
 
     public static String cancelRecipeItem;
+    public static String suspiciousPotionItem;
 
 
     public static DACustomItemReader customItemReader;
@@ -181,6 +182,8 @@ public class DAConfig {
 
         //Loads the CancelRecipeItem
         cancelRecipeItem = config.getString("cancelRecipeItem", "drugsadder:cancel_recipe_item");
+        //Loads the SuspiciousPotionItem
+        suspiciousPotionItem = config.getString("suspiciousPotionItem", "drugsadder:suspicious_potion_item");
 
         //Loads the Data
         loadDataAsync = config.getBoolean("loadDataAsync", true);
