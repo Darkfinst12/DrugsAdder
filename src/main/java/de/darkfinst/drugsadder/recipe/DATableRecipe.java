@@ -82,19 +82,9 @@ public class DATableRecipe extends DARecipe {
      */
     public void startProcess(DATable daTable, int side) {
         if (side == 0) {
-            boolean otherFinished = daTable.getProcess().getRecipeTwo() != null;
-            daTable.getProcess().setState(otherFinished ? 10 : 0);
-            ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, daTable.getProcess().getState(), processingTimeOne / 4, otherFinished);
-            BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialOne);
-            daTable.getProcess().setRecipeOne(this);
-            daTable.getProcess().setTaskID(task.getTaskId());
+            startProcessOne(daTable);
         } else if (side == 1) {
-            boolean otherFinished = daTable.getProcess().getRecipeOne() != null;
-            daTable.getProcess().setState(otherFinished ? 5 : 0);
-            ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, daTable.getProcess().getState(), processingTimeTwo / 4, otherFinished);
-            BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
-            daTable.getProcess().setRecipeTwo(this);
-            daTable.getProcess().setTaskID(task.getTaskId());
+            startProcessTwo(daTable);
         }
 
     }
@@ -106,7 +96,33 @@ public class DATableRecipe extends DARecipe {
      * @param state   The state to restart the process on
      */
     public void restartProcess(DATable daTable, int state) {
+        if (state < 5) {
+            startProcessOne(daTable);
+        } else if (state < 10) {
+            startProcessTwo(daTable);
+        } else if (state < 15) {
+            startProcessOne(daTable);
+        } else if (state < 20) {
+            startProcessTwo(daTable);
+        }
+    }
 
+    private void startProcessTwo(DATable daTable) {
+        boolean otherFinished = daTable.getProcess().getRecipeOne() != null;
+        daTable.getProcess().setState(otherFinished ? 5 : 0);
+        ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, daTable.getProcess().getState(), processingTimeTwo / 4, otherFinished);
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
+        daTable.getProcess().setRecipeTwo(this);
+        daTable.getProcess().setTaskID(task.getTaskId());
+    }
+
+    private void startProcessOne(DATable daTable) {
+        boolean otherFinished = daTable.getProcess().getRecipeTwo() != null;
+        daTable.getProcess().setState(otherFinished ? 10 : 0);
+        ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, daTable.getProcess().getState(), processingTimeOne / 4, otherFinished);
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialOne);
+        daTable.getProcess().setRecipeOne(this);
+        daTable.getProcess().setTaskID(task.getTaskId());
     }
 
     /**

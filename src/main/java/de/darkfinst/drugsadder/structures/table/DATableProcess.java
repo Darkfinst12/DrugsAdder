@@ -11,9 +11,9 @@ public class DATableProcess {
 
 
     @Nullable
-    private DATableRecipe recipeOne;
+    private DATableRecipe recipeOne = null;
     @Nullable
-    private DATableRecipe recipeTwo;
+    private DATableRecipe recipeTwo = null;
 
     private int state = 0;
     private int taskID = -1;
@@ -50,4 +50,21 @@ public class DATableProcess {
             this.recipeTwo.finishProcess(daTable, isAsync);
         }
     }
+
+    public void restart(DATable daTable) {
+        if (state != 20 && state != 10 && state != 5) {
+            if (state < 5 && this.recipeOne != null) {
+                this.recipeOne.restartProcess(daTable, this.state);
+            } else if (state > 5 && state < 10 && this.recipeTwo != null) {
+                this.recipeTwo.restartProcess(daTable, this.state);
+            }
+            if (state > 10 && state < 15 && this.recipeOne != null) {
+                this.recipeOne.restartProcess(daTable, this.state);
+            }
+            if (state > 15 && state < 20 && this.recipeTwo != null) {
+                this.recipeTwo.restartProcess(daTable, this.state);
+            }
+        }
+    }
 }
+

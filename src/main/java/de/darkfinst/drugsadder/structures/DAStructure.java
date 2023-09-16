@@ -116,6 +116,10 @@ public abstract class DAStructure {
 
                     config.set(prefix + ".forRemoval", table.isForRemoval());
 
+                    config.set(prefix + ".process.state", table.getProcess().getState());
+                    config.set(prefix + ".process.recipe.one", table.getProcess().getRecipeOne() == null ? "null" : table.getProcess().getRecipeOne().getID());
+                    config.set(prefix + ".process.recipe.two", table.getProcess().getRecipeTwo() == null ? "null" : table.getProcess().getRecipeTwo().getID());
+
                     int slot = 0;
                     ItemStack item;
                     ConfigurationSection invConfig = null;
@@ -125,7 +129,7 @@ public abstract class DAStructure {
                             if (invConfig == null) {
                                 invConfig = config.createSection(prefix + ".inv");
                             }
-                            // ItemStacks are configurationSerializeable, makes them
+                            // ItemStacks are configurationSerializable, makes them
                             // really easy to save
                             invConfig.set(slot + "", item);
                         }
@@ -138,6 +142,7 @@ public abstract class DAStructure {
                     String prefix = worldName + "." + "plants." + plantID;
 
                     config.set(prefix + ".forRemoval", plant.isForRemoval());
+                    config.set(prefix + "lastHarvest", plant.getLastHarvest());
 
                     Location loc = plant.getBody().getPlantBLock().getLocation();
                     config.set(prefix + ".plant", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());

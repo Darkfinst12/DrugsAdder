@@ -273,6 +273,13 @@ public class DAData {
                                     daTable.getInventory().setItem(DAUtil.parseInt(slot), invSection.getItemStack(slot));
                                 }
                             }
+                            ConfigurationSection process = table.getConfigurationSection("process");
+                            if (process != null) {
+                                daTable.getProcess().setState(process.getInt("state", 0));
+                                daTable.getProcess().setRecipeOne(DAConfig.daRecipeReader.getTableRecipe(process.getString("recipe.one", "null")));
+                                daTable.getProcess().setRecipeTwo(DAConfig.daRecipeReader.getTableRecipe(process.getString("recipe.two", "null")));
+                                daTable.getProcess().restart(daTable);
+                            }
                         }
                         return success;
                     } catch (Exception e) {
@@ -305,6 +312,7 @@ public class DAData {
                     try {
                         DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowthTime(), seedItem.getDrops());
                         daPlant.setAllowedTools(seedItem.getAllowedTools());
+                        daPlant.setLastHarvest(plant.getLong("lastHarvest", 0));
                         boolean success = daPlant.create(worldBlock, isAsync);
                         return success;
 

@@ -265,6 +265,11 @@ public class DAPlant extends DAStructure {
         return (DAPlantBody) super.getBody();
     }
 
+    public void setLastHarvest(long lastHarvest) {
+        this.lastHarvest = lastHarvest;
+        this.canBeHarvested = false;
+    }
+
 
     /**
      * Runnable for growing the plant if it is a crop
