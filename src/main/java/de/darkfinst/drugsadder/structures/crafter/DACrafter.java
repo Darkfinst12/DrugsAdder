@@ -2,17 +2,22 @@ package de.darkfinst.drugsadder.structures.crafter;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
+import de.darkfinst.drugsadder.api.events.crafter.CrafterStartRecipeEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
+import de.darkfinst.drugsadder.recipe.DACrafterRecipe;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,12 +27,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DACRafter extends DAStructure implements InventoryHolder {
+@Getter
+public class DACrafter extends DAStructure implements InventoryHolder {
 
     /**
      * The inventory of the crafter
@@ -52,7 +59,7 @@ public class DACRafter extends DAStructure implements InventoryHolder {
      */
     private final int startSlot = 23;
 
-    public DACRafter() {
+    public DACrafter() {
         this.inventory = DA.getInstance.getServer().createInventory(this, 54, this.getTitle(0));
     }
 
@@ -210,13 +217,40 @@ public class DACRafter extends DAStructure implements InventoryHolder {
                     event.setCancelled(true);
                 } else if (this.startSlot == event.getSlot() && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                    //TODO: Start recipe
+                    this.callRecipeCheck(event.getWhoClicked());
                 } else if (ClickType.SHIFT_LEFT.equals(event.getClick()) || ClickType.SHIFT_RIGHT.equals(event.getClick()) && event.getClickedInventory() != this.inventory) {
                     event.setCancelled(true);
                 } else if (event.getSlot() == this.resultSlot && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(false);
                 }
             }
+        }
+    }
+
+    private void callRecipeCheck(@Nullable HumanEntity who) {
+        List<DACrafterRecipe> recipes = DAConfig.daRecipeReader.getCrafterRecipes();
+        for (DACrafterRecipe recipe : recipes) {
+            if (recipe.matchMaterials(this.getContent().toArray(new ItemStack[0])) && recipe.getRequiredPlayers() <= this.inventory.getViewers().size()) {
+                if (who != null) {
+                    ((Player) who).playSound(who.getLocation(), Sound.UI_BUTTON_CLICK, 80, 1);
+                }
+                this.startRecipe(who, recipe);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Starts the process of the given recipe
+     *
+     * @param who    The player who started the recipe, can be null
+     * @param recipe The recipe to start
+     */
+    public void startRecipe(@Nullable HumanEntity who, @NotNull DACrafterRecipe recipe) {
+        CrafterStartRecipeEvent crafterStartRecipeEvent = new CrafterStartRecipeEvent(who, this, recipe);
+        Bukkit.getPluginManager().callEvent(crafterStartRecipeEvent);
+        if (!crafterStartRecipeEvent.isCancelled()) {
+            recipe.startProcess(this);
         }
     }
 
@@ -235,11 +269,13 @@ public class DACRafter extends DAStructure implements InventoryHolder {
     }
 
     public void handelInventoryClose(InventoryCloseEvent event) {
-        if (event.getInventory().getViewers().isEmpty()) {
-            //TODO: Cancel Recipe
-            if(!DAConfig.crafterKeepInv){
-                this.destroyInventory();
-            }
+        DACrafterRecipe recipe = this.getProcess().getRecipe();
+        if (recipe != null && event.getInventory().getViewers().size() < recipe.getRequiredPlayers()) {
+            recipe.cancelProcess(this, false);
+        }
+
+        if (event.getInventory().getViewers().isEmpty() && !DAConfig.crafterKeepInv) {
+            this.destroyInventory();
         }
     }
 

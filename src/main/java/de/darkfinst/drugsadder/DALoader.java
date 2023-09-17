@@ -8,6 +8,7 @@ import de.darkfinst.drugsadder.filedata.readers.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -294,6 +295,8 @@ public class DALoader {
             daPress.usePress(player, block);
         } else if (daStructure instanceof DAPlant daPlant) {
             daPlant.checkHarvest(player);
+        } else if (daStructure instanceof DACrafter daCRafter) {
+            daCRafter.open(player);
         }
     }
 

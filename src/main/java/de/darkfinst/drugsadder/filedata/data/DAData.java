@@ -6,7 +6,7 @@ import de.darkfinst.drugsadder.api.events.DrugsAdderLoadDataEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
-import de.darkfinst.drugsadder.structures.crafter.DACRafter;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -152,7 +152,7 @@ public class DAData {
                         for (String plant : plants.getKeys(false)) {
                             ConfigurationSection plantSection = plants.getConfigurationSection(plant);
                             if (plantSection == null) {
-                                DA.log.debugLog("Plant Section is null, skipping plant: " + plant);
+                                DA.log.debugLog("Plant Section is null, skipping plant: " + plant, isAsync);
                                 return;
                             }
                             boolean success = DAData.loadPlantData(world, plantSection, isAsync);
@@ -358,7 +358,7 @@ public class DAData {
                 Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
                 if (worldBlock.getBlockData() instanceof WallSign) {
                     try {
-                        DACRafter dacRafter = new DACRafter();
+                        DACrafter dacRafter = new DACrafter();
                         boolean success = dacRafter.create(worldBlock, isAsync);
 
                         if (success) {
@@ -371,7 +371,7 @@ public class DAData {
                             ConfigurationSection process = crafter.getConfigurationSection("process");
                             if (process != null) {
                                 dacRafter.getProcess().setState(process.getInt("state", 0));
-                                dacRafter.getProcess().setDaCrafterRecipe(DAConfig.daRecipeReader.getCrafterRecipe(process.getString("recipe", "null")));
+                                dacRafter.getProcess().setRecipe(DAConfig.daRecipeReader.getCrafterRecipe(process.getString("recipe", "null")));
                             }
                         }
                         return success;

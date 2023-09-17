@@ -1,9 +1,8 @@
 package de.darkfinst.drugsadder.structures;
 
 import de.darkfinst.drugsadder.DA;
-import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
-import de.darkfinst.drugsadder.structures.crafter.DACRafter;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -61,6 +60,7 @@ public abstract class DAStructure {
             int pressID = 0;
             int tableID = 0;
             int plantID = 0;
+            int crafterID = 0;
             for (DAStructure structure : DA.loader.getStructureList()) {
                 if (structure instanceof DABarrel barrel) {
                     String worldName = barrel.getWorld().getUID().toString();
@@ -138,9 +138,9 @@ public abstract class DAStructure {
                         slot++;
                     }
                     tableID++;
-                } else if (structure instanceof DACRafter crafter) {
+                } else if (structure instanceof DACrafter crafter) {
                     String worldName = crafter.getWorld().getUID().toString();
-                    String prefix = worldName + "." + "crafters." + tableID;
+                    String prefix = worldName + "." + "crafters." + crafterID;
 
                     Location loc = crafter.getBody().getSign().getLocation();
                     config.set(prefix + ".sign", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
@@ -148,7 +148,7 @@ public abstract class DAStructure {
                     config.set(prefix + ".forRemoval", crafter.isForRemoval());
 
                     config.set(prefix + ".process.state", crafter.getProcess().getState());
-                    config.set(prefix + ".process.recipe", crafter.getProcess().getDaCrafterRecipe() == null ? "null" : crafter.getProcess().getDaCrafterRecipe().getID());
+                    config.set(prefix + ".process.recipe", crafter.getProcess().getRecipe() == null ? "null" : crafter.getProcess().getRecipe().getID());
 
                     int slot = 0;
                     ItemStack item;
@@ -166,7 +166,7 @@ public abstract class DAStructure {
 
                         slot++;
                     }
-                    tableID++;
+                    crafterID++;
                 } else if (structure instanceof DAPlant plant) {
                     String worldName = plant.getWorld().getUID().toString();
                     String prefix = worldName + "." + "plants." + plantID;

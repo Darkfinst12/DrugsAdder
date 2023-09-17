@@ -616,7 +616,7 @@ public class DARecipeReader {
                 String namespacedID = materialSec.getString("itemStack", "null");
                 DAItem material = DAUtil.getItemStackByNamespacedID(namespacedID);
                 if (material == null) {
-                    this.logError("Load_Error_Recipes_ItemNotFound", namespacedID, recipeID);
+                    this.logError("Load_Error_Recipes_ItemNotFound", namespacedID + " (" + key + ")", recipeID);
                     continue;
                 }
                 material.setAmount(materialSec.getInt("amount", 1));

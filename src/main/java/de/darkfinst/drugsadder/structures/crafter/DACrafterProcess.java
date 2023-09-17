@@ -10,16 +10,24 @@ import lombok.Setter;
 @Setter
 public class DACrafterProcess extends DAProcess {
 
-    private DACrafterRecipe daCrafterRecipe = null;
+    private DACrafterRecipe recipe = null;
 
 
     @Override
     public void finish(DAStructure daCrafter, boolean isAsync) {
-
+        if (this.recipe != null) {
+            this.recipe.finishProcess((DACrafter) daCrafter, isAsync);
+        }
     }
 
     @Override
-    public void restart(DAStructure daCrafter) {
+    public void reset() {
+        super.reset();
+        recipe = null;
+    }
 
+    @Override
+    public void restart(DAStructure daStructure) {
+        //Do nothing - not needed
     }
 }

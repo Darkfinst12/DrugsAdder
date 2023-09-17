@@ -3,9 +3,8 @@ package de.darkfinst.drugsadder.listeners;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
-import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
-import de.darkfinst.drugsadder.structures.crafter.DACRafter;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import org.bukkit.Bukkit;
@@ -35,7 +34,7 @@ public class SignChangeEventListener implements Listener {
                 DATable daTable = new DATable();
                 daTable.create(event.getBlock(), event.getPlayer());
             } else if (hasCrafterLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
-                DACRafter dacRafter = new DACRafter();
+                DACrafter dacRafter = new DACrafter();
                 dacRafter.create(event.getBlock(), event.getPlayer());
             }
         } catch (RegisterStructureException e) {
