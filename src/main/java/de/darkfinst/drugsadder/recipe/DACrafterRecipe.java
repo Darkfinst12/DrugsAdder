@@ -59,16 +59,17 @@ public class DACrafterRecipe extends DARecipe {
     }
 
     public boolean matchMaterials(ItemStack[] matrix) {
-        if (this.getMaterials().length != matrix.length) {
-            return false;
-        }
+        DA.log.debugLog("Called matchMaterials");
         try {
             if (isShapeless) {
+                DA.log.debugLog("Recipe is shapeless");
                 return this.hasMaterials(matrix);
             } else {
+                DA.log.debugLog("Recipe is not shapeless");
                 return this.matchShape(matrix);
             }
         } catch (IllegalArgumentException e) {
+            DA.log.debugLog(e.getMessage());
             return false;
         }
     }
@@ -80,14 +81,18 @@ public class DACrafterRecipe extends DARecipe {
         if (matrix.length != 25) {
             throw new IllegalArgumentException("Matrix length must be 25");
         }
+        DA.log.debugLog("Called matchShape");
         for (int i = 0; i < 5; i++) {
+            DA.log.debugLog("Row: " + i);
             String row = this.shape.get(i);
             String[] rowKeys = row.split(",");
             for (int j = 0; j < 5; j++) {
                 String key = rowKeys[j];
+                DA.log.debugLog("Key: " + key + " j: " + j);
                 if (!key.equals(" ")) {
                     DAItem item = this.shapeKeys.get(key);
                     if (item == null || !DAUtil.matchItems(item.getItemStack(), matrix[i * 9 + j], item.getItemMatchTypes()) || matrix[i * 9 + j].getAmount() < item.getItemStack().getAmount()) {
+                        DA.log.debugLog("Item does not match: " + item + " " + matrix[i * 9 + j]);
                         return false;
                     }
                 }
@@ -229,7 +234,13 @@ public class DACrafterRecipe extends DARecipe {
                         recipe.cancelProcess(daCrafter, true);
                         return;
                     }
-                    Bukkit.getScheduler().runTask(DA.getInstance, () -> recipe.executeShape(daCrafter));
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> {
+                        try {
+                            recipe.executeShape(daCrafter);
+                        } catch (Exception e) {
+                            DA.log.logException(e, false);
+                        }
+                    });
                     daCrafter.getProcess().finish(daCrafter, true);
                     daCrafter.getProcess().setTaskID(-1);
                 } else {

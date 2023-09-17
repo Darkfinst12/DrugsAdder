@@ -45,7 +45,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
     /**
      * The slots which are blocked
      */
-    private final int[] blockedSlots = new int[]{5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 26, 32, 33, 34, 35, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
+    private final int[] blockedSlots = new int[]{5, 6, 7, 8, 14, 15, 16, 17, 24, 26, 32, 33, 34, 35, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     /**
      * The slot of the result
      */
@@ -228,9 +228,15 @@ public class DACrafter extends DAStructure implements InventoryHolder {
     }
 
     private void callRecipeCheck(@Nullable HumanEntity who) {
+        DA.log.debugLog("Checking for recipe");
         List<DACrafterRecipe> recipes = DAConfig.daRecipeReader.getCrafterRecipes();
         for (DACrafterRecipe recipe : recipes) {
-            if (recipe.matchMaterials(this.getContent().toArray(new ItemStack[0])) && recipe.getRequiredPlayers() <= this.inventory.getViewers().size()) {
+            DA.log.debugLog("Checking recipe: " + recipe.getID());
+            boolean matchMaterials = recipe.matchMaterials(this.getContent().toArray(new ItemStack[0]));
+            int viewers = this.inventory.getViewers().size();
+            DA.log.debugLog("Match Materials: " + matchMaterials + " Viewers: " + viewers);
+            if (matchMaterials && recipe.getRequiredPlayers() <= viewers) {
+                DA.log.debugLog("Recipe found: " + recipe.getID());
                 if (who != null) {
                     ((Player) who).playSound(who.getLocation(), Sound.UI_BUTTON_CLICK, 80, 1);
                 }
