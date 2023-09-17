@@ -4,7 +4,6 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import lol.simeon.bpmcalculator.BPMAPI;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -153,7 +152,6 @@ public class DACrafterRecipe extends DARecipe {
      */
     public void finishProcess(DACrafter daCrafter, boolean isAsync) {
         this.updateView(daCrafter, 0, isAsync);
-        daCrafter.getInventory().setItem(daCrafter.getResultSlot(), this.getResult().getItemStack());
         daCrafter.getProcess().reset();
     }
 
@@ -173,11 +171,20 @@ public class DACrafterRecipe extends DARecipe {
     }
 
     private void addResult(DACrafter daCrafter, DAItem result) {
+        ItemStack itemStack = daCrafter.getInventory().getItem(daCrafter.getResultSlot());
         ItemStack resultItem = result != null ? result.getItemStack() : null;
-        if (daCrafter.getInventory().getItem(daCrafter.getResultSlot()) == null) {
+        if (itemStack == null) {
             daCrafter.getInventory().setItem(daCrafter.getResultSlot(), resultItem);
         } else if (resultItem != null) {
-            daCrafter.getWorld().dropItem(daCrafter.getBody().getSign().getLocation(), resultItem);
+            if (DAUtil.matchItems(itemStack, resultItem, result.getItemMatchTypes())) {
+                if (itemStack.getAmount() + resultItem.getAmount() <= itemStack.getMaxStackSize()) {
+                    itemStack.setAmount(itemStack.getAmount() + resultItem.getAmount());
+                } else {
+                    daCrafter.getWorld().dropItem(daCrafter.getBody().getSign().getLocation(), resultItem);
+                }
+            } else {
+                daCrafter.getWorld().dropItem(daCrafter.getBody().getSign().getLocation().add(0, 1, 0), resultItem);
+            }
         }
     }
 
