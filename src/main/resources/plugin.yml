@@ -27,7 +27,6 @@ permissions:
     children:
       drugsadder.barrel: true
       drugsadder.press: true
-      drugsadder.cauldron: true
       drugsadder.table: true
       drugsadder.plant: true
 
@@ -84,20 +83,6 @@ permissions:
     description: Allow to plant a Plant
   drugsadder.plant.harvest:
     description: Allow to harvest a Plant
-
-  # -- Cauldron --
-  drugsadder.cauldron:
-    description: Allow to view the current Cooking time, to add Ingredients and fill a Bottle form a Cauldron
-    children:
-      drugsadder.cauldron.time: true
-      drugsadder.cauldron.insert: true
-      drugsadder.cauldron.fill: true
-  drugsadder.cauldron.time:
-    description: View the current Cooking time of a cauldron with a watch
-  drugsadder.cauldron.insert:
-    description: Add Ingredients to the Cauldron
-  drugsadder.cauldron.fill:
-    description: Fill a Bottle form a Cauldron wit a DrugsAdder brew
 
   # -- Commands --
   drugsadder.cmd:
