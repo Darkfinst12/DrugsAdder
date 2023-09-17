@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.*;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
@@ -22,8 +23,8 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg());
     private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
-    private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
-    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.PLAYER.getArg(), PossibleArgs.PLANT.getArg());
+    private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.CRAFTER.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
+    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.CRAFTER.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.PLAYER.getArg(), PossibleArgs.PLANT.getArg());
     private static final List<String> PLAYER_ARGS = List.of(PossibleArgs.SET.getArg(), PossibleArgs.CLEAR.getArg());
 
     public void register() {
@@ -154,7 +155,14 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 } else {
                     DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
                 }
-            } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
+            } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
+                if (commandSender.hasPermission("drugsadder.cmd.list.recipes.crafter")) {
+                    String recipes = getRecipeList(DAConfig.daRecipeReader.getCraftingRecipes(), PossibleArgs.CRAFTER);
+                    DA.loader.msg(commandSender, recipes);
+                } else {
+                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                }
+            }  else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.furnace")) {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getFurnaceRecipes(), PossibleArgs.FURNACE);
                     DA.loader.msg(commandSender, recipes);
@@ -289,6 +297,17 @@ public class DACommand implements CommandExecutor, TabCompleter {
                             DACraftingRecipe daCraftingRecipe = DAConfig.daRecipeReader.getCraftingRecipe(args[2]);
                             if (daCraftingRecipe != null) {
                                 DA.loader.msg(commandSender, daCraftingRecipe.toString());
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
+                            }
+                        } else {
+                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                        }
+                    } else if (args[1].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
+                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafter")) {
+                            DACrafterRecipe crafterRecipe = DAConfig.daRecipeReader.getCrafterRecipe(args[2]);
+                            if (crafterRecipe != null) {
+                                DA.loader.msg(commandSender, crafterRecipe.toString());
                             } else {
                                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
                             }
@@ -489,6 +508,8 @@ public class DACommand implements CommandExecutor, TabCompleter {
             return DAConfig.daRecipeReader.getBarrelRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
             return DAConfig.daRecipeReader.getCraftingRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
+            return DAConfig.daRecipeReader.getCrafterRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
             return DAConfig.daRecipeReader.getFurnaceRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
@@ -538,6 +559,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         SET(DA.loader.getTranslation("set", "Command_Args_Set")),
         CLEAR(DA.loader.getTranslation("clear", "Command_Args_Clear")),
         PLANT(DA.loader.getTranslation("plant", "Command_Args_Plant")),
+        CRAFTER(DA.loader.getTranslation("crafter", "Command_Args_Crafter")),
         ;
 
         private final String arg;

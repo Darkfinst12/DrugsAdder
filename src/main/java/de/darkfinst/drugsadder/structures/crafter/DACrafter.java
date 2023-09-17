@@ -144,8 +144,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         boolean isValid = crafterBody.isValidCrafter();
         if (isValid) {
             super.setBody(crafterBody);
-            boolean success = DA.loader.registerDAStructure(this, isAsync);
-            DA.log.debugLog("DACrafter.create() - success: " + success + " at " + sign.getLocation());
+            DA.loader.registerDAStructure(this, isAsync);
         }
         return isValid;
     }
