@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.structures;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.crafter.DACRafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -125,6 +126,35 @@ public abstract class DAStructure {
                     ConfigurationSection invConfig = null;
                     while (slot < table.getInventory().getSize()) {
                         item = table.getInventory().getItem(slot);
+                        if (item != null) {
+                            if (invConfig == null) {
+                                invConfig = config.createSection(prefix + ".inv");
+                            }
+                            // ItemStacks are configurationSerializable, makes them
+                            // really easy to save
+                            invConfig.set(slot + "", item);
+                        }
+
+                        slot++;
+                    }
+                    tableID++;
+                } else if (structure instanceof DACRafter crafter) {
+                    String worldName = crafter.getWorld().getUID().toString();
+                    String prefix = worldName + "." + "crafters." + tableID;
+
+                    Location loc = crafter.getBody().getSign().getLocation();
+                    config.set(prefix + ".sign", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+
+                    config.set(prefix + ".forRemoval", crafter.isForRemoval());
+
+                    config.set(prefix + ".process.state", crafter.getProcess().getState());
+                    config.set(prefix + ".process.recipe", crafter.getProcess().getDaCrafterRecipe() == null ? "null" : crafter.getProcess().getDaCrafterRecipe().getID());
+
+                    int slot = 0;
+                    ItemStack item;
+                    ConfigurationSection invConfig = null;
+                    while (slot < crafter.getInventory().getSize()) {
+                        item = crafter.getInventory().getItem(slot);
                         if (item != null) {
                             if (invConfig == null) {
                                 invConfig = config.createSection(prefix + ".inv");

@@ -113,3 +113,5 @@ Player_Plant_WrongTool: "Du hast das falsche Werkzeug (&v1) benutzt um die Pflan
 # ---- Structures ----
 Structure_Name_Table: "Labortisch"
 Structure_Name_Barrel: "Fass"
+Structure_Name_Press: "Presse"
+Structure_Name_Crafter: "Crafter"

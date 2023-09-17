@@ -9,6 +9,7 @@ public enum RecipeType {
     FURNACE,
     SMOKING,
     BLASTING,
+    CRAFTER,
     ;
 
     public static String getNamedRecipeID(RecipeType recipeType, String recipeID) {

@@ -6,6 +6,7 @@ import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.*;
+import de.darkfinst.drugsadder.structures.crafter.DACrafterProcess;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -52,6 +53,7 @@ public class DARecipeReader {
                     case "table" -> this.loadTableRecipes(configSec);
                     case "crafting" -> this.loadCraftingRecipes(configSec);
                     case "furnace" -> this.loadFurnaceRecipes(configSec);
+                    case "crafter" -> this.loadCrafterRecipes(configSec);
                     default -> this.logError("Load_Error_Recipe_UnknownType", recipeType);
                 }
             }
@@ -432,6 +434,109 @@ public class DARecipeReader {
     }
 
     /**
+     * This method loads the Crafting recipes from the config
+     *
+     * @param configSec The config section to load the recipes from
+     */
+    private void loadCrafterRecipes(ConfigurationSection configSec) {
+        Set<String> recipes = configSec.getKeys(false);
+        this.configCraftingCount = recipes.size();
+        for (String recipeID : recipes) {
+            this.loadCrafterRecipe(recipeID, configSec);
+        }
+        if (DAConfig.logRecipeLoadInfo) {
+            this.logInfo("Load_Info_Recipes", "Crafter");
+        }
+    }
+
+    /**
+     * This method loads a single Crafting recipe from the config
+     *
+     * @param craftingRID The ID of the recipe to load
+     * @param craftingSec The config section to load the recipe from
+     */
+    private void loadCrafterRecipe(String craftingRID, ConfigurationSection craftingSec) {
+        ConfigurationSection recipeConfig = craftingSec.getConfigurationSection(craftingRID);
+        if (recipeConfig == null) {
+            this.logError("Load_Error_Recipe_NotConfigSection", craftingRID);
+            return;
+        }
+        if (this.registeredRecipes.stream().anyMatch(daRecipe -> daRecipe.getRecipeNamedID().toLowerCase().equals(craftingRID))) {
+            this.logError("Load_Error_Recipe_IDAlreadyAssigned", craftingRID);
+            return;
+        }
+        DAItem result = this.getResultItem(craftingRID, recipeConfig);
+        if (result == null) return;
+
+        Map<String, DAItem> materials = new HashMap<>(this.loadMaterials(craftingRID, recipeConfig));
+        if (materials.isEmpty()) {
+            this.logError("Load_Error_Recipes_NoMaterials", craftingRID);
+            return;
+        }
+        if (materials.size() > 25) {
+            this.logError("Load_Error_Recipes_TooManyMaterials", craftingRID);
+            return;
+        }
+
+        List<String> shape = recipeConfig.getStringList("shape");
+        if (shape.isEmpty()) {
+            this.logError("Load_Error_Recipes_NoShape", craftingRID);
+            return;
+        }
+        if (shape.size() != 5) {
+            this.logError("Load_Error_Recipes_WrongShape", craftingRID);
+            return;
+        }
+        for (String line : shape) {
+            if (line.length() != 5) {
+                this.logError("Load_Error_Recipes_WrongShape", craftingRID);
+                return;
+            }
+        }
+        for (String shapeKey : materials.keySet()) {
+            if (shape.stream().noneMatch(line -> line.contains(shapeKey))) {
+                this.logError("Load_Error_Recipes_ShapeKeyNotFound", shapeKey, craftingRID);
+                return;
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder("[^");
+        for (String key : materials.keySet()) {
+            stringBuilder.append(key);
+        }
+        stringBuilder.append("]");
+        String regex = stringBuilder.toString();
+
+        for (String s : new ArrayList<>(shape)) {
+            shape.remove(s);
+            shape.add(s.replaceAll(regex, " "));
+        }
+
+        boolean isShaped = recipeConfig.getBoolean("isShaped", true);
+
+        double processingTime = recipeConfig.getDouble("processingTime", 10D);
+        if (processingTime <= 0) {
+            this.logError("Load_Error_Recipes_ProcessingTime", craftingRID);
+            return;
+        }
+        int requiredPlayers = recipeConfig.getInt("requiredPlayers", 1);
+        if (requiredPlayers <= 0) {
+            this.logError("Load_Error_Recipes_RequiredPlayers", craftingRID);
+            return;
+        }
+
+        DACrafterRecipe craftingRecipe = new DACrafterRecipe(craftingRID, RecipeType.CRAFTER, result, processingTime, requiredPlayers, materials.values().toArray(new DAItem[0]));
+        craftingRecipe.setShapeless(!isShaped);
+        craftingRecipe.setShape(shape.toArray(new String[0]));
+        craftingRecipe.setShapeKeys(materials);
+
+        this.registeredRecipes.add(craftingRecipe);
+        if (DAConfig.logRecipeLoadInfo) {
+            this.logInfo("Load_Info_RecipeLoaded", craftingRID);
+        }
+
+    }
+
+    /**
      * This method loads the result item of a recipe
      *
      * @param recipeID     The ID of the recipe
@@ -720,6 +825,18 @@ public class DARecipeReader {
 
     public DAFurnaceRecipe getFurnaceRecipe(String recipe) {
         return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DAFurnaceRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DAFurnaceRecipe) daRecipe).findFirst().orElse(null);
+    }
+
+    public List<DACrafterRecipe> getCrafterRecipes() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACrafterRecipe).map(daRecipe -> (DACrafterRecipe) daRecipe).toList();
+    }
+
+    public List<String> getCrafterRecipeIDs() {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACrafterRecipe).map(DARecipe::getRecipeNamedID).toList();
+    }
+
+    public DACrafterRecipe getCrafterRecipe(String recipe) {
+        return this.registeredRecipes.stream().filter(daRecipe -> daRecipe instanceof DACrafterRecipe && daRecipe.getRecipeNamedID().equalsIgnoreCase(recipe)).map(daRecipe -> (DACrafterRecipe) daRecipe).findFirst().orElse(null);
     }
 
 }

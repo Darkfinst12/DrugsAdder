@@ -6,6 +6,7 @@ import de.darkfinst.drugsadder.api.events.DrugsAdderLoadDataEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.crafter.DACRafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -153,6 +154,16 @@ public class DAData {
                             boolean success = DAData.loadPlantData(world, plantSection, isAsync);
                             if (!success) {
                                 section.set("plants." + plant, null);
+                            }
+                        }
+                    }
+                    case "crafters" -> {
+                        ConfigurationSection crafters = section.getConfigurationSection("crafters");
+                        for (String crafter : crafters.getKeys(false)) {
+                            ConfigurationSection crafterSection = crafters.getConfigurationSection(crafter);
+                            boolean success = DAData.loadCrafterData(world, crafterSection, isAsync);
+                            if (!success) {
+                                section.set("crafters." + crafter, null);
                             }
                         }
                     }
@@ -318,6 +329,50 @@ public class DAData {
 
                     } catch (Exception e) {
                         DA.log.errorLog("Error while loading Plant: " + plant.getCurrentPath(), isAsync);
+                        DA.log.logException(e, isAsync);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * This method loads the data for the Tables
+     *
+     * @param world   The world
+     * @param crafter The table config section
+     * @param isAsync Whether the method is called asynchronously or not
+     */
+    private static boolean loadCrafterData(World world, ConfigurationSection crafter, boolean isAsync) {
+        // Block split by ","
+        String block = crafter.getString("sign");
+        boolean forRemoval = crafter.getBoolean("forRemoval", false);
+        if (block != null && !forRemoval) {
+            String[] split = block.split(",");
+            if (split.length == 3) {
+                Block worldBlock = world.getBlockAt(DAUtil.parseInt(split[0]), DAUtil.parseInt(split[1]), DAUtil.parseInt(split[2]));
+                if (worldBlock.getBlockData() instanceof WallSign) {
+                    try {
+                        DACRafter dacRafter = new DACRafter();
+                        boolean success = dacRafter.create(worldBlock, isAsync);
+
+                        if (success) {
+                            ConfigurationSection invSection = crafter.getConfigurationSection("inv");
+                            if (invSection != null) {
+                                for (String slot : invSection.getKeys(false)) {
+                                    dacRafter.getInventory().setItem(DAUtil.parseInt(slot), invSection.getItemStack(slot));
+                                }
+                            }
+                            ConfigurationSection process = crafter.getConfigurationSection("process");
+                            if (process != null) {
+                                dacRafter.getProcess().setState(process.getInt("state", 0));
+                                dacRafter.getProcess().setDaCrafterRecipe(DAConfig.daRecipeReader.getCrafterRecipe(process.getString("recipe", "null")));
+                            }
+                        }
+                        return success;
+                    } catch (Exception e) {
+                        DA.log.errorLog("Error while loading Crafter: " + crafter.getCurrentPath(), isAsync);
                         DA.log.logException(e, isAsync);
                     }
                 }

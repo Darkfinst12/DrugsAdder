@@ -3,7 +3,9 @@ package de.darkfinst.drugsadder.listeners;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.crafter.DACRafter;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import org.bukkit.Bukkit;
@@ -32,9 +34,12 @@ public class SignChangeEventListener implements Listener {
             } else if (hasTableLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
                 DATable daTable = new DATable();
                 daTable.create(event.getBlock(), event.getPlayer());
+            } else if (hasCrafterLine(lines) && event.getBlock().getBlockData() instanceof WallSign) {
+                DACRafter dacRafter = new DACRafter();
+                dacRafter.create(event.getBlock(), event.getPlayer());
             }
         } catch (RegisterStructureException e) {
-            DA.loader.msg(event.getPlayer(), DA.loader.languageReader.get("Player_Barrel_NotValid"), DrugsAdderSendMessageEvent.Type.ERROR);
+            DA.loader.msg(event.getPlayer(), DA.loader.languageReader.get("Error_Structures_Register"), DrugsAdderSendMessageEvent.Type.ERROR);
             DA.log.logException(e);
         }
 
@@ -42,7 +47,7 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasBarrelLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase("Barrel")) {
+            if (line.equalsIgnoreCase(DA.loader.getTranslation("barrel", "Structure_Name_Barrel"))) {
                 return true;
             }
         }
@@ -51,7 +56,7 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasPressLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase("Press")) {
+            if (line.equalsIgnoreCase(DA.loader.getTranslation("press", "Structure_Name_Press"))) {
                 return true;
             }
         }
@@ -60,7 +65,16 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasTableLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase("Table")) {
+            if (line.equalsIgnoreCase(DA.loader.getTranslation("table", "Structure_Name_Table"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasCrafterLine(String[] lines) {
+        for (String line : lines) {
+            if (line.equalsIgnoreCase(DA.loader.getTranslation("crafter", "Structure_Name_Crafter"))) {
                 return true;
             }
         }

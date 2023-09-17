@@ -24,6 +24,7 @@ logSeedLoadComplete: true
 logSeedLoadError: true
 
 tableTitleArray: "0,8,10,-10"
+crafterTitleArray: "0,8,10,-10"
 
 #Table States
 #It must be 11 States
@@ -50,6 +51,17 @@ tableStates:
   18: "\uF012"
   19: "\uF013"
   20: "\uF014"
+
+crafterStates:
+  0: "\uF020"
+  1: "\uF021"
+  2: "\uF022"
+  3: "\uF023"
+  4: "\uF024"
+  5: "\uF025"
+  6: "\uF026"
+  7: "\uF027"
+
 
 #Custom Items
 customItems:
@@ -188,6 +200,39 @@ recipes:
           matchType: "ALL"
       #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
       result: 'drugsadder:dirty_cocaine/6'
+    crafter:
+      #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+      dirty_cocaine:
+        #Whether the Recipe is Shaped or not
+        isShaped: true
+        #The Shape of the Recipe - You musst add five Lines and five Characters per Line
+        shape:
+          - 'OXVXO'
+          - 'OXVXO'
+          - '0XVX0'
+          - '0XVX0'
+          - '0XVX0'
+        processingTime: 10.0
+        requiredPlayers: 1
+        #The Materials of the Recipe - You can add 25 Materials
+        #The position of the Material does not matter, but the Section must be in the Shape
+        materials:
+          #The Shape Key
+          X:
+            #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
+            #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+            #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+            itemStack: 'minecraft:coal'
+            #The Amount of this Material that is required for this Recipe
+            amount: 1
+            #An MatchType
+            matchType: "ALL"
+          V:
+            itemStack: 'drugsadder:coca'
+            amount: 4
+            matchType: "ALL"
+        #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+        result: 'drugsadder:dirty_cocaine/6'
     shrooms:
       isShaped: false
       shape:

@@ -1,13 +1,15 @@
 package de.darkfinst.drugsadder.structures.table;
 
 import de.darkfinst.drugsadder.recipe.DATableRecipe;
+import de.darkfinst.drugsadder.structures.DAProcess;
+import de.darkfinst.drugsadder.structures.DAStructure;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
-public class DATableProcess {
+public class DATableProcess extends DAProcess {
 
 
     @Nullable
@@ -15,54 +17,51 @@ public class DATableProcess {
     @Nullable
     private DATableRecipe recipeTwo = null;
 
-    private int state = 0;
-    private int taskID = -1;
-
+    @Override
     public boolean isFinished() {
-        return this.taskID == -1 && (this.state == 20 || this.state == 10 || this.state == 5);
+        return super.isFinished() && (this.getState() == 20 || this.getState() == 10 || this.getState() == 5);
     }
 
-    public boolean isProcessing() {
-        return this.taskID != -1;
-    }
 
     public int getSide() {
-        if (this.recipeOne == null && this.recipeTwo != null && this.state != 9) {
+        if (this.recipeOne == null && this.recipeTwo != null && this.getState() != 9) {
             return 1;
-        } else if (this.recipeOne != null && this.recipeTwo == null && this.state != 5) {
+        } else if (this.recipeOne != null && this.recipeTwo == null && this.getState() != 5) {
             return 0;
         } else {
             return -1;
         }
     }
 
+    @Override
     public void reset() {
+        super.reset();
         this.recipeOne = null;
         this.recipeTwo = null;
-        this.state = 0;
-        this.taskID = -1;
     }
 
-    public void finish(DATable daTable, boolean isAsync) {
+    @Override
+    public void finish(DAStructure daTable, boolean isAsync) {
         if (this.recipeOne != null) {
-            this.recipeOne.finishProcess(daTable, isAsync);
+            this.recipeOne.finishProcess((DATable) daTable, isAsync);
         } else if (this.recipeTwo != null) {
-            this.recipeTwo.finishProcess(daTable, isAsync);
+            this.recipeTwo.finishProcess((DATable) daTable, isAsync);
         }
     }
 
-    public void restart(DATable daTable) {
-        if (state != 20 && state != 10 && state != 5) {
-            if (state < 5 && this.recipeOne != null) {
-                this.recipeOne.restartProcess(daTable, this.state);
-            } else if (state > 5 && state < 10 && this.recipeTwo != null) {
-                this.recipeTwo.restartProcess(daTable, this.state);
+    @Override
+    public void restart(DAStructure daTable) {
+        if (this.getState() != 20 && this.getState() != 10 && this.getState() != 5) {
+            if (this.getState() < 5 && this.recipeOne != null) {
+                this.recipeOne.restartProcess((DATable) daTable, this.getState());
+            } else if (this.getState() > 5 && this.getState() < 10 && this.recipeTwo != null) {
+                this.recipeTwo.restartProcess((DATable) daTable, this.getState());
             }
-            if (state > 10 && state < 15 && this.recipeOne != null) {
-                this.recipeOne.restartProcess(daTable, this.state);
+            if (getState() > 10 && getState() < 15 && this.recipeOne != null) {
+                this.recipeOne.restartProcess((DATable) daTable, this.getState());
             }
-            if (state > 15 && state < 20 && this.recipeTwo != null) {
-                this.recipeTwo.restartProcess(daTable, this.state);
+            if (getState() > 15 && getState() < 20 && this.recipeTwo != null) {
+                this.recipeTwo.restartProcess((DATable) daTable, this.getState());
             }
         }
     }
