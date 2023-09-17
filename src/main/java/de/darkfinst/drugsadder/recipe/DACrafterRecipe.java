@@ -70,6 +70,7 @@ public class DACrafterRecipe extends DARecipe {
             DA.log.debugLog(e.getMessage());
             return false;
         }
+
     }
 
     public boolean matchShape(Map<Integer, ItemStack> matrix) throws IllegalArgumentException {
