@@ -172,7 +172,7 @@ public abstract class DAStructure {
                     String prefix = worldName + "." + "plants." + plantID;
 
                     config.set(prefix + ".forRemoval", plant.isForRemoval());
-                    config.set(prefix + "lastHarvest", plant.getLastHarvest());
+                    config.set(prefix + ".lastHarvest", plant.getLastHarvest());
 
                     Location loc = plant.getBody().getPlantBLock().getLocation();
                     config.set(prefix + ".plant", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
