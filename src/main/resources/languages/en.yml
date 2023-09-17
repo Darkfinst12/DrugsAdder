@@ -20,6 +20,12 @@ Command_Info_ListItems: "All registered &v1:"
 Command_Error_RecipeNotFound: "The recipe: &v1 was not found!"
 Command_Args_Player: "player"
 Command_Error_NoPermission: "You have no permission to execute this command!"
+Command_Args_Plant: "plant"
+Command_Args_Clear: "clear"
+Command_Args_Set: "set"
+Command_Info_Addicted: "The player: &v1 is now addicted to the drug: &v2 with &v3 addictionPoints!"
+Command_Info_Cleared: "The player: &v1 has been cleared of the addictionPoints (&v2)!"
+Command_Info_NothingToClear: "The player: &v1 has no addictions!"
 
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
