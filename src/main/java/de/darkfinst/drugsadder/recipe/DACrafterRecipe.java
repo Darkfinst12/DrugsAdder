@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import lol.simeon.bpmcalculator.BPMAPI;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -58,14 +59,11 @@ public class DACrafterRecipe extends DARecipe {
         this.shapeKeys.putAll(shapeKeys);
     }
 
-    public boolean matchMaterials(ItemStack[] matrix) {
-        DA.log.debugLog("Called matchMaterials");
+    public boolean matchMaterials(Map<Integer, ItemStack> matrix) {
         try {
             if (isShapeless) {
-                DA.log.debugLog("Recipe is shapeless");
-                return this.hasMaterials(matrix);
+                return this.hasMaterials(matrix.values().toArray(new ItemStack[0]));
             } else {
-                DA.log.debugLog("Recipe is not shapeless");
                 return this.matchShape(matrix);
             }
         } catch (IllegalArgumentException e) {
@@ -74,25 +72,25 @@ public class DACrafterRecipe extends DARecipe {
         }
     }
 
-    public boolean matchShape(ItemStack[] matrix) throws IllegalArgumentException {
+    public boolean matchShape(Map<Integer, ItemStack> matrix) throws IllegalArgumentException {
         if (this.isShapeless) {
             throw new IllegalArgumentException("Recipe is shapeless");
         }
-        if (matrix.length != 25) {
+        if (matrix.size() != 25) {
             throw new IllegalArgumentException("Matrix length must be 25");
         }
-        DA.log.debugLog("Called matchShape");
+
         for (int i = 0; i < 5; i++) {
-            DA.log.debugLog("Row: " + i);
             String row = this.shape.get(i);
-            String[] rowKeys = row.split(",");
             for (int j = 0; j < 5; j++) {
-                String key = rowKeys[j];
-                DA.log.debugLog("Key: " + key + " j: " + j);
+                String key = String.valueOf(row.charAt(j));
                 if (!key.equals(" ")) {
                     DAItem item = this.shapeKeys.get(key);
-                    if (item == null || !DAUtil.matchItems(item.getItemStack(), matrix[i * 9 + j], item.getItemMatchTypes()) || matrix[i * 9 + j].getAmount() < item.getItemStack().getAmount()) {
-                        DA.log.debugLog("Item does not match: " + item + " " + matrix[i * 9 + j]);
+                    int slot = i * 9 + j;
+                    if (item == null) {
+                        continue;
+                    }
+                    if (!DAUtil.matchItems(item.getItemStack(), matrix.get(slot), item.getItemMatchTypes()) || matrix.get(slot).getAmount() < item.getItemStack().getAmount()) {
                         return false;
                     }
                 }
@@ -102,28 +100,33 @@ public class DACrafterRecipe extends DARecipe {
     }
 
     public void executeShape(DACrafter daCrafter) {
-        ItemStack[] matrix = daCrafter.getContent().toArray(new ItemStack[0]);
+        var matrix = daCrafter.getContentMap();
         if (this.isShapeless) {
             throw new IllegalArgumentException("Recipe is shapeless");
         }
-        if (matrix.length != 25) {
+        if (matrix.size() != 25) {
             throw new IllegalArgumentException("Matrix length must be 25");
         }
         for (int i = 0; i < 5; i++) {
             String row = this.shape.get(i);
-            String[] rowKeys = row.split(",");
             for (int j = 0; j < 5; j++) {
-                String key = rowKeys[j];
+                String key = String.valueOf(row.charAt(j));
                 if (!key.equals(" ")) {
                     DAItem item = this.shapeKeys.get(key);
                     int slot = i * 9 + j;
-                    if (DAUtil.matchItems(item.getItemStack(), matrix[slot], item.getItemMatchTypes())) {
-                        int newAmount = matrix[slot].getAmount() - item.getItemStack().getAmount();
+                    if (item == null) {
+                        DA.log.debugLog("Item is null at " + slot);
+                        return;
+                    }
+                    if (DAUtil.matchItems(item.getItemStack(), matrix.get(slot), item.getItemMatchTypes()) && matrix.get(slot).getAmount() >= item.getItemStack().getAmount()) {
+                        int newAmount = matrix.get(slot).getAmount() - item.getItemStack().getAmount();
                         if (newAmount <= 0) {
                             daCrafter.getInventory().setItem(slot, null);
                         } else {
                             daCrafter.getInventory().getItem(slot).setAmount(newAmount);
                         }
+                    } else {
+                        return;
                     }
                 }
             }
@@ -196,12 +199,7 @@ public class DACrafterRecipe extends DARecipe {
 
     @Override
     public String toString() {
-        return super.toString().replace("DARecipe", "DACrafterRecipe")
-                .replace("}", "") +
-                ", shape=" + shape +
-                ", shapeKeys=" + shapeKeys +
-                ", isShapeless=" + isShapeless +
-                "}";
+        return super.toString().replace("DARecipe", "DACrafterRecipe").replace("}", "") + ", shape=" + shape + ", shapeKeys=" + shapeKeys + ", isShapeless=" + isShapeless + "}";
     }
 
     public static class ProcessMaterials implements Runnable {
@@ -230,7 +228,7 @@ public class DACrafterRecipe extends DARecipe {
                 } else if (state == 7) {
                     int newState = 0;
                     recipe.updateView(daCrafter, newState, true);
-                    if (!recipe.matchMaterials(daCrafter.getContent().toArray(new ItemStack[0]))) {
+                    if (!recipe.matchMaterials(daCrafter.getContentMap())) {
                         recipe.cancelProcess(daCrafter, true);
                         return;
                     }

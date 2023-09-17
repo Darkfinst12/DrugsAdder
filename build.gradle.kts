@@ -37,6 +37,7 @@ repositories {
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
+    maven("https://nexus.jaholl.de/repository/JaHollDE-Repo/")
 }
 
 dependencies {
@@ -59,6 +60,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
 
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
+
+    implementation("lol.simeon:BPMCalculator:1.0-SNAPSHOT")
 }
 
 tasks {
@@ -100,4 +103,13 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 java {
     // Configure the java toolchain. This allows gradle to auto-provision JDK 17 on systems that only have JDK 8 installed for example.
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+publishing {
+    repositories {
+        maven {
+            setUrl("https://nexus.jaholl.de/repository/JaHollDE-Repo/")
+            credentials { username = "NexusNoPass"; password = "NexusNoPass"}
+        }
+    }
 }

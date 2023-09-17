@@ -29,9 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Getter
 public class DACrafter extends DAStructure implements InventoryHolder {
@@ -195,6 +193,14 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         return content;
     }
 
+    public Map<Integer, ItemStack> getContentMap() {
+        Map<Integer, ItemStack> content = new HashMap<>();
+        for (int materialSlot : this.materialSlots) {
+            content.put(materialSlot, this.inventory.getItem(materialSlot));
+        }
+        return content;
+    }
+
 
     /**
      * Handles the inventory click event
@@ -232,7 +238,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         List<DACrafterRecipe> recipes = DAConfig.daRecipeReader.getCrafterRecipes();
         for (DACrafterRecipe recipe : recipes) {
             DA.log.debugLog("Checking recipe: " + recipe.getID());
-            boolean matchMaterials = recipe.matchMaterials(this.getContent().toArray(new ItemStack[0]));
+            boolean matchMaterials = recipe.matchMaterials(this.getContentMap());
             int viewers = this.inventory.getViewers().size();
             DA.log.debugLog("Match Materials: " + matchMaterials + " Viewers: " + viewers);
             if (matchMaterials && recipe.getRequiredPlayers() <= viewers) {
