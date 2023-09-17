@@ -174,7 +174,8 @@ public class DALoader {
             } else if (oldStructure != null) {
                 throw new RegisterStructureException("Structure already registered");
             } else {
-                return this.structureList.add(structure);
+                this.structureList.add(structure);
+                return this.getStructure(structure) != null;
             }
         }
         return false;
@@ -261,6 +262,8 @@ public class DALoader {
                 return daBarrel.getInventory().equals(inventory);
             } else if (daStructure instanceof DATable daTable) {
                 return daTable.getInventory().equals(inventory);
+            }else if (daStructure instanceof DACrafter daCrafter) {
+                return daCrafter.getInventory().equals(inventory);
             }
             return false;
         }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);

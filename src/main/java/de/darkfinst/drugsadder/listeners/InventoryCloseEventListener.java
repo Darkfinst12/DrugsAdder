@@ -20,8 +20,9 @@ public class InventoryCloseEventListener implements Listener {
         DAStructure daStructure = DA.loader.getStructure(event.getInventory());
         if (daStructure instanceof DABarrel daBarrel) {
             daBarrel.handleInventoryClose(event);
-        } else if (daStructure instanceof DACrafter dacRafter) {
-            dacRafter.handelInventoryClose(event);
+        } else if (daStructure instanceof DACrafter daCrafter) {
+            DA.log.debugLog("InventoryCloseEvent - DACrafter");
+            daCrafter.handelInventoryClose(event);
         }
     }
 

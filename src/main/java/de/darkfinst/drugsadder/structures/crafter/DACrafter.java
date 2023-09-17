@@ -144,7 +144,8 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         boolean isValid = crafterBody.isValidCrafter();
         if (isValid) {
             super.setBody(crafterBody);
-            DA.loader.registerDAStructure(this, isAsync);
+            boolean success = DA.loader.registerDAStructure(this, isAsync);
+            DA.log.debugLog("DACrafter.create() - success: " + success + " at " + sign.getLocation());
         }
         return isValid;
     }
@@ -158,7 +159,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      */
     public void open(Player player) {
         if (player.hasPermission("drugsadder.crafter.open")) {
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
+            //player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
             player.getOpenInventory().setTitle(this.getTitle(this.getProcess().getState()));
         } else {
