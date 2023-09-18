@@ -70,11 +70,24 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkArgs2(CommandSender commandSender, String[] args) {
         this.checkGetCustomItem(commandSender, args);
         this.checkConsume(commandSender, args);
-        if (args[0].equalsIgnoreCase("test")) {
+        if (args[0].equalsIgnoreCase("tableStates")) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
             for (DATable table : tables) {
                 String title = table.getTitle(Integer.parseInt(args[1]));
                 for (HumanEntity viewer : table.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
+                }
+            }
+        } else if (args[0].equalsIgnoreCase("crafterStates")) {
+            List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
+            for (DACrafter crafter : crafters) {
+                String title = crafter.getTitle(Integer.parseInt(args[1]));
+                for (HumanEntity viewer : crafter.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
                         inventoryView.setTitle(title);
@@ -162,7 +175,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 } else {
                     DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
                 }
-            }  else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
+            } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.furnace")) {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getFurnaceRecipes(), PossibleArgs.FURNACE);
                     DA.loader.msg(commandSender, recipes);
@@ -405,11 +418,24 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     private void checkArgs5(CommandSender commandSender, String[] args) {
         this.checkPlayerSet(commandSender, args);
-        if ("test".equalsIgnoreCase(args[0])) {
+        if ("tableArray".equalsIgnoreCase(args[0])) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
             for (DATable table : tables) {
                 String title = table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0);
                 for (HumanEntity viewer : table.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
+                }
+            }
+        } else if ("crafterArray".equalsIgnoreCase(args[0])) {
+            List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
+            for (DACrafter crafter : crafters) {
+                String title = crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0);
+                for (HumanEntity viewer : crafter.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
                         inventoryView.setTitle(title);

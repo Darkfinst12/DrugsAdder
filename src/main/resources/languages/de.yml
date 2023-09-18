@@ -78,6 +78,8 @@ Load_Error_Seed_AllowedTools: "Der Samen: &v1 hat keine erlaubten Werkzeuge! - B
 Load_Error_CustomItem_PotionMeta: "Das CustomItem: &v1 hat kein PotionMeta! - Bitte überprüfe die config.yml!"
 Load_Error_CustomItem_PotionColor: "Von dem CustomItem: &v1 is die PotionColor nicht ein ARGB Wert - Es wird der Standard verwendet!"
 Load_Error_CustomItem_PotionEffect: "Vom CustomItem: &v1 ist der PotionEffect: &v2 kein gültiger PotionEffect! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_ProcessingTime: "Das Rezept: &v1 hat keine Verarbeitungszeit! - Bitte überprüfe die config.yml!"
+Load_Error_Recipes_RequiredPlayers: "Das Rezept: &v1 hat keine benötigten Spieler! - Bitte überprüfe die config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "Das Rezept: &v1 wurde nicht gefunden! - Spieler: &v2 hat versucht das Rezept zu verwenden!"
@@ -92,6 +94,8 @@ Perm_Table_NoCreate: "Du hast keine Berechtigung, um ein Labortisch erstellen zu
 Perms_Table_NoOpen: "Du hast keine Berechtigung ,um ein Labortisch öffnen zu können!"
 Perms_Plant_NoHarvest: "Du hast keine Berechtigung, um eine Pflanze ernten zu können!"
 Perms_Plant_NoCreate: "Du hast keine Berechtigung, um eine Pflanze erstellen zu können!"
+Perm_Crafter_NoCreate: "Du hast keine Berechtigung, um einen Crafter erstellen zu können!"
+Perms_Crafter_NoOpen: "Du hast keine Berechtigung ,um einen Crafter öffnen zu können!"
 
 # ---- Player ----
 Player_Barrel_Created: "Das Fass wurde erfolgreich erstellt"
@@ -109,6 +113,8 @@ Player_Structure_Destroyed: "&v1 wurde erfolgreich zerstört!"
 Player_Plant_Harvested: "Die Pflanze wurde erfolgreich geerntet!"
 Player_Tool_NotEnoughDurability: "Dein Werkzeug hat nicht genug Haltbarkeit um diese Aktion auszuführen!"
 Player_Plant_WrongTool: "Du hast das falsche Werkzeug (&v1) benutzt um die Pflanze zu ernten!"
+Player_Crafter_Created: "Der Crafter wurde erfolgreich erstellt!"
+Player_Crafter_NotValid: "Der Crafter ist nicht korrekt gebaut!"
 
 # ---- Structures ----
 Structure_Name_Table: "Labortisch"

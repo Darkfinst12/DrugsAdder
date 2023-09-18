@@ -3,7 +3,7 @@ name: DrugsAdder
 version: 0.0.1
 api-version: 1.20
 softdepend: [ WorldGuard, ItemsAdder, Slimefun ]
-author: Jarod Békési
+author: Jarod A. M. Békési
 
 commands:
   drugsadder:
@@ -29,6 +29,7 @@ permissions:
       drugsadder.press: true
       drugsadder.table: true
       drugsadder.plant: true
+      drugsadder.crafter: true
 
   #*
   drugsadder.*:
@@ -39,6 +40,17 @@ permissions:
       drugsadder.cmd: true
       drugsadder.user: true
 
+
+  # -- Crafter --
+  drugsadder.crafter:
+    description: Allow to create and access Crafters
+    children:
+      drugsadder.crafter.create: true
+      drugsadder.crafter.open: true
+  drugsadder.crafter.create:
+    description: Allow to create a Crafter
+  drugsadder.crafter.open:
+    description: Allow to open a Crafter
 
   # -- Barrel --
   drugsadder.barrel:

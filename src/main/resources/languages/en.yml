@@ -116,7 +116,6 @@ Player_Plant_WrongTool: "You are using the wrong tool (&v1) to harvest this plan
 Player_Crafter_Created: "The crafter was created"
 Player_Crafter_NotValid: "The crafter is nit properly built"
 
-
 # ---- Structures ----
 Structure_Name_Table: "Laboratory Table"
 Structure_Name_Barrel: "Barrel"

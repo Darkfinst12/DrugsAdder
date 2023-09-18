@@ -23,10 +23,18 @@ logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
 
+#Table Title Array
+#Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
+tableTitleArray: "-7,-4,12,-2"
+#Table Crafter Title Array
+#Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
+crafterTitleArray: "0,8,10,-10"
+
 #Table States
 #Es muss immer dies 20 States geben
 #Du kannst jeden Unicode Character verwenden - Es ist nicht empfohlen Unicode Characters mehrfach zu verwenden
 #Ebenso wird empfohlen die standard Unicode Characters zu verwenden mit dem DrugsAdder Texturenpacket
+#Wenn Du die Unicode Characters ändern möchtest, musst Du auch das Texturenpacket ändern, für weitere Informationen siehe in der Wiki nach
 tableStates:
   0: "\uF000"
   1: "\uF001"
@@ -49,9 +57,20 @@ tableStates:
   19: "\uF013"
   20: "\uF014"
 
-#Table Title Array
-#Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
-tableTitleArray: "-7,-4,12,-2"
+#Crafter States
+#Es muss immer dies 8 States geben
+#Du kannst jeden Unicode Character verwenden - Es ist nicht empfohlen Unicode Characters mehrfach zu verwenden
+#Ebenso wird empfohlen die standard Unicode Characters zu verwenden mit dem DrugsAdder Texturenpacket
+#Wenn Du die Unicode Characters ändern möchtest, musst Du auch das Texturenpacket ändern, für weitere Informationen siehe in der Wiki nach
+crafterStates:
+  0: "\uF020"
+  1: "\uF021"
+  2: "\uF022"
+  3: "\uF023"
+  4: "\uF024"
+  5: "\uF025"
+  6: "\uF026"
+  7: "\uF027"
 
 #CustomItems
 customItems:
@@ -128,7 +147,7 @@ suspiciousPotionItem: "drugsadder:suspicious_potion"
 
 #Rezepte
 recipes:
-  #Der Abschnitt für die Fassrezepte fügen hier deine Rezepte ein
+  #Der Abschnitt für die Fass rezepte füge hier deine Rezepte ein
   barrel:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     dirty_cocaine:
@@ -156,7 +175,7 @@ recipes:
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:dirty_cocaine/1'
-  #Der Abschnitt für die Baurezepte (Werkbank) fügen hier deine Rezepte ein
+  #Der Abschnitt für die Baurezepte (Werkbank) füge hier deine Rezepte ein
   crafting:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     dirty_cocaine:
@@ -205,7 +224,45 @@ recipes:
           amount: 1
           matchType: "ALL"
       result: 'drugsadder:shrooms/6'
-  #Der Abschnitt für die Ofenrezepte fügen hier deine Rezepte ein
+  #Der Abschnitt für die Crafterrezepte füge hier deine Rezepte ein
+  crafter:
+    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    dirty_cocaine:
+      #Whether the Recipe is Shaped or not
+      isShaped: true
+      #The Shape of the Recipe - You musst add five Lines and five Characters per Line
+      shape:
+        - 'OXVXO'
+        - 'OXVXO'
+        - '0XVX0'
+        - '0XVX0'
+        - '0XVX0'
+      #The time it takes to process the Recipe in Seconds
+      processingTime: 10.0
+      #The amount of Players that are required for the Recipe
+      requiredPlayers: 1
+      #The Materials of the Recipe - You can add 25 Materials
+      #The position of the Material does not matter, but the Section must be in the Shape
+      materials:
+        #The Shape Key
+        X:
+          #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
+          #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          itemStack: 'minecraft:coal'
+          #The Amount of this Material that is required for this Recipe
+          amount: 1
+          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
+          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
+          #For more Information about MatchTypes check the Wiki
+          matchType: "ALL"
+        V:
+          itemStack: 'drugsadder:coca'
+          amount: 4
+          matchType: "ALL"
+        #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+      result: 'drugsadder:dirty_cocaine/6'
+  #Der Abschnitt für die Ofenrezepte füge hier deine Rezepte ein
   furnace:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     cocaine:
@@ -245,7 +302,7 @@ recipes:
         itemStack: 'drugsadder:dirty_cocaine'
         amount: 1
       result: 'drugsadder:cocaine/1'
-  #Der Abschnitt für die Braurezepte fügen hier deine Rezepte ein
+  #Der Abschnitt für die Pressrezepte füge hier deine Rezepte ein
   press:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     cocaine_pills:
@@ -272,18 +329,40 @@ recipes:
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:cocaine_pills/1'
+  #Der Abschnitt für die Labortischrezepte füge hier deine Rezepte ein
   table:
+    #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     test:
+      #Du kannst das Rezept aus bis zu zwei Materialien erstellen
+      #Der Filter, welcher für das erste Material benötigt wird
       filterOne: 'minecraft:paper/1'
+      #Ob der Filter verbraucht werden soll
       consumeFilterOne: true
+      #Der Brennstoff, welcher für das erste Material benötigt wird
       fuelOne: 'minecraft:coal/1'
+      #Die Zeit, die benötigt wird, um das erste Material zu verarbeiten - In Sekunden
+      processingTimeOne: 10.0
+      #Der Filter, welcher für das zweite Material benötigt wird
       filterTwo: 'minecraft:paper/1'
+      #Ob der Filter verbraucht werden soll
       consumeFilterTwo: true
+      #Der Brennstoff, welcher für das zweite Material benötigt wird
       fuelTwo: 'minecraft:coal/1'
+      #Die Zeit, die benötigt wird, um das zweite Material zu verarbeiten - In Sekunden
+      processingTimeTwo: 10.0
+      #Die Position des Materials spielt eine Rolle
+      #1 = one, 2 = two
       materials:
         1:
+          #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+          #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
+          #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
           itemStack: 'drugsadder:dirty_cocaine'
+          #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
           amount: 1
+          #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+          #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+          #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         2:
           itemStack: 'drugsadder:dirty_cocaine'
