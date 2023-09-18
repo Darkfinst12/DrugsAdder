@@ -207,7 +207,7 @@ public class DALoader {
             }
             boolean success = this.unregisterDAStructure(structure);
             if (success) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName()), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName().replace("DA", "")), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
 
         }

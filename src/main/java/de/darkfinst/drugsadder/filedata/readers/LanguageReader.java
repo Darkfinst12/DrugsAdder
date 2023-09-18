@@ -64,8 +64,8 @@ public class LanguageReader {
      * This method is used to get a string from the language file.
      *
      * @param key  The key of the string.
-     * @param args The arguments to replace the placeholders, if there are any.
-     * @return The found string with the placeholders replaced. - If no entry is found, it will return "%placeholder%".
+     * @param args The arguments to replace the placeholders if there are any.
+     * @return The found string with the placeholders replaced. - If no entry is found, it will return the given key.
      */
     public String get(String key, String... args) {
         String entry = entries.get(key);
@@ -75,7 +75,7 @@ public class LanguageReader {
             for (String arg : args) {
                 if (arg != null) {
                     i++;
-                    entry = entry.replace("&v" + i, arg);
+                    entry = entry.replace("%v" + i, arg);
                 }
             }
         } else {
