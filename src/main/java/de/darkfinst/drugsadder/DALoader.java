@@ -355,10 +355,8 @@ public class DALoader {
     }
 
     public void reloadConfig() {
-        //TODO: Fix this
         this.clearConfigData();
         this.initConfig();
-        this.initData();
     }
 
     private void clearConfigData() {

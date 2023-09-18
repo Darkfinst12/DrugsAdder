@@ -60,7 +60,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
             DALoader loader = DA.loader;
             if (args[0].equalsIgnoreCase(PossibleArgs.RELOAD.getArg())) {
                 loader.reloadConfig();
-                commandSender.sendMessage("Reloaded config");
+                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_Reload"));
             }
         } else {
             DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
