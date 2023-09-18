@@ -281,12 +281,13 @@ public class DACrafter extends DAStructure implements InventoryHolder {
     }
 
     public void handelInventoryClose(InventoryCloseEvent event) {
+        int viewers = event.getInventory().getViewers().size() - 1;
         DACrafterRecipe recipe = this.getProcess().getRecipe();
-        if (recipe != null && event.getInventory().getViewers().size() < recipe.getRequiredPlayers()) {
+        if (recipe != null && viewers < recipe.getRequiredPlayers()) {
+            DA.log.debugLog("Recipe cancelled");
             recipe.cancelProcess(this, false);
         }
-
-        if (event.getInventory().getViewers().isEmpty() && !DAConfig.crafterKeepInv) {
+        if (viewers == 0 && !DAConfig.crafterKeepInv) {
             this.destroyInventory();
         }
     }
@@ -301,6 +302,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
                 this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
             }
         }
+        this.inventory.clear();
     }
 
     /**

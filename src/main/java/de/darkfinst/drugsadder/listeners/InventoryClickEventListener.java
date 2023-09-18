@@ -27,7 +27,6 @@ public class InventoryClickEventListener implements Listener {
         } else if (daStructure instanceof DATable daTable) {
             daTable.handleInventoryClick(event);
         } else if (daStructure instanceof DACrafter daCrafter) {
-            DA.log.debugLog("InventoryClickEvent - DACrafter");
             daCrafter.handleInventoryClick(event);
         } else if (InventoryType.FURNACE.equals(event.getInventory().getType())) {
             this.handelFurnace(event);
