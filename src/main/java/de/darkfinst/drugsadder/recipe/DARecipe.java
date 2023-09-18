@@ -2,7 +2,9 @@ package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +28,7 @@ public abstract class DARecipe {
     /**
      * The materials of the recipe
      */
-    private final DAItem[] materials;
+    private DAItem[] materials;
     /**
      * The result of the recipe
      */
@@ -71,6 +73,10 @@ public abstract class DARecipe {
             }
         }
         return true;
+    }
+
+    public void setMaterials(DAItem... materials) {
+        this.materials = materials;
     }
 
     /**

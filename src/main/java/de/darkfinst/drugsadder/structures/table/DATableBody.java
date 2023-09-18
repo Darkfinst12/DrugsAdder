@@ -18,17 +18,17 @@ import org.bukkit.block.data.type.WallSign;
 public class DATableBody extends DABody {
 
     /**
-     * The table of the body
-     */
-    private final DATable table;
-    /**
      * The sign of the table
      */
     private final Block sign;
 
-    public DATableBody(DATable table, Block sign) {
+    /**
+     * The process of the table
+     */
+    private final DATableProcess process = new DATableProcess();
+
+    public DATableBody(Block sign) {
         super(sign.getWorld());
-        this.table = table;
         this.sign = sign;
     }
 

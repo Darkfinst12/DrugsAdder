@@ -4,16 +4,14 @@ import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Particle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.ItemStack;
 
 public class InventoryClickEventListener implements Listener {
 
@@ -28,6 +26,9 @@ public class InventoryClickEventListener implements Listener {
             daBarrel.handleInventoryClick(event);
         } else if (daStructure instanceof DATable daTable) {
             daTable.handleInventoryClick(event);
+        } else if (daStructure instanceof DACrafter daCrafter) {
+            DA.log.debugLog("InventoryClickEvent - DACrafter");
+            daCrafter.handleInventoryClick(event);
         } else if (InventoryType.FURNACE.equals(event.getInventory().getType())) {
             this.handelFurnace(event);
         } else if (InventoryType.WORKBENCH.equals(event.getInventory().getType())) {

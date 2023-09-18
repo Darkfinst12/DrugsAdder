@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder.filedata;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.filedata.readers.*;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -37,7 +38,14 @@ public class DAConfig {
 
 
     public static String cancelRecipeItem;
+    public static String suspiciousPotionItem;
 
+    public static Map<Integer, String> tableStates = new HashMap<>();
+    public static int[] tableTitleArray = new int[]{0, 0, 0, 0};
+
+    public static Map<Integer, String> crafterStates = new HashMap<>();
+    public static int[] crafterTitleArray = new int[]{0, 0, 0, 0};
+    public static boolean crafterKeepInv;
 
     public static DACustomItemReader customItemReader;
     public static boolean logCustomItemLoadInfo;
@@ -49,8 +57,6 @@ public class DAConfig {
     public static boolean logRecipeLoadComplete;
     public static boolean logRecipeLoadError;
 
-    public static Map<Integer, String> tableStates = new HashMap<>();
-
     public static DADrugReader drugReader;
     public static boolean logDrugLoadInfo;
     public static boolean logDrugLoadComplete;
@@ -61,7 +67,6 @@ public class DAConfig {
     public static boolean logSeedLoadComplete;
     public static boolean logSeedLoadError;
 
-    public static int[] tableTitleArray = new int[]{0, 0, 0, 0};
 
     /**
      * Checks if the config exists and creates it if not
@@ -153,7 +158,7 @@ public class DAConfig {
      *
      * @param config the config file
      */
-    public static void readConfig(FileConfiguration config) {
+    public static void readConfig(FileConfiguration config) throws NumberFormatException {
 
         //Set Language
         loader.language = config.getString("language", "en");
@@ -180,6 +185,8 @@ public class DAConfig {
 
         //Loads the CancelRecipeItem
         cancelRecipeItem = config.getString("cancelRecipeItem", "drugsadder:cancel_recipe_item");
+        //Loads the SuspiciousPotionItem
+        suspiciousPotionItem = config.getString("suspiciousPotionItem", "drugsadder:suspicious_potion_item");
 
         //Loads the Data
         loadDataAsync = config.getBoolean("loadDataAsync", true);
@@ -190,12 +197,8 @@ public class DAConfig {
         //Loads the reset values
         resetItemCrafting = config.getBoolean("resetItemCrafting", true);
         resetItemSmelting = config.getBoolean("resetItemSmelting", true);
-
-        //Title Array
-        tableTitleArray = Arrays.stream(config.getString("tableTitleArray", "120,4,1,-10").split(",")).mapToInt(Integer::parseInt).toArray();
-        if (tableTitleArray.length != 4) {
-            tableTitleArray = new int[]{0, 0, 0, 0};
-        }
+        //Loads the keep values
+        crafterKeepInv = config.getBoolean("crafterKeepInventory", false);
 
         //Loads the Logging
         logCustomItemLoadInfo = config.getBoolean("logCustomItemLoadInfo", true);
@@ -211,11 +214,26 @@ public class DAConfig {
         logSeedLoadComplete = config.getBoolean("logSeedLoadComplete", true);
         logSeedLoadError = config.getBoolean("logSeedLoadError", true);
 
-        //Loads the TableStates
+        //Loads the States
         if (config.contains("tableStates")) {
             for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
                 tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
             }
+        }
+        if (config.contains("crafterStates")) {
+            for (String key : config.getConfigurationSection("crafterStates").getKeys(false)) {
+                crafterStates.put(Integer.parseInt(key), config.getString("crafterStates." + key));
+            }
+        }
+
+        //Title Arrays
+        tableTitleArray = Arrays.stream(config.getString("tableTitleArray", "120,4,1,-10").split(",")).mapToInt(DAUtil::parseInt).toArray();
+        if (tableTitleArray.length != 4) {
+            tableTitleArray = new int[]{0, 0, 0, 0};
+        }
+        crafterTitleArray = Arrays.stream(config.getString("crafterTitleArray", "120,4,1,-10").split(",")).mapToInt(DAUtil::parseInt).toArray();
+        if (crafterTitleArray.length != 4) {
+            crafterTitleArray = new int[]{0, 0, 0, 0};
         }
 
         //Loads the own CustomItems
