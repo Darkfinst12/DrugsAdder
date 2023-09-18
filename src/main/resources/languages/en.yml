@@ -20,6 +20,12 @@ Command_Info_ListItems: "All registered &v1:"
 Command_Error_RecipeNotFound: "The recipe: &v1 was not found!"
 Command_Args_Player: "player"
 Command_Error_NoPermission: "You have no permission to execute this command!"
+Command_Args_Plant: "plant"
+Command_Args_Clear: "clear"
+Command_Args_Set: "set"
+Command_Info_Addicted: "The player: &v1 is now addicted to the drug: &v2 with &v3 addictionPoints!"
+Command_Info_Cleared: "The player: &v1 has been cleared of the addictionPoints (&v2)!"
+Command_Info_NothingToClear: "The player: &v1 has no addictions!"
 
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
@@ -69,6 +75,11 @@ Load_Error_Seed_Drop_NotConfigSection: "Off the Seed: &v1 the Drop: &v2 is not p
 Load_Error_Seed_Drop_Probability: "Off the Seed: &v1 in the Drop: &v2 the probability: &v3 is not a valid value! - It must be between 0 and 100 and must not have more than 6 digits!"
 Load_Error_NoSeeds: "No seeds were configured in the config.yml!"
 Load_Error_Seed_AllowedTools: "The Seed: &v1 has no allowed tools! - Please check the config.yml!"
+Load_Error_CustomItem_PotionMeta: "The CustomItem: &v1 has no PotionMeta! - Please check the config.yml!"
+Load_Error_CustomItem_PotionColor: "Of CustomItem: &v1 the PotionColor is not a ARGB Value - Using default!"
+Load_Error_CustomItem_PotionEffect: "Of CustomItem: &v1 the PotionEffect: &v2 is not a valid PotionEffect! - Please check the config.yml!"
+Load_Error_Recipes_ProcessingTime: "The recipe: &v1 has no processing time! - Please check the config.yml!"
+Load_Error_Recipes_RequiredPlayers: "The recipe: &v1 has no required players! - Please check the config.yml!"
 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: &v1 was not found! - Player: &v2 attempted the recipe!"
@@ -83,6 +94,8 @@ Perm_Table_NoCreate: "You have no permission to create a table!"
 Perms_Table_NoOpen: "You have no permission to open a table!"
 Perms_Plant_NoCreate: "You have no permission to create a plant!"
 Perms_Plant_NoHarvest: "You have no permission to harvest a plant!"
+Perm_Crafter_NoCreate: "You have not permission to create a crafter!"
+Perms_Crafter_NoOpen: "You have no permission to open a crafter!"
 
 # ---- Player ----
 Player_Barrel_Created: "The barrel was created"
@@ -100,7 +113,11 @@ Player_Structure_Destroyed: "&v1 was successfully destroyed!"
 Player_Plant_Harvested: "The plant was successfully harvested!"
 Player_Tool_NotEnoughDurability: "Your tool does not have enough durability to perform this action!"
 Player_Plant_WrongTool: "You are using the wrong tool (&v1) to harvest this plant!"
+Player_Crafter_Created: "The crafter was created"
+Player_Crafter_NotValid: "The crafter is nit properly built"
 
 # ---- Structures ----
 Structure_Name_Table: "Laboratory Table"
 Structure_Name_Barrel: "Barrel"
+Structure_Name_Press: "Press"
+Structure_Name_Crafter: "Crafter"

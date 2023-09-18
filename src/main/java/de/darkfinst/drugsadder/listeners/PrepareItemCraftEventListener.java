@@ -3,7 +3,7 @@ package de.darkfinst.drugsadder.listeners;
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import de.darkfinst.drugsadder.filedata.LanguageReader;
+import de.darkfinst.drugsadder.filedata.readers.LanguageReader;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.recipe.DACraftingRecipe;
 import de.darkfinst.drugsadder.recipe.DARecipe;

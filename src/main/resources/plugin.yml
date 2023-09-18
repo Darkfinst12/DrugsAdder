@@ -3,7 +3,7 @@ name: DrugsAdder
 version: 0.0.1
 api-version: 1.20
 softdepend: [ WorldGuard, ItemsAdder, Slimefun ]
-author: Jarod Békési
+author: Jarod A. M. Békési
 
 commands:
   drugsadder:
@@ -27,8 +27,9 @@ permissions:
     children:
       drugsadder.barrel: true
       drugsadder.press: true
-      drugsadder.cauldron: true
       drugsadder.table: true
+      drugsadder.plant: true
+      drugsadder.crafter: true
 
   #*
   drugsadder.*:
@@ -39,6 +40,17 @@ permissions:
       drugsadder.cmd: true
       drugsadder.user: true
 
+
+  # -- Crafter --
+  drugsadder.crafter:
+    description: Allow to create and access Crafters
+    children:
+      drugsadder.crafter.create: true
+      drugsadder.crafter.open: true
+  drugsadder.crafter.create:
+    description: Allow to create a Crafter
+  drugsadder.crafter.open:
+    description: Allow to open a Crafter
 
   # -- Barrel --
   drugsadder.barrel:
@@ -73,19 +85,16 @@ permissions:
   drugsadder.table.open:
     description: Allow to open a Table
 
-  # -- Cauldron --
-  drugsadder.cauldron:
-    description: Allow to view the current Cooking time, to add Ingredients and fill a Bottle form a Cauldron
+  # -- Plant --
+  drugsadder.plant:
+    description: Allow to create and harvest a Plant
     children:
-      drugsadder.cauldron.time: true
-      drugsadder.cauldron.insert: true
-      drugsadder.cauldron.fill: true
-  drugsadder.cauldron.time:
-    description: View the current Cooking time of a cauldron with a watch
-  drugsadder.cauldron.insert:
-    description: Add Ingredients to the Cauldron
-  drugsadder.cauldron.fill:
-    description: Fill a Bottle form a Cauldron wit a DrugsAdder brew
+      drugsadder.plant.create: true
+      drugsadder.plant.harvest: true
+  drugsadder.plant.create:
+    description: Allow to plant a Plant
+  drugsadder.plant.harvest:
+    description: Allow to harvest a Plant
 
   # -- Commands --
   drugsadder.cmd:
@@ -96,6 +105,7 @@ permissions:
       drugsadder.cmd.help: true
       drugsadder.cmd.info: true
       drugsadder.cmd.list: true
+      drugsadder.cmd.player: true
   drugsadder.cmd.reload:
     description: Reload config
   drugsadder.cmd.help:
@@ -161,3 +171,12 @@ permissions:
     description: List all Furnace Recipes
   drugsadder.cmd.list.customitems:
     description: List all CustomItems
+  drugsadder.cmd.player:
+    description: Gives access to all Player Commands
+    children:
+      drugsadder.cmd.player.set: true
+      drugsadder.cmd.player.clear: true
+  drugsadder.cmd.player.set:
+    description: Set the addiction of a Player for a Drug
+  drugsadder.cmd.player.clear:
+    description: Clear the addiction of a Player for a Drug or all Drugs

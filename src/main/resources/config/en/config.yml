@@ -23,14 +23,16 @@ logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
 
-#Table Title Array
-#It must have four Values - For detailed Information check the Wiki
-tableTitleArray: "-3,2,8,-12"
+#The Table title Array, it must always be four Numbers - For more Information check the Wiki
+tableTitleArray: "0,8,10,-10"
+#The Crafter title Array, it must always be four Numbers - For more Information check the Wiki
+crafterTitleArray: "0,8,10,-10"
 
-#Table States
-#It must be eight States
+#The Table States
+#It must be 11 States
 #You can use any Unicode Character you Want - It is not recommended to use the same Character twice
-#It is also recommended to use the default Unicode Characters with the DrugsAdder Resourcepack
+#It is also recommended to use the default Unicode Characters with the DrugsAdder Resource pack
+#If you want to change the Unicode Characters you must also change the Resource pack for more Information check the Wiki
 tableStates:
   0: "\uF000"
   1: "\uF001"
@@ -40,6 +42,36 @@ tableStates:
   5: "\uF005"
   6: "\uF006"
   7: "\uF007"
+  8: "\uF008"
+  9: "\uF009"
+  10: "\uF00A"
+  11: "\uF00B"
+  12: "\uF00C"
+  13: "\uF00D"
+  14: "\uF00E"
+  16: "\uF00F"
+  17: "\uF011"
+  18: "\uF012"
+  19: "\uF013"
+  20: "\uF014"
+
+#The Crafter States
+#It must be eight States
+#You can use any Unicode Character you Want - It is not recommended to use the same Character twice
+#It is also recommended to use the default Unicode Characters with the DrugsAdder Resource pack
+#If you want to change the Unicode Characters you must also change the Resource pack for more Information check the Wiki
+crafterStates:
+  0: "\uF020"
+  1: "\uF021"
+  2: "\uF022"
+  3: "\uF023"
+  4: "\uF024"
+  5: "\uF025"
+  6: "\uF026"
+  7: "\uF027"
+
+#If a Crafter should keep its Inventory when it is closed (That means no Player is using it)
+crafterKeepInv: true
 
 #Custom Items
 customItems:
@@ -59,7 +91,7 @@ customItems:
     lore:
       - '&7Cocaine'
     #CustomModelData of the Item
-    #Note the Model will be taken from the Users highest Resourcepack, which contains the Model
+    #Note the Model will be taken from the Users highest Resourcepack, wich contains the Model
     customModelData: 1
   dirty_cocaine:
     name: '&fDirty Cocaine'
@@ -91,6 +123,16 @@ customItems:
     lore:
       - '&7Shrooms'
     customModelData: 6
+  suspicious_potion:
+    name: '&cSus Potion'
+    material: 'potion'
+    lore:
+      - '&7SUS Potion'
+    customModelData: 0
+    potionMeta:
+      color: "255,10,255,125"
+      effects:
+        - 'PotionEffect{type=SPEED, duration=600, level=2, particles=true, icon=true}'
 
 #Whether a bucket should be returned when a filled one is used when crafting
 returnBucket: true
@@ -101,10 +143,16 @@ resetItemCrafting: true
 #Whether Items in a Furnace (smelting slot) should be reverted to their clean Version
 resetItemSmelting: true
 
+#The NamespacedID of the Item that is used when a Recipe is canceled
+cancelRecipeItem: "drugsadder:cancel_recipe_item"
+#The NamespacedID of the Item that is used when a Recipe is not valid after the processing
+#Currently only used for the Table
+suspiciousPotionItem: "drugsadder:suspicious_potion"
+
 
 #Recipes
 recipes:
-  #The Section for the Barrel Recipes add here your Recipes
+  #The Section for the Barrel Recipes adds here your Recipes
   barrel:
     #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
     dirty_cocaine:
@@ -112,18 +160,18 @@ recipes:
       duration: 10
       #
       processOverdueAcceptance: 5.5 #In Minutes
-      #The Materials of the Recipe - You can add 3 Materials
+      #The Materials of the Recipe - You can add three Materials
       #The position of the Material does not matter
       materials:
         1:
           #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder, check the Wiki
           itemStack: 'minecraft:coal'
-          #The Amount of this Material that are required for this Recipe
+          #The Amount of this Material that is required for this Recipe
           amount: 1
           #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
+          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME, EXACT_LORE"
           #For more Information about MatchTypes check the Wiki
           matchType: "ALL"
         2:
@@ -132,31 +180,31 @@ recipes:
           matchType: "ALL"
         #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
       result: 'drugsadder:dirty_cocaine/1'
-  #The Section for the Crafting Recipes add here your Recipes
+  #The Section for the Crafting Recipes adds here your Recipes
   crafting:
     #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
     dirty_cocaine:
       #Whether the Recipe is Shaped or not
       isShaped: true
-      #The Shape of the Recipe - You musst add 3 Lines and 3 Characters per Line
+      #The Shape of the Recipe - You musst add three Lines and three Characters per Line
       shape:
         - 'XVX'
         - 'XVX'
         - 'XVX'
-      #The Materials of the Recipe - You can add 9 Materials
-      #The position of the Material does not matter but the Section must be in the Shape
+      #The Materials of the Recipe - You can add nine Materials
+      #The position of the Material does not matter, but the Section must be in the Shape
       materials:
         #The Shape Key
         X:
           #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder, check the Wiki
           itemStack: 'minecraft:coal'
-          #The Amount of this Material that are required for this Recipe
+          #The Amount of this Material that is required for this Recipe
           amount: 1
           #An MatchType is not needed
           #All Items in a CraftingBench will be reverted to their clean Version
-          #That means if a Lore or a Name is added by a Player to the Item it will be removed
+          #That means if a Lore or a Name is added by a Player to the Item, it will be removed
           #For more Information check the Wiki
           #You can disable this Option, just set resetItemCrafting to false
         V:
@@ -178,8 +226,47 @@ recipes:
         O:
           itemStack: 'drugsadder:coca'
           amount: 1
-      result: 'drugsadder:shrooms/6'
-  #The Section for the Furnace Recipes add here your Recipes
+      result:
+        'drugsadder:shrooms/6'
+  #The Section for the Crafter recipes adds here your Recipes
+  crafter:
+    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    dirty_cocaine:
+      #Whether the Recipe is Shaped or not
+      isShaped: true
+      #The Shape of the Recipe - You musst add five Lines and five Characters per Line
+      shape:
+        - 'OXVXO'
+        - 'OXVXO'
+        - '0XVX0'
+        - '0XVX0'
+        - '0XVX0'
+      #The time it takes to process the Recipe in Seconds
+      processingTime: 10.0
+      #The amount of Players that are required for the Recipe
+      requiredPlayers: 1
+      #The Materials of the Recipe - You can add 25 Materials
+      #The position of the Material does not matter, but the Section must be in the Shape
+      materials:
+        #The Shape Key
+        X:
+          #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
+          #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder, check the Wiki
+          itemStack: 'minecraft:coal'
+          #The Amount of this Material that is required for this Recipe
+          amount: 1
+          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
+          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME, EXACT_LORE"
+          #For more Information about MatchTypes check the Wiki
+          matchType: "ALL"
+        V:
+          itemStack: 'drugsadder:coca'
+          amount: 4
+          matchType: "ALL"
+        #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+      result: 'drugsadder:dirty_cocaine/6'
+  #The Section for the Furnace recipes adds here your Recipes
   furnace:
     #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
     cocaine:
@@ -189,16 +276,16 @@ recipes:
       cookingTime: 100
       #The Experience you receive for the Recipe
       exp: 0
-      #The Materials of the Recipe - You can only add 1 Material
+      #The Materials of the Recipe - You can only add one Material
       material:
         #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-        #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-        #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+        #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+        #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder, check the Wiki
         itemStack: 'drugsadder:dirty_cocaine'
         #The Amount is always 1
         #An MatchType is not needed
         #All Items in a Furnace (smelting slot) will be reverted to their clean Version
-        #That means if a Lore or a Name is added by a Player to the Item it will be removed
+        #That means if a Lore or a Name is added by a Player to the Item, it will be removed
         #For more Information check the Wiki
         #You can disable this Option, just set resetItemSmelting to false
       #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
@@ -219,7 +306,7 @@ recipes:
         itemStack: 'drugsadder:dirty_cocaine'
         amount: 1
       result: 'drugsadder:cocaine/1'
-  #The Section for the Press Recipes add here your Recipes
+  #The Section for the Press recipes adds here your Recipes
   press:
     #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
     cocaine_pills:
@@ -231,29 +318,44 @@ recipes:
       returnMold: true
       #The Materials of the Recipe - You can add as many as you want
       #The position of the Material does not matter
-      #It is not recommended to use more than 3 Materials
+      #It is not recommended to use more than three Materials
       materials:
         1:
           #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use a other Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
+          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder, check the Wiki
           itemStack: 'drugsadder:dirty_cocaine'
-          #The Amount of this Material that are required for this Recipe
+          #The Amount of this Material that is required for this Recipe
           amount: 2
           #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
+          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME, EXACT_LORE"
           #For more Information about MatchTypes check the Wiki
           matchType: "ALL"
       #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
       result: 'drugsadder:cocaine_pills/1'
+  #The Section for the Table recipes adds here your Recipes
   table:
+    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
     test:
+      #You can create the recipe with up to two Materials
+      #The filter for the first Material
       filterOne: 'minecraft:paper/1'
+      #If the filter should be consumed when the Recipe is processed
       consumeFilterOne: true
+      #The fuel for the first Material
       fuelOne: 'minecraft:coal/1'
+      #The time it takes to process the first Material
+      processingTimeOne: 20.0
+      #The filter for the second Material
       filterTwo: 'minecraft:paper/1'
+      #If the filter should be consumed when the Recipe is processed
       consumeFilterTwo: true
+      #The fuel for the second Material
       fuelTwo: 'minecraft:coal/1'
+      #The time it takes to process the second Material
+      processingTimeTwo: 20.0
+      #The position of the Material does matter
+      #1 = one, 2 = two
       materials:
         1:
           itemStack: 'drugsadder:dirty_cocaine'
@@ -287,9 +389,9 @@ drugs:
       #How much of this Drug can be consumed before the player overdoses
       #For the timespan of the overdose check the overdoseTime
       overdose: 3
-      #The timespan in which the player overdoses, if the drug is consumed to often
+      #The timespan in wich the player overdoses, if the drug is consumed to often
       #example: 600 means 10 Minutes, in thies 10 minutes the player can consume three times the Drug without overdosing
-      overdoseTime: 600
+      overdoseTime: 120
       #The time it takes to reduce the addictionPoints in minutes
       reductionTime: 10
       #The amount of addictionPoints that is reduced when the reductionTime is over
@@ -352,30 +454,28 @@ seeds:
     #The time it takes to grow the Plant in Seconds
     growTime: 60
     #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-    #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
+    #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME, EXACT_LORE"
     #For more Information about MatchTypes check the Wiki
     matchType: "ALL"
     #The Tools that are allowed to harvest the Plant - You can add as many as you want
-    #It is written like this: "NamespacedID": damage - You can use CustomItems here
+    #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
     #The Number represents the damage the Item takes when it is used to harvest the Plant
     #Be reminded that the Item will be destroyed when the damage is higher than the maxDamage of the Item
     #Also only Items that are damageable will receive damage
     #If you want to disable the damage just set the damage to 0
-    #The enchantment durability will be considered when the damage is calculated
     allowedTools:
       "minecraft:air": 0
       "minecraft:diamond_hoe": 1
     #The Drops of the Plant - You can add as many as you want
     #The order of the Drops does not matter
-    #The enchantment fortune will not be considered when the drops are calculated
     drops:
       1:
         #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
         itemStack: 'drugsadder:coca'
-        #The Amount of this Material that are dropped
+        #The Amount of this Material that is dropped
         amount: 1
         #The Probability of the Drop - The Probability is in Percent - 100 means 100%
-        #The Probability must be between 0 and 100 - If the Probability is 0 the Drop will not be dropped
+        #The Probability must be between 0 and 100 - If the Probability is 0, the Drop will not be dropped.
         #The Probability can have 3 decimal places - Example: 50.333
         probability: 100
       2:

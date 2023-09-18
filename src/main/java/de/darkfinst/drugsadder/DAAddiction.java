@@ -96,7 +96,6 @@ public class DAAddiction {
      */
     public void addConsumed(DAPlayer daPlayer, long time) {
         if (this.overdose > 1) {
-            DA.log.debugLog("Adding consumed drug to player " + daPlayer.getUuid() + " at time " + time);
             ConcurrentLinkedDeque<Long> consumed = this.lastConsummations.getOrDefault(daPlayer, null);
             if (consumed == null) {
                 consumed = new ConcurrentLinkedDeque<>();

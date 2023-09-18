@@ -1,4 +1,4 @@
-package de.darkfinst.drugsadder.filedata;
+package de.darkfinst.drugsadder.filedata.readers;
 
 import de.darkfinst.drugsadder.DA;
 import org.bukkit.configuration.file.FileConfiguration;

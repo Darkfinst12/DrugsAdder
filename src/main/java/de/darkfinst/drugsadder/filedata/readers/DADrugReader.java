@@ -1,6 +1,7 @@
-package de.darkfinst.drugsadder.filedata;
+package de.darkfinst.drugsadder.filedata.readers;
 
 import de.darkfinst.drugsadder.*;
+import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;

@@ -2,24 +2,22 @@ package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
-import de.darkfinst.drugsadder.filedata.DAData;
-import de.darkfinst.drugsadder.filedata.DataSave;
-import de.darkfinst.drugsadder.filedata.LanguageReader;
+import de.darkfinst.drugsadder.filedata.data.DAData;
+import de.darkfinst.drugsadder.filedata.data.DataSave;
+import de.darkfinst.drugsadder.filedata.readers.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
-import de.darkfinst.drugsadder.recipe.DATableRecipe;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.filedata.DAConfig;
-import de.darkfinst.drugsadder.structures.table.DATableProcess;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -32,8 +30,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -178,7 +174,8 @@ public class DALoader {
             } else if (oldStructure != null) {
                 throw new RegisterStructureException("Structure already registered");
             } else {
-                return this.structureList.add(structure);
+                this.structureList.add(structure);
+                return this.getStructure(structure) != null;
             }
         }
         return false;
@@ -265,6 +262,8 @@ public class DALoader {
                 return daBarrel.getInventory().equals(inventory);
             } else if (daStructure instanceof DATable daTable) {
                 return daTable.getInventory().equals(inventory);
+            }else if (daStructure instanceof DACrafter daCrafter) {
+                return daCrafter.getInventory().equals(inventory);
             }
             return false;
         }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);
@@ -299,6 +298,8 @@ public class DALoader {
             daPress.usePress(player, block);
         } else if (daStructure instanceof DAPlant daPlant) {
             daPlant.checkHarvest(player);
+        } else if (daStructure instanceof DACrafter daCRafter) {
+            daCRafter.open(player);
         }
     }
 
@@ -357,7 +358,7 @@ public class DALoader {
         //TODO: Fix this
         this.clearConfigData();
         this.initConfig();
-        this.initConfig();
+        this.initData();
     }
 
     private void clearConfigData() {

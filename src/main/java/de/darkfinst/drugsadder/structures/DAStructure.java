@@ -1,8 +1,8 @@
 package de.darkfinst.drugsadder.structures;
 
 import de.darkfinst.drugsadder.DA;
-import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
+import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
@@ -60,6 +60,7 @@ public abstract class DAStructure {
             int pressID = 0;
             int tableID = 0;
             int plantID = 0;
+            int crafterID = 0;
             for (DAStructure structure : DA.loader.getStructureList()) {
                 if (structure instanceof DABarrel barrel) {
                     String worldName = barrel.getWorld().getUID().toString();
@@ -116,6 +117,10 @@ public abstract class DAStructure {
 
                     config.set(prefix + ".forRemoval", table.isForRemoval());
 
+                    config.set(prefix + ".process.state", table.getProcess().getState());
+                    config.set(prefix + ".process.recipe.one", table.getProcess().getRecipeOne() == null ? "null" : table.getProcess().getRecipeOne().getID());
+                    config.set(prefix + ".process.recipe.two", table.getProcess().getRecipeTwo() == null ? "null" : table.getProcess().getRecipeTwo().getID());
+
                     int slot = 0;
                     ItemStack item;
                     ConfigurationSection invConfig = null;
@@ -125,7 +130,7 @@ public abstract class DAStructure {
                             if (invConfig == null) {
                                 invConfig = config.createSection(prefix + ".inv");
                             }
-                            // ItemStacks are configurationSerializeable, makes them
+                            // ItemStacks are configurationSerializable, makes them
                             // really easy to save
                             invConfig.set(slot + "", item);
                         }
@@ -133,11 +138,41 @@ public abstract class DAStructure {
                         slot++;
                     }
                     tableID++;
+                } else if (structure instanceof DACrafter crafter) {
+                    String worldName = crafter.getWorld().getUID().toString();
+                    String prefix = worldName + "." + "crafters." + crafterID;
+
+                    Location loc = crafter.getBody().getSign().getLocation();
+                    config.set(prefix + ".sign", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+
+                    config.set(prefix + ".forRemoval", crafter.isForRemoval());
+
+                    config.set(prefix + ".process.state", crafter.getProcess().getState());
+                    config.set(prefix + ".process.recipe", crafter.getProcess().getRecipe() == null ? "null" : crafter.getProcess().getRecipe().getID());
+
+                    int slot = 0;
+                    ItemStack item;
+                    ConfigurationSection invConfig = null;
+                    while (slot < crafter.getInventory().getSize()) {
+                        item = crafter.getInventory().getItem(slot);
+                        if (item != null) {
+                            if (invConfig == null) {
+                                invConfig = config.createSection(prefix + ".inv");
+                            }
+                            // ItemStacks are configurationSerializable, makes them
+                            // really easy to save
+                            invConfig.set(slot + "", item);
+                        }
+
+                        slot++;
+                    }
+                    crafterID++;
                 } else if (structure instanceof DAPlant plant) {
                     String worldName = plant.getWorld().getUID().toString();
                     String prefix = worldName + "." + "plants." + plantID;
 
                     config.set(prefix + ".forRemoval", plant.isForRemoval());
+                    config.set(prefix + ".lastHarvest", plant.getLastHarvest());
 
                     Location loc = plant.getBody().getPlantBLock().getLocation();
                     config.set(prefix + ".plant", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());

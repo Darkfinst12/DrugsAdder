@@ -1,17 +1,23 @@
-package de.darkfinst.drugsadder.filedata;
+package de.darkfinst.drugsadder.filedata.readers;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.DAEffect;
 import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.ItemMatchType;
+import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,6 +95,16 @@ public class DACustomItemReader {
             itemMeta.setCustomModelData(cmd);
         }
         itemStack.setItemMeta(itemMeta);
+        if (itemStack.getItemMeta() instanceof PotionMeta potionMeta) {
+            potionMeta = this.loadPotionMeta(itemID, potionMeta, itemConfig);
+            if (potionMeta == null) {
+                return;
+            } else {
+                itemStack.setItemMeta(potionMeta);
+            }
+        } else {
+            itemStack.setItemMeta(itemMeta);
+        }
         DAItem item = new DAItem(itemStack, name, lore, cmd, namespacedID);
         item.setAmount(1);
 
@@ -96,6 +112,56 @@ public class DACustomItemReader {
         if (DAConfig.logCustomItemLoadInfo) {
             this.logInfo("Load_Info_CustomItem_Loaded", itemID);
         }
+    }
+
+    private PotionMeta loadPotionMeta(String itemID, PotionMeta potionMeta, ConfigurationSection itemConfig) {
+        ConfigurationSection potionConfig = itemConfig.getConfigurationSection("potionMeta");
+        if (potionConfig == null) {
+            this.logError("Load_Error_CustomItem_PotionMeta", itemID);
+            return null;
+        }
+        String argb = potionConfig.getString("color", "255,255,255,255");
+
+        if (argb.split(",").length != 4) {
+            this.logError("Load_Error_CustomItem_PotionColor", itemID);
+        } else {
+            argb = "255,255,255,255";
+        }
+        String[] argbSplit = argb.split(",");
+
+        int alpha = Integer.parseInt(argbSplit[0]);
+        int red = Integer.parseInt(argbSplit[1]);
+        int green = Integer.parseInt(argbSplit[2]);
+        int blue = Integer.parseInt(argbSplit[3]);
+        potionMeta.setColor(Color.fromARGB(alpha, red, green, blue));
+
+        potionConfig.getStringList("effects").forEach(effectString -> {
+            PotionEffect potionEffect = this.loadPotionEffect(effectString);
+            if (potionEffect != null) {
+                potionMeta.addCustomEffect(potionEffect, true);
+            }
+        });
+
+        return potionMeta;
+    }
+
+
+    private PotionEffect loadPotionEffect(String effectString) throws NumberFormatException {
+        effectString = effectString.replace("PotionEffect{", "").replace("}", "");
+        Map<String, String> map = DAUtil.parsMap(effectString);
+
+        PotionEffectType effectType = PotionEffectType.getByName(Objects.requireNonNullElse(map.get("type"), "null"));
+        int duration = Integer.parseInt(Objects.requireNonNullElse(map.get("duration"), "-1"));
+        int level = Integer.parseInt(Objects.requireNonNullElse(map.get("level"), "-1"));
+        if (effectType == null || duration == -1 || level == -1) {
+            String effectName = Objects.requireNonNullElse(map.get("type"), "null");
+            this.logError("Load_Error_CustomItem_PotionEffect", effectName);
+            return null;
+        }
+        boolean particles = Boolean.parseBoolean(Objects.requireNonNullElse(map.get("particles"), "true"));
+        boolean icon = Boolean.parseBoolean(Objects.requireNonNullElse(map.get("icon"), "true"));
+
+        return new PotionEffect(effectType, duration, level, particles, icon);
     }
 
     /**
