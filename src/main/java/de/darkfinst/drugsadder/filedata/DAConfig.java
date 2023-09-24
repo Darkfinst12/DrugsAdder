@@ -66,6 +66,7 @@ public class DAConfig {
     public static boolean logSeedLoadInfo;
     public static boolean logSeedLoadComplete;
     public static boolean logSeedLoadError;
+    public static boolean debugLogg;
 
 
     /**
@@ -213,6 +214,7 @@ public class DAConfig {
         logSeedLoadInfo = config.getBoolean("logSeedLoadInfo", true);
         logSeedLoadComplete = config.getBoolean("logSeedLoadComplete", true);
         logSeedLoadError = config.getBoolean("logSeedLoadError", true);
+        debugLogg = config.getBoolean("debugLogg", false);
 
         //Loads the States
         if (config.contains("tableStates")) {

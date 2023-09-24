@@ -2,6 +2,22 @@ package de.darkfinst.drugsadder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.minecraft.network.protocol.game.PacketPlayOutCamera;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.network.PlayerConnection;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.monster.EntityCreeper;
+import net.minecraft.world.entity.monster.EntityEnderman;
+import net.minecraft.world.entity.monster.EntitySpider;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -160,7 +176,7 @@ public class DAEffect {
      * @param player - The player to apply the effect to
      */
     private void applyScreenEffect(Player player) {
-        //TODO: Find out how screen Effects work (minecraft shaders)
+        //Currently not implemented
     }
 
     @Override
@@ -195,5 +211,11 @@ public class DAEffect {
         POTION,
         SCREEN
 
+    }
+
+    public enum ScreenEffectType {
+        GREEN,
+        SPLIT,
+        INVERT,
     }
 }

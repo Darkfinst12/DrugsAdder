@@ -547,7 +547,10 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void debugLog(String msg, boolean isAsync) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
+        if (DAConfig.debugLogg) {
+            this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
+        }
+
     }
 
     /**

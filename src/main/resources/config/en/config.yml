@@ -22,6 +22,7 @@ logDrugLoadError: true
 logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
+debugLogg: false
 
 #The Table title Array, it must always be four Numbers - For more Information check the Wiki
 tableTitleArray: "0,8,10,-10"
