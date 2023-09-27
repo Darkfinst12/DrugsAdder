@@ -7,7 +7,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.simple.JSONObject;
 
 import java.security.SecureRandom;
 
@@ -160,7 +159,7 @@ public class DAEffect {
      * @param player - The player to apply the effect to
      */
     private void applyScreenEffect(Player player) {
-        //TODO: Find out how screen Effects work (minecraft shaders)
+        //Currently not implemented
     }
 
     @Override
@@ -195,5 +194,11 @@ public class DAEffect {
         POTION,
         SCREEN
 
+    }
+
+    public enum ScreenEffectType {
+        GREEN,
+        SPLIT,
+        INVERT,
     }
 }

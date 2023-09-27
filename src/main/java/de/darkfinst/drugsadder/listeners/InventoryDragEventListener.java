@@ -24,7 +24,6 @@ public class InventoryDragEventListener implements Listener {
         if (daStructure instanceof DATable daTable) {
             daTable.handleInventoryDrag(event);
         } else if (daStructure instanceof DACrafter daCrafter) {
-            DA.log.debugLog("InventoryDragEvent - DACrafter");
             daCrafter.handleInventoryDrag(event);
         } else if (InventoryType.FURNACE.equals(event.getInventory().getType())) {
             this.handelFurnace(event);

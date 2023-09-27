@@ -22,6 +22,7 @@ logDrugLoadError: true
 logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
+debugLogg: false
 
 #Table Title Array
 #Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach

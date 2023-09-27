@@ -53,7 +53,14 @@ public class DAFurnaceRecipe extends DARecipe {
                 return false;
             }
         }
-        return Bukkit.addRecipe(recipe);
+        if (Bukkit.getRecipe(namespacedKey) == null) {
+            return Bukkit.addRecipe(recipe);
+        } else if (!recipe.equals(Bukkit.getRecipe(namespacedKey))) {
+            Bukkit.removeRecipe(namespacedKey);
+            return Bukkit.addRecipe(recipe);
+        } else {
+            return true;
+        }
     }
 
     @Deprecated(since = "1.0.0", forRemoval = false)
