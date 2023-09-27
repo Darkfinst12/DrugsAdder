@@ -1,7 +1,7 @@
 package de.darkfinst.drugsadder.structures.press;
 
-import de.darkfinst.drugsadder.structures.DABody;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
+import de.darkfinst.drugsadder.structures.DABody;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;

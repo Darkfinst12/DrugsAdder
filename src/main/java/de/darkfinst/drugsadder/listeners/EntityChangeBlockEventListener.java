@@ -7,6 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
+/**
+ * This class handles the {@link org.bukkit.event.entity.EntityChangeBlockEvent}
+ */
 public class EntityChangeBlockEventListener implements Listener {
 
     public EntityChangeBlockEventListener() {

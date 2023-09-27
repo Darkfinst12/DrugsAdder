@@ -1,6 +1,6 @@
 package de.darkfinst.drugsadder.exceptions;
 
-public abstract class DrugsAdderException extends RuntimeException{
+public abstract class DrugsAdderException extends RuntimeException {
 
     /**
      * Constructs an {@code ShopModifyStorageException} with no

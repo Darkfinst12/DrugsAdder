@@ -2,7 +2,6 @@ package de.darkfinst.drugsadder.api.events.drug;
 
 import de.darkfinst.drugsadder.DADrug;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,14 +14,14 @@ public class DrugConsumeEvent extends DrugEvent implements Cancellable {
         super(drug);
     }
 
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 

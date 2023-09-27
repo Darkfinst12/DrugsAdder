@@ -14,6 +14,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
+/**
+ * This class handles the {@link org.bukkit.event.block.SignChangeEvent}
+ */
 public class SignChangeEventListener implements Listener {
 
     public SignChangeEventListener() {

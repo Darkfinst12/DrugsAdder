@@ -13,6 +13,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+/**
+ * This class handles the {@link org.bukkit.event.inventory.InventoryClickEvent}
+ */
 public class InventoryClickEventListener implements Listener {
 
     public InventoryClickEventListener() {

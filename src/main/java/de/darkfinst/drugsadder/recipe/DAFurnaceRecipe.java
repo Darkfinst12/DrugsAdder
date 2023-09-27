@@ -29,6 +29,17 @@ public class DAFurnaceRecipe extends DARecipe {
         super(namedID, recipeType, result, materials);
     }
 
+    @Deprecated(since = "0.0.1", forRemoval = true)
+    public static void registerDEMORecipe() {
+        ItemStack result = new ItemStack(Material.STICK, 1);
+        ItemMeta meta = result.getItemMeta();
+        meta.setDisplayName("§6§lDEMO-Recipe-F1");
+        result.setItemMeta(meta);
+        FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_f1"), result, Material.ACACIA_PLANKS, 0.1f, 200);
+        boolean successf1 = Bukkit.addRecipe(furnaceRecipe);
+        DA.loader.debugLog("FurnaceRecipe F1 - " + successf1);
+    }
+
     /**
      * Registers the recipe in the server
      *
@@ -61,17 +72,6 @@ public class DAFurnaceRecipe extends DARecipe {
         } else {
             return true;
         }
-    }
-
-    @Deprecated(since = "1.0.0", forRemoval = false)
-    public static void registerDEMORecipe() {
-        ItemStack result = new ItemStack(Material.STICK, 1);
-        ItemMeta meta = result.getItemMeta();
-        meta.setDisplayName("§6§lDEMO-Recipe-F1");
-        result.setItemMeta(meta);
-        FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_f1"), result, Material.ACACIA_PLANKS, 0.1f, 200);
-        boolean successf1 = Bukkit.addRecipe(furnaceRecipe);
-        DA.loader.debugLog("FurnaceRecipe F1 - " + successf1);
     }
 
     @Override

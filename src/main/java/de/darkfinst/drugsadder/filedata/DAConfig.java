@@ -23,49 +23,155 @@ import java.util.Map;
 
 public class DAConfig {
 
+    /**
+     * The current config version
+     */
     private static final String configVersion = "0.1";
 
+    /**
+     * The loader of the plugin
+     */
     private static final DALoader loader = DA.loader;
 
+    /**
+     * If the data should be loaded async
+     */
     public static boolean loadDataAsync;
+
+    /**
+     * If the bucket should be returned after crafting
+     */
     public static boolean returnBucket;
+    /**
+     * If the bottle should be returned after crafting
+     */
     public static boolean returnBottle;
+    /**
+     * If the item should be reverted to the original item in a crafting table
+     */
     public static boolean resetItemCrafting;
+    /**
+     * If the item should be reverted to the original item in a furnace, smoker or blast furnace
+     */
     public static boolean resetItemSmelting;
 
+    /**
+     * If Slimefun is installed
+     */
     public static boolean hasSlimefun;
+    /**
+     * If ItemsAdder is installed
+     */
     public static boolean hasItemsAdder;
 
 
+    /**
+     * The item that is given back when a recipe is canceled
+     */
     public static String cancelRecipeItem;
+    /**
+     * The item that is given when a suspicious potion is crafted
+     */
     public static String suspiciousPotionItem;
 
+    /**
+     * The map of all table states - It must be 11 States
+     * the key is the state of the table and the value is an unicode character
+     */
     public static Map<Integer, String> tableStates = new HashMap<>();
+    /**
+     * The offset of the table title - It must be four numbers
+     * It must be changed depending on the name of the table
+     */
     public static int[] tableTitleArray = new int[]{0, 0, 0, 0};
 
+    /**
+     * The map of all crafter states - It must be eight States
+     * the key is the state of the crafter and the value is an unicode character
+     */
     public static Map<Integer, String> crafterStates = new HashMap<>();
+    /**
+     * The offset of the crafter title - It must be four numbers
+     * It must be changed depending on the name of the table
+     */
     public static int[] crafterTitleArray = new int[]{0, 0, 0, 0};
+    /**
+     * If the crafter should keep the inventory after closing
+     */
     public static boolean crafterKeepInv;
 
+    /**
+     * The reader for the custom items
+     */
     public static DACustomItemReader customItemReader;
+    /**
+     * If a load complete message should be logged of a custom item
+     */
     public static boolean logCustomItemLoadInfo;
+    /**
+     * If a load complete message should be logged of all custom items
+     */
     public static boolean logCustomItemLoadComplete;
+    /**
+     * If a load error message should be logged of the custom items
+     */
     public static boolean logCustomItemLoadError;
 
+    /**
+     * The reader for the recipes
+     */
     public static DARecipeReader daRecipeReader;
+    /**
+     * If a load complete message should be logged of a recipe
+     */
     public static boolean logRecipeLoadInfo;
+    /**
+     * If a load complete message should be logged of all recipes
+     */
     public static boolean logRecipeLoadComplete;
+    /**
+     * If a load error message should be logged of the recipes
+     */
     public static boolean logRecipeLoadError;
 
+    /**
+     * The reader for the drugs
+     */
     public static DADrugReader drugReader;
+    /**
+     * If a load complete message should be logged of a drug
+     */
     public static boolean logDrugLoadInfo;
+    /**
+     * If a load complete message should be logged of all drugs
+     */
     public static boolean logDrugLoadComplete;
+    /**
+     * If a load error message should be logged of the drugs
+     */
     public static boolean logDrugLoadError;
 
+    /**
+     * The reader for the custom seeds
+     */
     public static DASeedReader seedReader;
+    /**
+     * If a load complete message should be logged of a seed
+     */
     public static boolean logSeedLoadInfo;
+    /**
+     * If a load complete message should be logged of all seeds
+     */
     public static boolean logSeedLoadComplete;
+    /**
+     * If a load error message should be logged of the seeds
+     */
     public static boolean logSeedLoadError;
+
+    /**
+     * If debug messages should be logged - Only recommended for developers
+     * Default: false
+     */
     public static boolean debugLogg;
 
 

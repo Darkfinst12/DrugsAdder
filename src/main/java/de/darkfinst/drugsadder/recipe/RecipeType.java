@@ -1,5 +1,8 @@
 package de.darkfinst.drugsadder.recipe;
 
+/**
+ * The types of recipes
+ */
 public enum RecipeType {
 
     BARREL,

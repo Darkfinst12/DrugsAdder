@@ -30,23 +30,6 @@ public abstract class DAStructure {
     private boolean forRemoval = false;
 
     /**
-     * Checks if the block is a body part of the structure
-     *
-     * @param block The block to check
-     * @return true, if the block is a body part otherwise false
-     */
-    public boolean isBodyPart(Block block) {
-        return this.body.blocks.contains(block);
-    }
-
-    /**
-     * @return The world of the structure
-     */
-    public World getWorld() {
-        return this.body.getWorld();
-    }
-
-    /**
      * Saves the structure to the config file
      *
      * @param config  The config file to save the structure to
@@ -201,8 +184,24 @@ public abstract class DAStructure {
         }
     }
 
-    public void destroyInventory() {
+    /**
+     * Checks if the block is a body part of the structure
+     *
+     * @param block The block to check
+     * @return true, if the block is a body part otherwise false
+     */
+    public boolean isBodyPart(Block block) {
+        return this.body.blocks.contains(block);
     }
+
+    /**
+     * @return The world of the structure
+     */
+    public World getWorld() {
+        return this.body.getWorld();
+    }
+
+    public abstract void destroyInventory();
 
     public boolean hasInventory() {
         return false;

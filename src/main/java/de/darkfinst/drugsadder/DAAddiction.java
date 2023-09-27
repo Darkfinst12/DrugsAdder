@@ -3,7 +3,6 @@ package de.darkfinst.drugsadder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,22 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class DAAddiction {
 
+    /**
+     * The effects, which are applied to the player, when he is addicted and the drug is not consumed
+     * <br>
+     * It will be accessed by the reduction timer
+     */
+    private final Map<Integer, List<DAEffect>> deprivation = new HashMap<>();
+    /**
+     * The effects, which are applied to the player, when the drug is consumed
+     */
+    private final Map<Integer, List<DAEffect>> consummation = new HashMap<>();
+    /**
+     * The last consummations of the players
+     * <br>
+     * In {@link DAAddiction#isOverdose(DAPlayer)} explained as logs
+     */
+    private final Map<DAPlayer, ConcurrentLinkedDeque<Long>> lastConsummations = new HashMap<>();
     /**
      * Whether the drug is addiction able or not
      */
@@ -42,24 +57,6 @@ public class DAAddiction {
      * Whether the reduction should only be applied when the player is online or not
      */
     private boolean reductionOnlyOnline = false;
-
-    /**
-     * The effects, which are applied to the player, when he is addicted and the drug is not consumed
-     * <br>
-     * It will be accessed by the reduction timer
-     */
-    private final Map<Integer, List<DAEffect>> deprivation = new HashMap<>();
-    /**
-     * The effects, which are applied to the player, when the drug is consumed
-     */
-    private final Map<Integer, List<DAEffect>> consummation = new HashMap<>();
-
-    /**
-     * The last consummations of the players
-     * <br>
-     * In {@link DAAddiction#isOverdose(DAPlayer)} explained as logs
-     */
-    private final Map<DAPlayer, ConcurrentLinkedDeque<Long>> lastConsummations = new HashMap<>();
 
     public DAAddiction(Boolean addictionAble) {
         this.addictionAble = addictionAble;

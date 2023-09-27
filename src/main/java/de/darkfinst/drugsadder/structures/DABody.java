@@ -1,7 +1,6 @@
 package de.darkfinst.drugsadder.structures;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 

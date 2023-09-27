@@ -11,9 +11,14 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 public class DATableProcess extends DAProcess {
 
-
+    /**
+     * The recipe of the first slots
+     */
     @Nullable
     private DATableRecipe recipeOne = null;
+    /**
+     * The recipe of the second slots
+     */
     @Nullable
     private DATableRecipe recipeTwo = null;
 
@@ -22,7 +27,7 @@ public class DATableProcess extends DAProcess {
         return super.isFinished() && (this.getState() == 20 || this.getState() == 10 || this.getState() == 5);
     }
 
-
+    @Deprecated(forRemoval = true)
     public int getSide() {
         if (this.recipeOne == null && this.recipeTwo != null && this.getState() != 9) {
             return 1;
@@ -33,6 +38,9 @@ public class DATableProcess extends DAProcess {
         }
     }
 
+    /**
+     * Resets the process to the default values
+     */
     @Override
     public void reset() {
         super.reset();
@@ -40,6 +48,12 @@ public class DATableProcess extends DAProcess {
         this.recipeTwo = null;
     }
 
+    /**
+     * Finishes the process
+     *
+     * @param daTable the table to finish
+     * @param isAsync if the process is async
+     */
     @Override
     public void finish(DAStructure daTable, boolean isAsync) {
         if (this.recipeOne != null) {
@@ -49,6 +63,11 @@ public class DATableProcess extends DAProcess {
         }
     }
 
+    /**
+     * Restarts the process
+     *
+     * @param daTable the table to restart
+     */
     @Override
     public void restart(DAStructure daTable) {
         if (this.getState() != 20 && this.getState() != 10 && this.getState() != 5) {

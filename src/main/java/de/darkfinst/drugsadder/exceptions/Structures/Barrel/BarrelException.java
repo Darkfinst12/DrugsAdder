@@ -1,6 +1,6 @@
 package de.darkfinst.drugsadder.exceptions.Structures.Barrel;
 
-public abstract class BarrelException extends RuntimeException{
+public abstract class BarrelException extends RuntimeException {
 
     /**
      * Constructs an {@code ShopModifyStorageException} with no

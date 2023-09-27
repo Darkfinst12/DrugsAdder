@@ -3,14 +3,9 @@ package de.darkfinst.drugsadder.api.events.table;
 import de.darkfinst.drugsadder.recipe.DATableRecipe;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import lombok.Getter;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 
 public class TableStartRecipeEvent extends TableEvent implements Cancellable {
@@ -29,6 +24,11 @@ public class TableStartRecipeEvent extends TableEvent implements Cancellable {
         this.recipe = recipe;
     }
 
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public boolean isCancelled() {
         return this.isCancelled;
@@ -42,11 +42,6 @@ public class TableStartRecipeEvent extends TableEvent implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

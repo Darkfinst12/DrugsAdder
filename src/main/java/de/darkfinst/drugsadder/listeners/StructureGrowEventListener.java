@@ -6,8 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
 
-import java.nio.Buffer;
-
+/**
+ * This class handles the {@link StructureGrowEvent}
+ */
 public class StructureGrowEventListener implements Listener {
 
     public StructureGrowEventListener() {

@@ -24,6 +24,10 @@ public class TableAccessEvent extends TableEvent implements Cancellable {
         this.clickedBlockFace = clickedBlockFace;
     }
 
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     @Override
     public boolean isCancelled() {
@@ -38,11 +42,6 @@ public class TableAccessEvent extends TableEvent implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

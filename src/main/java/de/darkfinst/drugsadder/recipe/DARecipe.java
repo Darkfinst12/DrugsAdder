@@ -2,9 +2,7 @@ package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,15 +22,14 @@ public abstract class DARecipe {
      * @see RecipeType
      */
     private final RecipeType recipeType;
-
-    /**
-     * The materials of the recipe
-     */
-    private DAItem[] materials;
     /**
      * The result of the recipe
      */
     private final DAItem result;
+    /**
+     * The materials of the recipe
+     */
+    private DAItem[] materials;
 
     protected DARecipe(String ID, RecipeType recipeType, DAItem result, DAItem... materials) {
         this.ID = ID;
