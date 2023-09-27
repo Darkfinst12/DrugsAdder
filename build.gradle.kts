@@ -43,20 +43,20 @@ dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 
     implementation("org.jetbrains:annotations:24.0.0")
+
     implementation("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.28")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("com.github.Slimefun:Slimefun4:RC-35")
 
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT")
+
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.15")
     compileOnly("com.sk89q.worldedit:worldedit-core:7.2.15")
     compileOnly("com.sk89q.worldguard:worldguard-core:7.0.9")
     compileOnly("net.Indyuce:MMOItems-API:6.9.2-SNAPSHOT")
-    compileOnly("org.projectlombok:lombok:1.18.28")
 
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
 }

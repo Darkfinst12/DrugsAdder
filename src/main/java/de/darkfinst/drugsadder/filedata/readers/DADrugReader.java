@@ -190,9 +190,10 @@ public class DADrugReader {
         int minDuration = Integer.parseInt(Objects.requireNonNullElse(map.get("minDuration"), "-1"));
         int maxDuration = Integer.parseInt(Objects.requireNonNullElse(map.get("maxDuration"), "-1"));
         float probability = Float.parseFloat(Objects.requireNonNullElse(map.get("probability"), "-1"));
-        String screenEffect = map.get("screenEffect");
+        String screenEffect = Objects.requireNonNullElse(map.get("type"), "null");
+        DA.log.debugLog("Load ScreenEffect: " + screenEffect);
 
-        if (minDuration == -1 || maxDuration == -1 || probability == -1 || screenEffect == null) {
+        if (minDuration == -1 || maxDuration == -1 || probability == -1 || screenEffect.equals("null")) {
             return null;
         }
 

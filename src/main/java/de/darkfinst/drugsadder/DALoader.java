@@ -207,7 +207,7 @@ public class DALoader {
             }
             boolean success = this.unregisterDAStructure(structure);
             if (success) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName()), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName().replace("DA", "")), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
 
         }
@@ -262,7 +262,7 @@ public class DALoader {
                 return daBarrel.getInventory().equals(inventory);
             } else if (daStructure instanceof DATable daTable) {
                 return daTable.getInventory().equals(inventory);
-            }else if (daStructure instanceof DACrafter daCrafter) {
+            } else if (daStructure instanceof DACrafter daCrafter) {
                 return daCrafter.getInventory().equals(inventory);
             }
             return false;
@@ -355,10 +355,8 @@ public class DALoader {
     }
 
     public void reloadConfig() {
-        //TODO: Fix this
         this.clearConfigData();
         this.initConfig();
-        this.initData();
     }
 
     private void clearConfigData() {
@@ -417,6 +415,7 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+        msg = ChatColor.translateAlternateColorCodes('&', msg);
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
@@ -548,7 +547,10 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void debugLog(String msg, boolean isAsync) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
+        if (DAConfig.debugLogg) {
+            this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
+        }
+
     }
 
     /**
