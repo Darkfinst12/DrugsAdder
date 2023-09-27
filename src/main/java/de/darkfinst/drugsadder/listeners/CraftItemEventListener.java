@@ -18,6 +18,9 @@ import org.bukkit.inventory.Recipe;
 
 import java.util.Arrays;
 
+/**
+ * This class handles the {@link org.bukkit.event.inventory.CraftItemEvent}
+ */
 public class CraftItemEventListener implements Listener {
 
     public CraftItemEventListener() {

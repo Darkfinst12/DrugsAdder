@@ -23,6 +23,11 @@ public class CompressItemsEvent extends PressEvent implements Cancellable {
         this.items = items;
     }
 
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public boolean isCancelled() {
         return this.isCancelled;
@@ -36,11 +41,6 @@ public class CompressItemsEvent extends PressEvent implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -10,13 +10,18 @@ import org.jetbrains.annotations.NotNull;
 public class BarrelProcessMaterialsEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private boolean isCancelled = false;
     @Getter
     private final DABarrelRecipe recipe;
+    private boolean isCancelled = false;
 
     public BarrelProcessMaterialsEvent(DABarrelRecipe recipe) {
         super();
         this.recipe = recipe;
+    }
+
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     @Override
@@ -32,11 +37,6 @@ public class BarrelProcessMaterialsEvent extends Event implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

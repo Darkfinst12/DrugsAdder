@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.filedata.readers;
 
-import de.darkfinst.drugsadder.*;
+import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.DALoader;
+import de.darkfinst.drugsadder.ItemMatchType;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.items.DAPlantItem;

@@ -6,6 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 
+/**
+ * This class handles the {@link FurnaceStartSmeltEvent}
+ * <br>
+ * Currently not used
+ */
 public class FurnaceStartSmeltEventListener implements Listener {
 
     public FurnaceStartSmeltEventListener() {

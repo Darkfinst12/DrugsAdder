@@ -5,6 +5,7 @@ import org.bukkit.event.Event;
 
 public abstract class DrugEvent extends Event {
     private final DADrug drug;
+
     public DrugEvent(DADrug drug) {
         this.drug = drug;
     }

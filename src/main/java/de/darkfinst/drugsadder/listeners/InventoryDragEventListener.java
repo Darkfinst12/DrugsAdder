@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+/**
+ * This class handles the {@link org.bukkit.event.inventory.InventoryDragEvent}
+ */
 public class InventoryDragEventListener implements Listener {
 
     public InventoryDragEventListener() {

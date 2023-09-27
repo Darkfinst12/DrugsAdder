@@ -10,8 +10,10 @@ import lombok.Setter;
 @Setter
 public class DACrafterProcess extends DAProcess {
 
+    /**
+     * The recipe of the process
+     */
     private DACrafterRecipe recipe = null;
-
 
     @Override
     public void finish(DAStructure daCrafter, boolean isAsync) {

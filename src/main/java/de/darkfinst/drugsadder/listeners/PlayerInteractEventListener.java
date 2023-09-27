@@ -9,6 +9,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+/**
+ * This class handles the {@link org.bukkit.event.player.PlayerInteractEvent}
+ */
 public class PlayerInteractEventListener implements Listener {
 
     public PlayerInteractEventListener() {

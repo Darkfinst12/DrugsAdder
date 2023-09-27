@@ -26,6 +26,12 @@ public class DACrafterBody extends DABody {
         this.sign = sign;
     }
 
+    /**
+     * Checks if the crafter is valid
+     *
+     * @return true if the crafter is valid
+     * @throws ValidateStructureException if the crafter is not valid
+     */
     public boolean isValidCrafter() throws ValidateStructureException {
         this.blocks.add(this.sign);
 

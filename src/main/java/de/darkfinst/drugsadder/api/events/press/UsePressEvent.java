@@ -10,13 +10,18 @@ import org.jetbrains.annotations.NotNull;
 public class UsePressEvent extends PressEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private boolean isCancelled = false;
     @Getter
     private final Player player;
+    private boolean isCancelled = false;
 
     public UsePressEvent(DAPress press, Player player) {
         super(press);
         this.player = player;
+    }
+
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     @Override
@@ -32,11 +37,6 @@ public class UsePressEvent extends PressEvent implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

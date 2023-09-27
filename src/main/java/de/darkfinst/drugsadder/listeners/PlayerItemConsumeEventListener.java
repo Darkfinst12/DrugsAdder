@@ -9,6 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
+/**
+ * This class handles the {@link org.bukkit.event.player.PlayerItemConsumeEvent}
+ */
 public class PlayerItemConsumeEventListener implements Listener {
 
     public PlayerItemConsumeEventListener() {

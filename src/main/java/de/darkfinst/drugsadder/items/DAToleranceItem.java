@@ -3,6 +3,9 @@ package de.darkfinst.drugsadder.items;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Currently not used
+ */
 @Getter
 public class DAToleranceItem extends DAItem {
 

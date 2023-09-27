@@ -2,7 +2,6 @@ package de.darkfinst.drugsadder.api.events;
 
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -15,12 +14,12 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final CommandSender sender;
+    private final Type type;
     @Nullable
     private BaseComponent component;
     @Nullable
     private String message;
     private boolean cancelled;
-    private final Type type;
 
 
     public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, @NotNull String message, Type type) {
@@ -37,6 +36,11 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
         this.component = component;
         this.type = type;
         this.cancelled = false;
+    }
+
+    // Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     @Override
@@ -60,11 +64,6 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    // Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

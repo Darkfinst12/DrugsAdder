@@ -51,6 +51,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("com.github.Slimefun:Slimefun4:RC-35")
 
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.15")
