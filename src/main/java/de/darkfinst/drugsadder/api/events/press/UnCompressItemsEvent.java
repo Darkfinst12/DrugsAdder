@@ -3,7 +3,6 @@ package de.darkfinst.drugsadder.api.events.press;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.entity.Item;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +23,11 @@ public class UnCompressItemsEvent extends PressEvent implements Cancellable {
         this.items = items;
     }
 
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public boolean isCancelled() {
         return this.isCancelled;
@@ -37,11 +41,6 @@ public class UnCompressItemsEvent extends PressEvent implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

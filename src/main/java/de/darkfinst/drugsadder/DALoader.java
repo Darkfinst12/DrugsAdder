@@ -1,19 +1,19 @@
 package de.darkfinst.drugsadder;
 
+import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
+import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.filedata.data.DAData;
 import de.darkfinst.drugsadder.filedata.data.DataSave;
 import de.darkfinst.drugsadder.filedata.readers.LanguageReader;
 import de.darkfinst.drugsadder.listeners.*;
-import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
-import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
-import de.darkfinst.drugsadder.filedata.DAConfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
@@ -36,19 +36,20 @@ import java.util.concurrent.TimeUnit;
 public class DALoader {
 
     /**
+     * Whether the ItemsAdder plugin is loaded or not
+     * <br>
+     * Can be ignored if the ItemsAdder plugin is not used
+     */
+    @Setter
+    public static boolean iaLoaded = false;
+    /**
+     * The prefix, which is used for all messages
+     */
+    public final String prefix = ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE;
+    /**
      * The instance of the plugin
      */
     private final DA plugin;
-
-    /**
-     * The language reader for the language files
-     */
-    public LanguageReader languageReader;
-    /**
-     * The language, which is used for the language files
-     */
-    public String language;
-
     /**
      * The list of all registered structures
      */
@@ -57,19 +58,14 @@ public class DALoader {
      * The list of all registered players
      */
     private final ArrayList<DAPlayer> daPlayerList = new ArrayList<>();
-
     /**
-     * The prefix, which is used for all messages
+     * The language reader for the language files
      */
-    public final String prefix = ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE;
-
+    public LanguageReader languageReader;
     /**
-     * Whether the ItemsAdder plugin is loaded or not
-     * <br>
-     * Can be ignored if the ItemsAdder plugin is not used
+     * The language, which is used for the language files
      */
-    @Setter
-    public static boolean iaLoaded = false;
+    public String language;
 
     public DALoader(DA plugin) {
         this.plugin = plugin;
@@ -347,7 +343,6 @@ public class DALoader {
 
 
     //Config
-
     public void reloadConfigIA() {
         this.clearConfigData();
         this.initConfig();

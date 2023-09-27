@@ -9,10 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class DrugAddAddictionEvent extends DrugEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    private boolean isCancelled = false;
     @Getter
     private final int oldAddiction;
+    private boolean isCancelled = false;
     @Getter
     @Setter
     private int newAddiction;
@@ -23,14 +22,14 @@ public class DrugAddAddictionEvent extends DrugEvent implements Cancellable {
         this.newAddiction = newAddiction;
     }
 
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 

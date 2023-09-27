@@ -37,6 +37,30 @@ public class DACraftingRecipe extends DARecipe {
         super(namedID, recipeType, result, materials);
     }
 
+    @Deprecated(since = "0.0.1", forRemoval = true)
+    public static void registerDEMORecipe(boolean isShapeless) {
+        ItemStack result = new ItemStack(Material.STICK, 1);
+        ItemMeta meta = result.getItemMeta();
+        if (isShapeless) {
+            meta.setDisplayName("§6§lDEMO-Recipe-NoShape");
+            result.setItemMeta(meta);
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shapeless"), result);
+            shapelessRecipe.addIngredient(Material.BIRCH_PLANKS);
+            shapelessRecipe.addIngredient(Material.ACACIA_PLANKS);
+            shapelessRecipe.addIngredient(Material.CHERRY_PLANKS);
+            Bukkit.addRecipe(shapelessRecipe);
+        } else {
+            meta.setDisplayName("§6§lDEMO-Recipe-Shape");
+            result.setItemMeta(meta);
+            ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shape"), result);
+            shapedRecipe.shape(" A ", " B ", " C ");
+            shapedRecipe.setIngredient('A', Material.SPRUCE_PLANKS);
+            shapedRecipe.setIngredient('B', Material.DARK_OAK_PLANKS);
+            shapedRecipe.setIngredient('C', Material.CHERRY_PLANKS);
+            Bukkit.addRecipe(shapedRecipe);
+        }
+    }
+
     public void setShape(String... shape) {
         this.shape.clear();
         this.shape.addAll(Arrays.asList(shape));
@@ -99,33 +123,9 @@ public class DACraftingRecipe extends DARecipe {
         }
     }
 
+    @Deprecated(since = "0.0.1", forRemoval = true)
     private void ifRegisteredUnregister(NamespacedKey namespacedKey) {
         Bukkit.removeRecipe(namespacedKey);
-
-    }
-
-    @Deprecated(since = "1.0.0", forRemoval = false)
-    public static void registerDEMORecipe(boolean isShapeless) {
-        ItemStack result = new ItemStack(Material.STICK, 1);
-        ItemMeta meta = result.getItemMeta();
-        if (isShapeless) {
-            meta.setDisplayName("§6§lDEMO-Recipe-NoShape");
-            result.setItemMeta(meta);
-            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shapeless"), result);
-            shapelessRecipe.addIngredient(Material.BIRCH_PLANKS);
-            shapelessRecipe.addIngredient(Material.ACACIA_PLANKS);
-            shapelessRecipe.addIngredient(Material.CHERRY_PLANKS);
-            Bukkit.addRecipe(shapelessRecipe);
-        } else {
-            meta.setDisplayName("§6§lDEMO-Recipe-Shape");
-            result.setItemMeta(meta);
-            ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shape"), result);
-            shapedRecipe.shape(" A ", " B ", " C ");
-            shapedRecipe.setIngredient('A', Material.SPRUCE_PLANKS);
-            shapedRecipe.setIngredient('B', Material.DARK_OAK_PLANKS);
-            shapedRecipe.setIngredient('C', Material.CHERRY_PLANKS);
-            Bukkit.addRecipe(shapedRecipe);
-        }
     }
 
     @Override

@@ -10,14 +10,14 @@ public class PreFabEvent extends Event {
     public PreFabEvent() {
     }
 
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
+    //Required by Bukkit
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    //Required by Bukkit
-    public static HandlerList getHandlerList() {
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 }

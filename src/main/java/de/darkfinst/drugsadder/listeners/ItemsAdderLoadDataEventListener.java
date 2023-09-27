@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+/**
+ * This class handles the {@link ItemsAdderLoadDataEvent}
+ */
 public class ItemsAdderLoadDataEventListener implements Listener {
 
     public ItemsAdderLoadDataEventListener() {

@@ -25,6 +25,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +53,7 @@ public class DAPress extends DAStructure {
      * @param sign   The sign of the press
      * @param player The player who created the press
      */
-    public void create(Block sign, Player player) throws RegisterStructureException {
+    public void create(@NotNull Block sign, @NotNull Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.press.create")) {
             DAPressBody pressBody = new DAPressBody(this, sign);
             try {
@@ -82,7 +83,7 @@ public class DAPress extends DAStructure {
      * @return True, if the press is valid otherwise false
      * @throws ValidateStructureException If the press is not valid
      */
-    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
+    public boolean create(@NotNull Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DAPressBody pressBody = new DAPressBody(this, sign);
         boolean isValid = pressBody.isValidPress();
         if (isValid) {
@@ -104,7 +105,7 @@ public class DAPress extends DAStructure {
      * @param player Player, who uses the press
      * @param block  Block of the press
      */
-    public void usePress(Player player, Block block) {
+    public void usePress(@NotNull Player player, @NotNull Block block) {
         if (!(Material.LEVER.equals(block.getType()) || Material.PISTON.equals(block.getType()) || Material.PISTON_HEAD.equals(block.getType()))) {
             return;
         }
@@ -162,7 +163,7 @@ public class DAPress extends DAStructure {
      * @param block Block of the press
      * @return true if the items were dropped otherwise false
      */
-    private boolean dropItems(Block block) {
+    private boolean dropItems(@NotNull Block block) {
         UnCompressItemsEvent unCompressItemsEvent = new UnCompressItemsEvent(this, this.compressedItems.stream().toList());
         Bukkit.getPluginManager().callEvent(unCompressItemsEvent);
         if (unCompressItemsEvent.isCancelled()) {
@@ -183,7 +184,7 @@ public class DAPress extends DAStructure {
      * @param block Block from where the items should be compressed
      * @return true if the items were compressed otherwise false
      */
-    private boolean compressItems(Block block) {
+    private boolean compressItems(@NotNull Block block) {
         Collection<Entity> entities = block.getWorld().getNearbyEntities(block.getLocation(), 0.8, 0.8, 0.8, entity -> entity instanceof Item);
         List<Item> items = new ArrayList<>();
         for (Entity entity : entities) {

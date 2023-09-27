@@ -12,6 +12,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class DATableRecipe extends DARecipe {
@@ -21,11 +22,19 @@ public class DATableRecipe extends DARecipe {
      */
     private final DAItem filterOne;
     /**
+     * The fuel for the first material
+     */
+    private final DAItem fuelOne;
+    /**
+     * The first material
+     */
+    private final DAItem materialOne;
+    private final double processingTimeOne;
+    /**
      * If the filter should be consumed
      */
     @Setter
     private boolean consumeFilterOne = false;
-
     /**
      * The filter for the second material
      */
@@ -35,27 +44,14 @@ public class DATableRecipe extends DARecipe {
      */
     @Setter
     private boolean consumeFilterTwo = false;
-
-    /**
-     * The fuel for the first material
-     */
-    private final DAItem fuelOne;
     /**
      * The fuel for the second material
      */
     private DAItem fuelTwo;
-
-    /**
-     * The first material
-     */
-    private final DAItem materialOne;
     /**
      * The second material
      */
     private DAItem materialTwo;
-
-    private final double processingTimeOne;
-
     private double processingTimeTwo;
 
     public DATableRecipe(String ID, RecipeType recipeType, DAItem result, DAItem filterOne, DAItem fuelOne, DAItem materialOne, double processingTimeOne) {
@@ -95,7 +91,7 @@ public class DATableRecipe extends DARecipe {
      * @param daTable The table to restart the process on
      * @param state   The state to restart the process on
      */
-    public void restartProcess(DATable daTable, int state) {
+    public void restartProcess(@NotNull DATable daTable, int state) {
         if (state < 5) {
             startProcessOne(daTable);
         } else if (state < 10) {
@@ -107,21 +103,31 @@ public class DATableRecipe extends DARecipe {
         }
     }
 
-    private void startProcessTwo(DATable daTable) {
-        boolean otherFinished = daTable.getProcess().getRecipeOne() != null;
-        daTable.getProcess().setState(otherFinished ? 5 : 0);
-        ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, daTable.getProcess().getState(), processingTimeTwo / 4, otherFinished);
-        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
-        daTable.getProcess().setRecipeTwo(this);
-        daTable.getProcess().setTaskID(task.getTaskId());
-    }
-
-    private void startProcessOne(DATable daTable) {
+    /**
+     * Starts the first process of the recipe on the table
+     *
+     * @param daTable The table to start the process on
+     */
+    private void startProcessOne(@NotNull DATable daTable) {
         boolean otherFinished = daTable.getProcess().getRecipeTwo() != null;
         daTable.getProcess().setState(otherFinished ? 10 : 0);
         ProcessMaterialOne processMaterialOne = new ProcessMaterialOne(daTable, this, daTable.getProcess().getState(), processingTimeOne / 4, otherFinished);
         BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialOne);
         daTable.getProcess().setRecipeOne(this);
+        daTable.getProcess().setTaskID(task.getTaskId());
+    }
+
+    /**
+     * Starts the second process of the recipe on the table if the first process is finished
+     *
+     * @param daTable The table to start the process on
+     */
+    private void startProcessTwo(@NotNull DATable daTable) {
+        boolean otherFinished = daTable.getProcess().getRecipeOne() != null;
+        daTable.getProcess().setState(otherFinished ? 5 : 0);
+        ProcessMaterialTwo processMaterialTwo = new ProcessMaterialTwo(daTable, this, daTable.getProcess().getState(), processingTimeTwo / 4, otherFinished);
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, processMaterialTwo);
+        daTable.getProcess().setRecipeTwo(this);
         daTable.getProcess().setTaskID(task.getTaskId());
     }
 
@@ -134,7 +140,7 @@ public class DATableRecipe extends DARecipe {
      *
      * @param daTable The table to finish the process on and to start the recipe again
      */
-    public void finishProcess(DATable daTable, boolean isAsync) {
+    public void finishProcess(@NotNull DATable daTable, boolean isAsync) {
         this.updateView(daTable, 0, isAsync);
         if (this.equals(daTable.getProcess().getRecipeOne()) && this.equals(daTable.getProcess().getRecipeTwo())) {
             daTable.getInventory().setItem(daTable.getResultSlot(), this.getResult().getItemStack());
@@ -151,7 +157,7 @@ public class DATableRecipe extends DARecipe {
      * @param daTable The table to cancel the process on
      * @param isAsync If the method is called async
      */
-    public void cancelProcess(DATable daTable, boolean isAsync) {
+    public void cancelProcess(@NotNull DATable daTable, boolean isAsync) {
         if (daTable.getProcess().isProcessing()) {
             Bukkit.getScheduler().cancelTask(daTable.getProcess().getTaskID());
             this.updateView(daTable, 0, isAsync);
@@ -162,7 +168,17 @@ public class DATableRecipe extends DARecipe {
 
     }
 
-    private void addResult(DATable daTable, DAItem result) {
+    /**
+     * Adds the result to the table
+     * <br>
+     * If the result slot is empty, the result will be added to the result slot
+     * <br>
+     * If the result slot is not empty, the result will be dropped at the location of the table
+     *
+     * @param daTable The table to add the result to
+     * @param result  The result to add
+     */
+    private void addResult(@NotNull DATable daTable, DAItem result) {
         ItemStack resultItem = result != null ? result.getItemStack() : null;
         if (daTable.getInventory().getItem(daTable.getResultSlot()) == null) {
             daTable.getInventory().setItem(daTable.getResultSlot(), resultItem);
@@ -172,16 +188,61 @@ public class DATableRecipe extends DARecipe {
     }
 
     /**
+     * Updates the view of the table
+     *
+     * @param daTable The table to update
+     * @param state   The state to update to
+     */
+    public void updateView(DATable daTable, int state, boolean isAsync) {
+        for (HumanEntity viewer : daTable.getInventory().getViewers()) {
+            try {
+                InventoryView inventoryView = viewer.getOpenInventory();
+                inventoryView.setTitle(daTable.getTitle(state));
+            } catch (Exception e) {
+                DA.log.logException(e, isAsync);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("DARecipe", "DATableRecipe")
+                .replace("}", "") +
+                ", filterOne=" + filterOne +
+                ", consumeFilterOne=" + consumeFilterOne +
+                ", filterTwo=" + filterTwo +
+                ", consumeFilterTwo=" + consumeFilterTwo +
+                ", fuelOne=" + fuelOne +
+                ", fuelTwo=" + fuelTwo +
+                ", materialOne=" + materialOne +
+                ", materialTwo=" + materialTwo +
+                '}';
+    }
+
+    /**
      * Runnable for the first process
      */
     public static class ProcessMaterialOne implements Runnable {
 
+        /**
+         * The state of the process
+         */
         private final int state;
+        /**
+         * The table to process on
+         */
         private final DATable daTable;
+        /**
+         * The recipe to process
+         */
         private final DATableRecipe recipe;
-
+        /**
+         * If the second process is finished
+         */
         private final int otherFinished;
-
+        /**
+         * The duration of the process in seconds
+         */
         private final double processingTime;
 
         public ProcessMaterialOne(DATable daTable, DATableRecipe recipe, int state, double processingTime, boolean otherFinished) {
@@ -243,11 +304,25 @@ public class DATableRecipe extends DARecipe {
      */
     public static class ProcessMaterialTwo implements Runnable {
 
+        /**
+         * The state of the process
+         */
         private final int state;
+        /**
+         * The table to process on
+         */
         private final DATable daTable;
+        /**
+         * The recipe to process
+         */
         private final DATableRecipe recipe;
+        /**
+         * The duration of the process in seconds
+         */
         private final double processingTime;
-
+        /**
+         * If the first process is finished
+         */
         private final int otherFinished;
 
         public ProcessMaterialTwo(DATable daTable, DATableRecipe recipe, int state, double processingTime, boolean otherFinished) {
@@ -304,38 +379,6 @@ public class DATableRecipe extends DARecipe {
                 DA.log.logException(e, true);
             }
         }
-    }
-
-    /**
-     * Updates the view of the table
-     *
-     * @param daTable The table to update
-     * @param state   The state to update to
-     */
-    public void updateView(DATable daTable, int state, boolean isAsync) {
-        for (HumanEntity viewer : daTable.getInventory().getViewers()) {
-            try {
-                InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(daTable.getTitle(state));
-            } catch (Exception e) {
-                DA.log.logException(e, isAsync);
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        return super.toString().replace("DARecipe", "DATableRecipe")
-                .replace("}", "") +
-                ", filterOne=" + filterOne +
-                ", consumeFilterOne=" + consumeFilterOne +
-                ", filterTwo=" + filterTwo +
-                ", consumeFilterTwo=" + consumeFilterTwo +
-                ", fuelOne=" + fuelOne +
-                ", fuelTwo=" + fuelTwo +
-                ", materialOne=" + materialOne +
-                ", materialTwo=" + materialTwo +
-                '}';
     }
 
 

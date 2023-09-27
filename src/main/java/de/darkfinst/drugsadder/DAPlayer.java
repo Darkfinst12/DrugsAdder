@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,6 +33,25 @@ public class DAPlayer {
 
     public DAPlayer(@NotNull UUID uuid) {
         this.uuid = uuid;
+    }
+
+    /**
+     * Saves the player to the config
+     *
+     * @param players The config to save the player to
+     */
+    public static void save(ConfigurationSection players) {
+        for (DAPlayer daPlayer : DA.loader.getDaPlayerList()) {
+            if (daPlayer.addicted.isEmpty()) {
+                if (players.contains(daPlayer.getUuid().toString())) {
+                    players.set(daPlayer.getUuid().toString(), null);
+                }
+            } else {
+                DA.log.debugLog("Saving player " + daPlayer.getUuid());
+                ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
+                daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
+            }
+        }
     }
 
     /**
@@ -194,25 +212,6 @@ public class DAPlayer {
             return;
         }
         this.addicted.put(daDrug, addictionPoints);
-    }
-
-    /**
-     * Saves the player to the config
-     *
-     * @param players The config to save the player to
-     */
-    public static void save(ConfigurationSection players) {
-        for (DAPlayer daPlayer : DA.loader.getDaPlayerList()) {
-            if (daPlayer.addicted.isEmpty()) {
-                if (players.contains(daPlayer.getUuid().toString())) {
-                    players.set(daPlayer.getUuid().toString(), null);
-                }
-            } else {
-                DA.log.debugLog("Saving player " + daPlayer.getUuid());
-                ConfigurationSection player = players.createSection(daPlayer.getUuid().toString());
-                daPlayer.addicted.forEach((daDrug, addictionPoints) -> player.set(daDrug.getID(), addictionPoints));
-            }
-        }
     }
 
     private Map<String, Integer> getAddictionString() {

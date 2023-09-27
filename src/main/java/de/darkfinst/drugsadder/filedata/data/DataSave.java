@@ -16,25 +16,53 @@ import java.util.concurrent.TimeUnit;
 
 public class DataSave extends BukkitRunnable {
 
+    final public static String dataVersion = "0.0.1";
     public static int lastBackup = 0;
     public static int lastSave = 1;
     public static int autosave = 3;
-    final public static String dataVersion = "0.0.1";
     public static DataSave running;
     public static List<World> unloadingWorlds = new CopyOnWriteArrayList<>();
-
-    public ReadOldData read;
     private final long time;
     private final List<World> loadedWorlds;
+    public ReadOldData read;
     public boolean collected = false;
 
-    // Not Thread-Safe! Needs to be run in main thread but uses async Read/Write
+    // Not Thread-Safe! Needs to be run in the main thread but uses async Read/Write
     public DataSave(ReadOldData read) {
         this.read = read;
         time = System.currentTimeMillis();
         loadedWorlds = Bukkit.getWorlds();
     }
 
+    // Save all data. Takes a boolean whether all data should be collected in instantly
+    public static void save(boolean collectInstant) {
+        if (running != null) {
+            DA.log.log("Another Save was started while a Save was in Progress");
+            if (collectInstant) {
+                running.now();
+            }
+            return;
+        }
+
+        ReadOldData read = new ReadOldData();
+        if (collectInstant) {
+            read.run();
+            running = new DataSave(read);
+            running.run();
+        } else {
+            read.runTaskAsynchronously(DA.getInstance);
+            running = new DataSave(read);
+            running.runTaskTimer(DA.getInstance, 1, 2);
+        }
+    }
+
+    public static void autoSave() {
+        if (lastSave >= autosave) {
+            save(false);// save all data
+        } else {
+            lastSave++;
+        }
+    }
 
     // Running in Main Thread
     @Override
@@ -135,37 +163,6 @@ public class DataSave extends BukkitRunnable {
         if (!collected) {
             cancel();
             run();
-        }
-    }
-
-
-    // Save all data. Takes a boolean whether all data should be collected in instantly
-    public static void save(boolean collectInstant) {
-        if (running != null) {
-            DA.log.log("Another Save was started while a Save was in Progress");
-            if (collectInstant) {
-                running.now();
-            }
-            return;
-        }
-
-        ReadOldData read = new ReadOldData();
-        if (collectInstant) {
-            read.run();
-            running = new DataSave(read);
-            running.run();
-        } else {
-            read.runTaskAsynchronously(DA.getInstance);
-            running = new DataSave(read);
-            running.runTaskTimer(DA.getInstance, 1, 2);
-        }
-    }
-
-    public static void autoSave() {
-        if (lastSave >= autosave) {
-            save(false);// save all data
-        } else {
-            lastSave++;
         }
     }
 }

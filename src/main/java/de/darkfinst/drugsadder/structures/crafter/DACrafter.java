@@ -35,12 +35,6 @@ import java.util.*;
 public class DACrafter extends DAStructure implements InventoryHolder {
 
     /**
-     * The inventory of the crafter
-     */
-    @Setter(AccessLevel.NONE)
-    protected Inventory inventory;
-
-    /**
      * The slots which are blocked
      */
     private final int[] blockedSlots = new int[]{5, 6, 7, 8, 14, 15, 16, 17, 24, 26, 32, 33, 34, 35, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
@@ -56,6 +50,11 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      * The slot wich starts the recipe
      */
     private final int startSlot = 23;
+    /**
+     * The inventory of the crafter
+     */
+    @Setter(AccessLevel.NONE)
+    protected Inventory inventory;
 
     public DACrafter() {
         this.inventory = DA.getInstance.getServer().createInventory(this, 54, this.getTitle(0));
@@ -108,7 +107,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      * @param sign   The sign of the crafter
      * @param player The player who created the crafter
      */
-    public void create(Block sign, Player player) throws RegisterStructureException {
+    public void create(@NotNull Block sign, @NotNull Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.crafter.create")) {
             DACrafterBody dacrafterBody = new DACrafterBody(sign);
             try {
@@ -137,7 +136,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      * @param isAsync If the crafter should be created, async
      * @return True if the crafter was successfully created and registered
      */
-    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
+    public boolean create(@NotNull Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DACrafterBody crafterBody = new DACrafterBody(sign);
         boolean isValid = crafterBody.isValidCrafter();
         if (isValid) {
@@ -154,7 +153,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      *
      * @param player The player who wants to open the crafter
      */
-    public void open(Player player) {
+    public void open(@NotNull Player player) {
         if (player.hasPermission("drugsadder.crafter.open")) {
             //player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
@@ -172,6 +171,9 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         return (DACrafterBody) super.getBody();
     }
 
+    /**
+     * @return The process of the crafter
+     */
     public DACrafterProcess getProcess() {
         return this.getBody().getProcess();
     }

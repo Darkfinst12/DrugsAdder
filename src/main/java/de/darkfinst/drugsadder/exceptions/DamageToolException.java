@@ -1,6 +1,6 @@
 package de.darkfinst.drugsadder.exceptions;
 
-public class DamageToolException extends RuntimeException{
+public class DamageToolException extends RuntimeException {
 
     /**
      * Constructs an {@code ShopModifyStorageException} with no

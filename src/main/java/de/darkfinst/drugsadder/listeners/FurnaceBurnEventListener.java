@@ -6,6 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 
+/**
+ * This class handles the {@link FurnaceBurnEvent}
+ * <br>
+ * Currently not used
+ */
 public class FurnaceBurnEventListener implements Listener {
 
     public FurnaceBurnEventListener() {

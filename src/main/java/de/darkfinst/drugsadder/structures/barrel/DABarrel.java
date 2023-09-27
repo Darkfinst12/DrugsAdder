@@ -40,7 +40,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      * @param sign   The sign of the barrel
      * @param player The player who created the barrel
      */
-    public void create(Block sign, Player player) throws RegisterStructureException {
+    public void create(@NotNull Block sign, @NotNull Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.barrel.create")) {
             DABarrelBody barrelBody = new DABarrelBody(this, sign);
             try {
@@ -70,7 +70,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      * @return True if the barrel was successfully created and registered
      * @throws ValidateStructureException If the barrel is not valid
      */
-    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
+    public boolean create(@NotNull Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DABarrelBody barrelBody = new DABarrelBody(this, sign);
         boolean isValid = barrelBody.isValidBarrel();
         if (isValid) {
@@ -89,7 +89,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      * @param player The player who opens the barrel
      * @param block  The block of the barrel
      */
-    public void open(Player player, Block block) {
+    public void open(@NotNull Player player, @NotNull Block block) {
         if (Material.SPRUCE_TRAPDOOR.equals(block.getType())) {
             return;
         }
@@ -123,7 +123,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      *
      * @param event The event to handle
      */
-    public void handleInventoryClose(InventoryCloseEvent event) {
+    public void handleInventoryClose(@NotNull InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1);
         for (ItemStack itemStack : event.getInventory().getContents()) {
@@ -136,7 +136,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      *
      * @param event The event to handle
      */
-    public void handleInventoryClick(InventoryClickEvent event) {
+    public void handleInventoryClick(@NotNull InventoryClickEvent event) {
         if (this.inventory.equals(event.getClickedInventory())) {
             this.removeTimeStamp(event.getCursor());
             this.removeTimeStamp(event.getCurrentItem());
@@ -150,7 +150,7 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      * <br>
      * It is needed to check if the item can be processed
      *
-     * @param itemStack
+     * @param itemStack The item stack to add the time stamp to
      */
     public void addTimeStamp(ItemStack itemStack) {
         if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {

@@ -2,7 +2,6 @@ package de.darkfinst.drugsadder.structures.table;
 
 import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
-import de.darkfinst.drugsadder.api.events.table.TableCancelRecipeEvent;
 import de.darkfinst.drugsadder.api.events.table.TableStartRecipeEvent;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
@@ -36,12 +35,6 @@ import java.util.List;
 public class DATable extends DAStructure implements InventoryHolder {
 
     /**
-     * The inventory of the table
-     */
-    @Setter(AccessLevel.NONE)
-    protected Inventory inventory;
-
-    /**
      * The slots which are blocked
      */
     private final int[] blockedSlots = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20, 21, 23, 24, 26, 27, 29, 30, 32, 33, 35, 36, 37, 39, 40, 41, 43, 44, 45, 47, 48, 49, 50, 51, 53};
@@ -66,6 +59,11 @@ public class DATable extends DAStructure implements InventoryHolder {
      * The slots wich starts the recipe for the corresponding side
      */
     private final int[] startSlots = new int[]{38, 42};
+    /**
+     * The inventory of the table
+     */
+    @Setter(AccessLevel.NONE)
+    protected Inventory inventory;
 
     public DATable() {
         this.inventory = DA.getInstance.getServer().createInventory(this, 54, this.getTitle(0));
@@ -111,7 +109,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param sign   The sign of the table
      * @param player The player who created the table
      */
-    public void create(Block sign, Player player) throws RegisterStructureException {
+    public void create(@NotNull Block sign, @NotNull Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.table.create")) {
             DATableBody daTableBody = new DATableBody(sign);
             try {
@@ -140,7 +138,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      * @param isAsync If the table should be created, async
      * @return True if the table was successfully created and registered
      */
-    public boolean create(Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
+    public boolean create(@NotNull Block sign, boolean isAsync) throws ValidateStructureException, RegisterStructureException {
         DATableBody tableBody = new DATableBody(sign);
         boolean isValid = tableBody.isValidTable();
         if (isValid) {
@@ -157,7 +155,7 @@ public class DATable extends DAStructure implements InventoryHolder {
      *
      * @param player The player who wants to open the table
      */
-    public void open(Player player) {
+    public void open(@NotNull Player player) {
         if (player.hasPermission("drugsadder.table.open")) {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
@@ -174,6 +172,9 @@ public class DATable extends DAStructure implements InventoryHolder {
         return (DATableBody) super.getBody();
     }
 
+    /**
+     * @return The process of the table
+     */
     public DATableProcess getProcess() {
         return this.getBody().getProcess();
     }
@@ -246,6 +247,12 @@ public class DATable extends DAStructure implements InventoryHolder {
         return side == 0 ? this.isThisRecipeOne(recipe) : this.isThisRecipeTwo(recipe);
     }
 
+    /**
+     * Checks if the table has all items for the given recipe in the first side
+     *
+     * @param recipe The recipe to check
+     * @return True if the table has all items for the recipe otherwise false
+     */
     public boolean isThisRecipeOne(@NotNull DATableRecipe recipe) {
         boolean isValid = false;
         if (recipe.getFilterOne() != null) {
@@ -269,6 +276,12 @@ public class DATable extends DAStructure implements InventoryHolder {
         return isValid;
     }
 
+    /**
+     * Checks if the table has all items for the given recipe in the second side
+     *
+     * @param recipe The recipe to check
+     * @return True if the table has all items for the recipe otherwise false
+     */
     public boolean isThisRecipeTwo(@NotNull DATableRecipe recipe) {
         boolean isValid = false;
         if (recipe.getFilterTwo() != null) {
@@ -311,7 +324,7 @@ public class DATable extends DAStructure implements InventoryHolder {
             default -> {
                 if (Arrays.stream(this.blockedSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
-                }else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
+                } else if (Arrays.stream(this.startSlots).anyMatch(slot -> slot == event.getSlot()) && event.getClickedInventory() == this.inventory) {
                     event.setCancelled(true);
                     int side = this.startSlots[0] == event.getSlot() ? 0 : 1;
                     Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> this.callRecipeCheck(event.getWhoClicked(), side), 1);
@@ -330,6 +343,7 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
+    @Deprecated(forRemoval = true)
     private int getClickedSide(int slot) {
         if (materialSlots[0] == slot || filterSlots[0] == slot || fuelSlots[0] == slot) {
             return 0;

@@ -20,6 +20,10 @@ public class DAItem implements Cloneable {
     @NotNull
     private final ItemStack itemStack;
     /**
+     * The namespaced ID of the item
+     */
+    private final String namespacedID;
+    /**
      * The name of the item
      */
     @Nullable
@@ -34,7 +38,6 @@ public class DAItem implements Cloneable {
      */
     @Nullable
     private Integer customModelData;
-
     /**
      * The match types, which should be used to match the item
      */
@@ -43,11 +46,6 @@ public class DAItem implements Cloneable {
      * The amount of the item
      */
     private int amount = 1;
-
-    /**
-     * The namespaced ID of the item
-     */
-    private final String namespacedID;
 
     public DAItem(@NotNull ItemStack itemStack, String namespacedID) {
         this.itemStack = itemStack;

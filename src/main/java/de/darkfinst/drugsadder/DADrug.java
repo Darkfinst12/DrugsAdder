@@ -3,7 +3,6 @@ package de.darkfinst.drugsadder;
 import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

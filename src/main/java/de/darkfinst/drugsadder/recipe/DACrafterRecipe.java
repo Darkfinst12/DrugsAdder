@@ -27,20 +27,18 @@ public class DACrafterRecipe extends DARecipe {
      */
     private final Map<String, DAItem> shapeKeys = new HashMap<>();
     /**
-     * Whether the recipe is shapeless or not
-     */
-    @Setter
-    private boolean isShapeless = false;
-
-    /**
      * The processing time of the recipe
      */
     private final double processingTime;
-
     /**
      * The required players for the recipe
      */
     private final int requiredPlayers;
+    /**
+     * Whether the recipe is shapeless or not
+     */
+    @Setter
+    private boolean isShapeless = false;
 
     public DACrafterRecipe(String ID, RecipeType recipeType, DAItem result, double processingTime, int requiredPlayers, DAItem... materials) {
         super(ID, recipeType, result, materials);
@@ -58,7 +56,7 @@ public class DACrafterRecipe extends DARecipe {
         this.shapeKeys.putAll(shapeKeys);
     }
 
-    public boolean matchMaterials(Map<Integer, ItemStack> matrix) {
+    public boolean matchMaterials(@NotNull Map<Integer, ItemStack> matrix) {
         try {
             if (isShapeless) {
                 return this.hasMaterials(matrix.values().toArray(new ItemStack[0]));
@@ -72,7 +70,7 @@ public class DACrafterRecipe extends DARecipe {
 
     }
 
-    public boolean matchShape(Map<Integer, ItemStack> matrix) throws IllegalArgumentException {
+    public boolean matchShape(@NotNull Map<Integer, ItemStack> matrix) throws IllegalArgumentException {
         if (this.isShapeless) {
             throw new IllegalArgumentException("Recipe is shapeless");
         }
@@ -99,7 +97,13 @@ public class DACrafterRecipe extends DARecipe {
         return true;
     }
 
-    public void executeShape(DACrafter daCrafter) {
+    /**
+     * Executes the shape of the recipe; that means it removes the materials from the table and adds the result
+     *
+     * @param daCrafter The table to execute the shape on
+     * @throws IllegalArgumentException If the recipe is shapeless or the matrix length isn't 25
+     */
+    public void executeShape(@NotNull DACrafter daCrafter) throws IllegalArgumentException {
         var matrix = daCrafter.getContentMap();
         if (this.isShapeless) {
             throw new IllegalArgumentException("Recipe is shapeless");
@@ -134,7 +138,7 @@ public class DACrafterRecipe extends DARecipe {
         this.addResult(daCrafter, this.getResult());
     }
 
-    public void startProcess(DACrafter daCrafter) {
+    public void startProcess(@NotNull DACrafter daCrafter) {
         daCrafter.getProcess().setRecipe(this);
         BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, new ProcessMaterials(0, daCrafter, this, this.processingTime / 7));
         daCrafter.getProcess().setTaskID(task.getTaskId());
@@ -150,7 +154,7 @@ public class DACrafterRecipe extends DARecipe {
      *
      * @param daCrafter The table to finish the process on and to start the recipe again
      */
-    public void finishProcess(DACrafter daCrafter, boolean isAsync) {
+    public void finishProcess(@NotNull DACrafter daCrafter, boolean isAsync) {
         this.updateView(daCrafter, 0, isAsync);
         daCrafter.getProcess().reset();
     }
@@ -161,7 +165,7 @@ public class DACrafterRecipe extends DARecipe {
      * @param daCrafter The table to cancel the process on
      * @param isAsync   If the method is called async
      */
-    public void cancelProcess(DACrafter daCrafter, boolean isAsync) {
+    public void cancelProcess(@NotNull DACrafter daCrafter, boolean isAsync) {
         if (daCrafter.getProcess().isProcessing()) {
             Bukkit.getScheduler().cancelTask(daCrafter.getProcess().getTaskID());
             this.updateView(daCrafter, 0, isAsync);
@@ -170,7 +174,21 @@ public class DACrafterRecipe extends DARecipe {
 
     }
 
-    private void addResult(DACrafter daCrafter, DAItem result) {
+    /**
+     * Adds the result to the table
+     * <br>
+     * If the result slot is empty,
+     * the result will be set in the result slot.
+     * <br>
+     * If the result is the same as the item in the result slot,
+     * it will be added to the amount of the item in the result slot.
+     * <br>
+     * If the result is not the same as the item in the result slot, the result will be dropped
+     *
+     * @param daCrafter The table to add the result to
+     * @param result    The result to add
+     */
+    private void addResult(@NotNull DACrafter daCrafter, DAItem result) {
         ItemStack itemStack = daCrafter.getInventory().getItem(daCrafter.getResultSlot());
         ItemStack resultItem = result != null ? result.getItemStack() : null;
         if (itemStack == null) {
@@ -194,7 +212,7 @@ public class DACrafterRecipe extends DARecipe {
      * @param dacRafter The table to update
      * @param state     The state to update to
      */
-    public void updateView(DACrafter dacRafter, int state, boolean isAsync) {
+    public void updateView(@NotNull DACrafter dacRafter, int state, boolean isAsync) {
         for (HumanEntity viewer : dacRafter.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
@@ -210,11 +228,26 @@ public class DACrafterRecipe extends DARecipe {
         return super.toString().replace("DARecipe", "DACrafterRecipe").replace("}", "") + ", shape=" + shape + ", shapeKeys=" + shapeKeys + ", isShapeless=" + isShapeless + "}";
     }
 
+    /**
+     * Processes the materials of the recipe asynchronously and updates the view of the table
+     */
     public static class ProcessMaterials implements Runnable {
 
+        /**
+         * The state of the process
+         */
         private final int state;
+        /**
+         * The crafter to process the materials on
+         */
         private final DACrafter daCrafter;
+        /**
+         * The recipe to process
+         */
         private final DACrafterRecipe recipe;
+        /**
+         * The processing time of the recipe for each state
+         */
         private final double processingTime;
 
         public ProcessMaterials(int state, DACrafter daCrafter, DACrafterRecipe recipe, double processingTime) {

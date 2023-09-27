@@ -20,6 +20,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -52,11 +53,14 @@ public class DAPlant extends DAStructure {
      */
     private final DAItem[] drops;
     /**
+     * The secure random for the calculation of the probability items
+     */
+    private final SecureRandom secureRandom;
+    /**
      * The allowed tools to harvest the plant
      */
     @Setter
     private Map<String, Integer> allowedTools = new HashMap<>();
-
     /**
      * The last harvest time of the plant
      */
@@ -65,11 +69,6 @@ public class DAPlant extends DAStructure {
      * Whether the plant can be harvested
      */
     private boolean canBeHarvested = false;
-
-    /**
-     * The secure random for the calculation of the probability items
-     */
-    private final SecureRandom secureRandom;
 
     public DAPlant(DAItem seed, boolean isCrop, boolean destroyOnHarvest, float growthTime, DAItem... drops) {
         this.seed = seed;
@@ -82,6 +81,23 @@ public class DAPlant extends DAStructure {
     }
 
     /**
+     * Handles the change of a Block if it is a farmland
+     *
+     * @param block The block that changed
+     */
+    public static void handelChange(Block block) {
+        if (Material.FARMLAND.equals(block.getType())) {
+            Block crop = block.getRelative(0, 1, 0);
+            if (DA.loader.isPlant(crop)) {
+                DAStructure plant = DA.loader.getStructure(crop);
+                if (plant instanceof DAPlant daPlant) {
+                    daPlant.destroy();
+                }
+            }
+        }
+    }
+
+    /**
      * Creates the plant
      * <p>
      * Checks if the player has the permission to create the plant
@@ -89,7 +105,7 @@ public class DAPlant extends DAStructure {
      * @param plantBlock Block of the plant
      * @param player     Player, who wants to create the plant
      */
-    public void create(Block plantBlock, Player player) throws RegisterStructureException {
+    public void create(@NotNull Block plantBlock, @NotNull Player player) throws RegisterStructureException {
         if (player.hasPermission("drugsadder.plant.create")) {
             DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
             try {
@@ -124,7 +140,7 @@ public class DAPlant extends DAStructure {
      * @param isAsync    If the plant should be created, async
      * @return True if the plant was successfully created and registered
      */
-    public boolean create(Block plantBlock, boolean isAsync) throws RegisterStructureException {
+    public boolean create(@NotNull Block plantBlock, boolean isAsync) throws RegisterStructureException {
         DAPlantBody daPlantBody = new DAPlantBody(this, plantBlock);
         boolean isValid = daPlantBody.isValidPlant();
         if (isValid) {
@@ -149,7 +165,7 @@ public class DAPlant extends DAStructure {
      *
      * @param player Player, who wants to harvest the plant
      */
-    public void checkHarvest(Player player) {
+    public void checkHarvest(@NotNull Player player) {
         if (player.hasPermission("drugsadder.plant.harvest")) {
             String namespacedID = DAUtil.getNamespacedIDByItemStack(player.getInventory().getItemInMainHand());
             if (this.hasTool(player)) {
@@ -183,7 +199,7 @@ public class DAPlant extends DAStructure {
         }
     }
 
-    public boolean hasTool(Player player) {
+    public boolean hasTool(@NotNull Player player) {
         String namespacedID = DAUtil.getNamespacedIDByItemStack(player.getInventory().getItemInMainHand());
         return this.allowedTools.containsKey(namespacedID);
     }
@@ -247,19 +263,9 @@ public class DAPlant extends DAStructure {
         }
     }
 
-    public static void handelChange(Block block) {
-        if (Material.FARMLAND.equals(block.getType())) {
-            Block crop = block.getRelative(0, 1, 0);
-            if (DA.loader.isPlant(crop)) {
-                DAStructure plant = DA.loader.getStructure(crop);
-                if (plant instanceof DAPlant daPlant) {
-                    daPlant.destroy();
-                }
-            }
-        }
-    }
-
-
+    /**
+     * @return The body of the plant
+     */
     @Override
     public DAPlantBody getBody() {
         return (DAPlantBody) super.getBody();
@@ -270,14 +276,28 @@ public class DAPlant extends DAStructure {
         this.canBeHarvested = false;
     }
 
+    @Override
+    public void destroyInventory() {
+        //Do nothing because plants don't have an inventory
+    }
+
 
     /**
      * Runnable for growing the plant if it is a crop
      */
     public static class GrowRunnable implements Runnable {
 
+        /**
+         * The plant
+         */
         private final DAPlant plant;
+        /**
+         * The crop
+         */
         private final Block crop;
+        /**
+         * The time the plant needs to grow in seconds
+         */
         private final float growTime;
 
         public GrowRunnable(DAPlant plant, Block crop, float growTime) {
