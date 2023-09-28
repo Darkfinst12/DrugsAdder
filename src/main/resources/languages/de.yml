@@ -100,7 +100,7 @@ Perms_Crafter_NoOpen: "Du hast keine Berechtigung ,um einen Crafter öffnen zu k
 
 # ---- Player ----
 Player_Barrel_Created: "Das Fass wurde erfolgreich erstellt"
-Player_Barrel_NotValid: "Diese Fass ist nicht korrekt gebaut!"
+Player_Barrel_NotValid: "Dieses Fass ist nicht korrekt gebaut!"
 Player_Overdose_Consume: "Du hast eine Überdosis genommen!"
 Player_Overdose_Death: "%v1 ist an einer Überdosis gestorben!"
 Player_Press_Created: "Die Presse wurde erfolgreich erstellt"
