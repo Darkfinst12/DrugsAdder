@@ -308,7 +308,18 @@ public class DACommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args.length == 4) {
                     if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
-                        if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
+                        if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes")) {
+                                DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(args[3]);
+                                if (daRecipe != null) {
+                                    DA.loader.msg(commandSender, daRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.barrel")) {
                                 DABarrelRecipe daBarrelRecipe = DAConfig.daRecipeReader.getBarrelRecipe(args[3]);
                                 if (daBarrelRecipe != null) {
@@ -374,17 +385,6 @@ public class DACommand implements CommandExecutor, TabCompleter {
                             } else {
                                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
                             }
-                        } else if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
-                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes")) {
-                                DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(args[3]);
-                                if (daRecipe != null) {
-                                    DA.loader.msg(commandSender, daRecipe.toString());
-                                } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
-                                }
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                            }
                         }
                     }
                 }
@@ -396,6 +396,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     private void checkArgs4(CommandSender commandSender, String[] args) {
         this.checkPlayerClear(commandSender, args);
+        this.checkInfo(commandSender, args);
     }
 
     private void checkPlayerClear(CommandSender commandSender, String[] args) {
@@ -530,8 +531,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
             command, @NotNull String commandLabel, @NotNull String[] args) {
         if (args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
             return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        }
-        if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
             return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
@@ -550,11 +550,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     public List<String> getTabCompleteArgs4(@NotNull CommandSender commandSender, @NotNull Command
             command, @NotNull String commandLabel, @NotNull String[] args) {
-        if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
-            List<String> drugNames = DAConfig.drugReader.getDrugNames();
-            drugNames.add(PossibleArgs.ALL.getArg());
-            return drugNames.stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
+        if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
             return DAConfig.daRecipeReader.getBarrelRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
             return DAConfig.daRecipeReader.getCraftingRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
@@ -566,6 +562,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
             return DAConfig.daRecipeReader.getPressRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
             return DAConfig.daRecipeReader.getTableRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
+            List<String> drugNames = DAConfig.drugReader.getDrugNames();
+            drugNames.add(PossibleArgs.ALL.getArg());
+            return drugNames.stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
         } else {
             return new ArrayList<>();
         }
