@@ -1,5 +1,5 @@
 # DrugsAdder
-
+[![Build](https://github.com/Darkfinst12/DrugsAdder/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/Darkfinst12/DrugsAdder/actions/workflows/gradle-publish.yml)
 ![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)
 [![Releases](https://img.shields.io/github/v/release/Darkfinst12/DrugsAdder)](https://github.com/Darkfinst12/DrugsAdder/releases/latest)
 
