@@ -118,7 +118,7 @@ Player_Crafter_Created: "The crafter was created"
 Player_Crafter_NotValid: "The crafter is nit properly built"
 
 # ---- Structures ----
-Structure_Name_Table: "Laboratory Table"
+Structure_Name_Table: "Table"
 Structure_Name_Barrel: "Barrel"
 Structure_Name_Press: "Press"
 Structure_Name_Crafter: "Crafter"

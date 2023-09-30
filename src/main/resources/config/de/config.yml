@@ -171,7 +171,7 @@ customItems:
     potionMeta:
       color: "255,10,255,125"
       effects:
-        - 'PotionEffect{type=SLOWNESS, duration=600, level=2, particles=true, icon=true}'
+        - 'PotionEffect{type=SLOW, duration=600, level=2, particles=true, icon=true}'
   coca_seeds:
     name: '&fCoca Seeds'
     material: 'pumpkin_seeds'
@@ -204,7 +204,7 @@ recipes:
           #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         2:
-          itemStack: 'drugsadder:coca'
+          itemStack: 'drugsadder:coca_leaf'
           amount: 4
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
@@ -237,7 +237,7 @@ recipes:
           #Für weitere Informationen schaue in der Wiki nach
           #Du kannst, diese Einstellung auch Deaktivieren, indem Du die Einstellung resetItemCrafting auf false setzt
         V:
-          itemStack: 'drugsadder:coca'
+          itemStack: 'drugsadder:coca_leaf'
           amount: 4
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
@@ -275,7 +275,7 @@ recipes:
           #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         V:
-          itemStack: 'drugsadder:coca'
+          itemStack: 'drugsadder:coca_leaf'
           amount: 4
           matchType: "ALL"
         #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
@@ -330,7 +330,7 @@ recipes:
           #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
-      result: 'drugsadder:cocaine_pills/6'
+      result: 'drugsadder:cocaine_pill/6'
     red_pills:
       duration: 10.0
       mold: 'drugsadder:pill_mold'
