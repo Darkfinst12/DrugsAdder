@@ -11,7 +11,6 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -133,16 +132,38 @@ public class DASeedReader {
         boolean isValid = false;
         if (itemStack != null) {
             Material plantType = itemStack.getType();
-            isValid = Tag.CORAL_PLANTS.isTagged(plantType) || Tag.WALL_CORALS.isTagged(plantType)
-                    || Tag.SMALL_FLOWERS.isTagged(plantType) || Tag.FLOWERS.isTagged(plantType)
-                    || Tag.SAPLINGS.isTagged(plantType) || Tag.ITEMS_VILLAGER_PLANTABLE_SEEDS.isTagged(plantType)
-                    || Material.NETHER_SPROUTS.equals(plantType) || Material.TALL_SEAGRASS.equals(plantType)
-                    || Material.SEAGRASS.equals(plantType) || Material.FERN.equals(plantType)
-                    || Material.TALL_GRASS.equals(plantType) || Material.LARGE_FERN.equals(plantType)
-                    || Material.SWEET_BERRY_BUSH.equals(plantType) || Material.DEAD_BUSH.equals(plantType)
-                    || Material.GLOW_BERRIES.equals(plantType) || Material.RED_MUSHROOM.equals(plantType)
-                    || Material.BROWN_MUSHROOM.equals(plantType) || Material.WARPED_FUNGUS.equals(plantType)
-                    || Material.CRIMSON_FUNGUS.equals(plantType)
+            isValid = Material.BEETROOT_SEEDS.equals(plantType) || Material.MELON_SEEDS.equals(plantType)
+                    || Material.PUMPKIN_SEEDS.equals(plantType) || Material.WHEAT_SEEDS.equals(plantType)
+                    || Material.COCOA_BEANS.equals(plantType) || Material.CARROT.equals(plantType)
+                    || Material.POTATO.equals(plantType) || Material.NETHER_WART.equals(plantType)
+                    || Material.KELP.equals(plantType) || Material.BAMBOO.equals(plantType)
+                    || Material.LILY_PAD.equals(plantType)
+                    || Material.SEA_PICKLE.equals(plantType) || Material.GRASS.equals(plantType)
+                    || Material.FERN.equals(plantType) || Material.LARGE_FERN.equals(plantType)
+                    || Material.SUNFLOWER.equals(plantType) || Material.LILAC.equals(plantType)
+                    || Material.ROSE_BUSH.equals(plantType) || Material.PEONY.equals(plantType)
+                    || Material.DANDELION.equals(plantType) || Material.POPPY.equals(plantType)
+                    || Material.BLUE_ORCHID.equals(plantType) || Material.ALLIUM.equals(plantType)
+                    || Material.AZURE_BLUET.equals(plantType) || Material.RED_TULIP.equals(plantType)
+                    || Material.ORANGE_TULIP.equals(plantType) || Material.WHITE_TULIP.equals(plantType)
+                    || Material.PINK_TULIP.equals(plantType) || Material.OXEYE_DAISY.equals(plantType)
+                    || Material.CORNFLOWER.equals(plantType) || Material.LILY_OF_THE_VALLEY.equals(plantType)
+                    || Material.WITHER_ROSE.equals(plantType) || Material.BROWN_MUSHROOM.equals(plantType)
+                    || Material.RED_MUSHROOM.equals(plantType) || Material.CRIMSON_FUNGUS.equals(plantType)
+                    || Material.WARPED_FUNGUS.equals(plantType) || Material.CRIMSON_ROOTS.equals(plantType)
+                    || Material.WARPED_ROOTS.equals(plantType) || Material.NETHER_SPROUTS.equals(plantType)
+                    || Material.TALL_SEAGRASS.equals(plantType) || Material.SEAGRASS.equals(plantType)
+                    || Material.TALL_GRASS.equals(plantType) || Material.SWEET_BERRY_BUSH.equals(plantType)
+                    || Material.DEAD_BUSH.equals(plantType) || Material.GLOW_BERRIES.equals(plantType)
+                    || Material.BAMBOO_SAPLING.equals(plantType) || Material.ACACIA_SAPLING.equals(plantType)
+                    || Material.BIRCH_SAPLING.equals(plantType) || Material.DARK_OAK_SAPLING.equals(plantType)
+                    || Material.JUNGLE_SAPLING.equals(plantType) || Material.OAK_SAPLING.equals(plantType)
+                    || Material.SPRUCE_SAPLING.equals(plantType)
+                    || Material.BRAIN_CORAL.equals(plantType) || Material.BUBBLE_CORAL.equals(plantType)
+                    || Material.FIRE_CORAL.equals(plantType) || Material.HORN_CORAL.equals(plantType)
+                    || Material.TUBE_CORAL.equals(plantType) || Material.DEAD_BRAIN_CORAL.equals(plantType)
+                    || Material.DEAD_BUBBLE_CORAL.equals(plantType) || Material.DEAD_FIRE_CORAL.equals(plantType)
+                    || Material.DEAD_HORN_CORAL.equals(plantType) || Material.DEAD_TUBE_CORAL.equals(plantType)
             ;
 
         }
