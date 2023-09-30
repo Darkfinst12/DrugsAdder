@@ -1,5 +1,13 @@
 # DrugsAdder
-![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)
 
-# Infos for Developer
-BulidTools is requiered https://www.spigotmc.org/wiki/buildtools/
+![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)
+[![Releases](https://img.shields.io/github/v/release/Darkfinst12/DrugsAdder)](https://github.com/Darkfinst12/DrugsAdder/releases/latest)
+
+
+***
+
+#### Find the Project Page on (not listed yet)
+
+#### Also see [Wiki](https://github.com/Darkfinst12/DrugsAdder/wiki) | [Issues](https://github.com/Darkfinst12/DrugsAdder/issues) | [Releases](https://github.com/Darkfinst12/DrugsAdder/releases) | [Changelog](https://github.com/Darkfinst12/DrugsAdder/wiki/changelog) | [Commits](https://github.com/Darkfinst12/DrugsAdder/commits/master)
+
+***
