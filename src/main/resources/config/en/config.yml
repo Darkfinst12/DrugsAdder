@@ -470,7 +470,7 @@ drugs:
     #PlayerCommands means that the Command will be executed by the Player
     #Note that the Player must have the Permission to execute the Command
     playerCommands:
-      - 'say Ich have %drug% consumed!'
+      - 'say I have %drug% consumed!'
     #The Message that is sent to the Player when the Drug is consumed
     #You can use the following Placeholders: %player%, %drug%
     consumeMessage: 'You have %drug% consumed'
