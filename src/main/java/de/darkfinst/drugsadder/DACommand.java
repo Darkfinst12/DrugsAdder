@@ -47,6 +47,8 @@ public class DACommand implements CommandExecutor, TabCompleter {
             this.checkArgs4(commandSender, args);
         } else if (args.length == 5) {
             this.checkArgs5(commandSender, args);
+        } else if (args.length == 6) {
+            this.checkArgs6(commandSender, args);
         }
         return true;
     }
@@ -446,6 +448,37 @@ public class DACommand implements CommandExecutor, TabCompleter {
             List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
             for (DACrafter crafter : crafters) {
                 String title = crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0);
+                for (HumanEntity viewer : crafter.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkArgs6(CommandSender commandSender, String[] args) {
+        this.checkPlayerSet(commandSender, args);
+        if ("tableArray".equalsIgnoreCase(args[0])) {
+            List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
+            for (DATable table : tables) {
+                String title = table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+                for (HumanEntity viewer : table.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
+                }
+            }
+        } else if ("crafterArray".equalsIgnoreCase(args[0])) {
+            List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
+            for (DACrafter crafter : crafters) {
+                String title = crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
                 for (HumanEntity viewer : crafter.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
