@@ -3,10 +3,10 @@
   "textures": {
     "layer0": "minecraft:item/apple"
   },
-  "overrides":
-  [
-	{"predicate":{
-        "custom_model_data":1
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
       },
       "model": "minecraft:item/red_pill"
     },
@@ -16,13 +16,13 @@
       },
       "model": "minecraft:item/blue_pill"
     },
-	{
+    {
       "predicate": {
         "custom_model_data": 3
       },
-      "model": "minecraft:item/cocain"
+      "model": "minecraft:item/cocaine"
     },
-	{
+    {
       "predicate": {
         "custom_model_data": 4
       },
@@ -33,6 +33,12 @@
         "custom_model_data": 5
       },
       "model": "minecraft:item/heroin_syringe"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "minecraft:item/cocaine_pill"
     }
   ]
 }
