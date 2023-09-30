@@ -23,6 +23,7 @@ logSeedLoadInfo: true
 logSeedLoadComplete: true
 logSeedLoadError: true
 debugLogg: false
+logGeneralInfo: true
 
 #Table Title Array
 #Es muss immer 4 Werte geben - Für eine genaue Erklärung siehe in der Wiki nach
@@ -107,37 +108,60 @@ customItems:
       - '&7Cocaine'
     #CustomModelData von dem Item
     #Beachten, dass das Modell aus dem höchsten Texturenpacket des Benutzers entnommen wird, welches diese hat.
-    customModelData: 1
-  dirty_cocaine:
-    name: '&fDirty Cocaine'
-    material: 'paper'
-    lore:
-      - '&7Dirty Cocaine'
-    customModelData: 2
-  cocaine_pills:
-    name: '&fCocaine Pills'
-    material: 'paper'
-    lore:
-      - '&7Cocaine Pills'
     customModelData: 3
+  dirty_cocaine:
+    name: '&fDreckiges Kokain'
+    material: 'apple'
+    lore:
+      - '&7Oh nein mein Kokain ist schmutzig'
+    customModelData: 4
+  cocaine_pill:
+    name: '&fKokain Pille'
+    material: 'apple'
+    customModelData: 6
+  blue_pill:
+    name: '&fBlaue Pill'
+    material: 'apple'
+    customModelData: 2
+    lore:
+      - '&7You take the blue pill, the story ends.'
+  red_pill:
+    name: '&fRote Pill'
+    material: 'apple'
+    customModelData: 1
+    lore:
+      - '&7You take the red pill, you stay in Wonderland,'
+      - '&7and I show you how deep the rabbit hole goes.'
+  heroin_syringe:
+    name: '&fHeroinspritze'
+    material: 'apple'
+    customModelData: 5
+    lore:
+      - '&7Spritz dir Heroin'
+  joint:
+    name: '&fJoint'
+    material: 'apple'
+    customModelData: 7
+    lore:
+      - '&7Lets smoke some Weed'
   pill_mold:
     name: '&fPill Mold'
-    material: 'paper'
+    material: 'stick'
     lore:
-      - '&7Pill Mold'
-    customModelData: 4
-  coca:
-    name: '&fCoca'
-    material: 'paper'
+      - '&7Lets press some Pills'
+    customModelData: 3
+  coca_leaf:
+    name: '&fCoca Leaf'
+    material: 'stick'
     lore:
       - '&7Coca'
-    customModelData: 5
-  shrooms:
-    name: '&fShrooms'
-    material: 'paper'
+    customModelData: 1
+  hanf:
+    name: '&fHanf'
+    material: 'stick'
     lore:
-      - '&7Shrooms'
-    customModelData: 6
+      - '&7Coca'
+    customModelData: 2
   suspicious_potion:
     name: '&cSus Potion'
     material: 'potion'
@@ -147,7 +171,13 @@ customItems:
     potionMeta:
       color: "255,10,255,125"
       effects:
-        - 'PotionEffect{type=SPEED, duration=600, level=2, particles=true, icon=true}'
+        - 'PotionEffect{type=SLOWNESS, duration=600, level=2, particles=true, icon=true}'
+  coca_seeds:
+    name: '&fCoca Seeds'
+    material: 'pumpkin_seeds'
+    lore:
+      - '&7Coca'
+    customModelData: 0
 
 #Rezepte
 recipes:
@@ -211,23 +241,7 @@ recipes:
           amount: 4
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
-      result: 'drugsadder:dirty_cocaine/6'
-    shrooms:
-      isShaped: false
-      shape:
-        - 'XOE'
-        - 'XXX'
-        - 'XXX'
-      materials:
-        E:
-          itemStack: 'minecraft:sugar'
-          amount: 1
-          matchType: "ALL"
-        O:
-          itemStack: 'drugsadder:coca'
-          amount: 1
-          matchType: "ALL"
-      result: 'drugsadder:shrooms/6'
+      result: 'drugsadder:dirty_cocaine/3'
   #Der Abschnitt für die Crafterrezepte füge hier deine Rezepte ein
   crafter:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
@@ -265,13 +279,13 @@ recipes:
           amount: 4
           matchType: "ALL"
         #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
-      result: 'drugsadder:dirty_cocaine/6'
+      result: 'drugsadder:dirty_cocaine/4'
   #Der Abschnitt für die Ofenrezepte füge hier deine Rezepte ein
   furnace:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     cocaine:
       #Der Typ des Rezeptes - Du kannst zwischen FURNACE, SMOKING, BLASTING wählen
-      recipeType: "FURNACE"
+      recipeType: "BLASTING"
       #Wie lange das Rezept dauert - In Sekunden
       cookingTime: 100
       #Die Erfahrung, die der Spieler erhält, wenn er das Rezept ausführt
@@ -290,28 +304,12 @@ recipes:
         #Du kannst, diese Einstellung auch Deaktivieren, indem Du die Einstellung resetItemCrafting auf false setzt
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:cocaine/1'
-    blast_cocaine:
-      recipeType: "BLASTING"
-      cookingTime: 50
-      exp: 0
-      material:
-        itemStack: 'drugsadder:dirty_cocaine'
-        amount: 1
-      result: 'drugsadder:cocaine/1'
-    smoke_cocaine:
-      recipeType: "SMOKING"
-      cookingTime: 75
-      exp: 0
-      material:
-        itemStack: 'drugsadder:dirty_cocaine'
-        amount: 1
-      result: 'drugsadder:cocaine/1'
   #Der Abschnitt für die Pressrezepte füge hier deine Rezepte ein
   press:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     cocaine_pills:
       #Wie lange das Rezept dauert - In Sekunden
-      duration: 2.0
+      duration: 5.0
       #Die Form des Rezeptes - Verwende einfach ein gültiges NamespacedID eines Gegenstandes, es kann ein CustomItem sein
       mold: 'drugsadder:pill_mold'
       #Ob die Form zurückgegeben werden soll, wenn das Rezept abgeschlossen ist
@@ -324,19 +322,47 @@ recipes:
           #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
           #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
           #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
-          itemStack: 'drugsadder:dirty_cocaine'
+          itemStack: 'drugsadder:cocaine'
           #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
-          amount: 1
+          amount: 5
           #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
           #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
           #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
       #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
-      result: 'drugsadder:cocaine_pills/1'
+      result: 'drugsadder:cocaine_pills/6'
+    red_pills:
+      duration: 10.0
+      mold: 'drugsadder:pill_mold'
+      returnMold: true
+      materials:
+        1:
+          itemStack: 'drugsadder:cocaine'
+          amount: 2
+          matchType: "ALL"
+        2:
+          itemStack: 'minecraft:red_dye'
+          amount: 1
+          matchType: "ALL"
+      result: 'drugsadder:red_pill/1'
+    blue_pills:
+      duration: 10.0
+      mold: 'drugsadder:pill_mold'
+      returnMold: true
+      materials:
+        1:
+          itemStack: 'drugsadder:cocaine'
+          amount: 2
+          matchType: "ALL"
+        2:
+          itemStack: 'minecraft:blue_dye'
+          amount: 1
+          matchType: "ALL"
+      result: 'drugsadder:blue_pill/1'
   #Der Abschnitt für die Labortischrezepte füge hier deine Rezepte ein
   table:
     #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
-    test:
+    heroin:
       #Du kannst das Rezept aus bis zu zwei Materialien erstellen
       #Der Filter, welcher für das erste Material benötigt wird
       filterOne: 'minecraft:paper/1'
@@ -361,7 +387,7 @@ recipes:
           #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
           #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
           #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
-          itemStack: 'drugsadder:dirty_cocaine'
+          itemStack: 'drugsadder:red_pill'
           #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
           amount: 1
           #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
@@ -369,11 +395,11 @@ recipes:
           #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         2:
-          itemStack: 'drugsadder:dirty_cocaine'
+          itemStack: 'drugsadder:blue_pill'
           amount: 1
           matchType: "ALL"
-          #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
-      result: 'drugsadder:cocaine/1'
+      #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
+      result: 'drugsadder:heroin_syringe/1'
 
 #Drogen
 drugs:
@@ -456,7 +482,7 @@ drugs:
 seeds:
   #Name des Samens - Dies ist die ID des Samens du kannst jede NamespacedID verwenden die eine unterstützte Pflanze ist
   #Für unterstützte Pflanzen siehe in der Wiki nach
-  "minecraft:wheat_seeds":
+  "minecraft:coca_seeds":
     #Ob die Pflanze beim Ernten zerstört werden soll
     destroyOnHarvest: true
     #Wie lange die Pflanze zum Wachsen braucht - In Minuten
@@ -481,7 +507,7 @@ seeds:
     drops:
       1:
         #Der ItemStack, der fallen gelassen wird - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
-        itemStack: 'drugsadder:coca'
+        itemStack: 'drugsadder:coca_leaf'
         #Wie viele Items fallen gelassen werden sollen
         amount: 1
         #Die Wahrscheinlichkeit, dass der Drop fallen gelassen wird in Prozent - 100 bedeutet 100%
@@ -489,15 +515,6 @@ seeds:
         #Die Wahrscheinlichkeit kann 3 Nachkommastellen haben - Beispiel: 50.333
         probability: 100
       2:
-        itemStack: 'drugsadder:shrooms'
+        itemStack: 'drugsadder:coca_seeds'
         amount: 1
-        probability: 50
-  "minecraft:tall_grass":
-    destroyOnHarvest: false
-    growTime: 60
-    matchType: "ALL"
-    drops:
-      1:
-        itemStack: 'drugsadder:coca'
-        amount: 1
-        probability: 20
+        probability: 10
