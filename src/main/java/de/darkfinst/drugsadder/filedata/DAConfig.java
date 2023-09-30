@@ -173,6 +173,11 @@ public class DAConfig {
      * Default: false
      */
     public static boolean debugLogg;
+    /**
+     * If general info messages should be logged
+     * Default: true
+     */
+    public static boolean logGeneralInfo;
 
 
     /**
@@ -321,6 +326,7 @@ public class DAConfig {
         logSeedLoadComplete = config.getBoolean("logSeedLoadComplete", true);
         logSeedLoadError = config.getBoolean("logSeedLoadError", true);
         debugLogg = config.getBoolean("debugLogg", false);
+        logGeneralInfo = config.getBoolean("logGeneralInfo", true);
 
         //Loads the States
         if (config.contains("tableStates")) {
