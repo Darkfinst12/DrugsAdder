@@ -26,9 +26,9 @@ debugLogg: false
 logGeneralInfo: true
 
 #The Table title Array, it must always be four Numbers - For more Information check the Wiki
-tableTitleArray: "0,8,10,-10"
+tableTitleArray: "0,8,20,-2"
 #The Crafter title Array, it must always be four Numbers - For more Information check the Wiki
-crafterTitleArray: "0,8,10,-10"
+crafterTitleArray: "0,8,25,5"
 
 #The Table States
 #It must be 11 States
