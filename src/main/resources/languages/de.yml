@@ -100,7 +100,7 @@ Perms_Crafter_NoOpen: "Du hast keine Berechtigung ,um einen Crafter öffnen zu k
 
 # ---- Player ----
 Player_Barrel_Created: "Das Fass wurde erfolgreich erstellt"
-Player_Barrel_NotValid: "Diese Fass ist nicht korrekt gebaut!"
+Player_Barrel_NotValid: "Dieses Fass ist nicht korrekt gebaut!"
 Player_Overdose_Consume: "Du hast eine Überdosis genommen!"
 Player_Overdose_Death: "%v1 ist an einer Überdosis gestorben!"
 Player_Press_Created: "Die Presse wurde erfolgreich erstellt"
@@ -108,7 +108,7 @@ Player_Press_NotValid: "Die Presse ist nicht korrekt gebaut!"
 Player_Table_Created: "Der Labortisch wurde erfolgreich erstellt"
 Player_Table_NotValid: "Der Labortisch ist nicht korrekt gebaut!"
 Player_Plant_Created: "Die Pflanze wurde erfolgreich erstellt"
-Player_Plant_NotValid: "Die Pflanze ist kein richtige Pflanze!"
+Player_Plant_NotValid: "Die Pflanze ist keine richtige Pflanze!"
 Player_Plant_NoReady: "Die Pflanze ist noch nicht bereit zum ernten!"
 Player_Structure_Destroyed: "%v1 wurde erfolgreich zerstört!"
 Player_Plant_Harvested: "Die Pflanze wurde erfolgreich geerntet!"

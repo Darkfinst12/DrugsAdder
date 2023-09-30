@@ -42,7 +42,7 @@ public class DASeedReader {
         for (String seedID : seeds) {
             this.loadSeed(seedID);
         }
-        if (DAConfig.logDrugLoadComplete) {
+        if (DAConfig.logSeedLoadComplete) {
             this.logInfo("Load_Info_SeedsComplete", (this.registeredSeeds.size() + ""), (this.configSeedsCount + ""));
         }
     }
@@ -124,7 +124,7 @@ public class DASeedReader {
 
 
         registeredSeeds.add(plantItem);
-        if (DAConfig.logDrugLoadInfo) {
+        if (DAConfig.logSeedLoadInfo) {
             this.logInfo("Load_Info_Seed_Loaded", seedID);
         }
     }
@@ -138,7 +138,12 @@ public class DASeedReader {
                     || Tag.SAPLINGS.isTagged(plantType) || Tag.ITEMS_VILLAGER_PLANTABLE_SEEDS.isTagged(plantType)
                     || Material.NETHER_SPROUTS.equals(plantType) || Material.TALL_SEAGRASS.equals(plantType)
                     || Material.SEAGRASS.equals(plantType) || Material.FERN.equals(plantType)
-                    || Material.TALL_GRASS.equals(plantType) || Material.LARGE_FERN.equals(plantType);
+                    || Material.TALL_GRASS.equals(plantType) || Material.LARGE_FERN.equals(plantType)
+                    || Material.SWEET_BERRY_BUSH.equals(plantType) || Material.DEAD_BUSH.equals(plantType)
+                    || Material.GLOW_BERRIES.equals(plantType) || Material.RED_MUSHROOM.equals(plantType)
+                    || Material.BROWN_MUSHROOM.equals(plantType) || Material.WARPED_FUNGUS.equals(plantType)
+                    || Material.CRIMSON_FUNGUS.equals(plantType)
+            ;
 
         }
         return isValid;
@@ -172,7 +177,7 @@ public class DASeedReader {
      * @param args The arguments for the error message (optional)
      */
     private void logError(String key, String... args) {
-        if (DAConfig.logDrugLoadError) {
+        if (DAConfig.logSeedLoadError) {
             LanguageReader languageReader = DA.loader.getLanguageReader();
             DALoader loader = DA.loader;
             if (languageReader != null) {

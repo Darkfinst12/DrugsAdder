@@ -17,14 +17,15 @@ import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg());
+    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg(), PossibleArgs.PLAYER.getArg());
     private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
     private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.CRAFTER.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
-    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.CRAFTER.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.PLAYER.getArg(), PossibleArgs.PLANT.getArg());
+    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.RECIPES.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.PLAYER.getArg(), PossibleArgs.PLANT.getArg());
     private static final List<String> PLAYER_ARGS = List.of(PossibleArgs.SET.getArg(), PossibleArgs.CLEAR.getArg());
 
     public void register() {
@@ -46,6 +47,8 @@ public class DACommand implements CommandExecutor, TabCompleter {
             this.checkArgs4(commandSender, args);
         } else if (args.length == 5) {
             this.checkArgs5(commandSender, args);
+        } else if (args.length == 6) {
+            this.checkArgs6(commandSender, args);
         }
         return true;
     }
@@ -70,6 +73,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkArgs2(CommandSender commandSender, String[] args) {
         this.checkGetCustomItem(commandSender, args);
         this.checkConsume(commandSender, args);
+        this.checkList(commandSender, args);
         if (args[0].equalsIgnoreCase("tableStates")) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
             for (DATable table : tables) {
@@ -122,9 +126,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkList(CommandSender commandSender, String[] args) {
         if (args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg())) {
             if (commandSender.hasPermission("drugsadder.cmd.list")) {
-                this.checkListRecipes(commandSender, args);
-                this.checkListDrugs(commandSender, args);
-                this.checkListCustomItems(commandSender, args);
+                if (args.length == 2) {
+                    this.checkListDrugs(commandSender, args);
+                    this.checkListCustomItems(commandSender, args);
+                } else if (args.length == 3) {
+                    this.checkListRecipes(commandSender, args);
+                }
             } else {
                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
             }
@@ -134,11 +141,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkListCustomItems(CommandSender commandSender, String[] args) {
         if (args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
             if (commandSender.hasPermission("drugsadder.cmd.list.customitems")) {
-                if (args[2].equalsIgnoreCase(PossibleArgs.OWN.getArg())) {
-                    DA.loader.msg(commandSender, DAConfig.customItemReader.getCustomItemNames().toString());
-                } else if (args[2].equalsIgnoreCase(PossibleArgs.OTHER.getArg())) {
-                    DA.loader.msg(commandSender, CustomStack.getNamespacedIdsInRegistry().toString());
+                StringBuilder customItems = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", PossibleArgs.CUSTOM_ITEMS.getArg()) + "\n");
+                for (DAItem daItem : DAConfig.customItemReader.getRegisteredItems().values()) {
+                    String s = "- ID:" + daItem.getNamespacedID() + "\n";
+                    customItems.append(s);
                 }
+                DA.loader.msg(commandSender, customItems.toString());
             } else {
                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
             }
@@ -213,12 +221,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkListDrugs(CommandSender commandSender, String[] args) {
         if (args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
             if (commandSender.hasPermission("drugsadder.cmd.list.drugs")) {
-                DADrug daDrug = DAConfig.drugReader.getDrug(args[2]);
-                if (daDrug != null) {
-                    DA.loader.msg(commandSender, daDrug.toString());
-                } else {
-                    DA.loader.msg(commandSender, DA.loader.getTranslation("Drug not found", "Command_Error_DrugNotFound", args[2]));
+                StringBuilder drugs = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", PossibleArgs.DRUGS.getArg()) + "\n");
+                for (DADrug drug : DAConfig.drugReader.getRegisteredDrugs()) {
+                    String s = "- ID:" + drug.getID() + "\n";
+                    drugs.append(s);
                 }
+                DA.loader.msg(commandSender, drugs.toString());
             } else {
                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
             }
@@ -283,83 +291,6 @@ public class DACommand implements CommandExecutor, TabCompleter {
                         } else {
                             DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
                         }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes")) {
-                            DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(args[2]);
-                            if (daRecipe != null) {
-                                DA.loader.msg(commandSender, daRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.barrel")) {
-                            DABarrelRecipe daBarrelRecipe = DAConfig.daRecipeReader.getBarrelRecipe(args[2]);
-                            if (daBarrelRecipe != null) {
-                                DA.loader.msg(commandSender, daBarrelRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafting")) {
-                            DACraftingRecipe daCraftingRecipe = DAConfig.daRecipeReader.getCraftingRecipe(args[2]);
-                            if (daCraftingRecipe != null) {
-                                DA.loader.msg(commandSender, daCraftingRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafter")) {
-                            DACrafterRecipe crafterRecipe = DAConfig.daRecipeReader.getCrafterRecipe(args[2]);
-                            if (crafterRecipe != null) {
-                                DA.loader.msg(commandSender, crafterRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.furnace")) {
-                            DAFurnaceRecipe daFurnaceRecipe = DAConfig.daRecipeReader.getFurnaceRecipe(args[2]);
-                            if (daFurnaceRecipe != null) {
-                                DA.loader.msg(commandSender, daFurnaceRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.press")) {
-                            DAPressRecipe daPressRecipe = DAConfig.daRecipeReader.getPressRecipe(args[2]);
-                            if (daPressRecipe != null) {
-                                DA.loader.msg(commandSender, daPressRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
-                    } else if (args[1].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
-                        if (commandSender.hasPermission("drugsadder.cmd.info.recipes.table")) {
-                            DATableRecipe daTableRecipe = DAConfig.daRecipeReader.getTableRecipe(args[2]);
-                            if (daTableRecipe != null) {
-                                DA.loader.msg(commandSender, daTableRecipe.toString());
-                            } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[2]));
-                            }
-                        } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
-                        }
                     } else if (args[1].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
                         Player player = Bukkit.getPlayer(args[2]);
                         if (player != null) {
@@ -377,6 +308,87 @@ public class DACommand implements CommandExecutor, TabCompleter {
                             DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_PlayerNotFound", args[2]));
                         }
                     }
+                } else if (args.length == 4) {
+                    if (args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
+                        if (args[2].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes")) {
+                                DARecipe daRecipe = DAConfig.daRecipeReader.getRecipe(args[3]);
+                                if (daRecipe != null) {
+                                    DA.loader.msg(commandSender, daRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes.barrel")) {
+                                DABarrelRecipe daBarrelRecipe = DAConfig.daRecipeReader.getBarrelRecipe(args[3]);
+                                if (daBarrelRecipe != null) {
+                                    DA.loader.msg(commandSender, daBarrelRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafting")) {
+                                DACraftingRecipe daCraftingRecipe = DAConfig.daRecipeReader.getCraftingRecipe(args[3]);
+                                if (daCraftingRecipe != null) {
+                                    DA.loader.msg(commandSender, daCraftingRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafter")) {
+                                DACrafterRecipe crafterRecipe = DAConfig.daRecipeReader.getCrafterRecipe(args[3]);
+                                if (crafterRecipe != null) {
+                                    DA.loader.msg(commandSender, crafterRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes.furnace")) {
+                                DAFurnaceRecipe daFurnaceRecipe = DAConfig.daRecipeReader.getFurnaceRecipe(args[3]);
+                                if (daFurnaceRecipe != null) {
+                                    DA.loader.msg(commandSender, daFurnaceRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes.press")) {
+                                DAPressRecipe daPressRecipe = DAConfig.daRecipeReader.getPressRecipe(args[3]);
+                                if (daPressRecipe != null) {
+                                    DA.loader.msg(commandSender, daPressRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        } else if (args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
+                            if (commandSender.hasPermission("drugsadder.cmd.info.recipes.table")) {
+                                DATableRecipe daTableRecipe = DAConfig.daRecipeReader.getTableRecipe(args[3]);
+                                if (daTableRecipe != null) {
+                                    DA.loader.msg(commandSender, daTableRecipe.toString());
+                                } else {
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                }
+                            } else {
+                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            }
+                        }
+                    }
                 }
             } else {
                 DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
@@ -386,6 +398,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     private void checkArgs4(CommandSender commandSender, String[] args) {
         this.checkPlayerClear(commandSender, args);
+        this.checkInfo(commandSender, args);
     }
 
     private void checkPlayerClear(CommandSender commandSender, String[] args) {
@@ -447,6 +460,37 @@ public class DACommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void checkArgs6(CommandSender commandSender, String[] args) {
+        this.checkPlayerSet(commandSender, args);
+        if ("tableArray".equalsIgnoreCase(args[0])) {
+            List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
+            for (DATable table : tables) {
+                String title = table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+                for (HumanEntity viewer : table.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
+                }
+            }
+        } else if ("crafterArray".equalsIgnoreCase(args[0])) {
+            List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
+            for (DACrafter crafter : crafters) {
+                String title = crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+                for (HumanEntity viewer : crafter.getInventory().getViewers()) {
+                    try {
+                        InventoryView inventoryView = viewer.getOpenInventory();
+                        inventoryView.setTitle(title);
+                    } catch (Exception e) {
+                        DA.log.logException(e);
+                    }
+                }
+            }
+        }
+    }
+
     private void checkPlayerSet(CommandSender commandSender, String[] args) {
         if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
             if (commandSender.hasPermission("drugsadder.cmd.player.set")) {
@@ -489,7 +533,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         } else if (args.length == 4) {
             return this.getTabCompleteArgs4(commandSender, command, commandLabel, args);
         } else {
-            return null;
+            return new ArrayList<>();
         }
 
     }
@@ -510,9 +554,9 @@ public class DACommand implements CommandExecutor, TabCompleter {
         } else if (args[0].equalsIgnoreCase(PossibleArgs.GET_CUSTOM_ITEM.getArg())) {
             return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[1].toLowerCase())).toList();
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -520,45 +564,43 @@ public class DACommand implements CommandExecutor, TabCompleter {
             command, @NotNull String commandLabel, @NotNull String[] args) {
         if (args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
             return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
-            return DAConfig.drugReader.getDrugNames().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.LIST.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
-            return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
+            return LIST_RECIPES_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.CONSUME.getArg())) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
             return DAConfig.drugReader.getDrugNames().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
             return DAConfig.customItemReader.getCustomItemNames().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
-            return DAConfig.daRecipeReader.getBarrelRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
-            return DAConfig.daRecipeReader.getCraftingRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
-            return DAConfig.daRecipeReader.getCrafterRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
-            return DAConfig.daRecipeReader.getFurnaceRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
-            return DAConfig.daRecipeReader.getPressRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
-        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
-            return DAConfig.daRecipeReader.getTableRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
         } else if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
             return PLAYER_ARGS.stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
     public List<String> getTabCompleteArgs4(@NotNull CommandSender commandSender, @NotNull Command
             command, @NotNull String commandLabel, @NotNull String[] args) {
-        if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
+        if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
+            return DAConfig.daRecipeReader.getBarrelRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
+            return DAConfig.daRecipeReader.getCraftingRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
+            return DAConfig.daRecipeReader.getCrafterRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
+            return DAConfig.daRecipeReader.getFurnaceRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
+            return DAConfig.daRecipeReader.getPressRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.INFO.getArg()) && args[1].equalsIgnoreCase(PossibleArgs.RECIPES.getArg()) && args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
+            return DAConfig.daRecipeReader.getTableRecipeIDs().stream().filter(s1 -> s1.toLowerCase().contains(args[2].toLowerCase())).toList();
+        } else if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
             List<String> drugNames = DAConfig.drugReader.getDrugNames();
             drugNames.add(PossibleArgs.ALL.getArg());
             return drugNames.stream().filter(s1 -> s1.toLowerCase().contains(args[1])).toList();
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 

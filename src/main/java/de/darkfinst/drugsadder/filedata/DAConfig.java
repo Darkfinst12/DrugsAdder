@@ -70,7 +70,7 @@ public class DAConfig {
      */
     public static String cancelRecipeItem;
     /**
-     * The item that is given when a suspicious potion is crafted
+     * The item that is given when a table recipe is finished and combined with a wrong recipe
      */
     public static String suspiciousPotionItem;
 

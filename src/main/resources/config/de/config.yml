@@ -73,11 +73,26 @@ crafterStates:
   6: "\uF026"
   7: "\uF027"
 
+
+#Ob ein Eimer zurückgegeben werden soll, wenn ein gefüllter Eimer beim Basteln verwendet wird
+returnBucket: true
+#Ob eine Flasche zurückgegeben werden sollte, wenn eine gefüllte Flasche beim Basteln verwendet wird
+returnBottle: true
+#Ob Items in der Werkbank in ihre ursprüngliche Version zurückgesetzt werden sollen
+resetItemCrafting: true
+#Ob Items im Ofen in ihre ursprüngliche Version zurückgesetzt werden sollen
+resetItemSmelting: true
+
+#Welches Item zurückgeben werden soll, wenn ein Rezept abgebrochen wird
+cancelRecipeItem: "drugsadder:cancel_recipe_item"
+#Welches Item zurückgeben werden soll, wenn ein Labortischrezept falsch ist
+suspiciousPotionItem: "drugsadder:suspicious_potion"
+
 #CustomItems
 customItems:
   #Name des CustomItems - Dies ist die ID des CustomItems, die NamespacedID ist dann drugsadder:CUSTOMITEM_NAME
   cocaine:
-    #Displayname of the Item
+    #Displayname vom Item
     #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: '&7This is a Name'.
     #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
     #Wenn der Name zu lang ist, wird er von Minecraft abgeschnitten und man sieht nicht den ganzen Namen.
@@ -134,18 +149,6 @@ customItems:
       effects:
         - 'PotionEffect{type=SPEED, duration=600, level=2, particles=true, icon=true}'
 
-#Ob ein Eimer zurückgegeben werden soll, wenn ein gefüllter Eimer beim Basteln verwendet wird
-returnBucket: true
-#Ob eine Flasche zurückgegeben werden sollte, wenn eine gefüllte Flasche beim Basteln verwendet wird
-returnBottle: true
-#Ob Items in der Werkbank in ihre ursprüngliche Version zurückgesetzt werden sollen
-resetItemCrafting: true
-#Ob Items im Ofen in ihre ursprüngliche Version zurückgesetzt werden sollen
-resetItemSmelting: true
-
-cancelRecipeItem: "drugsadder:cancel_recipe_item"
-suspiciousPotionItem: "drugsadder:suspicious_potion"
-
 #Rezepte
 recipes:
   #Der Abschnitt für die Fass rezepte füge hier deine Rezepte ein
@@ -154,8 +157,8 @@ recipes:
     dirty_cocaine:
       #Wie lange das Rezept dauert - In Minuten
       duration: 10
-      #
-      processOverdueAcceptance: 5.5 #In Minutes
+      #Wie lange das Rezept maximal noch liegen darf, nachdem es fertig ist - In Minuten
+      processOverdueAcceptance: 5.5
       #Die Materialien des Rezepts - Du kannst maximal 3 Materialien hinzufügen
       #Die Position des Materials spielt keine Rolle.
       materials:
@@ -227,41 +230,41 @@ recipes:
       result: 'drugsadder:shrooms/6'
   #Der Abschnitt für die Crafterrezepte füge hier deine Rezepte ein
   crafter:
-    #Name of the Recipe - This is the ID of the Recipe, the NamespacedID is then drugsadder:RECIPE_NAME
+    #Name des Rezeptes - Dies ist die ID des Rezeptes, die NamespacedID ist dann drugsadder:RECIPE_NAME
     dirty_cocaine:
-      #Whether the Recipe is Shaped or not
+      #Ob das Rezept geformt ist oder nicht
       isShaped: true
-      #The Shape of the Recipe - You musst add five Lines and five Characters per Line
+      #Die Form des Rezeptes - Du musst 5 Zeilen hinzufügen und 5 Zeichen pro Zeile
       shape:
         - 'OXVXO'
         - 'OXVXO'
-        - '0XVX0'
-        - '0XVX0'
-        - '0XVX0'
-      #The time it takes to process the Recipe in Seconds
+        - 'OXVXO'
+        - 'OXVXO'
+        - 'OXVXO'
+      #Die Zeit die benötigt wird, um das Rezept zu verarbeiten - In Sekunden
       processingTime: 10.0
-      #The amount of Players that are required for the Recipe
+      #Die Anzahl der Spieler, die für das Rezept benötigt werden
       requiredPlayers: 1
-      #The Materials of the Recipe - You can add 25 Materials
-      #The position of the Material does not matter, but the Section must be in the Shape
+      #Die Materialien des Rezepts - Du kannst maximal 25 Materialien hinzufügen
+      #Die Position des Materials spielt keine Rolle, aber die Section muss in der Shape sein
       materials:
         #The Shape Key
         X:
-          #The Material of the ItemStack - Just use a valid NamespacedID of an Item it can be a CustomItem
-          #CustomItems can be configured in the CustomItems Section or use another Plugin that adds CustomItems and
-          #is compatible with DrugsAdder. To check if a Plugin is compatible with DrugsAdder check the Wiki
+          #Das Material des ItemStacks - Verwende einfach eine gültige NamespacedID eines Gegenstandes, es kann ein CustomItem sein
+          #CustomItems können in dem CustomItems Abschnitt konfiguriert werden oder ein anderes Plugin verwenden, das CustomItems hinzufügt und
+          #mit DrugsAdder kompatibel ist. Um zu überprüfen, ob ein Plugin mit DrugsAdder kompatibel ist, siehe in der Wiki nach
           itemStack: 'minecraft:coal'
-          #The Amount of this Material that is required for this Recipe
+          #Die Anzahl dieses Materials, die für dieses Rezept erforderlich sind
           amount: 1
-          #The MatchType of the Material - You can choose between ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA
-          #You can also combine MatchTypes with a ',' - Example: "EXACT_NAME,EXACT_LORE"
-          #For more Information about MatchTypes check the Wiki
+          #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
+          #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
+          #Für weitere Informationen zu MatchTypes siehe in der Wiki nach
           matchType: "ALL"
         V:
           itemStack: 'drugsadder:coca'
           amount: 4
           matchType: "ALL"
-        #The Result of the Recipe - Before the '/' is the ItemStack and after the '/' is the Amount
+        #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
       result: 'drugsadder:dirty_cocaine/6'
   #Der Abschnitt für die Ofenrezepte füge hier deine Rezepte ein
   furnace:
@@ -369,7 +372,8 @@ recipes:
           itemStack: 'drugsadder:dirty_cocaine'
           amount: 1
           matchType: "ALL"
-      result: 'drugsadder:cocaine_pills/1'
+          #Das Ergebnis des Rezepts - Vor dem '/' ist der ItemStack und nach dem '/' ist die Anzahl
+      result: 'drugsadder:cocaine/1'
 
 #Drogen
 drugs:
@@ -452,7 +456,6 @@ drugs:
 seeds:
   #Name des Samens - Dies ist die ID des Samens du kannst jede NamespacedID verwenden die eine unterstützte Pflanze ist
   #Für unterstützte Pflanzen siehe in der Wiki nach
-  #Name of the Seed - This is the ID of the Seed you can use any namespacedID that is a supported Plant
   "minecraft:wheat_seeds":
     #Ob die Pflanze beim Ernten zerstört werden soll
     destroyOnHarvest: true

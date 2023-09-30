@@ -132,6 +132,7 @@ permissions:
       drugsadder.cmd.info.recipes.press: true
       drugsadder.cmd.info.recipes.table: true
       drugsadder.cmd.info.recipes.crafting: true
+      drugsadder.cmd.info.recipes.crafter: true
       drugsadder.cmd.info.recipes.furnace: true
   drugsadder.cmd.info.recipes.barrel:
     description: Information about a specific Barrel Recipe
@@ -141,6 +142,8 @@ permissions:
     description: Information about a specific Table Recipe
   drugsadder.cmd.info.recipes.crafting:
     description: Information about a specific Crafting Recipe
+  drugsadder.cmd.info.recipes.crafter:
+    description: Information about a specific Crafter Recipe
   drugsadder.cmd.info.recipes.furnace:
     description: Information about a specific Furnace Recipe
   drugsadder.cmd.list:
@@ -158,6 +161,7 @@ permissions:
       drugsadder.cmd.list.recipes.press: true
       drugsadder.cmd.list.recipes.table: true
       drugsadder.cmd.list.recipes.crafting: true
+      drugsadder.cmd.list.recipes.crafter: true
       drugsadder.cmd.list.recipes.furnace: true
   drugsadder.cmd.list.recipes.barrel:
     description: List all Barrel Recipes
@@ -167,6 +171,8 @@ permissions:
     description: List all Table Recipes
   drugsadder.cmd.list.recipes.crafting:
     description: List all Crafting Recipes
+  drugsadder.cmd.list.recipes.crafter:
+    description: List all Crafter Recipes
   drugsadder.cmd.list.recipes.furnace:
     description: List all Furnace Recipes
   drugsadder.cmd.list.customitems:
