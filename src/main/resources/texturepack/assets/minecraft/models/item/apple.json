@@ -39,6 +39,12 @@
         "custom_model_data": 6
       },
       "model": "minecraft:item/cocaine_pill"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "minecraft:item/joint"
     }
   ]
 }
