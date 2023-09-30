@@ -11,3 +11,5 @@
 #### Also see [Wiki](https://github.com/Darkfinst12/DrugsAdder/wiki) | [Issues](https://github.com/Darkfinst12/DrugsAdder/issues) | [Releases](https://github.com/Darkfinst12/DrugsAdder/releases) | [Changelog](https://github.com/Darkfinst12/DrugsAdder/wiki/changelog) | [Commits](https://github.com/Darkfinst12/DrugsAdder/commits/master)
 
 ***
+
+You can get the TexutePack [here](https://bit.ly/3ZEHBMs)
