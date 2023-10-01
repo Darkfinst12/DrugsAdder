@@ -372,7 +372,7 @@ recipes:
       consumeFilterOne: true
       #The fuel for the first Material
       fuelOne: 'minecraft:coal/1'
-      #The time it takes to process the first Material
+      #The time it takes to process the first Material in Seconds
       processingTimeOne: 20.0
       #The filter for the second Material
       filterTwo: 'minecraft:paper/1'
@@ -380,7 +380,7 @@ recipes:
       consumeFilterTwo: true
       #The fuel for the second Material
       fuelTwo: 'minecraft:coal/1'
-      #The time it takes to process the second Material
+      #The time it takes to process the second Material in Seconds
       processingTimeTwo: 20.0
       #The position of the Material does matter
       #1 = one, 2 = two
@@ -470,7 +470,7 @@ drugs:
     #PlayerCommands means that the Command will be executed by the Player
     #Note that the Player must have the Permission to execute the Command
     playerCommands:
-      - 'say Ich have %drug% consumed!'
+      - 'say I have %drug% consumed!'
     #The Message that is sent to the Player when the Drug is consumed
     #You can use the following Placeholders: %player%, %drug%
     consumeMessage: 'You have %drug% consumed'

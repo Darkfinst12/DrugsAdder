@@ -99,7 +99,7 @@ customItems:
     #Wenn der Name zu lang ist, wird er von Minecraft abgeschnitten und man sieht nicht den ganzen Namen.
     name: '&fCocaine'
     #Material des Gegenstandes - Hier sind nur Gegenstände aus Minecraft erlaubt
-    material: 'paper'
+    material: 'apple'
     #Die Beschreibung des Gegenstandes - Du kannst so viele Zeilen hinzufügen, wie du willst, füge einfach ein '-' vor der Zeile ein.
     #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: '&7This is a Name'.
     #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
@@ -466,11 +466,11 @@ drugs:
     #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
     #Die Befehle werden vom Server ausgeführt
     serverCommands:
-      - 'say %player% has %drug% consumed!'
+      - 'say %player% hat %drug% genommen!'
     #Spielerbefehle bedeutet, dass der Befehl vom Spieler ausgeführt wird
     #Beachte, dass der Spieler die Berechtigung haben muss, den Befehl auszuführen
     playerCommands:
-      - 'say Ich have %drug% consumed!'
+      - 'say Ich habe %drug% konsumiert!'
     #Die Nachricht, die an den Spieler gesendet wird, wenn die Droge konsumiert wird
     #Du kannst die folgenden Platzhalter verwenden: %player%, %drug%
     consumeMessage: 'Du hast %drug% konsumiert'
@@ -482,10 +482,10 @@ drugs:
 seeds:
   #Name des Samens - Dies ist die ID des Samens du kannst jede NamespacedID verwenden die eine unterstützte Pflanze ist
   #Für unterstützte Pflanzen siehe in der Wiki nach
-  "minecraft:coca_seeds":
+  "drugsadder:coca_seeds":
     #Ob die Pflanze beim Ernten zerstört werden soll
     destroyOnHarvest: true
-    #Wie lange die Pflanze zum Wachsen braucht - In Minuten
+    #Wie lange die Pflanze zum Wachsen braucht - In Sekunden
     growTime: 60
     #Der MatchType des Materials - Du kannst zwischen ALL, CONTAINS_LORE, CONTAINS_NAME, EXACT_CMD, EXACT_LORE, EXACT_NAME, VANNILA wählen
     #Du kannst MatchTypes auch mit einem ',' kombinieren - Beispiel: "EXACT_NAME,EXACT_LORE"
