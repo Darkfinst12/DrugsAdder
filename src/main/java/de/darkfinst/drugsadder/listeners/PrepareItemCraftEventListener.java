@@ -48,7 +48,7 @@ public class PrepareItemCraftEventListener implements Listener {
             ItemStack[] matrix = inventory.getMatrix();
             DAItem[] materials = craftingRecipe.getMaterials();
             for (DAItem daItem : materials) {
-                boolean match = Arrays.stream(matrix).anyMatch(itemStack -> DAUtil.matchItems(itemStack, daItem.getItemStack(), daItem.getItemMatchTypes()));
+                boolean match = Arrays.stream(matrix).anyMatch(itemStack -> DAUtil.matchItems(itemStack, daItem.getItemStack(), daItem.getItemMatchTypes()) && itemStack.getAmount() >= daItem.getAmount());
                 if (!match) {
                     inventory.setResult(null);
                     break;

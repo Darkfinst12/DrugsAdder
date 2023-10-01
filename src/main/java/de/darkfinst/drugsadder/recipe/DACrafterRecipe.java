@@ -88,7 +88,7 @@ public class DACrafterRecipe extends DARecipe {
                     if (item == null) {
                         continue;
                     }
-                    if (!DAUtil.matchItems(item.getItemStack(), matrix.get(slot), item.getItemMatchTypes()) || matrix.get(slot).getAmount() < item.getItemStack().getAmount()) {
+                    if (!DAUtil.matchItems(item.getItemStack(), matrix.get(slot), item.getItemMatchTypes()) || matrix.get(slot).getAmount() < item.getAmount()) {
                         return false;
                     }
                 }
@@ -119,11 +119,10 @@ public class DACrafterRecipe extends DARecipe {
                     DAItem item = this.shapeKeys.get(key);
                     int slot = i * 9 + j;
                     if (item == null) {
-                        DA.log.debugLog("Item is null at " + slot);
                         return;
                     }
-                    if (DAUtil.matchItems(item.getItemStack(), matrix.get(slot), item.getItemMatchTypes()) && matrix.get(slot).getAmount() >= item.getItemStack().getAmount()) {
-                        int newAmount = matrix.get(slot).getAmount() - item.getItemStack().getAmount();
+                    if (DAUtil.matchItems(item.getItemStack(), matrix.get(slot), item.getItemMatchTypes()) && matrix.get(slot).getAmount() >= item.getAmount()) {
+                        int newAmount = matrix.get(slot).getAmount() - item.getAmount();
                         if (newAmount <= 0) {
                             daCrafter.getInventory().setItem(slot, null);
                         } else {
@@ -191,6 +190,9 @@ public class DACrafterRecipe extends DARecipe {
     private void addResult(@NotNull DACrafter daCrafter, DAItem result) {
         ItemStack itemStack = daCrafter.getInventory().getItem(daCrafter.getResultSlot());
         ItemStack resultItem = result != null ? result.getItemStack() : null;
+        if (resultItem != null) {
+            resultItem.setAmount(result.getAmount());
+        }
         if (itemStack == null) {
             daCrafter.getInventory().setItem(daCrafter.getResultSlot(), resultItem);
         } else if (resultItem != null) {

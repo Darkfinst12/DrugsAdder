@@ -85,6 +85,7 @@ Load_Error_Recipes_RequiredPlayers: "Das Rezept: %v1 hat keine benötigten Spiel
 # ---- Errors ----
 Error_Recipes_NotFound: "Das Rezept: %v1 wurde nicht gefunden! - Spieler: %v2 hat versucht das Rezept zu verwenden!"
 Error_Structures_Register: "Die Struktur: %v1 konnte nicht vom Server registriert werden! - Bitte kontaktiere den Server Administrator!"
+Error_Crafting_ReturnItems: "Im Rezept: %v1 konnte das Item: %v2 mit der Anzahl: %v3 nicht zurückgegeben werden!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "Du hast keine Berechtigung, um ein Fass erstellen zu können!"
