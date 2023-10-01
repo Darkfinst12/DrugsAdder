@@ -43,11 +43,10 @@ public class CraftItemEventListener implements Listener {
     }
 
     private void checkItems(CraftingInventory inv, RecipeChoice.ExactChoice[] choices, Recipe recipe) {
-        DA.log.debugLog("CheckItems Called");
         Map<Integer, ItemStack> returns = new HashMap<>();
         for (int i = 0; i < choices.length; i++) {
             ItemStack matrixItem = inv.getMatrix()[i];
-            if (choices[i].getItemStack().equals(matrixItem)) {
+            if (matrixItem != null && choices[i].getItemStack().isSimilar(matrixItem)) {
                 if (DAConfig.returnBucket && (Material.WATER_BUCKET.equals(matrixItem.getType())
                         || Material.LAVA_BUCKET.equals(matrixItem.getType()) || Material.MILK_BUCKET.equals(matrixItem.getType()))
                         || Material.AXOLOTL_BUCKET.equals(matrixItem.getType()) || Material.POWDER_SNOW_BUCKET.equals(matrixItem.getType())
@@ -63,30 +62,25 @@ public class CraftItemEventListener implements Listener {
                     ItemStack bottle = new ItemStack(Material.GLASS_BOTTLE, matrixItem.getAmount());
                     returns.put(i, bottle);
                 }
-                //TODO: Fix item Set if amount > than required
-                int newAmount = matrixItem.getAmount() - (choices[i].getItemStack().getAmount());
-                DA.log.debugLog("SetItem: " + i + " - " + matrixItem.getType().name());
-                DA.log.debugLog("New Amount: " + newAmount + " - " + matrixItem.getAmount() + " - " + choices[i].getItemStack().getAmount());
-                Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> matrixItem.setAmount(newAmount), 5L);
+                int newAmount = matrixItem.getAmount() - (choices[i].getItemStack().getAmount() - 1);
+                matrixItem.setAmount(newAmount);
             }
         }
-        Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> {
-            for (Map.Entry<Integer, ItemStack> entry : returns.entrySet()) {
-                ItemStack itemStack = inv.getItem(entry.getKey());
-                if (itemStack == null) {
-                    inv.setItem(entry.getKey(), entry.getValue());
-                } else if (itemStack.getType().equals(entry.getValue().getType())) {
-                    itemStack.setAmount(itemStack.getAmount() + entry.getValue().getAmount());
+        for (Map.Entry<Integer, ItemStack> entry : returns.entrySet()) {
+            ItemStack itemStack = inv.getItem(entry.getKey());
+            if (itemStack == null) {
+                inv.setItem(entry.getKey(), entry.getValue());
+            } else if (itemStack.getType().equals(entry.getValue().getType())) {
+                itemStack.setAmount(itemStack.getAmount() + entry.getValue().getAmount());
+            } else {
+                Location location = inv.getLocation();
+                if (location != null) {
+                    location.getWorld().dropItem(location, entry.getValue());
                 } else {
-                    Location location = inv.getLocation();
-                    if (location != null) {
-                        location.getWorld().dropItem(location, entry.getValue());
-                    } else {
-                        DA.log.errorLog(DA.loader.languageReader.get("Error_Crafting_ReturnItems", ((Keyed) recipe).getKey().asString(), entry.getValue().getType().name(), entry.getValue().getAmount() + ""));
-                    }
+                    DA.log.errorLog(DA.loader.languageReader.get("Error_Crafting_ReturnItems", ((Keyed) recipe).getKey().asString(), entry.getValue().getType().name(), entry.getValue().getAmount() + ""));
                 }
             }
-        }, 5L);
+        }
 
     }
 

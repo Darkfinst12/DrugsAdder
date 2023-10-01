@@ -236,15 +236,11 @@ public class DACrafter extends DAStructure implements InventoryHolder {
     }
 
     private void callRecipeCheck(@Nullable HumanEntity who) {
-        DA.log.debugLog("Checking for recipe");
         List<DACrafterRecipe> recipes = DAConfig.daRecipeReader.getCrafterRecipes();
         for (DACrafterRecipe recipe : recipes) {
-            DA.log.debugLog("Checking recipe: " + recipe.getID());
             boolean matchMaterials = recipe.matchMaterials(this.getContentMap());
             int viewers = this.inventory.getViewers().size();
-            DA.log.debugLog("Match Materials: " + matchMaterials + " Viewers: " + viewers);
             if (matchMaterials && recipe.getRequiredPlayers() <= viewers) {
-                DA.log.debugLog("Recipe found: " + recipe.getID());
                 if (who != null) {
                     ((Player) who).playSound(who.getLocation(), Sound.UI_BUTTON_CLICK, 80, 1);
                 }
@@ -286,7 +282,6 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         int viewers = event.getInventory().getViewers().size() - 1;
         DACrafterRecipe recipe = this.getProcess().getRecipe();
         if (recipe != null && viewers < recipe.getRequiredPlayers()) {
-            DA.log.debugLog("Recipe cancelled");
             recipe.cancelProcess(this, false);
         }
         if (viewers == 0 && !DAConfig.crafterKeepInv) {
