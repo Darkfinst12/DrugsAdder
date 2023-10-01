@@ -372,7 +372,7 @@ recipes:
       consumeFilterOne: true
       #The fuel for the first Material
       fuelOne: 'minecraft:coal/1'
-      #The time it takes to process the first Material
+      #The time it takes to process the first Material in Seconds
       processingTimeOne: 20.0
       #The filter for the second Material
       filterTwo: 'minecraft:paper/1'
@@ -380,7 +380,7 @@ recipes:
       consumeFilterTwo: true
       #The fuel for the second Material
       fuelTwo: 'minecraft:coal/1'
-      #The time it takes to process the second Material
+      #The time it takes to process the second Material in Seconds
       processingTimeTwo: 20.0
       #The position of the Material does matter
       #1 = one, 2 = two

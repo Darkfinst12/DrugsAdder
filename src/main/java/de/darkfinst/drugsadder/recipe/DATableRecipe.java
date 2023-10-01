@@ -29,6 +29,9 @@ public class DATableRecipe extends DARecipe {
      * The first material
      */
     private final DAItem materialOne;
+    /**
+     * The duration of the first process in seconds
+     */
     private final double processingTimeOne;
     /**
      * If the filter should be consumed
@@ -52,6 +55,9 @@ public class DATableRecipe extends DARecipe {
      * The second material
      */
     private DAItem materialTwo;
+    /**
+     * The duration of the second process in seconds
+     */
     private double processingTimeTwo;
 
     public DATableRecipe(String ID, RecipeType recipeType, DAItem result, DAItem filterOne, DAItem fuelOne, DAItem materialOne, double processingTimeOne) {
