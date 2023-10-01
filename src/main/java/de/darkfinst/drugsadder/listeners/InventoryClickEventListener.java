@@ -31,7 +31,7 @@ public class InventoryClickEventListener implements Listener {
             daTable.handleInventoryClick(event);
         } else if (daStructure instanceof DACrafter daCrafter) {
             daCrafter.handleInventoryClick(event);
-        } else if (InventoryType.FURNACE.equals(event.getInventory().getType())) {
+        } else if (InventoryType.FURNACE.equals(event.getInventory().getType()) || InventoryType.BLAST_FURNACE.equals(event.getInventory().getType()) ||InventoryType.SMOKER.equals(event.getInventory().getType())) {
             this.handelFurnace(event);
         } else if (InventoryType.WORKBENCH.equals(event.getInventory().getType())) {
             this.handelWorkbench(event);
