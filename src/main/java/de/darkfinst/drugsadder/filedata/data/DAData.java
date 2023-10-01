@@ -153,10 +153,6 @@ public class DAData {
                         ConfigurationSection plants = section.getConfigurationSection("plants");
                         for (String plant : plants.getKeys(false)) {
                             ConfigurationSection plantSection = plants.getConfigurationSection(plant);
-                            if (plantSection == null) {
-                                DA.log.debugLog("Plant Section is null, skipping plant: " + plant, isAsync);
-                                return;
-                            }
                             boolean success = DAData.loadPlantData(world, plantSection, isAsync);
                             if (!success) {
                                 section.set("plants." + plant, null);

@@ -83,7 +83,9 @@ public class DACraftingRecipe extends DARecipe {
             result.setAmount(this.getResult().getAmount());
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, result);
             for (DAItem material : this.getMaterials()) {
-                RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(material.getItemStack());
+                ItemStack itemStack = material.getItemStack();
+                itemStack.setAmount(material.getAmount());
+                RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(itemStack);
                 shapelessRecipe.addIngredient(exactChoice);
             }
             if (shapelessRecipe.getIngredientList().contains(null)) {
@@ -104,7 +106,9 @@ public class DACraftingRecipe extends DARecipe {
                 for (int i = 0; i < s.length(); i++) {
                     char key = s.charAt(i);
                     if (this.shapeKeys.containsKey(key + "")) {
-                        RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(this.shapeKeys.get(key + "").getItemStack());
+                        ItemStack itemStack = this.shapeKeys.get(key + "").getItemStack();
+                        itemStack.setAmount(this.shapeKeys.get(key + "").getAmount());
+                        RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(itemStack);
                         shapedRecipe.setIngredient(key, exactChoice);
                     } else {
                         return false;

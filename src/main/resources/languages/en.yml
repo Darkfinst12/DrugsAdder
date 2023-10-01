@@ -85,6 +85,7 @@ Load_Error_Recipes_RequiredPlayers: "The recipe: %v1 has no required players! - 
 # ---- Errors ----
 Error_Recipes_NotFound: "The recipe: %v1 was not found! - Player: %v2 attempted the recipe!"
 Error_Structures_Register: "The structure: %v1 could not be registered by the Server! - Please contact the Server Administrator!"
+Error_Crafting_ReturnItems: "In the recipe: %v1 the Item: %v2 with the amount: %v3 could not be returned!"
 
 # ---- Permission ----
 Perms_Barrel_NoCreate: "You have no permission to create a barrel!"
