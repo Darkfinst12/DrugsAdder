@@ -23,6 +23,7 @@ public class BlockPlaceEventListener implements Listener {
         if (DAConfig.seedReader.isSeed(event.getItemInHand())) {
             DAPlantItem seed = DAConfig.seedReader.getSeed(event.getItemInHand());
             DAPlant plant = new DAPlant(seed, seed.isCrop(), seed.isDestroyOnHarvest(), seed.getGrowthTime(), seed.getDrops());
+            plant.setAllowedTools(seed.getAllowedTools());
             Bukkit.getScheduler().runTaskLater(DA.getInstance, () -> plant.create(event.getBlock(), event.getPlayer()), 1L);
         }
         if (DA.loader.isStructure(event.getBlock())) {
