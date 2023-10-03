@@ -57,7 +57,7 @@ public class InventoryClickEventListener implements Listener {
     }
 
     private void handelFurnace(InventoryClickEvent event) {
-        if (DAConfig.resetItemSmelting && event.getSlot() == 0) {
+        if (DAConfig.resetItemSmelting && InventoryType.SlotType.CRAFTING.equals(event.getSlotType())) {
             DAUtil.setSlotDefaultItem(event, 0);
         }
     }
