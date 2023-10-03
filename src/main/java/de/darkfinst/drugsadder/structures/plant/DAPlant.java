@@ -65,10 +65,6 @@ public class DAPlant extends DAStructure {
      * The last harvest time of the plant
      */
     private long lastHarvest = 0;
-    /**
-     * Whether the plant can be harvested
-     */
-    private boolean canBeHarvested = false;
 
     public DAPlant(DAItem seed, boolean isCrop, boolean destroyOnHarvest, float growthTime, DAItem... drops) {
         this.seed = seed;
@@ -115,7 +111,6 @@ public class DAPlant extends DAStructure {
                     boolean success = DA.loader.registerDAStructure(this, false);
                     if (success) {
                         DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
-                        this.canBeHarvested = false;
                         this.lastHarvest = System.currentTimeMillis();
                         if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable) {
                             float tsp = (growthTime / ageable.getMaximumAge());
@@ -147,7 +142,6 @@ public class DAPlant extends DAStructure {
             super.setBody(daPlantBody);
             boolean success = DA.loader.registerDAStructure(this, isAsync);
             if (success) {
-                this.canBeHarvested = false;
                 this.lastHarvest = System.currentTimeMillis();
                 if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() < ageable.getMaximumAge()) {
                     float tsp = (growthTime / ageable.getMaximumAge());
@@ -170,19 +164,15 @@ public class DAPlant extends DAStructure {
             String namespacedID = DAUtil.getNamespacedIDByItemStack(player.getInventory().getItemInMainHand());
             if (this.hasTool(player)) {
                 try {
-                    int damage = this.allowedTools.getOrDefault(namespacedID, 0);
-                    ItemStack itemStack = DAUtil.damageTool(player.getInventory().getItemInMainHand(), damage);
-                    player.getInventory().setItemInMainHand(itemStack);
-                    if (this.canBeHarvested) {
-                        this.executeHarvest();
+                    if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
+                        this.executeHarvest(player, namespacedID);
+                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
+
                     } else {
                         long time = System.currentTimeMillis() - this.lastHarvest;
                         long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
                         if (passedTime > this.growthTime && !this.isCrop) {
-                            this.executeHarvest();
-                            DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
-                        } else if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
-                            this.executeHarvest();
+                            this.executeHarvest(player, namespacedID);
                             DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
                         } else {
                             DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
@@ -209,7 +199,10 @@ public class DAPlant extends DAStructure {
      * <p>
      * Drops the items and destroys the plant if destroyOnHarvest is true
      */
-    private void executeHarvest() {
+    private void executeHarvest(Player player, String namespacedID) {
+        int damage = this.allowedTools.getOrDefault(namespacedID, 0);
+        ItemStack tool = DAUtil.damageTool(player.getInventory().getItemInMainHand(), damage);
+        player.getInventory().setItemInMainHand(tool);
         Location location = this.getBody().blocks.get(0).getLocation();
         for (DAItem drop : this.drops) {
             if (drop instanceof DAProbabilityItem probabilityItem && probabilityItem.getProbability() < 100) {
@@ -228,7 +221,6 @@ public class DAPlant extends DAStructure {
                 block.setType(Material.AIR);
             }
         } else {
-            this.canBeHarvested = false;
             this.lastHarvest = System.currentTimeMillis();
             if (this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable) {
                 ageable.setAge(0);
@@ -273,7 +265,6 @@ public class DAPlant extends DAStructure {
 
     public void setLastHarvest(long lastHarvest) {
         this.lastHarvest = lastHarvest;
-        this.canBeHarvested = false;
     }
 
     @Override
@@ -316,8 +307,6 @@ public class DAPlant extends DAStructure {
                     Bukkit.getScheduler().runTask(DA.getInstance, () -> crop.setBlockData(ageable));
                     if (newAge < ageable.getMaximumAge()) {
                         Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, this, Math.max(Math.round((long) (growTime * 20)), 1));
-                    } else {
-                        plant.canBeHarvested = true;
                     }
                 }
             }
