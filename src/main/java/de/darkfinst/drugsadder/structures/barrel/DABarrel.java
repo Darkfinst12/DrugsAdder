@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -213,11 +214,17 @@ public class DABarrel extends DAStructure implements InventoryHolder {
      */
     @Override
     public void destroyInventory() {
+        for (HumanEntity viewer : this.inventory.getViewers()) {
+            if (viewer != null) {
+                viewer.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+            }
+        }
         for (ItemStack content : this.inventory.getContents()) {
             if (content != null && !content.getType().equals(Material.AIR)) {
                 this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
             }
         }
+        this.inventory.clear();
     }
 
     /**

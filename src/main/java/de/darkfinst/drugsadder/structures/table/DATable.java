@@ -21,6 +21,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -374,6 +375,11 @@ public class DATable extends DAStructure implements InventoryHolder {
      */
     @Override
     public void destroyInventory() {
+        for (HumanEntity viewer : this.inventory.getViewers()) {
+            if (viewer != null) {
+                viewer.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+            }
+        }
         for (ItemStack content : this.inventory.getContents()) {
             if (content != null && !content.getType().equals(Material.AIR)) {
                 this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);

@@ -294,6 +294,11 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      */
     @Override
     public void destroyInventory() {
+        for (HumanEntity viewer : this.inventory.getViewers()) {
+            if (viewer != null) {
+                viewer.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+            }
+        }
         for (ItemStack content : this.inventory.getContents()) {
             if (content != null && !content.getType().equals(Material.AIR)) {
                 this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
