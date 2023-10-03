@@ -7,7 +7,9 @@ import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -203,7 +205,8 @@ public class DATableRecipe extends DARecipe {
         for (HumanEntity viewer : daTable.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(daTable.getTitle(state));
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(daTable.getTitle(state));
+                inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
             }
@@ -296,7 +299,7 @@ public class DATableRecipe extends DARecipe {
                     }
                     daTable.getProcess().setTaskID(-1);
                 } else {
-                    DA.log.errorLog("Invalid State: " + state);
+                    DA.log.errorLog("Invalid State: " + state, true);
                 }
             } catch (Exception e) {
                 DA.log.logException(e, true);
@@ -379,7 +382,7 @@ public class DATableRecipe extends DARecipe {
                     }
                     daTable.getProcess().setTaskID(-1);
                 } else {
-                    DA.log.errorLog("Invalid State: " + state);
+                    DA.log.errorLog("Invalid State: " + state, true);
                 }
             } catch (Exception e) {
                 DA.log.logException(e, true);

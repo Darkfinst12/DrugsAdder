@@ -17,10 +17,6 @@ import org.bukkit.block.data.type.WallSign;
 @Getter
 public class DATableBody extends DABody {
 
-    /**
-     * The sign of the table
-     */
-    private final Block sign;
 
     /**
      * The process of the table
@@ -28,8 +24,7 @@ public class DATableBody extends DABody {
     private final DATableProcess process = new DATableProcess();
 
     public DATableBody(Block sign) {
-        super(sign.getWorld());
-        this.sign = sign;
+        super(sign.getWorld(), sign);
     }
 
     /**

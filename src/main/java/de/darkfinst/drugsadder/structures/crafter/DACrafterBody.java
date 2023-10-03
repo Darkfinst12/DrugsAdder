@@ -11,10 +11,6 @@ import org.bukkit.block.data.type.WallSign;
 @Getter
 public class DACrafterBody extends DABody {
 
-    /**
-     * The sign of the crafter
-     */
-    private final Block sign;
 
     /**
      * The process of the crafter
@@ -22,8 +18,7 @@ public class DACrafterBody extends DABody {
     private final DACrafterProcess process = new DACrafterProcess();
 
     public DACrafterBody(Block sign) {
-        super(sign.getWorld());
-        this.sign = sign;
+        super(sign.getWorld(), sign);
     }
 
     /**

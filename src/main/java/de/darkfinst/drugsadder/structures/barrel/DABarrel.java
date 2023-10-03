@@ -6,6 +6,7 @@ import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DABarrelRecipe;
+import de.darkfinst.drugsadder.structures.DAInvStructure;
 import de.darkfinst.drugsadder.structures.DAStructure;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,22 +16,17 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-public class DABarrel extends DAStructure implements InventoryHolder {
-
-    /**
-     * The inventory of the barrel
-     */
-    private final Inventory inventory;
+public class DABarrel extends DAInvStructure {
 
     public DABarrel() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, 9, DA.loader.getTranslation("Barrel", "Structure_Name_Barrel"));
+        super("Structure_Name_Barrel", 9);
     }
 
     /**
@@ -144,6 +140,11 @@ public class DABarrel extends DAStructure implements InventoryHolder {
         }
     }
 
+    @Override
+    public void handleInventoryDrag(InventoryDragEvent event) {
+        //Do nothing not needed
+    }
+
     /**
      * Adds a time stamp to the item stack
      * <p>
@@ -198,43 +199,6 @@ public class DABarrel extends DAStructure implements InventoryHolder {
             itemMeta.getPersistentDataContainer().remove(key);
             itemStack.setItemMeta(itemMeta);
         }
-    }
-
-    /**
-     * @return The inventory of the barrel
-     */
-    @NotNull
-    @Override
-    public Inventory getInventory() {
-        return this.inventory;
-    }
-
-    /**
-     * Drops the inventory of the barrel
-     */
-    @Override
-    public void destroyInventory() {
-        for (HumanEntity viewer : this.inventory.getViewers()) {
-            if (viewer != null) {
-                viewer.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
-            }
-        }
-        for (ItemStack content : this.inventory.getContents()) {
-            if (content != null && !content.getType().equals(Material.AIR)) {
-                this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
-            }
-        }
-        this.inventory.clear();
-    }
-
-    /**
-     * It is an override of {@link DAStructure#hasInventory()}
-     *
-     * @return true
-     */
-    @Override
-    public boolean hasInventory() {
-        return true;
     }
 
 }

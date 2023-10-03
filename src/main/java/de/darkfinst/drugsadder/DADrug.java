@@ -1,8 +1,12 @@
 package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.items.DAItem;
+import de.darkfinst.drugsadder.utils.DAUtil;
+import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,6 +86,26 @@ public class DADrug extends DAAddiction {
         daPlayer.consumeDrug(this);
     }
 
+    public void checkForDurability(ItemStack item) {
+        if (DAUtil.isItemsAdder(item)) {
+            CustomStack customStack = CustomStack.byItemStack(item);
+            if (customStack.hasUsagesAttribute()) {
+                customStack.setUsages(customStack.getUsages() - 1);
+            } else if (customStack.hasCustomDurability()) {
+                customStack.setDurability(customStack.getDurability() - 1);
+                if (customStack.getDurability() <= 0) {
+                    item.setAmount(0);
+                }
+            }
+        } else if (item.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage(damageable.getDamage() + 1);
+            if (damageable.getDamage() >= item.getType().getMaxDurability()) {
+                item.setAmount(0);
+            }
+        }
+    }
+
+
     /**
      * Starts a repeating task, which reduces the addiction of all addicted players
      */
@@ -96,7 +120,7 @@ public class DADrug extends DAAddiction {
     public String toString() {
         return "DADrug{" +
                 "ID='" + ID + '\'' +
-                ", itemStack=" + item.getNamespacedID() +
+                ", itemStack=" + item.getItemStack() +
                 ", serverCommands=" + serverCommands +
                 ", playerCommands=" + playerCommands +
                 ", daEffects=" + daEffects +

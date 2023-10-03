@@ -7,14 +7,12 @@ import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DACrafterRecipe;
-import de.darkfinst.drugsadder.structures.DAStructure;
-import de.darkfinst.drugsadder.utils.DAUtil;
+import de.darkfinst.drugsadder.structures.DAInvStructure;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
@@ -24,15 +22,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
-public class DACrafter extends DAStructure implements InventoryHolder {
+public class DACrafter extends DAInvStructure {
 
     /**
      * The slots which are blocked
@@ -50,53 +50,9 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      * The slot wich starts the recipe
      */
     private final int startSlot = 23;
-    /**
-     * The inventory of the crafter
-     */
-    @Setter(AccessLevel.NONE)
-    protected Inventory inventory;
 
     public DACrafter() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, 54, this.getTitle(0));
-    }
-
-    /**
-     * Gets the title of the crafter with the given state
-     *
-     * @param state The state of the crafter
-     * @return The title of the crafter
-     */
-    public String getTitle(int state) {
-        String title = DA.loader.languageReader.get("Structure_Name_Crafter");
-        int[] titleArray = DAConfig.crafterTitleArray;
-        int titleLength = title.length();
-        if (title.contains("&")) {
-            titleLength = titleLength - (int) (title.chars().filter(ch -> ch == '&').count() * 2);
-        }
-
-        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((titleLength * titleArray[0]) - titleArray[1]) + DAConfig.crafterStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(titleLength * titleArray[2]) + titleArray[3]) + ChatColor.translateAlternateColorCodes('&', title);
-    }
-
-    /**
-     * Gets the title of the crafter with the given state
-     * <p>
-     * Note this is a debug method
-     *
-     * @param m1    The first multiplier
-     * @param m2    The first subtractor
-     * @param m3    The second multiplier
-     * @param m4    The second adder
-     * @param state The state of the crafter
-     * @return The title of the crafter
-     */
-    public String getTitle(int m1, int m2, int m3, int m4, int state) {
-        String title = DA.loader.languageReader.get("Structure_Name_Crafter");
-        int titleLength = title.length();
-        if (title.contains("&")) {
-            titleLength = titleLength - (int) (title.chars().filter(ch -> ch == '&').count() * 2);
-        }
-
-        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((titleLength * m1) - m2) + DAConfig.crafterStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(titleLength * m3) + m4) + ChatColor.translateAlternateColorCodes('&', title);
+        super("Structure_Name_Crafter", 54);
     }
 
     /**
@@ -155,9 +111,9 @@ public class DACrafter extends DAStructure implements InventoryHolder {
      */
     public void open(@NotNull Player player) {
         if (player.hasPermission("drugsadder.crafter.open")) {
-            //player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
-            player.getOpenInventory().setTitle(this.getTitle(this.getProcess().getState()));
+            String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(this.getProcess().getState()));
+            player.getOpenInventory().setTitle(title);
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Crafter_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
@@ -178,23 +134,12 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         return this.getBody().getProcess();
     }
 
+
     /**
-     * @return The inventory of the crafter
+     * Returns a map that contains the contents of the crafter with the slot as key
+     *
+     * @return The content of the crafter
      */
-    @NotNull
-    @Override
-    public Inventory getInventory() {
-        return this.inventory;
-    }
-
-    public List<ItemStack> getContent() {
-        List<ItemStack> content = new ArrayList<>();
-        for (int materialSlot : this.materialSlots) {
-            content.add(this.inventory.getItem(materialSlot));
-        }
-        return content;
-    }
-
     public Map<Integer, ItemStack> getContentMap() {
         Map<Integer, ItemStack> content = new HashMap<>();
         for (int materialSlot : this.materialSlots) {
@@ -235,6 +180,11 @@ public class DACrafter extends DAStructure implements InventoryHolder {
         }
     }
 
+    /**
+     * Calls the recipe check, and if a recipe matches, it starts the process
+     *
+     * @param who The player who started the recipe, can be null
+     */
     private void callRecipeCheck(@Nullable HumanEntity who) {
         List<DACrafterRecipe> recipes = DAConfig.daRecipeReader.getCrafterRecipes();
         for (DACrafterRecipe recipe : recipes) {
@@ -285,35 +235,7 @@ public class DACrafter extends DAStructure implements InventoryHolder {
             recipe.cancelProcess(this, false);
         }
         if (viewers == 0 && !DAConfig.crafterKeepInv) {
-            this.destroyInventory();
+            this.dropContents();
         }
-    }
-
-    /**
-     * Drops the inventory of the crafter
-     */
-    @Override
-    public void destroyInventory() {
-        for (HumanEntity viewer : this.inventory.getViewers()) {
-            if (viewer != null) {
-                viewer.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
-            }
-        }
-        for (ItemStack content : this.inventory.getContents()) {
-            if (content != null && !content.getType().equals(Material.AIR)) {
-                this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
-            }
-        }
-        this.inventory.clear();
-    }
-
-    /**
-     * It is an override of {@link DAStructure#hasInventory()}
-     *
-     * @return true
-     */
-    @Override
-    public boolean hasInventory() {
-        return true;
     }
 }

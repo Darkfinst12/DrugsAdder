@@ -30,6 +30,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -255,11 +256,11 @@ public class DALoader {
     public DAStructure getStructure(Inventory inventory) {
         return this.structureList.stream().filter(daStructure -> {
             if (daStructure instanceof DABarrel daBarrel) {
-                return daBarrel.getInventory().equals(inventory);
+                return Objects.equals(daBarrel.getInventory(), inventory);
             } else if (daStructure instanceof DATable daTable) {
-                return daTable.getInventory().equals(inventory);
+                return  Objects.equals(daTable.getInventory(), inventory);
             } else if (daStructure instanceof DACrafter daCrafter) {
-                return daCrafter.getInventory().equals(inventory);
+                return  Objects.equals(daCrafter.getInventory(), inventory);
             }
             return false;
         }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);

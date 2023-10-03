@@ -132,6 +132,16 @@ public class DAUtil {
     }
 
     /**
+     * Checks if the item is a custom item from ItemsAdder
+     *
+     * @param item The item to check
+     * @return If the item is a custom item from ItemsAdder
+     */
+    public static boolean isItemsAdder(ItemStack item) {
+        return CustomStack.byItemStack(item) != null;
+    }
+
+    /**
      * Sets on a slot the default item of the item, but only for custom items
      *
      * @param event The event to get the inventory from
@@ -160,7 +170,10 @@ public class DAUtil {
      */
     public static boolean matchItems(ItemStack itemStackA, ItemStack itemStackB, ItemMatchType... matchTypes) {
         boolean match = false;
-        if (!(itemStackA == null || itemStackB == null || matchTypes == null || matchTypes.length == 0)) {
+        if (matchTypes == null || matchTypes.length == 0) {
+            matchTypes = new ItemMatchType[]{ItemMatchType.VANNILA};
+        }
+        if (!(itemStackA == null || itemStackB == null)) {
             for (ItemMatchType matchType : matchTypes) {
                 match = DAUtil.matchItems(itemStackA, itemStackB, matchType);
                 if (!match) {
@@ -612,5 +625,4 @@ public class DAUtil {
         int lowSurrogate = 0xDC00 + ((code - 0x10000) & 0x3FF);
         return new String(new int[]{highSurrogate, lowSurrogate}, 0, 2);
     }
-
 }

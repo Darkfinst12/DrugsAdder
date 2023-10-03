@@ -22,10 +22,6 @@ public class DAPressBody extends DABody {
      */
     private final DAPress press;
     /**
-     * The sign of the press
-     */
-    private final Block sign;
-    /**
      * The piston of the press
      */
     private Block piston;
@@ -35,9 +31,8 @@ public class DAPressBody extends DABody {
     private Block lever;
 
     public DAPressBody(DAPress press, Block sign) {
-        super(sign.getWorld());
+        super(sign.getWorld(), sign);
         this.press = press;
-        this.sign = sign;
     }
 
     /**

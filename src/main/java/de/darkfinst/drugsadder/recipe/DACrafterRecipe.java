@@ -6,7 +6,9 @@ import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -218,7 +220,8 @@ public class DACrafterRecipe extends DARecipe {
         for (HumanEntity viewer : dacRafter.getInventory().getViewers()) {
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(dacRafter.getTitle(state));
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(dacRafter.getTitle(state));
+                inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
             }
