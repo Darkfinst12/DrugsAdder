@@ -238,11 +238,11 @@ public class DALoader {
      * @return The structure, which contains the block or null if no structure was found
      */
     public DAStructure getStructure(Block block) {
-        return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval()).findAny().orElse(null);
+        return this.structureList.stream().filter(daStructure -> !daStructure.isForRemoval() && daStructure.isBodyPart(block)).findAny().orElse(null);
     }
 
     public DAStructure getStructure(DAStructure structure) {
-        return this.structureList.stream().filter(daStructure -> daStructure.equals(structure) && !daStructure.isForRemoval()).findAny().orElse(null);
+        return this.structureList.stream().filter(daStructure -> !daStructure.isForRemoval() && daStructure.equals(structure)).findAny().orElse(null);
     }
 
     /**
