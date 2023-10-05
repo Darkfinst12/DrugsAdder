@@ -1,7 +1,6 @@
 package de.darkfinst.drugsadder.structures;
 
 import de.darkfinst.drugsadder.DA;
-import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -19,6 +18,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public abstract class DAInvStructure extends DAStructure implements InventoryHolder {
@@ -30,9 +30,13 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
     protected Inventory inventory;
 
     private final String translationKey;
+    private final Map<Integer, String> states;
+    private final int[] titleArray;
 
-    public DAInvStructure(String translationKey, int size) {
+    public DAInvStructure(String translationKey, int size, Map<Integer, String> states, int[] titleArray) {
         this.translationKey = translationKey;
+        this.states = states;
+        this.titleArray = titleArray;
         this.inventory = DA.getInstance.getServer().createInventory(this, size, this.getTitle(0));
     }
 
@@ -46,8 +50,13 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
         String title = DA.loader.languageReader.get(this.translationKey);
         Component titleComp = MiniMessage.miniMessage().deserialize(title);
         title = LegacyComponentSerializer.legacyAmpersand().serialize(titleComp);
-        int[] titleArray = DAConfig.tableTitleArray;
-        String stateString = (DAUtil.convertWidthToMinecraftCode((title.length() * titleArray[0]) - titleArray[1]) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * titleArray[2]) + titleArray[3]));
+        int[] titleArray = this.titleArray;
+        String stateString;
+        if (this.states != null) {
+            stateString = (DAUtil.convertWidthToMinecraftCode((title.length() * titleArray[0]) - titleArray[1]) + this.states.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * titleArray[2]) + titleArray[3]));
+        } else {
+            stateString = "";
+        }
 
         return Component.text(stateString).color(NamedTextColor.WHITE).append(titleComp);
     }
@@ -68,7 +77,12 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
         String title = DA.loader.languageReader.get(this.translationKey);
         Component titleComp = MiniMessage.miniMessage().deserialize(title);
         title = LegacyComponentSerializer.legacyAmpersand().serialize(titleComp);
-        String stateString = DAUtil.convertWidthToMinecraftCode((title.length() * m1) - m2) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * m3) + m4);
+        String stateString;
+        if (this.states != null) {
+            stateString = DAUtil.convertWidthToMinecraftCode((title.length() * m1) - m2) + this.states.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * m3) + m4);
+        } else {
+            stateString = "";
+        }
         return Component.text(stateString).color(NamedTextColor.WHITE).append(titleComp);
     }
 

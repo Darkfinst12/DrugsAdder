@@ -8,9 +8,7 @@ import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DACrafterRecipe;
 import de.darkfinst.drugsadder.structures.DAInvStructure;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -21,7 +19,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +49,7 @@ public class DACrafter extends DAInvStructure {
     private final int startSlot = 23;
 
     public DACrafter() {
-        super("Structure_Name_Crafter", 54);
+        super("Structure_Name_Crafter", 54, DAConfig.crafterStates, DAConfig.crafterTitleArray);
     }
 
     /**

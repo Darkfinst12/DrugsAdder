@@ -7,17 +7,14 @@ import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DABarrelRecipe;
 import de.darkfinst.drugsadder.structures.DAInvStructure;
-import de.darkfinst.drugsadder.structures.DAStructure;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -26,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class DABarrel extends DAInvStructure {
 
     public DABarrel() {
-        super("Structure_Name_Barrel", 9);
+        super("Structure_Name_Barrel", 9, null, null);
     }
 
     /**
