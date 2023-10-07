@@ -24,10 +24,10 @@ import java.util.List;
 
 public class DACommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg(), PossibleArgs.PLAYER.getArg());
-    private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg());
-    private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(), PossibleArgs.CRAFTING.getArg(), PossibleArgs.CRAFTER.getArg(), PossibleArgs.FURNACE.getArg(), PossibleArgs.PRESS.getArg(), PossibleArgs.TABLE.getArg());
-    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.RECIPES.getArg(), PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.PLAYER.getArg(), PossibleArgs.PLANT.getArg());
+    private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(),PossibleArgs.LIST.getArg(),PossibleArgs.CONSUME.getArg(),PossibleArgs.INFO.getArg(),PossibleArgs.PLAYER.getArg());
+    private static final List<String> LIST_ARGS = List.of(PossibleArgs.RECIPES.getArg(), PossibleArgs.DRUGS.getArg(),PossibleArgs.CUSTOM_ITEMS.getArg());
+    private static final List<String> LIST_RECIPES_ARGS = List.of(PossibleArgs.ALL.getArg(), PossibleArgs.BARREL.getArg(),PossibleArgs.CRAFTING.getArg(),PossibleArgs.CRAFTER.getArg(),PossibleArgs.FURNACE.getArg(),PossibleArgs.PRESS.getArg(),PossibleArgs.TABLE.getArg());
+    private static final List<String> LIST_INFO_ARGS = List.of(PossibleArgs.DRUGS.getArg(), PossibleArgs.RECIPES.getArg(),PossibleArgs.CUSTOM_ITEMS.getArg(),PossibleArgs.PLAYER.getArg(),PossibleArgs.PLANT.getArg());
     private static final List<String> PLAYER_ARGS = List.of(PossibleArgs.SET.getArg(), PossibleArgs.CLEAR.getArg());
 
     public void register() {
@@ -609,27 +609,26 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     @Getter
     public enum PossibleArgs {
-        RELOAD(DA.loader.getTranslation("reload", "Command_Args_Reload")),
-        GET_CUSTOM_ITEM(DA.loader.getTranslation("getCustomItem", "Command_Args_GetCustomItem")),
-        LIST(DA.loader.getTranslation("list", "Command_Args_List")),
-        CONSUME(DA.loader.getTranslation("consume", "Command_Args_Consume")),
-        RECIPES(DA.loader.getTranslation("recipes", "Command_Args_Recipes")),
-        DRUGS(DA.loader.getTranslation("drugs", "Command_Args_Drugs")),
-        ALL(DA.loader.getTranslation("all", "Command_Args_All")),
-        BARREL(DA.loader.getTranslation("barrel", "Command_Args_Barrel")),
-        CRAFTING(DA.loader.getTranslation("crafting", "Command_Args_Crafting")),
-        FURNACE(DA.loader.getTranslation("furnace", "Command_Args_Furnace")),
-        PRESS(DA.loader.getTranslation("press", "Command_Args_Press")),
-        TABLE(DA.loader.getTranslation("table", "Command_Args_Table")),
-        OWN(DA.loader.getTranslation("own", "Command_Args_Own")),
-        OTHER(DA.loader.getTranslation("other", "Command_Args_Other")),
-        CUSTOM_ITEMS(DA.loader.getTranslation("customItems", "Command_Args_CustomItems")),
-        INFO(DA.loader.getTranslation("info", "Command_Args_Info")),
-        PLAYER(DA.loader.getTranslation("player", "Command_Args_Player")),
-        SET(DA.loader.getTranslation("set", "Command_Args_Set")),
-        CLEAR(DA.loader.getTranslation("clear", "Command_Args_Clear")),
-        PLANT(DA.loader.getTranslation("plant", "Command_Args_Plant")),
-        CRAFTER(DA.loader.getTranslation("crafter", "Command_Args_Crafter")),
+
+        RELOAD("reload"),
+        GET_CUSTOM_ITEM("getCustomItem"),
+        LIST("list"),
+        CONSUME("consume"),
+        RECIPES("recipes"),
+        DRUGS("drugs"),
+        ALL("all"),
+        BARREL("barrel"),
+        CRAFTING("crafting"),
+        FURNACE("furnace"),
+        PRESS("press"),
+        TABLE("table"),
+        CUSTOM_ITEMS("customItems"),
+        INFO("info"),
+        PLAYER("player"),
+        SET("set"),
+        CLEAR("clear"),
+        PLANT("plant"),
+        CRAFTER("crafter"),
         ;
 
         private final String arg;
@@ -637,6 +636,5 @@ public class DACommand implements CommandExecutor, TabCompleter {
         PossibleArgs(String arg) {
             this.arg = arg;
         }
-
     }
 }

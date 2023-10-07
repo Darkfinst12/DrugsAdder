@@ -258,9 +258,9 @@ public class DALoader {
             if (daStructure instanceof DABarrel daBarrel) {
                 return Objects.equals(daBarrel.getInventory(), inventory);
             } else if (daStructure instanceof DATable daTable) {
-                return  Objects.equals(daTable.getInventory(), inventory);
+                return Objects.equals(daTable.getInventory(), inventory);
             } else if (daStructure instanceof DACrafter daCrafter) {
-                return  Objects.equals(daCrafter.getInventory(), inventory);
+                return Objects.equals(daCrafter.getInventory(), inventory);
             }
             return false;
         }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);
@@ -516,7 +516,7 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void infoLog(String msg, boolean isAsync) {
-        if(DAConfig.logGeneralInfo){
+        if (DAConfig.logGeneralInfo) {
             this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(41, 212, 3)) + "[Info] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.INFO, isAsync);
         }
     }
