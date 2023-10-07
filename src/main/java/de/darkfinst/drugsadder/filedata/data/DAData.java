@@ -104,7 +104,6 @@ public class DAData {
                     // Spigot is _very_ slow at loading inventories from yml. Paper is way faster.
                     // Notify Admin that loading Data took long (its async so not much of a problem)
                     DA.log.log("Bukkit took " + (t2 - t1) / 1000.0 + "s to load Inventories from the World-Data File (in the Background),", isAsync);
-                    DA.log.log("consider switching to Paper, or have less items in Structures if it takes a long time for Structures to become available", isAsync);
                 } else {
                     DA.log.debugLog("Loading worlddata.yml: " + (t2 - t1) + "ms", isAsync);
                 }

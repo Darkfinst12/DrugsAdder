@@ -29,6 +29,9 @@ public class PlayerInteractEventListener implements Listener {
             if (Action.LEFT_CLICK_BLOCK.equals(event.getAction())) {
                 return;
             }
+            if (Action.RIGHT_CLICK_BLOCK.equals(event.getAction()) && event.getPlayer().isSneaking()) {
+                return;
+            }
             event.setCancelled(true);
             DA.loader.openStructure(event.getClickedBlock(), event.getPlayer());
         }

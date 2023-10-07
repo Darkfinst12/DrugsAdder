@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.api.events;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
@@ -16,7 +18,7 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
     private final CommandSender sender;
     private final Type type;
     @Nullable
-    private BaseComponent component;
+    private Component component;
     @Nullable
     private String message;
     private boolean cancelled;
@@ -30,7 +32,7 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
         this.cancelled = false;
     }
 
-    public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, @NotNull BaseComponent component, Type type) {
+    public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, @NotNull Component component, Type type) {
         super(isAsync);
         this.sender = sender;
         this.component = component;
@@ -57,8 +59,16 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
         this.message = message;
     }
 
-    public void setMessage(BaseComponent component) {
+    public void setMessage(@Nullable Component component) {
         this.component = component;
+    }
+
+    public String getCleanMessage() {
+        if(this.component != null){
+            return PlainTextComponentSerializer.plainText().serialize(this.component);
+        }else {
+            return this.message;
+        }
     }
 
     @NotNull
