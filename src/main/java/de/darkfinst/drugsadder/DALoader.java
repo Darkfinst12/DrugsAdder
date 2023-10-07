@@ -415,8 +415,8 @@ public class DALoader {
         Component component = MiniMessage.miniMessage().deserialize(msg).colorIfAbsent(NamedTextColor.WHITE);
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, component, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
-        if (!sendMessageEvent.isCancelled() && sendMessageEvent.getComponent() != null) {
-            sender.sendMessage(this.cPrefix.appendSpace().append(sendMessageEvent.getComponent()));
+        if (!sendMessageEvent.isCancelled()) {
+            sender.sendMessage(this.cPrefix.appendSpace().append(sendMessageEvent.getMessage()));
         }
     }
 
@@ -464,8 +464,8 @@ public class DALoader {
     public void msg(CommandSender sender, Component msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
-        if (!sendMessageEvent.isCancelled() && sendMessageEvent.getComponent() != null) {
-            sender.sendMessage(this.cPrefix.appendSpace().append(sendMessageEvent.getComponent().colorIfAbsent(NamedTextColor.WHITE)));
+        if (!sendMessageEvent.isCancelled()) {
+            sender.sendMessage(this.cPrefix.appendSpace().append(sendMessageEvent.getMessage().colorIfAbsent(NamedTextColor.WHITE)));
         }
     }
 
