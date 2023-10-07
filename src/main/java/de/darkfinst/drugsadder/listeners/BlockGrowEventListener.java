@@ -18,7 +18,7 @@ public class BlockGrowEventListener implements Listener {
 
     @EventHandler
     public void onBlockGrowEvent(BlockGrowEvent event) {
-        if (this.isNearStructure(event.getBlock())) {
+        if (DA.loader.isStructure(event.getBlock()) ||this.isNearStructure(event.getBlock())) {
             event.setCancelled(true);
         }
     }
