@@ -1,39 +1,28 @@
 package de.darkfinst.drugsadder.api.events;
 
 import lombok.Getter;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private final CommandSender sender;
+    private final @NotNull CommandSender sender;
     private final Type type;
-    @Nullable
-    private BaseComponent component;
-    @Nullable
-    private String message;
+    private @NotNull Component message;
     private boolean cancelled;
 
 
-    public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, @NotNull String message, Type type) {
+    public DrugsAdderSendMessageEvent(boolean isAsync, @NotNull CommandSender sender, @NotNull Component message, Type type) {
         super(isAsync);
         this.sender = sender;
         this.message = message;
-        this.type = type;
-        this.cancelled = false;
-    }
-
-    public DrugsAdderSendMessageEvent(boolean isAsync, CommandSender sender, @NotNull BaseComponent component, Type type) {
-        super(isAsync);
-        this.sender = sender;
-        this.component = component;
         this.type = type;
         this.cancelled = false;
     }
@@ -53,12 +42,16 @@ public class DrugsAdderSendMessageEvent extends Event implements Cancellable {
         this.cancelled = cancelled;
     }
 
-    public void setMessage(@Nullable String message) {
-        this.message = message;
+    public void setMessage(@NotNull Component component) {
+        this.message = component;
     }
 
-    public void setMessage(BaseComponent component) {
-        this.component = component;
+    public void setMessage(@NotNull String message) {
+        this.message = Component.text(message);
+    }
+
+    public @NotNull String getCleanMessage() {
+        return PlainTextComponentSerializer.plainText().serialize(this.message);
     }
 
     @NotNull

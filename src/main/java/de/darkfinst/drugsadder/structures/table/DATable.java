@@ -7,14 +7,12 @@ import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.recipe.DATableRecipe;
-import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.structures.DAInvStructure;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
@@ -22,9 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class DATable extends DAStructure implements InventoryHolder {
+public class DATable extends DAInvStructure {
 
     /**
      * The slots which are blocked
@@ -59,46 +54,9 @@ public class DATable extends DAStructure implements InventoryHolder {
      * The slots wich starts the recipe for the corresponding side
      */
     private final int[] startSlots = new int[]{38, 42};
-    /**
-     * The inventory of the table
-     */
-    @Setter(AccessLevel.NONE)
-    protected Inventory inventory;
 
     public DATable() {
-        this.inventory = DA.getInstance.getServer().createInventory(this, 54, this.getTitle(0));
-    }
-
-    /**
-     * Gets the title of the table with the given state
-     *
-     * @param state The state of the table
-     * @return The title of the table
-     */
-    public String getTitle(int state) {
-        String title = DA.loader.languageReader.get("Structure_Name_Table");
-        int[] titleArray = DAConfig.tableTitleArray;
-
-
-        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * titleArray[0]) - titleArray[1]) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * titleArray[2]) + titleArray[3]) + title;
-    }
-
-    /**
-     * Gets the title of the table with the given state
-     * <p>
-     * Note this is a debug method
-     *
-     * @param m1    The first multiplier
-     * @param m2    The first subtractor
-     * @param m3    The second multiplier
-     * @param m4    The second adder
-     * @param state The state of the table
-     * @return The title of the table
-     */
-    public String getTitle(int m1, int m2, int m3, int m4, int state) {
-        String title = DA.loader.languageReader.get("Structure_Name_Table");
-
-        return ChatColor.WHITE + DAUtil.convertWidthToMinecraftCode((title.length() * m1) - m2) + DAConfig.tableStates.get(state) + DAUtil.convertWidthToMinecraftCode(-(title.length() * m3) + m4) + title;
+        super("Structure_Name_Table", 54, DAConfig.tableStates, DAConfig.tableTitleArray);
     }
 
     /**
@@ -159,7 +117,8 @@ public class DATable extends DAStructure implements InventoryHolder {
         if (player.hasPermission("drugsadder.table.open")) {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
-            player.getOpenInventory().setTitle(this.getTitle(this.getProcess().getState()));
+            String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(this.getProcess().getState()));
+            player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title));
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
@@ -177,16 +136,6 @@ public class DATable extends DAStructure implements InventoryHolder {
      */
     public DATableProcess getProcess() {
         return this.getBody().getProcess();
-    }
-
-
-    /**
-     * @return The inventory of the table
-     */
-    @NotNull
-    @Override
-    public Inventory getInventory() {
-        return this.inventory;
     }
 
 
@@ -343,18 +292,6 @@ public class DATable extends DAStructure implements InventoryHolder {
         }
     }
 
-    @Deprecated(forRemoval = true)
-    private int getClickedSide(int slot) {
-        if (materialSlots[0] == slot || filterSlots[0] == slot || fuelSlots[0] == slot) {
-            return 0;
-        } else if (materialSlots[1] == slot || filterSlots[1] == slot || fuelSlots[1] == slot) {
-            return 1;
-        } else {
-            return -1;
-        }
-
-    }
-
     /**
      * Handles the inventory drag event
      *
@@ -367,27 +304,5 @@ public class DATable extends DAStructure implements InventoryHolder {
                 return;
             }
         }
-    }
-
-    /**
-     * Drops the inventory of the table
-     */
-    @Override
-    public void destroyInventory() {
-        for (ItemStack content : this.inventory.getContents()) {
-            if (content != null && !content.getType().equals(Material.AIR)) {
-                this.getBody().getWorld().dropItemNaturally(this.getBody().getSign().getLocation(), content);
-            }
-        }
-    }
-
-    /**
-     * It is an override of {@link DAStructure#hasInventory()}
-     *
-     * @return true
-     */
-    @Override
-    public boolean hasInventory() {
-        return true;
     }
 }

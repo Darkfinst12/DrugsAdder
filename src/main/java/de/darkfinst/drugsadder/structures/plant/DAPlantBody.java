@@ -19,7 +19,7 @@ public class DAPlantBody extends DABody {
     private final Block plantBLock;
 
     public DAPlantBody(DAPlant daPlant, Block plantBLock) {
-        super(plantBLock.getWorld());
+        super(plantBLock.getWorld(), null);
         this.daPlant = daPlant;
         this.plantBLock = plantBLock;
     }

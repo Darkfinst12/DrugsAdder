@@ -49,7 +49,7 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasBarrelLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase(DA.loader.getTranslation("barrel", "Structure_Name_Barrel"))) {
+            if (line.equalsIgnoreCase(this.getLegacyTranslation("barrel", "Structure_Name_Barrel"))) {
                 return true;
             }
         }
@@ -58,7 +58,7 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasPressLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase(DA.loader.getTranslation("press", "Structure_Name_Press"))) {
+            if (line.equalsIgnoreCase(this.getLegacyTranslation("press", "Structure_Name_Press"))) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasTableLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase(DA.loader.getTranslation("table", "Structure_Name_Table"))) {
+            if (line.equalsIgnoreCase(this.getLegacyTranslation("table", "Structure_Name_Table"))) {
                 return true;
             }
         }
@@ -76,10 +76,16 @@ public class SignChangeEventListener implements Listener {
 
     private boolean hasCrafterLine(String[] lines) {
         for (String line : lines) {
-            if (line.equalsIgnoreCase(DA.loader.getTranslation("crafter", "Structure_Name_Crafter"))) {
+            if (line.equalsIgnoreCase(this.getLegacyTranslation("crafter", "Structure_Name_Crafter"))) {
                 return true;
             }
         }
         return false;
+    }
+
+    private String getLegacyTranslation(String fallback, String key) {
+        String translation = DA.loader.getTranslation(fallback, key);
+        translation = translation.replaceAll("<.*>", "");
+        return translation;
     }
 }

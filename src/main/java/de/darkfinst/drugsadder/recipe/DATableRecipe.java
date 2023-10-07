@@ -8,8 +8,6 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -200,14 +198,7 @@ public class DATableRecipe extends DARecipe {
      * @param state   The state to update to
      */
     public void updateView(DATable daTable, int state, boolean isAsync) {
-        for (HumanEntity viewer : daTable.getInventory().getViewers()) {
-            try {
-                InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(daTable.getTitle(state));
-            } catch (Exception e) {
-                DA.log.logException(e, isAsync);
-            }
-        }
+        daTable.updateView(state, isAsync);
     }
 
     @Override
@@ -296,7 +287,7 @@ public class DATableRecipe extends DARecipe {
                     }
                     daTable.getProcess().setTaskID(-1);
                 } else {
-                    DA.log.errorLog("Invalid State: " + state);
+                    DA.log.errorLog("Invalid State: " + state, true);
                 }
             } catch (Exception e) {
                 DA.log.logException(e, true);
@@ -379,7 +370,7 @@ public class DATableRecipe extends DARecipe {
                     }
                     daTable.getProcess().setTaskID(-1);
                 } else {
-                    DA.log.errorLog("Invalid State: " + state);
+                    DA.log.errorLog("Invalid State: " + state, true);
                 }
             } catch (Exception e) {
                 DA.log.logException(e, true);

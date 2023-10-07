@@ -54,10 +54,10 @@ tableStates:
   13: "\uF00D"
   14: "\uF00E"
   16: "\uF00F"
-  17: "\uF011"
-  18: "\uF012"
-  19: "\uF013"
-  20: "\uF014"
+  17: "\uF010"
+  18: "\uF011"
+  19: "\uF012"
+  20: "\uF013"
 
 #Crafter States
 #Es muss immer dies 8 States geben

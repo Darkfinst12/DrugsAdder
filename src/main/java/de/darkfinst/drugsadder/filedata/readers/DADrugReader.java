@@ -79,6 +79,18 @@ public class DADrugReader {
                     matchTypes.add(itemMatchType);
                 }
             }
+        }else {
+            ItemMatchType itemMatchType = ItemMatchType.valueOf(matchTypeCon);
+            if (ItemMatchType.NULL.equals(itemMatchType)) {
+                this.logError("Load_Error_Drug_MatchType", drugID, matchTypeCon);
+                return;
+            } else {
+                matchTypes.add(itemMatchType);
+            }
+        }
+        if (matchTypes.isEmpty()) {
+            this.logError("Load_Error_Drug_MatchType", drugID, "NULL");
+            return;
         }
         String consumeMessage = drugConfig.getString("consumeMessage", null);
         String consumeTitle = drugConfig.getString("consumeTitle", null);

@@ -420,6 +420,12 @@ public class DAConfig {
         if (seedReader != null) {
             seedReader.getRegisteredSeeds().clear();
         }
+        if (!crafterStates.isEmpty()) {
+            crafterStates.clear();
+        }
+        if (!tableStates.isEmpty()) {
+            tableStates.clear();
+        }
     }
 
 }

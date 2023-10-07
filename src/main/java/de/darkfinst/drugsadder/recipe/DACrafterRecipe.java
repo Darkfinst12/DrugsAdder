@@ -7,8 +7,6 @@ import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -211,18 +209,11 @@ public class DACrafterRecipe extends DARecipe {
     /**
      * Updates the view of the table
      *
-     * @param dacRafter The table to update
+     * @param daCrafter The table to update
      * @param state     The state to update to
      */
-    public void updateView(@NotNull DACrafter dacRafter, int state, boolean isAsync) {
-        for (HumanEntity viewer : dacRafter.getInventory().getViewers()) {
-            try {
-                InventoryView inventoryView = viewer.getOpenInventory();
-                inventoryView.setTitle(dacRafter.getTitle(state));
-            } catch (Exception e) {
-                DA.log.logException(e, isAsync);
-            }
-        }
+    public void updateView(@NotNull DACrafter daCrafter, int state, boolean isAsync) {
+        daCrafter.updateView(state, isAsync);
     }
 
     @Override

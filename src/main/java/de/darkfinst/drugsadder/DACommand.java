@@ -9,7 +9,9 @@ import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -77,11 +79,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("tableStates")) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
             for (DATable table : tables) {
-                String title = table.getTitle(Integer.parseInt(args[1]));
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(table.getTitle(Integer.parseInt(args[1])));
                 for (HumanEntity viewer : table.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
-                        inventoryView.setTitle(title);
+                        inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
                     } catch (Exception e) {
                         DA.log.logException(e);
                     }
@@ -90,11 +92,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         } else if (args[0].equalsIgnoreCase("crafterStates")) {
             List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
             for (DACrafter crafter : crafters) {
-                String title = crafter.getTitle(Integer.parseInt(args[1]));
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(crafter.getTitle(Integer.parseInt(args[1])));
                 for (HumanEntity viewer : crafter.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
-                        inventoryView.setTitle(title);
+                        inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
                     } catch (Exception e) {
                         DA.log.logException(e);
                     }
@@ -434,11 +436,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         if ("tableArray".equalsIgnoreCase(args[0])) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
             for (DATable table : tables) {
-                String title = table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0);
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0));
                 for (HumanEntity viewer : table.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
-                        inventoryView.setTitle(title);
+                        inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
                     } catch (Exception e) {
                         DA.log.logException(e);
                     }
@@ -447,11 +449,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         } else if ("crafterArray".equalsIgnoreCase(args[0])) {
             List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
             for (DACrafter crafter : crafters) {
-                String title = crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0);
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 0));
                 for (HumanEntity viewer : crafter.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
-                        inventoryView.setTitle(title);
+                        inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
                     } catch (Exception e) {
                         DA.log.logException(e);
                     }
@@ -465,11 +467,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         if ("tableArray".equalsIgnoreCase(args[0])) {
             List<DATable> tables = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DATable).map(daStructure -> (DATable) daStructure).toList();
             for (DATable table : tables) {
-                String title = table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(table.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])));
                 for (HumanEntity viewer : table.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
-                        inventoryView.setTitle(title);
+                        inventoryView.setTitle(ChatColor.WHITE + title);
                     } catch (Exception e) {
                         DA.log.logException(e);
                     }
@@ -478,11 +480,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
         } else if ("crafterArray".equalsIgnoreCase(args[0])) {
             List<DACrafter> crafters = DA.loader.getStructureList().stream().filter(daStructure -> daStructure instanceof DACrafter).map(daStructure -> (DACrafter) daStructure).toList();
             for (DACrafter crafter : crafters) {
-                String title = crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(crafter.getTitle(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])));
                 for (HumanEntity viewer : crafter.getInventory().getViewers()) {
                     try {
                         InventoryView inventoryView = viewer.getOpenInventory();
-                        inventoryView.setTitle(title);
+                        inventoryView.setTitle(ChatColor.WHITE + title);
                     } catch (Exception e) {
                         DA.log.logException(e);
                     }
@@ -607,27 +609,26 @@ public class DACommand implements CommandExecutor, TabCompleter {
 
     @Getter
     public enum PossibleArgs {
-        RELOAD(DA.loader.getTranslation("reload", "Command_Args_Reload")),
-        GET_CUSTOM_ITEM(DA.loader.getTranslation("getCustomItem", "Command_Args_GetCustomItem")),
-        LIST(DA.loader.getTranslation("list", "Command_Args_List")),
-        CONSUME(DA.loader.getTranslation("consume", "Command_Args_Consume")),
-        RECIPES(DA.loader.getTranslation("recipes", "Command_Args_Recipes")),
-        DRUGS(DA.loader.getTranslation("drugs", "Command_Args_Drugs")),
-        ALL(DA.loader.getTranslation("all", "Command_Args_All")),
-        BARREL(DA.loader.getTranslation("barrel", "Command_Args_Barrel")),
-        CRAFTING(DA.loader.getTranslation("crafting", "Command_Args_Crafting")),
-        FURNACE(DA.loader.getTranslation("furnace", "Command_Args_Furnace")),
-        PRESS(DA.loader.getTranslation("press", "Command_Args_Press")),
-        TABLE(DA.loader.getTranslation("table", "Command_Args_Table")),
-        OWN(DA.loader.getTranslation("own", "Command_Args_Own")),
-        OTHER(DA.loader.getTranslation("other", "Command_Args_Other")),
-        CUSTOM_ITEMS(DA.loader.getTranslation("customItems", "Command_Args_CustomItems")),
-        INFO(DA.loader.getTranslation("info", "Command_Args_Info")),
-        PLAYER(DA.loader.getTranslation("player", "Command_Args_Player")),
-        SET(DA.loader.getTranslation("set", "Command_Args_Set")),
-        CLEAR(DA.loader.getTranslation("clear", "Command_Args_Clear")),
-        PLANT(DA.loader.getTranslation("plant", "Command_Args_Plant")),
-        CRAFTER(DA.loader.getTranslation("crafter", "Command_Args_Crafter")),
+
+        RELOAD("reload"),
+        GET_CUSTOM_ITEM("getCustomItem"),
+        LIST("list"),
+        CONSUME("consume"),
+        RECIPES("recipes"),
+        DRUGS("drugs"),
+        ALL("all"),
+        BARREL("barrel"),
+        CRAFTING("crafting"),
+        FURNACE("furnace"),
+        PRESS("press"),
+        TABLE("table"),
+        CUSTOM_ITEMS("customItems"),
+        INFO("info"),
+        PLAYER("player"),
+        SET("set"),
+        CLEAR("clear"),
+        PLANT("plant"),
+        CRAFTER("crafter"),
         ;
 
         private final String arg;
@@ -635,6 +636,5 @@ public class DACommand implements CommandExecutor, TabCompleter {
         PossibleArgs(String arg) {
             this.arg = arg;
         }
-
     }
 }

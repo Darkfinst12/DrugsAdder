@@ -14,13 +14,20 @@ public abstract class DABody {
      */
     @Getter
     public final World world;
+
+    /**
+     * The sign of the press
+     */
+    @Getter
+    public final Block sign;
     /**
      * The blocks of the body
      */
     public final List<Block> blocks = new ArrayList<>();
 
-    public DABody(World world) {
+    public DABody(World world, Block sign) {
         this.world = world;
+        this.sign = sign;
     }
 
 }

@@ -2,7 +2,7 @@ package de.darkfinst.drugsadder.items;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Tag;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,6 +58,9 @@ public class DAPlantItem extends DAItem implements Cloneable {
      * @return Whether the item is a crop or not
      */
     public boolean isCrop() {
-        return Tag.ITEMS_VILLAGER_PLANTABLE_SEEDS.isTagged(this.getItemStack().getType());
+        return Material.BEETROOT_SEEDS.equals(this.getItemStack().getType()) || Material.CARROT.equals(this.getItemStack().getType())
+                || Material.POTATO.equals(this.getItemStack().getType()) || Material.WHEAT_SEEDS.equals(this.getItemStack().getType())
+                || Material.MELON_SEEDS.equals(this.getItemStack().getType()) || Material.PUMPKIN_SEEDS.equals(this.getItemStack().getType())
+                ;
     }
 }

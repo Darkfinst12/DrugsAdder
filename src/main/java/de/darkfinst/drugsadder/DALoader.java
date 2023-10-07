@@ -16,8 +16,10 @@ import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -26,10 +28,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -45,7 +47,7 @@ public class DALoader {
     /**
      * The prefix, which is used for all messages
      */
-    public final String prefix = ChatColor.of(new Color(3, 94, 212)) + "[DrugsAdder] " + ChatColor.WHITE;
+    public final Component cPrefix = Component.text().color(TextColor.color(3, 94, 212)).content("[DrugsAdder]").build();
     /**
      * The instance of the plugin
      */
@@ -237,11 +239,11 @@ public class DALoader {
      * @return The structure, which contains the block or null if no structure was found
      */
     public DAStructure getStructure(Block block) {
-        return this.structureList.stream().filter(daStructure -> daStructure.isBodyPart(block) && !daStructure.isForRemoval()).findAny().orElse(null);
+        return this.structureList.stream().filter(daStructure -> !daStructure.isForRemoval() && daStructure.isBodyPart(block)).findAny().orElse(null);
     }
 
     public DAStructure getStructure(DAStructure structure) {
-        return this.structureList.stream().filter(daStructure -> daStructure.equals(structure) && !daStructure.isForRemoval()).findAny().orElse(null);
+        return this.structureList.stream().filter(daStructure -> !daStructure.isForRemoval() && daStructure.equals(structure)).findAny().orElse(null);
     }
 
     /**
@@ -255,11 +257,11 @@ public class DALoader {
     public DAStructure getStructure(Inventory inventory) {
         return this.structureList.stream().filter(daStructure -> {
             if (daStructure instanceof DABarrel daBarrel) {
-                return daBarrel.getInventory().equals(inventory);
+                return Objects.equals(daBarrel.getInventory(), inventory);
             } else if (daStructure instanceof DATable daTable) {
-                return daTable.getInventory().equals(inventory);
+                return Objects.equals(daTable.getInventory(), inventory);
             } else if (daStructure instanceof DACrafter daCrafter) {
-                return daCrafter.getInventory().equals(inventory);
+                return Objects.equals(daCrafter.getInventory(), inventory);
             }
             return false;
         }).filter(daStructure -> !daStructure.isForRemoval()).findAny().orElse(null);
@@ -410,11 +412,11 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void msg(CommandSender sender, String msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
-        msg = ChatColor.translateAlternateColorCodes('&', msg);
-        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
+        Component component = MiniMessage.miniMessage().deserialize(msg).colorIfAbsent(NamedTextColor.WHITE);
+        DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, component, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
-            sender.sendMessage(this.prefix + sendMessageEvent.getMessage());
+            sender.sendMessage(this.cPrefix.appendSpace().append(sendMessageEvent.getMessage()));
         }
     }
 
@@ -423,12 +425,12 @@ public class DALoader {
      * <br>
      * CommandSender can be a Player or the Console
      * <p>
-     * It executes {@link DALoader#msg(CommandSender, BaseComponent, DrugsAdderSendMessageEvent.Type)} wit the type {@link DrugsAdderSendMessageEvent.Type#NONE}
+     * It executes {@link DALoader#msg(CommandSender, Component, DrugsAdderSendMessageEvent.Type)} wit the type {@link DrugsAdderSendMessageEvent.Type#NONE}
      *
      * @param sender The CommandSender to send the message to
      * @param msg    The message to send
      */
-    public void msg(CommandSender sender, BaseComponent msg) {
+    public void msg(CommandSender sender, Component msg) {
         this.msg(sender, msg, DrugsAdderSendMessageEvent.Type.NONE);
     }
 
@@ -437,13 +439,13 @@ public class DALoader {
      * <br>
      * CommandSender can be a Player or the Console
      * <p>
-     * It executes {@link DALoader#msg(CommandSender, BaseComponent, DrugsAdderSendMessageEvent.Type, boolean)} and sets isAsync to false
+     * It executes {@link DALoader#msg(CommandSender, Component, DrugsAdderSendMessageEvent.Type, boolean)} and sets isAsync to false
      *
      * @param sender The CommandSender to send the message to
      * @param msg    The message to send
      * @param Type   The type of the message
      */
-    public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type Type) {
+    public void msg(CommandSender sender, Component msg, DrugsAdderSendMessageEvent.Type Type) {
         this.msg(sender, msg, Type, false);
     }
 
@@ -459,12 +461,11 @@ public class DALoader {
      * @param type    The type of the message
      * @param isAsync Whether the event should be called async or not
      */
-    public void msg(CommandSender sender, BaseComponent msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
+    public void msg(CommandSender sender, Component msg, DrugsAdderSendMessageEvent.Type type, boolean isAsync) {
         DrugsAdderSendMessageEvent sendMessageEvent = new DrugsAdderSendMessageEvent(isAsync, sender, msg, type);
         this.plugin.getServer().getPluginManager().callEvent(sendMessageEvent);
         if (!sendMessageEvent.isCancelled()) {
-            assert sendMessageEvent.getComponent() != null;
-            sender.spigot().sendMessage(sendMessageEvent.getComponent());
+            sender.sendMessage(this.cPrefix.appendSpace().append(sendMessageEvent.getMessage().colorIfAbsent(NamedTextColor.WHITE)));
         }
     }
 
@@ -488,7 +489,7 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void log(String msg, boolean isAsync) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.LOG, isAsync);
+        this.msg(Bukkit.getConsoleSender(), Component.text(msg).color(NamedTextColor.WHITE), DrugsAdderSendMessageEvent.Type.LOG, isAsync);
     }
 
     /**
@@ -515,8 +516,8 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void infoLog(String msg, boolean isAsync) {
-        if(DAConfig.logGeneralInfo){
-            this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(41, 212, 3)) + "[Info] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.INFO, isAsync);
+        if (DAConfig.logGeneralInfo) {
+            this.msg(Bukkit.getConsoleSender(), Component.text("[Info] ").color(TextColor.color(41, 212, 3)).append(Component.text(msg).color(NamedTextColor.WHITE)), DrugsAdderSendMessageEvent.Type.INFO, isAsync);
         }
     }
 
@@ -545,7 +546,7 @@ public class DALoader {
      */
     public void debugLog(String msg, boolean isAsync) {
         if (DAConfig.debugLogg) {
-            this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(212, 192, 3)) + "[Debug] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
+            this.msg(Bukkit.getConsoleSender(), Component.text("[Debug] ").color(TextColor.color(212, 192, 3)).append(Component.text(msg).color(NamedTextColor.WHITE)), DrugsAdderSendMessageEvent.Type.DEBUG, isAsync);
         }
 
     }
@@ -574,7 +575,7 @@ public class DALoader {
      * @param isAsync Whether the event should be called async or not
      */
     public void errorLog(String msg, boolean isAsync) {
-        this.msg(Bukkit.getConsoleSender(), ChatColor.of(new Color(196, 33, 33)) + "[ERROR] " + ChatColor.WHITE + msg, DrugsAdderSendMessageEvent.Type.ERROR, isAsync);
+        this.msg(Bukkit.getConsoleSender(), Component.text("[ERROR] ").color(TextColor.color(196, 33, 33)).append(Component.text(msg).color(NamedTextColor.WHITE)), DrugsAdderSendMessageEvent.Type.ERROR, isAsync);
     }
 
     /**
