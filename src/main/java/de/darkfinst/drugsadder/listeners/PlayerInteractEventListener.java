@@ -7,6 +7,7 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -29,7 +30,7 @@ public class PlayerInteractEventListener implements Listener {
             if (Action.LEFT_CLICK_BLOCK.equals(event.getAction())) {
                 return;
             }
-            if (Action.RIGHT_CLICK_BLOCK.equals(event.getAction()) && event.getPlayer().isSneaking()) {
+            if (Action.RIGHT_CLICK_BLOCK.equals(event.getAction()) && event.getPlayer().isSneaking() && !Material.AIR.equals(event.getPlayer().getInventory().getItem(event.getHand()).getType())) {
                 return;
             }
             event.setCancelled(true);
