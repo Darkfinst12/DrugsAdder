@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,6 +86,23 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
             stateString = "";
         }
         return Component.text(stateString).color(NamedTextColor.WHITE).append(titleComp);
+    }
+
+    /**
+     * Updates the view of the structure
+     *
+     * @param state The state to update to
+     */
+    public void updateView(int state, boolean isAsync) {
+        for (HumanEntity viewer : this.getInventory().getViewers()) {
+            try {
+                InventoryView inventoryView = viewer.getOpenInventory();
+                String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(state));
+                inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
+            } catch (Exception e) {
+                DA.log.logException(e, isAsync);
+            }
+        }
     }
 
     /**

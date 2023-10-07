@@ -11,6 +11,7 @@ import de.darkfinst.drugsadder.structures.DAInvStructure;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
@@ -110,7 +111,7 @@ public class DACrafter extends DAInvStructure {
         if (player.hasPermission("drugsadder.crafter.open")) {
             player.openInventory(this.inventory);
             String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(this.getProcess().getState()));
-            player.getOpenInventory().setTitle(title);
+            player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title));
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Crafter_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
