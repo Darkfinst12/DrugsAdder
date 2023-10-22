@@ -8,6 +8,7 @@ import de.darkfinst.drugsadder.exceptions.Structures.ValidateStructureException;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.items.DAProbabilityItem;
 import de.darkfinst.drugsadder.structures.DAStructure;
+import de.darkfinst.drugsadder.timed.TimedExecutable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -113,8 +114,8 @@ public class DAPlant extends DAStructure {
                         DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                         this.lastHarvest = System.currentTimeMillis();
                         if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable) {
-                            float tsp = (growthTime / ageable.getMaximumAge());
-                            Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
+                            long tsp = Math.round(this.growthTime / ageable.getMaximumAge());
+                            DA.loader.getTimedExecutionManager().addExecutable(new TimedGrow(daPlantBody.getPlantBLock().getLocation(), tsp));
                         }
                     }
                 }
@@ -307,6 +308,39 @@ public class DAPlant extends DAStructure {
                     Bukkit.getScheduler().runTask(DA.getInstance, () -> crop.setBlockData(ageable));
                     if (newAge < ageable.getMaximumAge()) {
                         Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, this, Math.max(Math.round((long) (growTime * 20)), 1));
+                    }
+                }
+            }
+        }
+    }
+
+    public static class TimedGrow extends TimedExecutable {
+        /**
+         * The crop
+         */
+        private final Location cropLoc;
+        /**
+         * The time the plant needs to grow in seconds
+         */
+        private final long growTime;
+
+        public TimedGrow(Location cropLoc, long growTime) {
+            super(System.currentTimeMillis() + growTime * 1000);
+            this.cropLoc = cropLoc;
+            this.growTime = growTime;
+        }
+
+        @Override
+        public void run() {
+            Block crop = this.cropLoc.getBlock();
+            if (crop.getBlockData() instanceof Ageable ageable) {
+                int age = ageable.getAge();
+                if (age < ageable.getMaximumAge()) {
+                    int newAge = age + 1;
+                    ageable.setAge(newAge);
+                    Bukkit.getScheduler().runTask(DA.getInstance, () -> crop.setBlockData(ageable));
+                    if (newAge < ageable.getMaximumAge()) {
+                        DA.loader.getTimedExecutionManager().addExecutable(new TimedGrow(this.cropLoc, this.growTime));
                     }
                 }
             }
