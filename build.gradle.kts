@@ -59,7 +59,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard:worldguard-core:7.0.9")
     compileOnly("net.Indyuce:MMOItems-API:6.9.2-SNAPSHOT")
 
-    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0c-r5")
+    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.1")
 }
 
 tasks {
