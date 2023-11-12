@@ -24,6 +24,7 @@ public class PlayerInteractEventListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, DA.getInstance);
     }
 
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() != null && DA.loader.isStructure(event.getClickedBlock()) && EquipmentSlot.HAND.equals(event.getHand())) {
@@ -45,9 +46,18 @@ public class PlayerInteractEventListener implements Listener {
 
     }
 
+    /**
+     * Checks if the player is holding a drug and if so, consumes it.
+     *
+     * @param event The {@link org.bukkit.event.player.PlayerInteractEvent}
+     */
     private void checkForDrug(PlayerInteractEvent event) {
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         if (!item.getType().isEdible()) {
+            if (DAConfig.drugReader == null) {
+                DA.log.errorLog("Tried to access DAConfig.drugReader but it is null!");
+                return;
+            }
             DADrug daDrug = DAConfig.drugReader.getDrug(item);
             if (daDrug != null) {
                 DrugConsumeEvent drugConsumeEvent = new DrugConsumeEvent(daDrug);
