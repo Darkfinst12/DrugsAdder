@@ -14,6 +14,7 @@ import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.structures.plant.DAPlant;
 import de.darkfinst.drugsadder.structures.press.DAPress;
 import de.darkfinst.drugsadder.structures.table.DATable;
+import de.darkfinst.drugsadder.timed.TimedExecutionManager;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -68,6 +69,10 @@ public class DALoader {
      * The language, which is used for the language files
      */
     public String language;
+    /**
+     * The timed execution manager – used for scheduled tasks
+     */
+    public TimedExecutionManager timedExecutionManager = new TimedExecutionManager();
 
     public DALoader(DA plugin) {
         this.plugin = plugin;
@@ -150,6 +155,7 @@ public class DALoader {
      */
     private void initRunnable() {
         this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new DrugsAdderRunnable(), 650, 1200);
+        this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this.timedExecutionManager::tick, 650, 1);
     }
 
     //Structures
