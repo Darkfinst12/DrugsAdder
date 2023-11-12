@@ -96,6 +96,7 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
             this.permission = permission;
         }
 
+        //TODO: find cause of error - Dose not work
         public String getArg() {
             return DA.loader.languageReader.getString(languageKey);
         }

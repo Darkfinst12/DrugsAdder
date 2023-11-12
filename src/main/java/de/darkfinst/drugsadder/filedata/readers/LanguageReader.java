@@ -69,6 +69,7 @@ public class LanguageReader {
      */
     public String getString(String key, String... args) {
         String entry = entries.get(key);
+        DA.log.debugLog("Try to get " + key + " from " + entries + " -> " + entry);
 
         if (entry != null) {
             int i = 0;
