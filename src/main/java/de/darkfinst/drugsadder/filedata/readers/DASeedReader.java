@@ -202,7 +202,7 @@ public class DASeedReader {
             LanguageReader languageReader = DA.loader.getLanguageReader();
             DALoader loader = DA.loader;
             if (languageReader != null) {
-                loader.errorLog(languageReader.get(key, args));
+                loader.errorLog(languageReader.getString(key, args));
             } else {
                 loader.errorLog("Error while loading seed " + args[0] + " - Skipping");
             }
@@ -219,7 +219,7 @@ public class DASeedReader {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;
         if (languageReader != null) {
-            loader.log(languageReader.get(key, args));
+            loader.log(languageReader.getString(key, args));
         }
     }
 

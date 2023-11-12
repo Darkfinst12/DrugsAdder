@@ -43,14 +43,14 @@ public class DABarrel extends DAInvStructure {
                     super.setBody(barrelBody);
                     boolean success = DA.loader.registerDAStructure(this, false);
                     if (success) {
-                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Barrel_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                     }
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Barrel_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Barrel_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perms_Barrel_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -92,7 +92,7 @@ public class DABarrel extends DAInvStructure {
             player.openInventory(this.inventory);
             player.playSound(player.getLocation(), Sound.BLOCK_BARREL_OPEN, 100, 1);
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Barrel_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perms_Barrel_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 

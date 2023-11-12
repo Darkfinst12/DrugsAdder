@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.filedata.readers;
 
 import de.darkfinst.drugsadder.DA;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -65,7 +67,7 @@ public class LanguageReader {
      * @param args The arguments to replace the placeholders if there are any.
      * @return The found string with the placeholders replaced. - If no entry is found, it will return the given key.
      */
-    public String get(String key, String... args) {
+    public String getString(String key, String... args) {
         String entry = entries.get(key);
 
         if (entry != null) {
@@ -81,6 +83,31 @@ public class LanguageReader {
         }
 
         return entry;
+    }
+
+    /**
+     * This method is used to get a component from the language file.
+     *
+     * @param key  The key of the component.
+     * @param args The arguments to replace the placeholders if there are any.
+     * @return The found component with the placeholders replaced. - If no entry is found, it will return the given key.
+     */
+    public Component getComponent(String key, Component... args) {
+        String entry = entries.get(key);
+
+        if (entry != null) {
+            int i = 0;
+            for (Component arg : args) {
+                if (arg != null) {
+                    i++;
+                    entry = entry.replace("%v" + i, arg.toString());
+                }
+            }
+        } else {
+            entry = String.format("Key: %s not found", key);
+        }
+
+        return MiniMessage.miniMessage().deserialize(entry);
     }
 
 

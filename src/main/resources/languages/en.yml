@@ -11,6 +11,8 @@ Command_Info_Cleared: "The player: %v1 has been cleared of the addictionPoints (
 Command_Info_NothingToClear: "The player: %v1 has no addictions!"
 Command_Info_Reload: "The configuration was successfully reloaded!"
 
+
+
 # ---- Load ----
 Load_Error_NoDrugs: "No drugs were configured in the config.yml!"
 Load_Error_Drug_NotConfigSection: "The Drug: %v1 is not properly configured in the config.yml!"

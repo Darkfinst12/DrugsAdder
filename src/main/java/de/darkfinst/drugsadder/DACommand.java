@@ -65,10 +65,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
             DALoader loader = DA.loader;
             if (args[0].equalsIgnoreCase(PossibleArgs.RELOAD.getArg())) {
                 loader.reloadConfig();
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_Reload"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Info_Reload"));
             }
         } else {
-            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
         }
     }
 
@@ -135,7 +135,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                     this.checkListRecipes(commandSender, args);
                 }
             } else {
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
             }
         }
     }
@@ -143,14 +143,14 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkListCustomItems(CommandSender commandSender, String[] args) {
         if (args[1].equalsIgnoreCase(PossibleArgs.CUSTOM_ITEMS.getArg())) {
             if (commandSender.hasPermission("drugsadder.cmd.list.customitems")) {
-                StringBuilder customItems = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", PossibleArgs.CUSTOM_ITEMS.getArg()) + "\n");
+                StringBuilder customItems = new StringBuilder(DA.loader.languageReader.getString("Command_Info_ListItems", PossibleArgs.CUSTOM_ITEMS.getArg()) + "\n");
                 for (DAItem daItem : DAConfig.customItemReader.getRegisteredItems().values()) {
                     String s = "- ID:" + daItem.getNamespacedID() + "\n";
                     customItems.append(s);
                 }
                 DA.loader.msg(commandSender, customItems.toString());
             } else {
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
             }
         }
     }
@@ -162,56 +162,56 @@ public class DACommand implements CommandExecutor, TabCompleter {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getRegisteredRecipes(), PossibleArgs.RECIPES);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.barrel")) {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getBarrelRecipes(), PossibleArgs.BARREL);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.crafting")) {
                     String recipes = getRecipeList(DAConfig.daRecipeReader.getCraftingRecipes(), PossibleArgs.CRAFTING);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.crafter")) {
                     String recipes = getRecipeList(DAConfig.daRecipeReader.getCraftingRecipes(), PossibleArgs.CRAFTER);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.furnace")) {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getFurnaceRecipes(), PossibleArgs.FURNACE);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             } else if (args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.press")) {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getPressRecipes(), PossibleArgs.PRESS);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             } else if (args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
                 if (commandSender.hasPermission("drugsadder.cmd.list.recipes.table")) {
                     String recipes = this.getRecipeList(DAConfig.daRecipeReader.getTableRecipes(), PossibleArgs.TABLE);
                     DA.loader.msg(commandSender, recipes);
                 } else {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
             }
         }
     }
 
     private @NotNull String getRecipeList(List<?> recipeList, PossibleArgs recipeType) {
-        StringBuilder recipes = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", recipeType.getArg()) + "\n");
+        StringBuilder recipes = new StringBuilder(DA.loader.languageReader.getString("Command_Info_ListItems", recipeType.getArg()) + "\n");
         for (Object o : recipeList) {
             DARecipe registeredRecipe = (DARecipe) o;
             String s = "- ID:" + registeredRecipe.getID() + " - Type: " + registeredRecipe.getRecipeType() + "\n";
@@ -223,14 +223,14 @@ public class DACommand implements CommandExecutor, TabCompleter {
     private void checkListDrugs(CommandSender commandSender, String[] args) {
         if (args[1].equalsIgnoreCase(PossibleArgs.DRUGS.getArg())) {
             if (commandSender.hasPermission("drugsadder.cmd.list.drugs")) {
-                StringBuilder drugs = new StringBuilder(DA.loader.languageReader.get("Command_Info_ListItems", PossibleArgs.DRUGS.getArg()) + "\n");
+                StringBuilder drugs = new StringBuilder(DA.loader.languageReader.getString("Command_Info_ListItems", PossibleArgs.DRUGS.getArg()) + "\n");
                 for (DADrug drug : DAConfig.drugReader.getRegisteredDrugs()) {
                     String s = "- ID:" + drug.getID() + "\n";
                     drugs.append(s);
                 }
                 DA.loader.msg(commandSender, drugs.toString());
             } else {
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
             }
         }
     }
@@ -263,7 +263,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 if (args.length == 1) {
                     String version = DA.getInstance.getDescription().getVersion();
                     String authors = DA.getInstance.getDescription().getAuthors().toString().replace("[", "").replace("]", "");
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_DAInfo", version, authors), DrugsAdderSendMessageEvent.Type.COMMAND);
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Info_DAInfo", version, authors), DrugsAdderSendMessageEvent.Type.COMMAND);
                 } else if (args.length == 2) {
                     if (args[1].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
                         if (commandSender instanceof Player player) {
@@ -272,13 +272,13 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daPlayer != null) {
                                     DA.loader.msg(commandSender, daPlayer.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_PlayerNotFound", player.getName()));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_PlayerNotFound", player.getName()));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NotPlayer"));
+                            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NotPlayer"));
                         }
                     }
                 } else if (args.length == 3) {
@@ -288,10 +288,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                             if (daDrug != null) {
                                 DA.loader.msg(commandSender, daDrug.toString());
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_DrugNotFound", args[2]));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_DrugNotFound", args[2]));
                             }
                         } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                         }
                     } else if (args[1].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
                         Player player = Bukkit.getPlayer(args[2]);
@@ -301,13 +301,13 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daPlayer != null) {
                                     DA.loader.msg(commandSender, daPlayer.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_PlayerNotFound", player.getName()));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_PlayerNotFound", player.getName()));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else {
-                            DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_PlayerNotFound", args[2]));
+                            DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_PlayerNotFound", args[2]));
                         }
                     }
                 } else if (args.length == 4) {
@@ -318,10 +318,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daRecipe != null) {
                                     DA.loader.msg(commandSender, daRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else if (args[2].equalsIgnoreCase(PossibleArgs.BARREL.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.barrel")) {
@@ -329,10 +329,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daBarrelRecipe != null) {
                                     DA.loader.msg(commandSender, daBarrelRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTING.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafting")) {
@@ -340,10 +340,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daCraftingRecipe != null) {
                                     DA.loader.msg(commandSender, daCraftingRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else if (args[2].equalsIgnoreCase(PossibleArgs.CRAFTER.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.crafter")) {
@@ -351,10 +351,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (crafterRecipe != null) {
                                     DA.loader.msg(commandSender, crafterRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else if (args[2].equalsIgnoreCase(PossibleArgs.FURNACE.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.furnace")) {
@@ -362,10 +362,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daFurnaceRecipe != null) {
                                     DA.loader.msg(commandSender, daFurnaceRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else if (args[2].equalsIgnoreCase(PossibleArgs.PRESS.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.press")) {
@@ -373,10 +373,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daPressRecipe != null) {
                                     DA.loader.msg(commandSender, daPressRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         } else if (args[2].equalsIgnoreCase(PossibleArgs.TABLE.getArg())) {
                             if (commandSender.hasPermission("drugsadder.cmd.info.recipes.table")) {
@@ -384,16 +384,16 @@ public class DACommand implements CommandExecutor, TabCompleter {
                                 if (daTableRecipe != null) {
                                     DA.loader.msg(commandSender, daTableRecipe.toString());
                                 } else {
-                                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_RecipeNotFound", args[3]));
+                                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_RecipeNotFound", args[3]));
                                 }
                             } else {
-                                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                             }
                         }
                     }
                 }
             } else {
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
             }
         }
     }
@@ -407,13 +407,13 @@ public class DACommand implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase(PossibleArgs.PLAYER.getArg())) {
             Player player = Bukkit.getPlayer(args[1]);
             if (player == null) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_PlayerNotFound", args[1]));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_PlayerNotFound", args[1]));
                 return;
             }
             if (args[2].equalsIgnoreCase(PossibleArgs.CLEAR.getArg())) {
                 DAPlayer daPlayer = DA.loader.getDaPlayer(player);
                 if (daPlayer == null) {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_NothingToClear", player.getName()));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Info_NothingToClear", player.getName()));
                     return;
                 }
                 if (args[3].equalsIgnoreCase(PossibleArgs.ALL.getArg())) {
@@ -421,12 +421,12 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 } else {
                     DADrug daDrug = DAConfig.drugReader.getDrug(args[3]);
                     if (daDrug == null) {
-                        DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_DrugNotFound", args[3]));
+                        DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_DrugNotFound", args[3]));
                         return;
                     }
                     daPlayer.clearAddiction(daDrug);
                 }
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_Cleared", player.getName(), args[3]));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Info_Cleared", player.getName(), args[3]));
             }
         }
     }
@@ -499,11 +499,11 @@ public class DACommand implements CommandExecutor, TabCompleter {
                 DADrug daDrug = DAConfig.drugReader.getDrug(args[3]);
                 Player player = Bukkit.getPlayer(args[1]);
                 if (player == null) {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_PlayerNotFound", args[1]));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_PlayerNotFound", args[1]));
                     return;
                 }
                 if (daDrug == null) {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_DrugNotFound", args[3]));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Error_DrugNotFound", args[3]));
                     return;
                 }
                 if (args[2].equalsIgnoreCase(PossibleArgs.SET.getArg())) {
@@ -513,10 +513,10 @@ public class DACommand implements CommandExecutor, TabCompleter {
                         daPlayer = new DAPlayer(player.getUniqueId());
                     }
                     daPlayer.addDrug(daDrug.getID(), addictionPoints);
-                    DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Info_Addicted", player.getName(), daDrug.getID(), String.valueOf(addictionPoints)));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getString("Command_Info_Addicted", player.getName(), daDrug.getID(), String.valueOf(addictionPoints)));
                 }
             } else {
-                DA.loader.msg(commandSender, DA.loader.languageReader.get("Command_Error_NoPermission"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
             }
         }
     }

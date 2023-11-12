@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
+import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.filedata.data.DAData;
@@ -125,7 +126,8 @@ public class DALoader {
      * Initializes the commands
      */
     private void initCommands() {
-        new DACommand().register();
+        new DACommandManager().register();
+        //new DACommand().register();
     }
 
     /**
@@ -211,7 +213,7 @@ public class DALoader {
             }
             boolean success = this.unregisterDAStructure(structure);
             if (success) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName().replace("DA", "")), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getString("Player_Structure_Destroyed", structure.getClass().getSimpleName().replace("DA", "")), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
 
         }
@@ -346,7 +348,7 @@ public class DALoader {
         if (this.languageReader == null) {
             return fallback;
         }
-        return this.languageReader.get(key, args);
+        return this.languageReader.getString(key, args);
     }
 
 

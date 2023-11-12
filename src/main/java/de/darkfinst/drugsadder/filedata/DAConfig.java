@@ -253,7 +253,7 @@ public class DAConfig {
             } catch (Exception e) {
                 // Failed to load
                 if (loader.languageReader != null) {
-                    loader.errorLog(loader.languageReader.get("Error_YmlRead"));
+                    loader.errorLog(loader.languageReader.getComponent("Error_YmlRead"));
                     Arrays.asList(e.getStackTrace()).forEach(stackTraceElement -> loader.log(stackTraceElement.toString()));
                 } else {
                     loader.errorLog("Could not read file config.yml, please make sure the file is in valid yml format (correct spaces etc.)");
@@ -376,7 +376,7 @@ public class DAConfig {
             drugReader.loadDrugs();
         } else {
             drugReader = new DADrugReader();
-            loader.errorLog(loader.languageReader.get("Load_Error_NoDrugs"));
+            loader.errorLog(loader.languageReader.getComponent("Load_Error_NoDrugs"));
         }
 
         //Loads the Seeds
@@ -385,7 +385,7 @@ public class DAConfig {
             seedReader.loadSeeds();
         } else {
             seedReader = new DASeedReader();
-            loader.errorLog(loader.languageReader.get("Load_Error_NoSeeds"));
+            loader.errorLog(loader.languageReader.getComponent("Load_Error_NoSeeds"));
         }
 
     }

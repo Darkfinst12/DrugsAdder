@@ -64,7 +64,7 @@ public class PrepareItemCraftEventListener implements Listener {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;
         if (languageReader != null) {
-            loader.errorLog(languageReader.get(key, args));
+            loader.errorLog(languageReader.getString(key, args));
         } else {
             loader.errorLog("Error while crafting the Recipe: " + args[0] + "! - Player: " + args[1] + " attempted the recipe!");
         }
