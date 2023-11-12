@@ -87,27 +87,15 @@ public class LanguageReader {
 
     /**
      * This method is used to get a component from the language file.
+     * <p>
+     * see {@link #getString(String, String...)}
      *
      * @param key  The key of the component.
      * @param args The arguments to replace the placeholders if there are any.
      * @return The found component with the placeholders replaced. - If no entry is found, it will return the given key.
      */
-    public Component getComponent(String key, Component... args) {
-        String entry = entries.get(key);
-
-        if (entry != null) {
-            int i = 0;
-            for (Component arg : args) {
-                if (arg != null) {
-                    i++;
-                    entry = entry.replace("%v" + i, arg.toString());
-                }
-            }
-        } else {
-            entry = String.format("Key: %s not found", key);
-        }
-
-        return MiniMessage.miniMessage().deserialize(entry);
+    public Component getComponent(String key, String... args) {
+        return MiniMessage.miniMessage().deserialize(this.getString(key, args));
     }
 
 

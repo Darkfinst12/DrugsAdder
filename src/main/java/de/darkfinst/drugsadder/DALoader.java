@@ -23,6 +23,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -319,6 +320,16 @@ public class DALoader {
      */
     public DAPlayer getDaPlayer(Player player) {
         return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
+    }
+
+    /**
+     * Get a DAPlayer by an offline player
+     *
+     * @param offlinePlayer The offline player, which is part of the DAPlayer
+     * @return The DAPlayer, which contains the offline player or null if no DAPlayer was found
+     */
+    public DAPlayer getDaPlayer(OfflinePlayer offlinePlayer) {
+        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(offlinePlayer.getUniqueId())).findAny().orElse(null);
     }
 
     public void removeDaPlayer(DAPlayer daPlayer) {

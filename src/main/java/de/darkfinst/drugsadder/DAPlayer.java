@@ -28,6 +28,7 @@ public class DAPlayer {
     /**
      * The drugs, which the player is addicted to
      */
+    @Getter
     private final HashMap<DADrug, Integer> addicted = new HashMap<>();
 
 
@@ -214,6 +215,11 @@ public class DAPlayer {
         this.addicted.put(daDrug, addictionPoints);
     }
 
+    public int getAddiction(String drugID) {
+        DADrug daDrug = DAConfig.drugReader.getDrug(drugID);
+        return this.addicted.getOrDefault(daDrug, 0);
+    }
+
     private Map<String, Integer> getAddictionString() {
         Map<String, Integer> addictionString = new HashMap<>();
         for (DADrug daDrug : this.addicted.keySet()) {
@@ -229,5 +235,4 @@ public class DAPlayer {
                 ", addicted=" + this.getAddictionString() +
                 '}';
     }
-
 }
