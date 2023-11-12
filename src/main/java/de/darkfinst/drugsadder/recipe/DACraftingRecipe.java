@@ -88,7 +88,7 @@ public class DACraftingRecipe extends DARecipe {
                 RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(itemStack);
                 shapelessRecipe.addIngredient(exactChoice);
             }
-            if (shapelessRecipe.getIngredientList().contains(null)) {
+            if (shapelessRecipe.getChoiceList().contains(null)) {
                 return false;
             }
             if (!shapelessRecipe.equals(Bukkit.getRecipe(namespacedKey))) {
@@ -115,7 +115,7 @@ public class DACraftingRecipe extends DARecipe {
                     }
                 }
             }
-            if (shapedRecipe.getIngredientMap().containsValue(null)) {
+            if (shapedRecipe.getChoiceMap().containsValue(null)) {
                 return false;
             }
             if (!shapedRecipe.equals(Bukkit.getRecipe(namespacedKey))) {
@@ -125,11 +125,6 @@ public class DACraftingRecipe extends DARecipe {
                 return true;
             }
         }
-    }
-
-    @Deprecated(since = "0.0.1", forRemoval = true)
-    private void ifRegisteredUnregister(NamespacedKey namespacedKey) {
-        Bukkit.removeRecipe(namespacedKey);
     }
 
     @Override

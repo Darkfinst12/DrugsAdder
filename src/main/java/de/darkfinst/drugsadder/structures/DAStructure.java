@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 @Setter
@@ -54,25 +55,7 @@ public abstract class DAStructure {
 
                     config.set(prefix + ".forRemoval", barrel.isForRemoval());
 
-                    int slot = 0;
-                    ItemStack item;
-                    ConfigurationSection invConfig = null;
-                    while (slot < barrel.getInventory().getSize()) {
-                        item = barrel.getInventory().getItem(slot);
-                        if (item != null) {
-                            if (invConfig == null) {
-                                invConfig = config.createSection(prefix + ".inv");
-                            }
-                            // ItemStacks are configurationSerializeable, makes them
-                            // really easy to save
-                            invConfig.set(slot + "", item);
-                        }
-
-                        slot++;
-                    }
-
-
-                    barrelID++;
+                    barrelID = saveInventory(config, barrelID, prefix, barrel.getInventory());
                 } else if (structure instanceof DAPress press) {
                     String worldName = press.getWorld().getUID().toString();
                     String prefix = worldName + "." + "presses." + pressID;
@@ -104,23 +87,7 @@ public abstract class DAStructure {
                     config.set(prefix + ".process.recipe.one", table.getProcess().getRecipeOne() == null ? "null" : table.getProcess().getRecipeOne().getID());
                     config.set(prefix + ".process.recipe.two", table.getProcess().getRecipeTwo() == null ? "null" : table.getProcess().getRecipeTwo().getID());
 
-                    int slot = 0;
-                    ItemStack item;
-                    ConfigurationSection invConfig = null;
-                    while (slot < table.getInventory().getSize()) {
-                        item = table.getInventory().getItem(slot);
-                        if (item != null) {
-                            if (invConfig == null) {
-                                invConfig = config.createSection(prefix + ".inv");
-                            }
-                            // ItemStacks are configurationSerializable, makes them
-                            // really easy to save
-                            invConfig.set(slot + "", item);
-                        }
-
-                        slot++;
-                    }
-                    tableID++;
+                    tableID = saveInventory(config, tableID, prefix, table.getInventory());
                 } else if (structure instanceof DACrafter crafter) {
                     String worldName = crafter.getWorld().getUID().toString();
                     String prefix = worldName + "." + "crafters." + crafterID;
@@ -133,23 +100,7 @@ public abstract class DAStructure {
                     config.set(prefix + ".process.state", crafter.getProcess().getState());
                     config.set(prefix + ".process.recipe", crafter.getProcess().getRecipe() == null ? "null" : crafter.getProcess().getRecipe().getID());
 
-                    int slot = 0;
-                    ItemStack item;
-                    ConfigurationSection invConfig = null;
-                    while (slot < crafter.getInventory().getSize()) {
-                        item = crafter.getInventory().getItem(slot);
-                        if (item != null) {
-                            if (invConfig == null) {
-                                invConfig = config.createSection(prefix + ".inv");
-                            }
-                            // ItemStacks are configurationSerializable, makes them
-                            // really easy to save
-                            invConfig.set(slot + "", item);
-                        }
-
-                        slot++;
-                    }
-                    crafterID++;
+                    crafterID = saveInventory(config, crafterID, prefix, crafter.getInventory());
                 } else if (structure instanceof DAPlant plant) {
                     String worldName = plant.getWorld().getUID().toString();
                     String prefix = worldName + "." + "plants." + plantID;
@@ -170,8 +121,10 @@ public abstract class DAStructure {
             DA.log.debugLog("Merging old data into new data");
             for (String world : oldData.getKeys(false)) {
                 ConfigurationSection structureSection = oldData.getConfigurationSection(world);
+                assert structureSection != null;
                 for (String structure : structureSection.getKeys(false)) {
                     ConfigurationSection structureData = structureSection.getConfigurationSection(structure);
+                    assert structureData != null;
                     for (String key : structureData.getKeys(false)) {
                         if (!config.contains(world + "." + structure + "." + key)) {
                             config.set(world + "." + structure + "." + key, oldData.get(world + "." + structure + "." + key));
@@ -182,6 +135,38 @@ public abstract class DAStructure {
         } else {
             DA.log.debugLog("No old data to merge");
         }
+    }
+
+    /**
+     * Saves the inventory of the structure to the config file
+     *
+     * @param config    The config file to save the inventory to
+     * @param id        The id of the structure
+     * @param prefix    The prefix of the structure
+     * @param inventory The inventory to save
+     * @return The new id
+     */
+    private static int saveInventory(ConfigurationSection config, int id, String prefix, Inventory inventory) {
+        int slot = 0;
+        ItemStack item;
+        ConfigurationSection invConfig = null;
+        while (slot < inventory.getSize()) {
+            item = inventory.getItem(slot);
+            if (item != null) {
+                if (invConfig == null) {
+                    invConfig = config.createSection(prefix + ".inv");
+                }
+                // ItemStacks are configurationSerializeable, makes them
+                // really easy to save
+                invConfig.set(slot + "", item);
+            }
+
+            slot++;
+        }
+
+
+        id++;
+        return id;
     }
 
     /**
@@ -214,10 +199,6 @@ public abstract class DAStructure {
      * @return true, if the structure is similar otherwise false
      */
     public boolean isSimilar(DAStructure structure) {
-        boolean isSimilar = false;
-        if (structure == this) {
-            isSimilar = true;
-        }
-        return isSimilar;
+        return structure == this || structure.getBody().equals(this.getBody());
     }
 }

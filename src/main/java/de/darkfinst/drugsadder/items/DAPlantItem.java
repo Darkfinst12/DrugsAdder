@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -35,14 +34,6 @@ public class DAPlantItem extends DAItem implements Cloneable {
 
     public DAPlantItem(@NotNull ItemStack itemStack, String namespacedID) {
         super(itemStack, namespacedID);
-    }
-
-    public DAPlantItem(@NotNull ItemStack itemStack, @NotNull String name, @NotNull List<String> lore, @NotNull Integer customModelData, String namespacedID) {
-        super(itemStack, name, lore, customModelData, namespacedID);
-    }
-
-    public DAPlantItem(ItemStack itemStack) {
-        super(itemStack);
     }
 
     @Override

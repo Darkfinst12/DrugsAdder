@@ -7,9 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Getter
 public class DAPressRecipe extends DARecipe {
 
@@ -31,27 +28,6 @@ public class DAPressRecipe extends DARecipe {
         this.duration = duration;
         this.returnMold = returnMold;
         this.mold = mold;
-    }
-
-
-    /**
-     * Processes the given materials
-     *
-     * @param givenMaterials The materials to process
-     * @return The result of the process
-     */
-    @Override
-    public DAItem processMaterials(DAItem... givenMaterials) {
-        List<DAItem> gml = Arrays.asList(givenMaterials);
-        if (gml.contains(this.mold) && this.getMaterials().length == givenMaterials.length - 1) {
-            for (DAItem material : this.getMaterials()) {
-                if (!Arrays.asList(givenMaterials).contains(material)) {
-                    return null;
-                }
-            }
-            return this.getResult();
-        }
-        return null;
     }
 
     /**

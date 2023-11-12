@@ -19,6 +19,7 @@ import org.bukkit.block.data.type.WallSign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -116,12 +117,18 @@ public class DAData {
         if (DAData.worldData.contains("Structures." + uuid)) {
             ConfigurationSection section = DAData.worldData.getConfigurationSection("Structures." + uuid);
             DA.log.log(String.format("Load Structures for World: %s", uuid), isAsync);
+            assert section != null;
             for (String structure : section.getKeys(false)) {
                 switch (structure.toLowerCase()) {
                     case "barrels" -> {
                         ConfigurationSection barrels = section.getConfigurationSection("barrels");
+                        assert barrels != null;
                         for (String barrel : barrels.getKeys(false)) {
                             ConfigurationSection barrelSection = barrels.getConfigurationSection(barrel);
+                            if (barrelSection == null) {
+                                DA.log.errorLog("Error while loading Barrel: " + barrel + " in World: " + uuid, isAsync);
+                                continue;
+                            }
                             boolean success = DAData.loadBarrelData(world, barrelSection, isAsync);
                             if (!success) {
                                 section.set("barrels." + barrel, null);
@@ -130,8 +137,13 @@ public class DAData {
                     }
                     case "presses" -> {
                         ConfigurationSection presses = section.getConfigurationSection("presses");
+                        assert presses != null;
                         for (String press : presses.getKeys(false)) {
                             ConfigurationSection pressSection = presses.getConfigurationSection(press);
+                            if (pressSection == null) {
+                                DA.log.errorLog("Error while loading Press: " + press + " in World: " + uuid, isAsync);
+                                continue;
+                            }
                             boolean success = DAData.loadPressData(world, pressSection, isAsync);
                             if (!success) {
                                 section.set("presses." + press, null);
@@ -140,8 +152,13 @@ public class DAData {
                     }
                     case "tables" -> {
                         ConfigurationSection tables = section.getConfigurationSection("tables");
+                        assert tables != null;
                         for (String table : tables.getKeys(false)) {
                             ConfigurationSection tableSection = tables.getConfigurationSection(table);
+                            if (tableSection == null) {
+                                DA.log.errorLog("Error while loading Table: " + table + " in World: " + uuid, isAsync);
+                                continue;
+                            }
                             boolean success = DAData.loadTableData(world, tableSection, isAsync);
                             if (!success) {
                                 section.set("tables." + table, null);
@@ -150,8 +167,13 @@ public class DAData {
                     }
                     case "plants" -> {
                         ConfigurationSection plants = section.getConfigurationSection("plants");
+                        assert plants != null;
                         for (String plant : plants.getKeys(false)) {
                             ConfigurationSection plantSection = plants.getConfigurationSection(plant);
+                            if (plantSection == null) {
+                                DA.log.errorLog("Error while loading Plant: " + plant + " in World: " + uuid, isAsync);
+                                continue;
+                            }
                             boolean success = DAData.loadPlantData(world, plantSection, isAsync);
                             if (!success) {
                                 section.set("plants." + plant, null);
@@ -160,8 +182,13 @@ public class DAData {
                     }
                     case "crafters" -> {
                         ConfigurationSection crafters = section.getConfigurationSection("crafters");
+                        assert crafters != null;
                         for (String crafter : crafters.getKeys(false)) {
                             ConfigurationSection crafterSection = crafters.getConfigurationSection(crafter);
+                            if (crafterSection == null) {
+                                DA.log.errorLog("Error while loading Crafter: " + crafter + " in World: " + uuid, isAsync);
+                                continue;
+                            }
                             boolean success = DAData.loadCrafterData(world, crafterSection, isAsync);
                             if (!success) {
                                 section.set("crafters." + crafter, null);
@@ -188,7 +215,7 @@ public class DAData {
      * @param isAsync Whether the method is called asynchronously or not
      * @return True if the barrel was successfully loaded
      */
-    private static boolean loadBarrelData(World world, ConfigurationSection barrel, boolean isAsync) {
+    private static boolean loadBarrelData(@NotNull World world, @NotNull ConfigurationSection barrel, boolean isAsync) {
         // Block split by ","
         String block = barrel.getString("sign");
         boolean forRemoval = barrel.getBoolean("forRemoval", false);
@@ -227,7 +254,7 @@ public class DAData {
      * @param press   The press config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static boolean loadPressData(World world, ConfigurationSection press, boolean isAsync) {
+    private static boolean loadPressData(@NotNull World world, @NotNull ConfigurationSection press, boolean isAsync) {
         // Block split by ","
         String block = press.getString("sign");
         boolean forRemoval = press.getBoolean("forRemoval", false);
@@ -265,7 +292,7 @@ public class DAData {
      * @param table   The table config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static boolean loadTableData(World world, ConfigurationSection table, boolean isAsync) {
+    private static boolean loadTableData(@NotNull World world, @NotNull ConfigurationSection table, boolean isAsync) {
         // Block split by ","
         String block = table.getString("sign");
         boolean forRemoval = table.getBoolean("forRemoval", false);
@@ -311,7 +338,7 @@ public class DAData {
      * @param plant   The plant config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static boolean loadPlantData(World world, ConfigurationSection plant, boolean isAsync) {
+    private static boolean loadPlantData(@NotNull World world, @NotNull ConfigurationSection plant, boolean isAsync) {
         // Block split by ","
         String block = plant.getString("plant");
         boolean forRemoval = plant.getBoolean("forRemoval", false);
@@ -325,8 +352,7 @@ public class DAData {
                         DAPlant daPlant = new DAPlant(seedItem, seedItem.isCrop(), seedItem.isDestroyOnHarvest(), seedItem.getGrowthTime(), seedItem.getDrops());
                         daPlant.setAllowedTools(seedItem.getAllowedTools());
                         daPlant.setLastHarvest(plant.getLong("lastHarvest", 0));
-                        boolean success = daPlant.create(worldBlock, isAsync);
-                        return success;
+                        return daPlant.create(worldBlock, isAsync);
 
                     } catch (Exception e) {
                         DA.log.errorLog("Error while loading Plant: " + plant.getCurrentPath(), isAsync);
@@ -345,7 +371,7 @@ public class DAData {
      * @param crafter The table config section
      * @param isAsync Whether the method is called asynchronously or not
      */
-    private static boolean loadCrafterData(World world, ConfigurationSection crafter, boolean isAsync) {
+    private static boolean loadCrafterData(@NotNull World world, @NotNull ConfigurationSection crafter, boolean isAsync) {
         // Block split by ","
         String block = crafter.getString("sign");
         boolean forRemoval = crafter.getBoolean("forRemoval", false);

@@ -111,7 +111,7 @@ public class DACrafter extends DAInvStructure {
         if (player.hasPermission("drugsadder.crafter.open")) {
             player.openInventory(this.inventory);
             String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(this.getProcess().getState()));
-            player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title));
+            player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title)); //Can not be changed to a Component, because it can not be set as such (Missing Paper API Update)
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Crafter_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }

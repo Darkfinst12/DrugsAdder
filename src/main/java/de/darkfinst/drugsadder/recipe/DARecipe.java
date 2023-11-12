@@ -38,18 +38,6 @@ public abstract class DARecipe {
         this.materials = materials;
     }
 
-    public DAItem processMaterials(DAItem... givenMaterials) {
-        if (this.materials.length == givenMaterials.length) {
-            for (DAItem material : this.materials) {
-                if (!Arrays.asList(givenMaterials).contains(material)) {
-                    return null;
-                }
-            }
-            return this.result;
-        }
-        return null;
-    }
-
     /**
      * Checks if the given items are materials of the recipe
      *

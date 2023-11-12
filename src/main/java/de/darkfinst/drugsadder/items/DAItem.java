@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.items;
 import de.darkfinst.drugsadder.ItemMatchType;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,12 +28,12 @@ public class DAItem implements Cloneable {
      * The name of the item
      */
     @Nullable
-    private String name;
+    private Component name;
     /**
      * The lore of the item
      */
     @Nullable
-    private List<String> lore;
+    private List<Component> lore;
     /**
      * The custom model data of the item
      */
@@ -50,14 +51,14 @@ public class DAItem implements Cloneable {
     public DAItem(@NotNull ItemStack itemStack, String namespacedID) {
         this.itemStack = itemStack;
         if (itemStack.hasItemMeta()) {
-            this.name = itemStack.getItemMeta().getDisplayName();
-            this.lore = itemStack.getItemMeta().getLore();
+            this.name = itemStack.getItemMeta().displayName();
+            this.lore = itemStack.getItemMeta().lore();
             this.customModelData = itemStack.getItemMeta().getCustomModelData();
         }
         this.namespacedID = namespacedID;
     }
 
-    public DAItem(@NotNull ItemStack itemStack, @NotNull String name, @NotNull List<String> lore, @NotNull Integer customModelData, String namespacedID) {
+    public DAItem(@NotNull ItemStack itemStack, @NotNull Component name, @NotNull List<Component> lore, @NotNull Integer customModelData, String namespacedID) {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;

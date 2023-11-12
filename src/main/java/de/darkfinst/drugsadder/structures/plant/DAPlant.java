@@ -114,7 +114,7 @@ public class DAPlant extends DAStructure {
                         this.lastHarvest = System.currentTimeMillis();
                         if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable) {
                             float tsp = (growthTime / ageable.getMaximumAge());
-                            Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
+                            Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(plantBlock, tsp), ((long) tsp * 20));
                         }
                     }
                 }
@@ -145,7 +145,7 @@ public class DAPlant extends DAStructure {
                 this.lastHarvest = System.currentTimeMillis();
                 if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() < ageable.getMaximumAge()) {
                     float tsp = (growthTime / ageable.getMaximumAge());
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, plantBlock, tsp), ((long) tsp * 20));
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(plantBlock, tsp), ((long) tsp * 20));
                 }
             }
             return success;
@@ -226,7 +226,7 @@ public class DAPlant extends DAStructure {
                 ageable.setAge(0);
                 this.getBody().getPlantBLock().setBlockData(ageable);
                 float tsp = (growthTime / ageable.getMaximumAge());
-                Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this, this.getBody().getPlantBLock(), tsp), ((long) tsp * 20));
+                Bukkit.getScheduler().runTaskLaterAsynchronously(DA.getInstance, new GrowRunnable(this.getBody().getPlantBLock(), tsp), ((long) tsp * 20));
             }
         }
     }
@@ -276,12 +276,9 @@ public class DAPlant extends DAStructure {
     /**
      * Runnable for growing the plant if it is a crop
      */
+    //TODO: Optimize this (use https://www.spigotmc.org/threads/guide-on-workload-distribution-or-how-to-handle-heavy-splittable-tasks.409003/)
     public static class GrowRunnable implements Runnable {
 
-        /**
-         * The plant
-         */
-        private final DAPlant plant;
         /**
          * The crop
          */
@@ -291,8 +288,7 @@ public class DAPlant extends DAStructure {
          */
         private final float growTime;
 
-        public GrowRunnable(DAPlant plant, Block crop, float growTime) {
-            this.plant = plant;
+        public GrowRunnable(Block crop, float growTime) {
             this.crop = crop;
             this.growTime = growTime;
         }

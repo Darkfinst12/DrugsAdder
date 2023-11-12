@@ -13,11 +13,9 @@ import java.util.*;
 public class LanguageReader {
 
     private final Map<String, String> entries = new HashMap<>(128);
-    private final File file;
 
     public LanguageReader(File file, String defaultPath) {
         /* Load */
-        this.file = file;
 
         FileConfiguration configFile = YamlConfiguration.loadConfiguration(file);
 

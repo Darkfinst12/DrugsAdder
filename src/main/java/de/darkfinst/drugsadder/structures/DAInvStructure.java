@@ -98,7 +98,7 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
             try {
                 InventoryView inventoryView = viewer.getOpenInventory();
                 String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(state));
-                inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title));
+                inventoryView.setTitle(ChatColor.translateAlternateColorCodes('&', title)); //Can not be changed to a Component, because it can not be set as such (Missing Paper API Update)
             } catch (Exception e) {
                 DA.log.logException(e, isAsync);
             }

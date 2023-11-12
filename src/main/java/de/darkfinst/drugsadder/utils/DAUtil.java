@@ -8,6 +8,8 @@ import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import dev.lone.itemsadder.api.CustomStack;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -60,7 +62,7 @@ public class DAUtil {
                 } else {
                     ItemStack itemStack = new ItemStack(Material.STICK);
                     ItemMeta itemMeta = itemStack.getItemMeta();
-                    itemMeta.setDisplayName("§cItemsAdder not loaded");
+                    itemMeta.displayName(Component.text("ItemsAdder not loaded").color(NamedTextColor.RED));
                     itemStack.setItemMeta(itemMeta);
                     return new DAItem(itemStack, namespacedID);
                 }
@@ -239,10 +241,7 @@ public class DAUtil {
      * @return If the items match
      */
     private static boolean matchItemNameContains(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
-        return itemStackA.hasItemMeta() && itemStackB.hasItemMeta()
-                && itemStackA.getItemMeta().hasDisplayName() && itemStackB.getItemMeta().hasDisplayName()
-                && (itemStackA.getItemMeta().getDisplayName().contains(itemStackB.getItemMeta().getDisplayName())
-                || itemStackB.getItemMeta().getDisplayName().contains(itemStackA.getItemMeta().getDisplayName()));
+        return itemStackA.hasItemMeta() && itemStackB.hasItemMeta() && itemStackA.getItemMeta().hasDisplayName() && itemStackB.getItemMeta().hasDisplayName() && (itemStackA.getItemMeta().getDisplayName().contains(itemStackB.getItemMeta().getDisplayName()) || itemStackB.getItemMeta().getDisplayName().contains(itemStackA.getItemMeta().getDisplayName()));
     }
 
     /**
@@ -271,8 +270,7 @@ public class DAUtil {
      * @return If the items match
      */
     private static boolean matchItemName(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
-        return itemStackA.hasItemMeta() && itemStackB.hasItemMeta()
-                && itemStackA.getItemMeta().getDisplayName().equals(itemStackB.getItemMeta().getDisplayName());
+        return itemStackA.hasItemMeta() && itemStackB.hasItemMeta() && itemStackA.getItemMeta().getDisplayName().equals(itemStackB.getItemMeta().getDisplayName());
     }
 
     /**
@@ -285,9 +283,7 @@ public class DAUtil {
      * @return If the items match
      */
     public static boolean matchItemCMD(@NotNull ItemStack itemStackA, @NotNull ItemStack itemStackB) {
-        return itemStackA.hasItemMeta() && itemStackB.hasItemMeta()
-                && itemStackA.getItemMeta().hasCustomModelData() && itemStackB.getItemMeta().hasCustomModelData()
-                && itemStackA.getItemMeta().getCustomModelData() == itemStackB.getItemMeta().getCustomModelData();
+        return itemStackA.hasItemMeta() && itemStackB.hasItemMeta() && itemStackA.getItemMeta().hasCustomModelData() && itemStackB.getItemMeta().hasCustomModelData() && itemStackA.getItemMeta().getCustomModelData() == itemStackB.getItemMeta().getCustomModelData();
     }
 
     /**
@@ -526,28 +522,21 @@ public class DAUtil {
     public static int findClosest(int[] arr, int target) {
         int n = arr.length;
 
-        if (target <= arr[0])
-            return arr[0];
-        if (target >= arr[n - 1])
-            return arr[n - 1];
+        if (target <= arr[0]) return arr[0];
+        if (target >= arr[n - 1]) return arr[n - 1];
 
         int i = 0, j = n, mid = 0;
         while (i < j) {
             mid = (i + j) / 2;
 
-            if (arr[mid] == target)
-                return arr[mid];
+            if (arr[mid] == target) return arr[mid];
 
             if (target < arr[mid]) {
-                if (mid > 0 && target > arr[mid - 1])
-                    return getClosest(arr[mid - 1],
-                            arr[mid], target);
+                if (mid > 0 && target > arr[mid - 1]) return getClosest(arr[mid - 1], arr[mid], target);
 
                 j = mid;
             } else {
-                if (mid < n - 1 && target < arr[mid + 1])
-                    return getClosest(arr[mid],
-                            arr[mid + 1], target);
+                if (mid < n - 1 && target < arr[mid + 1]) return getClosest(arr[mid], arr[mid + 1], target);
                 i = mid + 1; // update i
             }
         }
@@ -563,12 +552,9 @@ public class DAUtil {
      * @param target The target
      * @return The closest value to the target
      */
-    public static int getClosest(int val1, int val2,
-                                 int target) {
-        if (target - val1 >= val2 - target)
-            return val2;
-        else
-            return val1;
+    public static int getClosest(int val1, int val2, int target) {
+        if (target - val1 >= val2 - target) return val2;
+        else return val1;
     }
 
     //Spaces
