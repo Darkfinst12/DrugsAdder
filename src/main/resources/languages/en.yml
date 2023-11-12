@@ -1,4 +1,9 @@
 # ---- Commands ----
+Command_Arg_Info: "info"
+Command_Arg_Reload: "reload"
+Command_Arg_List: "list"
+Command_Arg_Give: "give"
+Command_Arg_Player: "player"
 Command_Error_NotPlayer: "You must be a player to execute this command!"
 Command_Error_PlayerNotFound: "The player: %v1 was not found!"
 Command_Error_DrugNotFound: "The drug: %v1 was not found!"
