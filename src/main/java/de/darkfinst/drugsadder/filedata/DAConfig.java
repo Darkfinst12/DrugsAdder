@@ -5,21 +5,21 @@ import de.darkfinst.drugsadder.DALoader;
 import de.darkfinst.drugsadder.filedata.readers.*;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DAConfig {
 
@@ -190,9 +190,9 @@ public class DAConfig {
     public static boolean checkConfig() {
         File file = new File(DA.getInstance.getDataFolder(), "config.yml");
         if (!file.exists()) {
-            loader.errorLog(ChatColor.BOLD + "No config.yml found, creating default file! You may want to choose a config according to your language!");
-            loader.log(ChatColor.BOLD + "You can find them in plugins/DrugsAdder/configs/");
-            loader.log(ChatColor.BOLD + "Just copy the config for your language into the DrugsAdder folder and use /drugsadder reload");
+            loader.errorLog(Component.text("No config.yml found, creating default file! You may want to choose a config according to your language!").decoration(TextDecoration.BOLD, true).decoration(TextDecoration.ITALIC, false));
+            loader.log(Component.text("You can find them in plugins/DrugsAdder/configs/").decoration(TextDecoration.BOLD, true).decoration(TextDecoration.ITALIC, false));
+            loader.log(Component.text("Just copy the config for your language into the DrugsAdder folder and use /drugsadder reload").decoration(TextDecoration.BOLD, true).decoration(TextDecoration.ITALIC, false));
             InputStream defConf = DA.getInstance.getResource("config/en/config.yml");
             if (defConf == null) {
                 loader.errorLog("Default config file not found! Your jarfile might be corrupted. Disabling DrugsAdder");
@@ -329,13 +329,13 @@ public class DAConfig {
         logGeneralInfo = config.getBoolean("logGeneralInfo", true);
 
         //Loads the States
-        if (config.contains("tableStates")) {
-            for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
+        if (config.contains("tableStates") && config.isConfigurationSection("tableStates")) {
+            for (String key : Objects.requireNonNull(config.getConfigurationSection("tableStates")).getKeys(false)) {
                 tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
             }
         }
-        if (config.contains("crafterStates")) {
-            for (String key : config.getConfigurationSection("crafterStates").getKeys(false)) {
+        if (config.contains("crafterStates") && config.isConfigurationSection("crafterStates")) {
+            for (String key : Objects.requireNonNull(config.getConfigurationSection("crafterStates")).getKeys(false)) {
                 crafterStates.put(Integer.parseInt(key), config.getString("crafterStates." + key));
             }
         }
@@ -355,13 +355,7 @@ public class DAConfig {
             customItemReader = new DACustomItemReader(config.getConfigurationSection("customItems"));
             customItemReader.loadItems();
             if (!customItemReader.getRegisteredItems().containsKey("drugsadder:cancel_recipe_item")) {
-                ItemStack itemStack = new ItemStack(Material.PAPER, 1);
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName("§cCancel Recipe");
-                itemMeta.setLore(List.of("§7This is the result of a cancelled recipe"));
-                itemMeta.setCustomModelData(1);
-                itemStack.setItemMeta(itemMeta);
-                DAItem cancelRecipeItem = new DAItem(itemStack, "Cancel Recipe", List.of("§7This is the result of a cancelled recipe"), 1, "drugsadder:cancel_recipe_item");
+                DAItem cancelRecipeItem = getCancelRecipeItem();
                 customItemReader.getRegisteredItems().put("drugsadder:cancel_recipe_item", cancelRecipeItem);
             }
         } else {
@@ -375,14 +369,6 @@ public class DAConfig {
         } else {
             daRecipeReader = new DARecipeReader();
         }
-
-        //Loads the TableStates
-        if (config.contains("tableStates")) {
-            for (String key : config.getConfigurationSection("tableStates").getKeys(false)) {
-                tableStates.put(Integer.parseInt(key), config.getString("tableStates." + key));
-            }
-        }
-
 
         //Loads the Drugs
         if (config.contains("drugs")) {
@@ -402,6 +388,23 @@ public class DAConfig {
             loader.errorLog(loader.languageReader.get("Load_Error_NoSeeds"));
         }
 
+    }
+
+    /**
+     * Creates the cancel recipe item and returns it
+     *
+     * @return The cancel recipe item
+     */
+    private static @NotNull DAItem getCancelRecipeItem() {
+        ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+        List<Component> lore = List.of(Component.text("This is the result of a cancelled recipe").color(NamedTextColor.GRAY));
+        Component name = Component.text("Cancel Recipe").color(NamedTextColor.RED);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(name);
+        itemMeta.lore(lore);
+        itemMeta.setCustomModelData(1);
+        itemStack.setItemMeta(itemMeta);
+        return new DAItem(itemStack, name, lore, 1, "drugsadder:cancel_recipe_item");
     }
 
     /**

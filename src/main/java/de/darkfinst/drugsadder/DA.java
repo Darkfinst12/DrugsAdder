@@ -1,10 +1,11 @@
 package de.darkfinst.drugsadder;
 
-import net.md_5.bungee.api.ChatColor;
+import io.papermc.paper.plugin.configuration.PluginMeta;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.awt.*;
 import java.security.SecureRandom;
 
 public class DA extends JavaPlugin {
@@ -13,9 +14,7 @@ public class DA extends JavaPlugin {
     public static DALoader loader;
     public static DALoader log;
 
-
     public static SecureRandom secureRandom;
-
 
     @Override
     public void onLoad() {
@@ -28,17 +27,18 @@ public class DA extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + " ____                  _____   _   _         ");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|    \\ ___ _ _ ___ ___|  _  |_| |_| |___ ___      " + ChatColor.of(new Color(0, 171, 34)) + getDescription().getName() + " " + ChatColor.of(new Color(130, 130, 130)) + getDescription().getVersion());
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|  |  |  _| | | . |_ -|     | . | . | -_|  _|     ");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "|____/|_| |___|_  |___|__|__|___|___|___|_|       " + ChatColor.of(new Color(73, 73, 73)) + getServer().getVersion());
-        Bukkit.getConsoleSender().sendMessage(ChatColor.of(new Color(8, 201, 201)) + "              |___|                          ");
+        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content(" ____                  _____   _   _         ").build());
+        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("|    \\ ___ _ _ ___ ___|  _  |_| |_| |___ ___      ").append(Component.text().color(TextColor.color(0, 171, 34)).content(getPluginMeta().getName() + " ").append(Component.text().color(TextColor.color(130, 130, 130)).content(getPluginMeta().getVersion()))).build());
+        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("|  |  |  _| | | . |_ -|     | . | . | -_|  _|     ").build());
+        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("|____/|_| |___|_  |___|__|__|___|___|___|_|       ").append(Component.text().color(TextColor.color(73, 73, 73)).content(getServer().getVersion())).build());
+        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("              |___|                          ").build());
         loader.init();
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getLogger().info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
+        PluginMeta meta = getPluginMeta();
+        Bukkit.getLogger().info(String.format("[%s] Disabled Version %s", meta.getName(), meta.getVersion()));
         loader.unload();
     }
 

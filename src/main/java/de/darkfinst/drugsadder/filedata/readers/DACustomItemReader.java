@@ -8,7 +8,9 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -82,13 +84,13 @@ public class DACustomItemReader {
         }
         ItemStack itemStack = new ItemStack(material, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        String name = ChatColor.translateAlternateColorCodes('&', itemConfig.getString("name", itemID));
-        itemMeta.setDisplayName(name);
-        List<String> lore = new ArrayList<>();
+        Component name = MiniMessage.miniMessage().deserialize(itemConfig.getString("name", itemID));
+        itemMeta.displayName(name);
+        List<Component> lore = new ArrayList<>();
         for (String loreLine : itemConfig.getStringList("lore")) {
-            lore.add(ChatColor.translateAlternateColorCodes('&', loreLine));
+            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(loreLine));
         }
-        itemMeta.setLore(lore);
+        itemMeta.lore(lore);
         int cmd = itemConfig.getInt("customModelData", -1);
         if (cmd >= 0) {
             itemMeta.setCustomModelData(cmd);

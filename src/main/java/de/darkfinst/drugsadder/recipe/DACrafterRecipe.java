@@ -124,7 +124,7 @@ public class DACrafterRecipe extends DARecipe {
                         if (newAmount <= 0) {
                             daCrafter.getInventory().setItem(slot, null);
                         } else {
-                            daCrafter.getInventory().getItem(slot).setAmount(newAmount);
+                            Objects.requireNonNull(daCrafter.getInventory().getItem(slot)).setAmount(newAmount);
                         }
                     } else {
                         return;

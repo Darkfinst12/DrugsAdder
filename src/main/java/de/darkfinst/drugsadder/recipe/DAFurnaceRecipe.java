@@ -5,10 +5,8 @@ import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
@@ -27,17 +25,6 @@ public class DAFurnaceRecipe extends DARecipe {
 
     public DAFurnaceRecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
         super(namedID, recipeType, result, materials);
-    }
-
-    @Deprecated(since = "0.0.1", forRemoval = true)
-    public static void registerDEMORecipe() {
-        ItemStack result = new ItemStack(Material.STICK, 1);
-        ItemMeta meta = result.getItemMeta();
-        meta.setDisplayName("§6§lDEMO-Recipe-F1");
-        result.setItemMeta(meta);
-        FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_f1"), result, Material.ACACIA_PLANKS, 0.1f, 200);
-        boolean successf1 = Bukkit.addRecipe(furnaceRecipe);
-        DA.loader.debugLog("FurnaceRecipe F1 - " + successf1);
     }
 
     /**

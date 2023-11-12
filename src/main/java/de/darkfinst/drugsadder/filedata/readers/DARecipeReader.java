@@ -106,10 +106,10 @@ public class DARecipeReader {
             return;
         }
 
-        Double duration = recipeConfig.getDouble("duration", 10D); //InMinutes
-        Double processOverdueAcceptance = recipeConfig.getDouble("processOverdueAcceptance", 10); //inMinutes
+        double duration = recipeConfig.getDouble("duration", 10D); //InMinutes
+        double processOverdueAcceptance = recipeConfig.getDouble("processOverdueAcceptance", 10); //inMinutes
 
-        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, duration.longValue(), processOverdueAcceptance.longValue(), result, materials.values().toArray(new DAItem[0]));
+        DABarrelRecipe barrelRecipe = new DABarrelRecipe(barrelRID, RecipeType.BARREL, (long) duration, (long) processOverdueAcceptance, result, materials.values().toArray(new DAItem[0]));
 
         this.registeredRecipes.add(barrelRecipe);
 

@@ -486,6 +486,10 @@ public class DALoader {
         this.log(msg, false);
     }
 
+    public void log(Component msg) {
+        this.log(msg, false);
+    }
+
     /**
      * Logs a messsage to the console
      * <p>
@@ -496,6 +500,10 @@ public class DALoader {
      */
     public void log(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), Component.text(msg).color(NamedTextColor.WHITE), DrugsAdderSendMessageEvent.Type.LOG, isAsync);
+    }
+
+    public void log(Component msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), msg.color(NamedTextColor.WHITE), DrugsAdderSendMessageEvent.Type.LOG, isAsync);
     }
 
     /**
@@ -570,6 +578,10 @@ public class DALoader {
         this.errorLog(msg, false);
     }
 
+    public void errorLog(Component msg) {
+        this.errorLog(msg, false);
+    }
+
     /**
      * Logs a message to the console
      * <br>
@@ -582,6 +594,10 @@ public class DALoader {
      */
     public void errorLog(String msg, boolean isAsync) {
         this.msg(Bukkit.getConsoleSender(), Component.text("[ERROR] ").color(TextColor.color(196, 33, 33)).append(Component.text(msg).color(NamedTextColor.WHITE)), DrugsAdderSendMessageEvent.Type.ERROR, isAsync);
+    }
+
+    public void errorLog(Component msg, boolean isAsync) {
+        this.msg(Bukkit.getConsoleSender(), Component.text("[ERROR] ").color(TextColor.color(196, 33, 33)).append(msg.color(NamedTextColor.WHITE)), DrugsAdderSendMessageEvent.Type.ERROR, isAsync);
     }
 
     /**

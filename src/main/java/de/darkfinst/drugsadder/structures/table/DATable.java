@@ -118,7 +118,7 @@ public class DATable extends DAInvStructure {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_HIT, 100, 0);
             player.openInventory(this.inventory);
             String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(this.getProcess().getState()));
-            player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title));
+            player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title)); //Can not be changed to a Component, because it can not be set as such (Missing Paper API Update)
         } else {
             DA.loader.msg(player, DA.loader.languageReader.get("Perms_Table_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
@@ -207,19 +207,19 @@ public class DATable extends DAInvStructure {
         if (recipe.getFilterOne() != null) {
             isValid = DAUtil.matchItems(recipe.getFilterOne().getItemStack(), this.inventory.getItem(this.filterSlots[0]), recipe.getFilterOne().getItemMatchTypes());
             if (!isValid) {
-                return isValid;
+                return false;
             }
         }
         if (recipe.getFuelOne() != null) {
             isValid = DAUtil.matchItems(recipe.getFuelOne().getItemStack(), this.inventory.getItem(this.fuelSlots[0]), recipe.getFuelOne().getItemMatchTypes());
             if (!isValid) {
-                return isValid;
+                return false;
             }
         }
         if (recipe.getMaterialOne() != null) {
             isValid = DAUtil.matchItems(recipe.getMaterialOne().getItemStack(), this.inventory.getItem(this.materialSlots[0]), recipe.getMaterialOne().getItemMatchTypes());
             if (!isValid) {
-                return isValid;
+                return false;
             }
         }
         return isValid;
@@ -236,19 +236,19 @@ public class DATable extends DAInvStructure {
         if (recipe.getFilterTwo() != null) {
             isValid = DAUtil.matchItems(recipe.getFilterTwo().getItemStack(), this.inventory.getItem(this.filterSlots[1]), recipe.getFilterTwo().getItemMatchTypes());
             if (!isValid) {
-                return isValid;
+                return false;
             }
         }
         if (recipe.getFuelTwo() != null) {
             isValid = DAUtil.matchItems(recipe.getFuelTwo().getItemStack(), this.inventory.getItem(this.fuelSlots[1]), recipe.getFuelTwo().getItemMatchTypes());
             if (!isValid) {
-                return isValid;
+                return false;
             }
         }
         if (recipe.getMaterialTwo() != null) {
             isValid = DAUtil.matchItems(recipe.getMaterialTwo().getItemStack(), this.inventory.getItem(this.materialSlots[1]), recipe.getMaterialTwo().getItemMatchTypes());
             if (!isValid) {
-                return isValid;
+                return false;
             }
         }
         return isValid;
