@@ -1,6 +1,7 @@
 package de.darkfinst.drugsadder.commands;
 
 import de.darkfinst.drugsadder.DA;
+import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -32,17 +33,18 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
         if (args.length == 0) {
             this.sendHelp(sender);
         } else {
-            switch (args[0].toLowerCase()) {
-                case "info":
-                    InfoCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                case "reload":
-                    ReloadCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                case "list":
-                    ListCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                case "give":
-                    GiveCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                default:
-                    this.sendHelp(sender);
+            if (PossibleArgs.INFO.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.INFO.getPermission())) {
+                InfoCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            } else if (PossibleArgs.RELOAD.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.RELOAD.getPermission())) {
+                ReloadCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            } else if (PossibleArgs.LIST.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.LIST.getPermission())) {
+                ListCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            } else if (PossibleArgs.GIVE.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.GIVE.getPermission())) {
+                GiveCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            } else if (PossibleArgs.PLAYER.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.PLAYER.getPermission())) {
+                PlayerCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            } else {
+                this.sendHelp(sender);
             }
         }
         return true;
@@ -56,27 +58,46 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length <= 1) {
             ArrayList<String> list = new ArrayList<>();
-            if (sender.hasPermission("drugsadder.cmd.info")) list.add("info");
-            if (sender.hasPermission("drugsadder.cmd.reload")) list.add("reload");
-            if (sender.hasPermission("drugsadder.cmd.list")) list.add("list");
-            if (sender.hasPermission("drugsadder.cmd.give")) list.add("give");
+            if (sender.hasPermission(PossibleArgs.INFO.getPermission())) list.add(PossibleArgs.INFO.getArg());
+            if (sender.hasPermission(PossibleArgs.RELOAD.getPermission())) list.add(PossibleArgs.RELOAD.getArg());
+            if (sender.hasPermission(PossibleArgs.LIST.getPermission())) list.add(PossibleArgs.LIST.getArg());
+            if (sender.hasPermission(PossibleArgs.GIVE.getPermission())) list.add(PossibleArgs.GIVE.getArg());
             return list;
         } else {
-            switch (args[0].toLowerCase()) {
-                case "info":
-                    if (sender.hasPermission("drugsadder.cmd.info")) {
-                        return InfoCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                    }
-                case "list":
-                    if (sender.hasPermission("drugsadder.cmd.list")) {
-                        return ListCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                    }
-                case "give":
-                    if (sender.hasPermission("drugsadder.cmd.give")) {
-                        return GiveCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-                    }
+            if (PossibleArgs.INFO.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.INFO.getPermission())) {
+                return InfoCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            }
+            if (PossibleArgs.LIST.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.LIST.getPermission())) {
+                return ListCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            }
+            if (PossibleArgs.GIVE.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.GIVE.getPermission())) {
+                return GiveCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+            }
+            if (PossibleArgs.PLAYER.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.PLAYER.getPermission())) {
+                return PlayerCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
             }
             return new ArrayList<>();
+        }
+    }
+
+    @Getter
+    private enum PossibleArgs {
+        INFO("Command_Arg_Info", "drugsadder.cmd.info"),
+        RELOAD("Command_Arg_Reload", "drugsadder.cmd.reload"),
+        LIST("Command_Arg_List", "drugsadder.cmd.list"),
+        GIVE("Command_Arg_Give", "drugsadder.cmd.give"),
+        PLAYER("Command_Arg_Player", "drugsadder.cmd.player"),
+        ;
+        private final String languageKey;
+        private final String permission;
+
+        PossibleArgs(String languageKey, String permission) {
+            this.languageKey = languageKey;
+            this.permission = permission;
+        }
+
+        public String getArg() {
+            return DA.loader.languageReader.getString(languageKey);
         }
     }
 }
