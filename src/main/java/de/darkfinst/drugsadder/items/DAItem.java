@@ -27,7 +27,7 @@ public class DAItem implements Cloneable {
     /**
      * The name of the item
      */
-    @Nullable
+    @NotNull
     private Component name;
     /**
      * The lore of the item
@@ -51,7 +51,7 @@ public class DAItem implements Cloneable {
     public DAItem(@NotNull ItemStack itemStack, String namespacedID) {
         this.itemStack = itemStack;
         if (itemStack.hasItemMeta()) {
-            this.name = itemStack.getItemMeta().displayName();
+            this.name = itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().displayName() : Component.text(itemStack.getType().name());
             this.lore = itemStack.getItemMeta().lore();
             this.customModelData = itemStack.getItemMeta().getCustomModelData();
         }
@@ -69,6 +69,7 @@ public class DAItem implements Cloneable {
     public DAItem(ItemStack itemStack) {
         this.itemStack = itemStack;
         this.namespacedID = itemStack.getType().name();
+        this.name = Component.text(itemStack.getType().name());
     }
 
     @Override

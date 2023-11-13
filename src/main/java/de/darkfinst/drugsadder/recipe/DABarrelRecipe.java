@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.api.events.barrel.BarrelProcessMaterialsEvent;
+import de.darkfinst.drugsadder.commands.InfoCommand;
+import de.darkfinst.drugsadder.commands.ListCommand;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.BarrelException;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughMaterialsException;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughTimePassedException;
@@ -9,6 +11,8 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -148,5 +152,21 @@ public class DABarrelRecipe extends DARecipe {
                 ", processTime=" + processTime +
                 ", processOverdueAcceptance=" + processOverdueAcceptance +
                 "}";
+    }
+
+    @Override
+    //TODO: Make Translatable and check functionality
+    public Component asComponent() {
+        Component component = super.asComponent();
+        Component hover = Component.text().asComponent();
+        hover = hover.append(Component.text("Process Time: " + this.getProcessTime() + "s\n"));
+        hover = hover.append(Component.text("Process Overdue Acceptance: " + this.getProcessOverdueAcceptance() + "s\n"));
+        hover = hover.append(Component.text("Materials: \n"));
+        for (DAItem material : this.getMaterials()) {
+            hover = hover.append(material.getName().append(Component.text(" x" + material.getAmount() + "\n")));
+        }
+        component = component.hoverEvent(hover.asHoverEvent());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/da " + InfoCommand.PossibleArgs.RECIPES.getArg() + " " + ListCommand.PossibleArgs.BARREL.getArg() + " " + this.getID()));
+
     }
 }

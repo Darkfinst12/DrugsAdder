@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder.recipe;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -94,5 +95,9 @@ public abstract class DARecipe {
                 ", materials=" + Arrays.toString(materials) +
                 ", result=" + result +
                 '}';
+    }
+
+    public Component asComponent() {
+        return Component.text(this.getID());
     }
 }

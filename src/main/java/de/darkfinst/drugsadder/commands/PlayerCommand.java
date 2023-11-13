@@ -34,6 +34,7 @@ public class PlayerCommand {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[1]);
                 if (!commandSender.hasPermission(possibleArgs.getPermission())) {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
+                    return;
                 }
                 switch (possibleArgs) {
                     case SET -> PlayerCommand.set(commandSender, offlinePlayer, args[2], Integer.parseInt(args[3]));
@@ -50,10 +51,6 @@ public class PlayerCommand {
     }
 
     private static void set(CommandSender commandSender, OfflinePlayer target, String drugID, int amount) {
-        if (!commandSender.hasPermission(PossibleArgs.SET.getPermission())) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
-            return;
-        }
         DAPlayer daPlayer = DA.loader.getDaPlayer(target);
         if (daPlayer == null) {
             daPlayer = new DAPlayer(target.getUniqueId());
@@ -69,10 +66,6 @@ public class PlayerCommand {
     }
 
     private static void get(CommandSender commandSender, OfflinePlayer offlinePlayer, String drugID) {
-        if (!commandSender.hasPermission(PossibleArgs.GET.getPermission())) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
-            return;
-        }
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -83,10 +76,6 @@ public class PlayerCommand {
     }
 
     private static void remove(CommandSender commandSender, OfflinePlayer offlinePlayer, String drugID) {
-        if (!commandSender.hasPermission(PossibleArgs.REMOVE.getPermission())) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
-            return;
-        }
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -102,10 +91,6 @@ public class PlayerCommand {
     }
 
     private static void clear(CommandSender commandSender, OfflinePlayer offlinePlayer) {
-        if (!commandSender.hasPermission(PossibleArgs.CLEAR.getPermission())) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
-            return;
-        }
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -116,10 +101,6 @@ public class PlayerCommand {
     }
 
     private static void info(CommandSender commandSender, OfflinePlayer offlinePlayer) {
-        if (!commandSender.hasPermission(PossibleArgs.INFO.getPermission())) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
-            return;
-        }
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -164,7 +145,7 @@ public class PlayerCommand {
 
     //Enum for possible arguments
     @Getter
-    private enum PossibleArgs {
+    public enum PossibleArgs {
         SET("Command_Arg_Set", "drugsadder.cmd.player.set"),
         GET("Command_Arg_Get", "drugsadder.cmd.player.get"),
         REMOVE("Command_Arg_Remove", "drugsadder.cmd.player.remove"),
