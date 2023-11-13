@@ -163,7 +163,9 @@ public class DABarrelRecipe extends DARecipe {
         hover = hover.append(Component.text("Process Overdue Acceptance: " + this.getProcessOverdueAcceptance() + "s\n"));
         hover = hover.append(Component.text("Materials: \n"));
         for (DAItem material : this.getMaterials()) {
-            hover = hover.append(material.getName().append(Component.text(" x" + material.getAmount() + "\n")));
+            Component name = material.getName();
+            if (name == null) name = Component.text(material.getItemStack().getType().name());
+            hover = hover.append(name.append(Component.text(" x" + material.getAmount() + "\n")));
         }
         component = component.hoverEvent(hover.asHoverEvent());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/da " + InfoCommand.PossibleArgs.RECIPES.getArg() + " " + ListCommand.PossibleArgs.BARREL.getArg() + " " + this.getID()));

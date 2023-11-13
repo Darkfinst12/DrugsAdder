@@ -27,7 +27,7 @@ public class DAItem implements Cloneable {
     /**
      * The name of the item
      */
-    @NotNull
+    @Nullable
     private Component name;
     /**
      * The lore of the item
