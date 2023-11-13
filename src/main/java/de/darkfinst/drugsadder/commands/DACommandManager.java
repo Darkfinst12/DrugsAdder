@@ -62,6 +62,7 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
             if (sender.hasPermission(PossibleArgs.RELOAD.getPermission())) list.add(PossibleArgs.RELOAD.getArg());
             if (sender.hasPermission(PossibleArgs.LIST.getPermission())) list.add(PossibleArgs.LIST.getArg());
             if (sender.hasPermission(PossibleArgs.GIVE.getPermission())) list.add(PossibleArgs.GIVE.getArg());
+            if (sender.hasPermission(PossibleArgs.PLAYER.getPermission())) list.add(PossibleArgs.PLAYER.getArg());
             return list;
         } else {
             if (PossibleArgs.INFO.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.INFO.getPermission())) {

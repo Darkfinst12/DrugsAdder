@@ -31,7 +31,7 @@ public class PlayerCommand {
         } else {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
             try {
-                PossibleArgs possibleArgs = PossibleArgs.valueOf(args[1].toUpperCase());
+                PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[1]);
                 if (!commandSender.hasPermission(possibleArgs.getPermission())) {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
                 }
@@ -43,6 +43,7 @@ public class PlayerCommand {
                     case INFO -> PlayerCommand.info(commandSender, offlinePlayer);
                 }
             } catch (Exception e) {
+                DA.log.logException(e);
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_WrongArgs"));
             }
         }
@@ -145,14 +146,16 @@ public class PlayerCommand {
                     .toList();
         } else if (args.length == 3) {
             //Handel SET, GET, REMOVE
-            if (args[1].equalsIgnoreCase(PossibleArgs.SET.getArg()) || args[1].equalsIgnoreCase(PossibleArgs.GET.getArg()) || args[1].equalsIgnoreCase(PossibleArgs.REMOVE.getArg())) {
+            if ((args[1].equalsIgnoreCase(PossibleArgs.SET.getArg()) && sender.hasPermission(PossibleArgs.SET.getPermission()))
+                    || (args[1].equalsIgnoreCase(PossibleArgs.GET.getArg()) && sender.hasPermission(PossibleArgs.GET.getPermission()))
+                    || args[1].equalsIgnoreCase(PossibleArgs.REMOVE.getArg()) && sender.hasPermission(PossibleArgs.REMOVE.getPermission())) {
                 return DAConfig.drugReader.getDrugNames().stream()
                         .filter(name -> name.contains(args[2].toLowerCase()))
                         .toList();
             }
         } else if (args.length == 4) {
             //Handel SET
-            if (args[1].equalsIgnoreCase(PossibleArgs.SET.getArg())) {
+            if (args[1].equalsIgnoreCase(PossibleArgs.SET.getArg()) && sender.hasPermission(PossibleArgs.SET.getPermission())) {
                 return Collections.singletonList(DA.loader.languageReader.getString("Command_Args_Amount"));
             }
         }
@@ -162,11 +165,11 @@ public class PlayerCommand {
     //Enum for possible arguments
     @Getter
     private enum PossibleArgs {
-        SET("Command_Args_Set", "drugsadder.cmd.player.set"),
-        GET("Command_Args_Get", "drugsadder.cmd.player.get"),
-        REMOVE("Command_Args_Remove", "drugsadder.cmd.player.remove"),
-        CLEAR("Command_Args_Clear", "drugsadder.cmd.player.clear"),
-        INFO("Command_Args_Info", "drugsadder.cmd.player.info"),
+        SET("Command_Arg_Set", "drugsadder.cmd.player.set"),
+        GET("Command_Arg_Get", "drugsadder.cmd.player.get"),
+        REMOVE("Command_Arg_Remove", "drugsadder.cmd.player.remove"),
+        CLEAR("Command_Arg_Clear", "drugsadder.cmd.player.clear"),
+        INFO("Command_Arg_Info", "drugsadder.cmd.player.info"),
         ;
 
         private final String languageKey;
@@ -179,6 +182,13 @@ public class PlayerCommand {
 
         public String getArg() {
             return DA.loader.languageReader.getString(languageKey);
+        }
+
+        public static PossibleArgs valueOfIgnoreCase(String translation) {
+            return Arrays.stream(PossibleArgs.values())
+                    .filter(possibleArgs -> possibleArgs.getArg().equalsIgnoreCase(translation))
+                    .findFirst()
+                    .orElse(null);
         }
 
     }

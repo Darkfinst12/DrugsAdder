@@ -16,10 +16,8 @@ public class LanguageReader {
 
     private final Map<String, String> entries = new HashMap<>(128);
 
-    //TODO: Check if this takes it out of the file and not the plugin jar
     public LanguageReader(File file, String defaultPath) {
         /* Load */
-
         FileConfiguration configFile = YamlConfiguration.loadConfiguration(file);
 
         Set<String> keySet = configFile.getKeys(false);
@@ -70,7 +68,6 @@ public class LanguageReader {
      */
     public String getString(String key, String... args) {
         String entry = entries.get(key);
-        DA.log.debugLog("Try to get " + key + " from " + entries.keySet() + " -> " + entry);
         if (entry != null) {
             int i = 0;
             for (String arg : args) {
