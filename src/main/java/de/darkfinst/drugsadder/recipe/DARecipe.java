@@ -98,6 +98,20 @@ public abstract class DARecipe {
     }
 
     public Component asComponent() {
-        return Component.text(this.getID());
+        return Component.text(RecipeType.getNamedRecipeID(this.recipeType, this.ID));
+    }
+
+    public abstract @NotNull Component getHover();
+
+    public Component getMaterialsAsComponent() {
+        Component hover = Component.text("Materials:");
+        for (DAItem material : this.materials) {
+            Component name = material.getName();
+            if (name == null) {
+                name = Component.text(material.getItemStack().getType().name());
+            }
+            hover = hover.appendNewline().append(Component.text("x" + material.getAmount() + " ")).append(name);
+        }
+        return hover;
     }
 }

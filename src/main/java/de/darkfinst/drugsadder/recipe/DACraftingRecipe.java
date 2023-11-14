@@ -1,9 +1,13 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,9 +19,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
-public class DACraftingRecipe extends DARecipe {
+public class DACraftingRecipe extends DAShapedRecipe {
 
     /**
      * The shape of the recipe
@@ -135,5 +140,28 @@ public class DACraftingRecipe extends DARecipe {
                 ", shapeKeys=" + shapeKeys +
                 ", isShapeless=" + isShapeless +
                 "}";
+    }
+
+    @Override
+    public Component asComponent() {
+        Component component = super.asComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.CRAFTING.getArg(), this.getID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    @Override
+    //TODO: Make Translatable
+    public @NotNull Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(Component.text("Shapeless: " + this.isShapeless + "\n"));
+        if (!this.isShapeless) {
+            hover = hover.append(Component.text("Shape:"));
+            for (String row : this.shape) {
+                hover = hover.appendNewline().append(Component.text(row));
+            }
+        }
+        hover = super.getMaterials(hover, this.shapeKeys);
+        return hover;
     }
 }

@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder.commands;
 
 import de.darkfinst.drugsadder.DA;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -51,7 +52,19 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender commandSender) {
-        commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Assistance_Use"));
+        Component component = DA.loader.languageReader.getComponent("Command_Assistance_Use");
+        if (component == null) {
+            component = Component.text(DA.loader.languageReader.getString("Command_Assistance_Use"));
+        }
+        commandSender.sendMessage(component);
+    }
+
+    public static String buildCommand(String... args) {
+        StringBuilder stringBuilder = new StringBuilder("/" + COMMAND_NAME);
+        for (String arg : args) {
+            stringBuilder.append(" ").append(arg);
+        }
+        return stringBuilder.toString();
     }
 
     @Override
@@ -82,7 +95,7 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
     }
 
     @Getter
-    private enum PossibleArgs {
+    public enum PossibleArgs {
         INFO("Command_Arg_Info", "drugsadder.cmd.info"),
         RELOAD("Command_Arg_Reload", "drugsadder.cmd.reload"),
         LIST("Command_Arg_List", "drugsadder.cmd.list"),

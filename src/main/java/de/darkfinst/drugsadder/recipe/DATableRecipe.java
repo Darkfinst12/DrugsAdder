@@ -1,12 +1,16 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -376,6 +380,48 @@ public class DATableRecipe extends DARecipe {
                 DA.log.logException(e, true);
             }
         }
+    }
+
+    @Override
+    public Component asComponent() {
+        Component component = super.asComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.TABLE.getArg(), this.getID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    @Override
+    public @NotNull Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(Component.text("Processing Time One: " + this.getProcessingTimeOne() + "s\n"));
+        hover = hover.append(Component.text("Filter One: "));
+        Component name = this.getFilterOne().getName();
+        if (name == null) {
+            name = Component.text(this.getFilterOne().getItemStack().getType().name());
+        }
+        hover = hover.append(Component.text("x" + this.getFilterOne().getAmount() + " ")).append(name).append(Component.text("\n"));
+        hover = hover.append(Component.text("Fuel One: "));
+        name = this.getFuelOne().getName();
+        if (name == null) {
+            name = Component.text(this.getFuelOne().getItemStack().getType().name());
+        }
+        hover = hover.append(Component.text("x" + this.getFuelOne().getAmount() + " ")).append(name).append(Component.text("\n"));
+        hover = hover.append(Component.text("Material One: "));
+        name = this.getMaterialOne().getName();
+        if (name == null) {
+            name = Component.text(this.getMaterialOne().getItemStack().getType().name());
+        }
+        hover = hover.append(Component.text("x" + this.getMaterialOne().getAmount() + " ")).append(name).append(Component.text("\n"));
+
+        hover = hover.append(Component.text("Processing Time Two: " + this.getProcessingTimeTwo() + "s\n"));
+        hover = hover.append(Component.text("Filter Two: "));
+        name = this.getFilterTwo().getName();
+        if (name == null) {
+            name = Component.text(this.getFilterTwo().getItemStack().getType().name());
+        }
+        hover = hover.append(Component.text("x" + this.getFilterTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
+        hover = hover.append(Component.text("Fuel Two: "));
+        return hover;
     }
 
 

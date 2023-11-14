@@ -58,6 +58,10 @@ public class ListCommand {
 
     private static void allRecipes(CommandSender commandSender) {
         Component component = DA.loader.languageReader.getComponent("Command_List_Recipes", PossibleArgs.ALL.getArg());
+        if (component == null) {
+            commandSender.sendMessage(Component.text(String.format("Key: %s not found", "Command_List_Recipes")));
+            return;
+        }
         for (DARecipe registeredRecipe : DAConfig.daRecipeReader.getRegisteredRecipes()) {
             component = component.appendNewline().append(Component.text("- ").append(registeredRecipe.asComponent()));
         }

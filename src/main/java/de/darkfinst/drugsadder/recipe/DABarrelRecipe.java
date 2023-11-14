@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.recipe;
 
+import de.darkfinst.drugsadder.DACommand;
 import de.darkfinst.drugsadder.api.events.barrel.BarrelProcessMaterialsEvent;
+import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.commands.ListCommand;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.BarrelException;
@@ -155,20 +157,20 @@ public class DABarrelRecipe extends DARecipe {
     }
 
     @Override
-    //TODO: Make Translatable and check functionality
     public Component asComponent() {
         Component component = super.asComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.BARREL.getArg(), this.getID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    @Override
+    //TODO: Make Translatable
+    public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
         hover = hover.append(Component.text("Process Time: " + this.getProcessTime() + "s\n"));
         hover = hover.append(Component.text("Process Overdue Acceptance: " + this.getProcessOverdueAcceptance() + "s\n"));
-        hover = hover.append(Component.text("Materials: \n"));
-        for (DAItem material : this.getMaterials()) {
-            Component name = material.getName();
-            if (name == null) name = Component.text(material.getItemStack().getType().name());
-            hover = hover.append(name.append(Component.text(" x" + material.getAmount() + "\n")));
-        }
-        component = component.hoverEvent(hover.asHoverEvent());
-        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/da " + InfoCommand.PossibleArgs.RECIPES.getArg() + " " + ListCommand.PossibleArgs.BARREL.getArg() + " " + this.getID()));
-
+        hover = hover.append(super.getMaterialsAsComponent());
+        return hover;
     }
 }

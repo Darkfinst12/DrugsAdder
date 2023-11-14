@@ -90,10 +90,14 @@ public class LanguageReader {
      *
      * @param key  The key of the component.
      * @param args The arguments to replace the placeholders if there are any.
-     * @return The found component with the placeholders replaced. - If no entry is found, it will return the given key.
+     * @return The found component with the placeholders replaced. - If no entry is found, it will return null.
      */
     public Component getComponent(String key, String... args) {
-        return MiniMessage.miniMessage().deserialize(this.getString(key, args));
+        String s = this.getString(key, args);
+        if(s.equals(String.format("Key: %s not found", key))) {
+            return null;
+        }
+        return MiniMessage.miniMessage().deserialize(s);
     }
 
 
