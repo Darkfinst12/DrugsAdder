@@ -99,6 +99,11 @@ public class DAItem implements Cloneable {
         }
     }
 
+    /**
+     * Returns the item as a component
+     *
+     * @return The item as a component
+     */
     public Component asComponent() {
         Component component = Component.text(this.namespacedID);
         component = component.hoverEvent(this.getHover().asHoverEvent());
@@ -106,6 +111,11 @@ public class DAItem implements Cloneable {
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
+    /**
+     * Returns the item as a component, which can be used in a message as a hover
+     *
+     * @return The hover as a component
+     */
     public Component getHover() {
         Component hover = Component.text().asComponent();
         hover = hover.append(Component.text("Base Item: " + this.itemStack.getType().name()));
