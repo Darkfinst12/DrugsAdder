@@ -1,9 +1,12 @@
 package de.darkfinst.drugsadder.items;
 
 import de.darkfinst.drugsadder.ItemMatchType;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,6 +101,18 @@ public class DAItem implements Cloneable {
 
     public Component asComponent() {
         Component component = Component.text(this.namespacedID);
-        return component;
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.CUSTOM_ITEMS.getArg(), this.getNamespacedID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    public Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(Component.text("Base Item: " + this.itemStack.getType().name()));
+        hover = hover.appendNewline().append(Component.text("Custom Model Data: " + this.customModelData));
+        hover = hover.appendNewline().append(Component.text("Name: " + this.name));
+        hover = hover.appendNewline().append(Component.text("Lore: " + this.lore));
+        hover = hover.appendNewline().append(Component.text("Item Match Types: " + Arrays.toString(this.itemMatchTypes)));
+        return hover;
     }
 }

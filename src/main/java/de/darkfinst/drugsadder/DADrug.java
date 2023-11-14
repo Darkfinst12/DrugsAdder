@@ -1,10 +1,13 @@
 package de.darkfinst.drugsadder;
 
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -134,10 +137,20 @@ public class DADrug extends DAAddiction {
 
     public Component asComponent() {
         Component component = Component.text(this.ID);
-
-        return component;
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.DRUGS.getArg(), this.getID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
+    public Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(Component.text("Item: " + this.item.getNamespacedID()));
+        hover = hover.appendNewline().append(Component.text("isAddictionAble: " + this.isAddictionAble()));
+        if (this.isAddictionAble()) {
+            hover = hover.appendNewline().append(super.asComponent(false));
+        }
+        return hover;
+    }
 
 
     /**

@@ -102,7 +102,7 @@ public class ListCommand {
         for (T item : getItems.apply(null)) {
             component = component.appendNewline().append(Component.text("- ").append(asComponent.apply(item)));
         }
-        commandSender.sendMessage(component);
+        DA.loader.msg(commandSender, component);
     }
 
 

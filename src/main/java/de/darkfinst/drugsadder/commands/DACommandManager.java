@@ -56,7 +56,7 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
         if (component == null) {
             component = Component.text(DA.loader.languageReader.getString("Command_Assistance_Use"));
         }
-        commandSender.sendMessage(component);
+        DA.loader.msg(commandSender, component);
     }
 
     public static String buildCommand(String... args) {

@@ -8,7 +8,7 @@ public class ReloadCommand {
 
     public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length != 0) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponent("Command_Assistance_Reload"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Assistance_Reload"));
         } else if (!commandSender.hasPermission("drugsadder.cmd.reload")) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
         } else {
