@@ -16,7 +16,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public class DACrafterRecipe extends DAShapedRecipe {
@@ -289,14 +288,24 @@ public class DACrafterRecipe extends DAShapedRecipe {
         }
     }
 
+    /**
+     * This method generates a component that represents the recipe.
+     *
+     * @return The component that represents the recipe.
+     */
     @Override
-    public Component asComponent() {
+    public @NotNull Component asComponent() {
         Component component = super.asComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
         String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.CRAFTER.getArg(), this.getID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
+    /**
+     * Returns the hover event of the recipe
+     *
+     * @return The hover event of the recipe
+     */
     @Override
     //TODO: Make Translatable
     public @NotNull Component getHover() {
@@ -307,7 +316,7 @@ public class DACrafterRecipe extends DAShapedRecipe {
         for (String row : this.shape) {
             hover = hover.appendNewline().append(Component.text(row));
         }
-        hover = super.getMaterials(hover, this.shapeKeys);
+        hover = super.getMaterialsAsComponent(hover, this.shapeKeys);
         return hover;
     }
 }

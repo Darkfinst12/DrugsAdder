@@ -75,15 +75,26 @@ public class DAFurnaceRecipe extends DARecipe {
                 '}';
     }
 
+    /**
+     * This method generates a component that represents the recipe.
+     *
+     * @return The component that represents the recipe.
+     */
     @Override
-    public Component asComponent() {
+    public @NotNull Component asComponent() {
         Component component = super.asComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
         String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.FURNACE.getArg(), this.getID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
+    /**
+     * Returns the hover event of the recipe
+     *
+     * @return The hover event of the recipe
+     */
     @Override
+    //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
         hover = hover.append(Component.text("Cooking Time: " + this.getCookingTime() + "s\n"));

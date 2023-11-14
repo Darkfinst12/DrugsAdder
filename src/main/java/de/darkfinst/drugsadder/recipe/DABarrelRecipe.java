@@ -1,10 +1,8 @@
 package de.darkfinst.drugsadder.recipe;
 
-import de.darkfinst.drugsadder.DACommand;
 import de.darkfinst.drugsadder.api.events.barrel.BarrelProcessMaterialsEvent;
 import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.commands.InfoCommand;
-import de.darkfinst.drugsadder.commands.ListCommand;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.BarrelException;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughMaterialsException;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughTimePassedException;
@@ -156,14 +154,24 @@ public class DABarrelRecipe extends DARecipe {
                 "}";
     }
 
+    /**
+     * This method generates a component that represents the recipe.
+     *
+     * @return The component that represents the recipe.
+     */
     @Override
-    public Component asComponent() {
+    public @NotNull Component asComponent() {
         Component component = super.asComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
         String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.BARREL.getArg(), this.getID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
+    /**
+     * Returns the hover event of the recipe
+     *
+     * @return The hover event of the recipe
+     */
     @Override
     //TODO: Make Translatable
     public @NotNull Component getHover() {

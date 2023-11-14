@@ -97,13 +97,35 @@ public abstract class DARecipe {
                 '}';
     }
 
-    public Component asComponent() {
+    /**
+     * This method generates a component that represents the recipe.
+     * <br>
+     * This may be overridden by the child class to add additional information.
+     *
+     * @return The component that represents the recipe.
+     */
+    public @NotNull Component asComponent() {
         return Component.text(RecipeType.getNamedRecipeID(this.recipeType, this.ID));
     }
 
+    /**
+     * This method generates a component used as a hover text for the recipe.
+     * <p>
+     * Note that this method is an abstract method and needs to be implemented by the child class.
+     *
+     * @return The hover text component.
+     */
     public abstract @NotNull Component getHover();
 
-    public Component getMaterialsAsComponent() {
+    /**
+     * This method generates a text component that lists all the materials used in the recipe.
+     * Each material is listed on a new line with its quantity and name.
+     * If the material does not have a name, the type of the item stack is used instead.
+     *
+     * @return A text component that represents the materials used in the recipe.
+     */
+    //TODO: Make Translatable
+    public @NotNull Component getMaterialsAsComponent() {
         Component hover = Component.text("Materials:");
         for (DAItem material : this.materials) {
             Component name = material.getName();
