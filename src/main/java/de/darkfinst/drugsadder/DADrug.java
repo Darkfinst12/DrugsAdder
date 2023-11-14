@@ -135,6 +135,11 @@ public class DADrug extends DAAddiction {
                 '}';
     }
 
+    /**
+     * Returns the drug as a component, which can be used in a message
+     *
+     * @return The drug as a component
+     */
     public Component asComponent() {
         Component component = Component.text(this.ID);
         component = component.hoverEvent(this.getHover().asHoverEvent());
@@ -142,6 +147,11 @@ public class DADrug extends DAAddiction {
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
+    /**
+     * Returns the drug as a component, which can be used in a message as a hover
+     *
+     * @return The hover as a component
+     */
     public Component getHover() {
         Component hover = Component.text().asComponent();
         hover = hover.append(Component.text("Item: " + this.item.getNamespacedID()));

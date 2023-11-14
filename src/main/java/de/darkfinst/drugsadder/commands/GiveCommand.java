@@ -16,8 +16,7 @@ public class GiveCommand {
         } else if (!commandSender.hasPermission("drugsadder.cmd.give")) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
         } else {
-            DA.loader.reloadConfig();
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Info_Reload"));
+            //TODO: Implement
         }
     }
 

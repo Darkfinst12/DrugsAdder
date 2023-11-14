@@ -152,6 +152,12 @@ public class DAAddiction {
                 '}';
     }
 
+    /**
+     * Returns the addiction as a component
+     *
+     * @param extended Whether the component should be extended or not (includes the effects)
+     * @return The addiction as a component
+     */
     protected Component asComponent(boolean extended) {
         Component component = Component.text().asComponent();
         component = component.append(Component.text("AddictionPoints: " + this.addictionPoints));
@@ -160,7 +166,7 @@ public class DAAddiction {
         component = component.appendNewline().append(Component.text("ReductionAmount: " + this.reductionAmount));
         component = component.appendNewline().append(Component.text("ReductionTime: " + this.reductionTime));
         component = component.appendNewline().append(Component.text("ReductionOnlyOnline: " + this.reductionOnlyOnline));
-        if(extended){
+        if (extended) {
             component = component.appendNewline().append(Component.text("Deprivation:"));
             for (Map.Entry<Integer, List<DAEffect>> entry : this.deprivation.entrySet()) {
                 component = component.appendNewline().append(Component.text("  " + entry.getKey() + ":"));
