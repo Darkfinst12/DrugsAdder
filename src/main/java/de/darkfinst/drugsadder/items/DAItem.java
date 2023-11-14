@@ -95,4 +95,9 @@ public class DAItem implements Cloneable {
             throw new AssertionError();
         }
     }
+
+    public Component asComponent() {
+        Component component = Component.text(this.namespacedID);
+        return component;
+    }
 }

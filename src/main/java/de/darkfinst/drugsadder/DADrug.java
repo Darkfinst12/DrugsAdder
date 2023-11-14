@@ -4,6 +4,7 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -130,6 +131,14 @@ public class DADrug extends DAAddiction {
                 ", addiction=" + super.toString() +
                 '}';
     }
+
+    public Component asComponent() {
+        Component component = Component.text(this.ID);
+
+        return component;
+    }
+
+
 
     /**
      * A runnable, which reduces the addiction of all addicted players

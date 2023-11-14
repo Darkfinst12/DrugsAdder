@@ -94,11 +94,18 @@ public class LanguageReader {
      */
     public Component getComponent(String key, String... args) {
         String s = this.getString(key, args);
-        if(s.equals(String.format("Key: %s not found", key))) {
+        if (s.equals(String.format("Key: %s not found", key))) {
             return null;
         }
         return MiniMessage.miniMessage().deserialize(s);
     }
 
 
+    public Component getComponentWithFallback(String key, String... args) {
+        Component component = this.getComponent(key, args);
+        if (component == null) {
+            component = Component.text(this.getString(key, args));
+        }
+        return component;
+    }
 }
