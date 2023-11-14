@@ -421,6 +421,17 @@ public class DATableRecipe extends DARecipe {
         }
         hover = hover.append(Component.text("x" + this.getFilterTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
         hover = hover.append(Component.text("Fuel Two: "));
+        name = this.getFuelTwo().getName();
+        if (name == null) {
+            name = Component.text(this.getFuelTwo().getItemStack().getType().name());
+        }
+        hover = hover.append(Component.text("x" + this.getFuelTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
+        hover = hover.append(Component.text("Material Two: "));
+        name = this.getMaterialTwo().getName();
+        if (name == null) {
+            name = Component.text(this.getMaterialTwo().getItemStack().getType().name());
+        }
+        hover = hover.append(Component.text("x" + this.getMaterialTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
         return hover;
     }
 
