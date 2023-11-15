@@ -107,7 +107,7 @@ public class GiveCommand {
                         return DAConfig.customItemReader.getRegisteredItems().keySet().stream().filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
                     }
                     case PLANTS -> {
-                        return DAConfig.seedReader.getRegisteredSeeds().stream().map(DAPlantItem::getNamespacedID).filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
+                        return DAConfig.seedReader.getSeedNames().stream().filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
                     }
                 }
 

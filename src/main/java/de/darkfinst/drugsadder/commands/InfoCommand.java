@@ -1,6 +1,8 @@
 package de.darkfinst.drugsadder.commands;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.filedata.DAConfig;
+import de.darkfinst.drugsadder.recipe.DARecipe;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -13,10 +15,52 @@ public class InfoCommand {
 
     public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
+
     }
 
 
     public static @NotNull List<String> complete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length <= 1) {
+            return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPos() == 0 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
+        } else if (args.length == 2) {
+            if (PossibleArgs.RECIPES.getArg().equalsIgnoreCase(args[0]) && sender.hasPermission(PossibleArgs.RECIPES.getPermission())) {
+                return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPos() == 1 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
+            } else if (PossibleArgs.CUSTOM_ITEMS.getArg().equalsIgnoreCase(args[0]) && sender.hasPermission(PossibleArgs.CUSTOM_ITEMS.getPermission())) {
+                return DAConfig.customItemReader.getCustomItemNames().stream().filter(name -> name.toLowerCase().contains(args[1])).toList();
+            } else if (PossibleArgs.DRUGS.getArg().equalsIgnoreCase(args[0]) && sender.hasPermission(PossibleArgs.DRUGS.getPermission())) {
+                return DAConfig.drugReader.getDrugNames().stream().filter(name -> name.toLowerCase().contains(args[1])).toList();
+            } else if (PossibleArgs.PLANT.getArg().equalsIgnoreCase(args[0]) && sender.hasPermission(PossibleArgs.PLANT.getPermission())) {
+                return DAConfig.seedReader.getSeedNames().stream().filter(namespacedID -> namespacedID.contains(args[1])).toList();
+            }
+        } else if (args.length == 3 && PossibleArgs.RECIPES.getArg().equalsIgnoreCase(args[0]) && sender.hasPermission(PossibleArgs.RECIPES.getPermission())) {
+            PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[1], 1);
+            if (possibleArgs != null) {
+                switch (possibleArgs) {
+                    case ALL -> {
+                        return DAConfig.daRecipeReader.getRegisteredRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+                    case CRAFTER -> {
+                        return DAConfig.daRecipeReader.getCrafterRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+                    case CRAFTING -> {
+                        return DAConfig.daRecipeReader.getCraftingRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+                    case BARREL -> {
+                        return DAConfig.daRecipeReader.getBarrelRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+                    case PRESS -> {
+                        return DAConfig.daRecipeReader.getPressRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+                    case TABLE -> {
+                        return DAConfig.daRecipeReader.getTableRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+                    case FURNACE -> {
+                        return DAConfig.daRecipeReader.getFurnaceRecipes().stream().map(DARecipe::getID).filter(namespacedID -> namespacedID.contains(args[2])).toList();
+                    }
+
+                }
+            }
+        }
         return new ArrayList<>();
     }
 
@@ -51,9 +95,10 @@ public class InfoCommand {
             return DA.loader.languageReader.getString(languageKey);
         }
 
-        public static ListCommand.PossibleArgs valueOfIgnoreCase(String translation) {
-            return Arrays.stream(ListCommand.PossibleArgs.values())
+        public static PossibleArgs valueOfIgnoreCase(String translation, Integer pos) {
+            return Arrays.stream(PossibleArgs.values())
                     .filter(possibleArgs -> possibleArgs.getArg().equalsIgnoreCase(translation))
+                    .filter(possibleArgs -> pos == null || possibleArgs.getPos() == pos)
                     .findFirst()
                     .orElse(null);
         }

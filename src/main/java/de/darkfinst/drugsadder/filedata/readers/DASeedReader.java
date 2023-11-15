@@ -178,6 +178,10 @@ public class DASeedReader {
         return this.registeredSeeds.stream().filter(drug -> drug.getNamespacedID().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
 
+    public List<String> getSeedNames() {
+        return this.registeredSeeds.stream().map(DAItem::getNamespacedID).toList();
+    }
+
     public Map<String, Integer> getAllowedTools(ConfigurationSection seedConfig) {
         Map<String, Integer> allowedTools = new HashMap<>();
         if (seedConfig != null) {
