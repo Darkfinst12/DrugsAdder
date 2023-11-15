@@ -34,7 +34,6 @@ public class ListCommand {
                     case RECIPES -> ListCommand.recipes(commandSender, Arrays.copyOfRange(args, 1, args.length));
                 }
             } catch (Exception e) {
-                DA.log.logException(e);
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_WrongArgs"));
             }
         }

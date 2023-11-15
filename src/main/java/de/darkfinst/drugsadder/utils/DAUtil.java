@@ -11,12 +11,14 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -373,6 +375,30 @@ public class DAUtil {
 
 
         return canBeApplied;
+    }
+
+    /**
+     * Adds the given items to the inventory and drops the items that could not be added
+     *
+     * @param inventory The inventory to add the items to
+     * @param items     The items to add
+     * @throws NullPointerException If the inventory location or world is null
+     */
+    public static void addToInventory(Inventory inventory, ItemStack... items) throws NullPointerException {
+        for (ItemStack item : items) {
+            HashMap<Integer, ItemStack> returns = inventory.addItem(item);
+            if (!returns.isEmpty()) {
+                Location location = inventory.getLocation();
+                if (location == null) {
+                    throw new NullPointerException("Inventory location is null");
+                }
+                World world = location.getWorld();
+                if (world == null) {
+                    throw new NullPointerException("Inventory world is null");
+                }
+                returns.values().forEach(returned -> world.dropItem(location, returned));
+            }
+        }
     }
 
 
