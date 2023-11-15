@@ -52,7 +52,7 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender commandSender) {
-        Component component = DA.loader.languageReader.getComponent("Command_Assistance_Use");
+        Component component = DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Use");
         if (component == null) {
             component = Component.text(DA.loader.languageReader.getString("Command_Assistance_Use"));
         }

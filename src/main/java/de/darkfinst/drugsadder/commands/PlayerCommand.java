@@ -27,13 +27,13 @@ public class PlayerCommand {
     //arg[3] = amount (if required)
     public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Assistance_Player"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Player"));
         } else {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
             try {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[1]);
                 if (!commandSender.hasPermission(possibleArgs.getPermission())) {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                     return;
                 }
                 switch (possibleArgs) {
@@ -45,7 +45,7 @@ public class PlayerCommand {
                 }
             } catch (Exception e) {
                 DA.log.logException(e);
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_WrongArgs"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_WrongArgs"));
             }
         }
     }
@@ -58,34 +58,34 @@ public class PlayerCommand {
         }
         DADrug daDrug = DAConfig.drugReader.getDrug(drugID);
         if (daDrug == null) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_DrugNotFound", drugID));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound", drugID));
         } else {
             daPlayer.addDrug(daDrug.getID(), amount);
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Player_Set", target.getName(), drugID, amount + ""));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Player_Set", target.getName(), drugID, amount + ""));
         }
     }
 
     private static void get(CommandSender commandSender, OfflinePlayer offlinePlayer, String drugID) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
         } else {
             int addictionPoints = daPlayer.getAddiction(drugID);
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Player_Get", offlinePlayer.getName(), drugID, addictionPoints + ""));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Player_Get", offlinePlayer.getName(), drugID, addictionPoints + ""));
         }
     }
 
     private static void remove(CommandSender commandSender, OfflinePlayer offlinePlayer, String drugID) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
         } else {
             DADrug daDrug = DAConfig.drugReader.getDrug(drugID);
             if (daDrug == null) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_DrugNotFound", drugID));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound", drugID));
             } else {
                 daPlayer.clearAddiction(daDrug);
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Player_Remove", offlinePlayer.getName(), drugID));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Player_Remove", offlinePlayer.getName(), drugID));
             }
         }
     }
@@ -93,20 +93,20 @@ public class PlayerCommand {
     private static void clear(CommandSender commandSender, OfflinePlayer offlinePlayer) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
         } else {
             daPlayer.clearAddictions();
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Player_Clear", offlinePlayer.getName()));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Player_Clear", offlinePlayer.getName()));
         }
     }
 
     private static void info(CommandSender commandSender, OfflinePlayer offlinePlayer) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
         } else {
-            AtomicReference<Component> component = new AtomicReference<>(DA.loader.languageReader.getComponent("Command_Player_Info", offlinePlayer.getName()));
-            daPlayer.getAddicted().forEach((daDrug, integer) -> component.set(component.get().appendNewline().append(DA.loader.languageReader.getComponent("Command_Player_Info_Drug", daDrug.getID(), integer + ""))));
+            AtomicReference<Component> component = new AtomicReference<>(DA.loader.languageReader.getComponentWithFallback("Command_Player_Info", offlinePlayer.getName()));
+            daPlayer.getAddicted().forEach((daDrug, integer) -> component.set(component.get().appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Command_Player_Info_Drug", daDrug.getID(), integer + ""))));
             DA.loader.msg(commandSender, component.get());
         }
     }

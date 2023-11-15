@@ -21,12 +21,12 @@ public class ListCommand {
 
     public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Assistance_List"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_List"));
         } else {
             try {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[0]);
                 if (!commandSender.hasPermission(possibleArgs.getPermission())) {
-                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
+                    DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                 }
                 switch (possibleArgs) {
                     case CUSTOM_ITEMS -> ListCommand.customItems(commandSender);
@@ -34,7 +34,7 @@ public class ListCommand {
                     case RECIPES -> ListCommand.recipes(commandSender, Arrays.copyOfRange(args, 1, args.length));
                 }
             } catch (Exception e) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_WrongArgs"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_WrongArgs"));
             }
         }
 
@@ -42,11 +42,11 @@ public class ListCommand {
 
     private static void recipes(CommandSender commandSender, String[] args) {
         if (args.length < 1) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Assistance_List_Recipes"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_List_Recipes"));
         } else {
             PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[0]);
             if (!commandSender.hasPermission(possibleArgs.getPermission())) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
             }
             switch (possibleArgs) {
                 case ALL ->
@@ -69,7 +69,7 @@ public class ListCommand {
 
     private static void drugs(CommandSender commandSender) {
         if (!commandSender.hasPermission(PossibleArgs.DRUGS.getPermission())) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
             ListCommand.listItems(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_List_Drugs"), v -> DAConfig.drugReader.getRegisteredDrugs(), DADrug::asComponent);
         }
@@ -77,7 +77,7 @@ public class ListCommand {
 
     private static void customItems(CommandSender commandSender) {
         if (!commandSender.hasPermission(PossibleArgs.CUSTOM_ITEMS.getPermission())) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponent("Command_Error_NoPermission"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
             ListCommand.listItems(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_List_CustomItems"), v -> DAConfig.customItemReader.getRegisteredItems().values(), DAItem::asComponent);
         }
