@@ -27,11 +27,7 @@ public class DA extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content(" ____                  _____   _   _         ").build());
-        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("|    \\ ___ _ _ ___ ___|  _  |_| |_| |___ ___      ").append(Component.text().color(TextColor.color(0, 171, 34)).content(getPluginMeta().getName() + " ").append(Component.text().color(TextColor.color(130, 130, 130)).content(getPluginMeta().getVersion()))).build());
-        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("|  |  |  _| | | . |_ -|     | . | . | -_|  _|     ").build());
-        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("|____/|_| |___|_  |___|__|__|___|___|___|_|       ").append(Component.text().color(TextColor.color(73, 73, 73)).content(getServer().getVersion())).build());
-        Bukkit.getConsoleSender().sendMessage(Component.text().color(TextColor.color(8, 201, 201)).content("              |___|                          ").build());
+        Bukkit.getConsoleSender().sendMessage(this.getInfoComponent());
         loader.init();
     }
 
@@ -44,6 +40,16 @@ public class DA extends JavaPlugin {
 
     public void disable() {
         this.getServer().getPluginManager().disablePlugin(this);
+    }
+
+    public Component getInfoComponent() {
+        Component component = Component.empty().asComponent();
+        component = component.appendNewline().append(Component.text().color(TextColor.color(8, 201, 201)).content(" ____                  _____   _   _         "));
+        component = component.appendNewline().append(Component.text().color(TextColor.color(8, 201, 201)).content("|    \\ ___ _ _ ___ ___|  _  |_| |_| |___ ___      ").append(Component.text().color(TextColor.color(0, 171, 34)).content(getPluginMeta().getName() + " ").append(Component.text().color(TextColor.color(130, 130, 130)).content(getPluginMeta().getVersion()))));
+        component = component.appendNewline().append(Component.text().color(TextColor.color(8, 201, 201)).content("|  |  |  _| | | . |_ -|     | . | . | -_|  _|     ")).append(Component.text().color(TextColor.color(0, 171, 34)).content("Autor ")).append(Component.text().color(TextColor.color(130, 130, 130)).content(getPluginMeta().getAuthors().toString().replace("[", "").replace("]", "")));
+        component = component.appendNewline().append(Component.text().color(TextColor.color(8, 201, 201)).content("|____/|_| |___|_  |___|__|__|___|___|___|_|       ").append(Component.text().color(TextColor.color(73, 73, 73)).content(getServer().getVersion())));
+        component = component.appendNewline().append(Component.text().color(TextColor.color(8, 201, 201)).content("              |___|                          "));
+        return component;
     }
 
 }

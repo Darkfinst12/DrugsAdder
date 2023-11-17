@@ -102,13 +102,13 @@ public class DALoader {
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
             if (config == null) {
-                this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+                DA.getInstance.disable();
                 return;
             }
             DAConfig.readConfig(config);
         } catch (Exception e) {
             this.logException(e);
-            this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+            DA.getInstance.disable();
         }
     }
 

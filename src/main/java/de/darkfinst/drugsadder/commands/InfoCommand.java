@@ -7,6 +7,7 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.recipe.DARecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -33,6 +34,7 @@ public class InfoCommand {
                     case DRUGS -> InfoCommand.drugs(commandSender, Arrays.copyOfRange(args, 1, args.length));
                     case RECIPES -> InfoCommand.recipes(commandSender, Arrays.copyOfRange(args, 1, args.length));
                     case PLANT -> InfoCommand.plant(commandSender, Arrays.copyOfRange(args, 1, args.length));
+                    case PLUGIN -> InfoCommand.plugin(commandSender);
                 }
             } catch (Exception e) {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_WrongArgs"));
@@ -132,6 +134,11 @@ public class InfoCommand {
     }
 
 
+    private static void plugin(CommandSender commandSender) {
+        DA.loader.msg(commandSender, DA.getInstance.getInfoComponent());
+    }
+
+
     public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPos() == 0 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
@@ -184,6 +191,7 @@ public class InfoCommand {
         DRUGS("Command_Arg_Drugs", "drugsadder.cmd.info.drugs", 0),
         RECIPES("Command_Arg_Recipes", "drugsadder.cmd.info.recipes", 0),
         PLANT("Command_Arg_Plant", "drugsadder.cmd.info.plant", 0),
+        PLUGIN("Command_Arg_Plugin", "drugsadder.cmd.info.plugin", 0),
 
         ALL("Command_Arg_All", "drugsadder.cmd.info.all", 1),
         CRAFTER("Command_Arg_Crafter", "drugsadder.cmd.info.crafter", 1),
