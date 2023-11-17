@@ -50,7 +50,7 @@ public class InfoCommand {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_CustomItemNotFound"));
             } else {
                 Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_CustomItem", daItem.getNamespacedID());
-                component = component.append(daItem.asInfoComponent());
+                component = component.appendNewline().append(daItem.asInfoComponent());
                 DA.loader.msg(commandSender, component);
             }
         }
@@ -65,7 +65,7 @@ public class InfoCommand {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound"));
             } else {
                 Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Drug", daDrug.getID());
-                component = component.append(daDrug.asInfoComponent());
+                component = component.appendNewline().append(daDrug.asInfoComponent());
 
                 DA.loader.msg(commandSender, component);
             }
@@ -81,7 +81,7 @@ public class InfoCommand {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlantNotFound"));
             } else {
                 Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Plant", daPlant.getNamespacedID());
-                component = component.append(daPlant.asInfoComponent());
+                component = component.appendNewline().append(daPlant.asInfoComponent());
 
                 DA.loader.msg(commandSender, component);
             }
@@ -99,19 +99,20 @@ public class InfoCommand {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                 }
                 switch (possibleArgs) {
-                    case ALL -> InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getRecipe(args[1]));
+                    case ALL ->
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getRecipe(args[1]), args[1]);
                     case CRAFTER ->
-                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getCrafterRecipe(args[1]));
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getCrafterRecipe(args[1]), args[1]);
                     case CRAFTING ->
-                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getCraftingRecipe(args[1]));
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getCraftingRecipe(args[1]), args[1]);
                     case BARREL ->
-                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getBarrelRecipe(args[1]));
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getBarrelRecipe(args[1]), args[1]);
                     case PRESS ->
-                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getPressRecipe(args[1]));
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getPressRecipe(args[1]), args[1]);
                     case TABLE ->
-                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getTableRecipe(args[1]));
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getTableRecipe(args[1]), args[1]);
                     case FURNACE ->
-                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getFurnaceRecipe(args[1]));
+                            InfoCommand.listRecipe(commandSender, DAConfig.daRecipeReader.getFurnaceRecipe(args[1]), args[1]);
                 }
             } catch (Exception e) {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_WrongArgs"));
@@ -119,12 +120,12 @@ public class InfoCommand {
         }
     }
 
-    private static void listRecipe(CommandSender commandSender, DARecipe recipe) {
+    private static void listRecipe(CommandSender commandSender, DARecipe recipe, String recipeID) {
         if (recipe == null) {
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_RecipeNotFound"));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_RecipeNotFound", recipeID));
         } else {
             Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Recipe", recipe.getRecipeType().name());
-            component = component.append(recipe.asInfoComponent());
+            component = component.appendNewline().append(recipe.asInfoComponent());
 
             DA.loader.msg(commandSender, component);
         }
