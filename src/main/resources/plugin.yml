@@ -97,6 +97,7 @@ permissions:
     description: Allow to harvest a Plant
 
   # -- Commands --
+  # TODO: REWORK - Command was split
   drugsadder.cmd:
     description: Gives access to all DrugsAdder Commands
     default: false

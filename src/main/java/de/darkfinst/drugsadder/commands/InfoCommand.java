@@ -47,7 +47,7 @@ public class InfoCommand {
             String namespacedID = args[0].contains(":") ? args[0] : "drugsadder:" + args[0];
             DAItem daItem = DAUtil.getItemStackByNamespacedID(namespacedID);
             if (daItem == null) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_CustomItemNotFound"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_CustomItemNotFound", namespacedID));
             } else {
                 Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_CustomItem", daItem.getNamespacedID());
                 component = component.appendNewline().append(daItem.asInfoComponent());
@@ -62,7 +62,7 @@ public class InfoCommand {
         } else {
             DADrug daDrug = DAConfig.drugReader.getDrug(args[0]);
             if (daDrug == null) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound", args[0]));
             } else {
                 Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Drug", daDrug.getID());
                 component = component.appendNewline().append(daDrug.asInfoComponent());
@@ -78,7 +78,7 @@ public class InfoCommand {
         } else {
             DAPlantItem daPlant = DAConfig.seedReader.getSeed(args[0]);
             if (daPlant == null) {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlantNotFound"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlantNotFound", args[0]));
             } else {
                 Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Plant", daPlant.getNamespacedID());
                 component = component.appendNewline().append(daPlant.asInfoComponent());

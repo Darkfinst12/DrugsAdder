@@ -21,7 +21,7 @@ public class GiveCommand {
 
     public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
-            commandSender.sendMessage(DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Reload"));
+            commandSender.sendMessage(DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Give"));
         } else {
             if (commandSender instanceof Player player) {
                 try {
@@ -41,7 +41,7 @@ public class GiveCommand {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_WrongArgs"));
                 }
             } else {
-                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPlayer"));
+                DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NotPlayer"));
             }
         }
     }
