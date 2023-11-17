@@ -100,15 +100,34 @@ public class DAItem implements Cloneable {
     }
 
     /**
-     * Returns the item as a component
+     * This method generates a component that represents the DAItem.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows information about the item.
+     * <br>
+     * It also extends a Click Event that executes the command to show the item in the info command.
+     * <br>
+     * It is used in the {@link de.darkfinst.drugsadder.commands.ListCommand}.
      *
-     * @return The item as a component
+     * @return The component that represents the DAItem.
      */
-    public Component asComponent() {
+    public Component asListComponent() {
         Component component = Component.text(this.namespacedID);
         component = component.hoverEvent(this.getHover().asHoverEvent());
         String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.CUSTOM_ITEMS.getArg(), this.getNamespacedID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    /**
+     * This method generates a component that represents the DAItem.
+     * <br>
+     * It is used in the {@link de.darkfinst.drugsadder.commands.InfoCommand}.
+     *
+     * @return The component that represents the recipe.
+     */
+    public @NotNull Component asInfoComponent() {
+        Component component = Component.text(this.namespacedID);
+        component = component.appendNewline().append(this.getHover());
+        return component;
     }
 
     /**

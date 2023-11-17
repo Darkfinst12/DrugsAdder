@@ -22,28 +22,40 @@ public class DACrafterRecipe extends DAShapedRecipe {
 
     /**
      * The shape of the recipe
+     * <br>
+     * The shape is a list of strings with a length of 5
+     * <br>
+     * Each string represents a row of the shape
+     * <br>
+     * Each character represents a slot in the row, that means the length of the string must be 5
      */
     private final List<String> shape = new ArrayList<>(5);
+
     /**
-     * The keys of the shape
+     * A list of keys for the shape, these keys are used to match the materials
      */
     private final Map<String, DAItem> shapeKeys = new HashMap<>();
+
     /**
      * The processing time of the recipe
+     * <br>
+     * The Time is in seconds
      */
     private final double processingTime;
+
     /**
      * The required players for the recipe
      */
     private final int requiredPlayers;
+
     /**
      * Whether the recipe is shapeless or not
      */
     @Setter
     private boolean isShapeless = false;
 
-    public DACrafterRecipe(String ID, RecipeType recipeType, DAItem result, double processingTime, int requiredPlayers, DAItem... materials) {
-        super(ID, recipeType, result, materials);
+    public DACrafterRecipe(String recipeID, RecipeType recipeType, DAItem result, double processingTime, int requiredPlayers, DAItem... materials) {
+        super(recipeID, recipeType, result, materials);
         this.processingTime = processingTime;
         this.requiredPlayers = requiredPlayers;
     }
@@ -290,14 +302,20 @@ public class DACrafterRecipe extends DAShapedRecipe {
 
     /**
      * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
      *
      * @return The component that represents the recipe.
      */
     @Override
-    public @NotNull Component asComponent() {
-        Component component = super.asComponent();
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.CRAFTER.getArg(), this.getID());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.CRAFTER.getArg(), this.getRecipeID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 

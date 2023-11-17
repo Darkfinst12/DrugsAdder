@@ -136,28 +136,49 @@ public class DADrug extends DAAddiction {
     }
 
     /**
-     * Returns the drug as a component, which can be used in a message
+     * This method generates a component that represents the drug.
+     * <br>
+     * It is used in the {@link de.darkfinst.drugsadder.commands.InfoCommand}.
      *
-     * @return The drug as a component
+     * @return The component that represents the drug.
      */
-    public Component asComponent() {
+    public Component asListComponent() {
         Component component = Component.text(this.ID);
-        component = component.hoverEvent(this.getHover().asHoverEvent());
+        component = component.hoverEvent(this.getHover(false).asHoverEvent());
         String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.DRUGS.getArg(), this.getID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
     /**
+     * This method generates a component that represents the drug.
+     * <br>
+     * It is used in the {@link de.darkfinst.drugsadder.commands.InfoCommand}.
+     *
+     * @return The component that represents the drug.
+     */
+    public Component asInfoComponent() {
+        Component component = Component.text(this.ID);
+        component = component.appendNewline().append(this.getHover(true));
+        return component;
+    }
+
+    /**
      * Returns the drug as a component, which can be used in a message as a hover
      *
+     * @param extended Whether the hover should be extended or not - For details see {@link DAAddiction#asComponent(boolean)}
      * @return The hover as a component
      */
-    public Component getHover() {
+    public Component getHover(boolean extended) {
         Component hover = Component.text().asComponent();
         hover = hover.append(Component.text("Item: " + this.item.getNamespacedID()));
         hover = hover.appendNewline().append(Component.text("isAddictionAble: " + this.isAddictionAble()));
         if (this.isAddictionAble()) {
-            hover = hover.appendNewline().append(super.asComponent(false));
+            hover = hover.appendNewline().append(super.asComponent(extended));
+        } else if (extended) {
+            hover = hover.appendNewline().append(Component.text("Consummation:"));
+            for (DAEffect effect : this.daEffects) {
+                hover = hover.appendNewline().append(effect.asComponent());
+            }
         }
         return hover;
     }

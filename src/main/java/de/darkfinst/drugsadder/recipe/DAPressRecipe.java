@@ -18,18 +18,22 @@ public class DAPressRecipe extends DARecipe {
      * The mold of the recipe
      */
     private final DAItem mold;
+
     /**
      * If the mold should be returned
      */
     private final boolean returnMold;
-    /**
-     * The duration of the process in seconds
-     */
-    private final double duration;
 
-    public DAPressRecipe(String namedID, RecipeType recipeType, double duration, DAItem mold, boolean returnMold, DAItem result, DAItem... materials) {
-        super(namedID, recipeType, result, materials);
-        this.duration = duration;
+    /**
+     * The processing time of the recipe
+     * <br>
+     * The Time is in seconds
+     */
+    private final double processingTime;
+
+    public DAPressRecipe(String recipeID, RecipeType recipeType, double processingTime, DAItem mold, boolean returnMold, DAItem result, DAItem... materials) {
+        super(recipeID, recipeType, result, materials);
+        this.processingTime = processingTime;
         this.returnMold = returnMold;
         this.mold = mold;
     }
@@ -72,20 +76,26 @@ public class DAPressRecipe extends DARecipe {
                 .replace("}", "") +
                 ", mold=" + mold +
                 ", returnMold=" + returnMold +
-                ", duration=" + duration +
+                ", duration=" + processingTime +
                 '}';
     }
 
     /**
      * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
      *
      * @return The component that represents the recipe.
      */
     @Override
-    public @NotNull Component asComponent() {
-        Component component = super.asComponent();
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.PRESS.getArg(), this.getID());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.PRESS.getArg(), this.getRecipeID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
@@ -98,7 +108,7 @@ public class DAPressRecipe extends DARecipe {
     //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Duration: " + this.getDuration() + "s\n"));
+        hover = hover.append(Component.text("Duration: " + this.getProcessingTime() + "s\n"));
         hover = hover.append(Component.text("Mold: "));
         Component name = this.getMold().getName();
         if (name == null) {

@@ -1,7 +1,11 @@
 package de.darkfinst.drugsadder.items;
 
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +38,30 @@ public class DAPlantItem extends DAItem implements Cloneable {
 
     public DAPlantItem(@NotNull ItemStack itemStack, String namespacedID) {
         super(itemStack, namespacedID);
+    }
+
+    @Override
+    public Component asListComponent() {
+        Component component = super.asListComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.PLANT.getArg(), this.getNamespacedID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    @Override
+    public Component getHover() {
+        Component hover = super.getHover();
+        hover = hover.appendNewline().append(Component.text("Growth Time: " + this.getGrowthTime() + "s"));
+        hover = hover.appendNewline().append(Component.text("Destroy on Harvest: " + this.isDestroyOnHarvest()));
+        hover = hover.appendNewline().append(Component.text("Drops: "));
+        for (DAItem drop : this.getDrops()) {
+            hover = hover.appendNewline().append(drop.getHover());
+        }
+        hover = hover.appendNewline().append(Component.text("Allowed Tools: "));
+        for (Map.Entry<String, Integer> entry : this.getAllowedTools().entrySet()) {
+            hover = hover.appendNewline().append(Component.text(entry.getKey() + ": " + entry.getValue()));
+        }
+        return hover;
     }
 
     @Override

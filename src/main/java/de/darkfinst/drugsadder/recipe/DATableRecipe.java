@@ -62,8 +62,8 @@ public class DATableRecipe extends DARecipe {
      */
     private double processingTimeTwo;
 
-    public DATableRecipe(String ID, RecipeType recipeType, DAItem result, DAItem filterOne, DAItem fuelOne, DAItem materialOne, double processingTimeOne) {
-        super(ID, recipeType, result, materialOne);
+    public DATableRecipe(String recipeID, RecipeType recipeType, DAItem result, DAItem filterOne, DAItem fuelOne, DAItem materialOne, double processingTimeOne) {
+        super(recipeID, recipeType, result, materialOne);
         this.filterOne = filterOne;
         this.fuelOne = fuelOne;
         this.materialOne = materialOne;
@@ -384,14 +384,20 @@ public class DATableRecipe extends DARecipe {
 
     /**
      * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
      *
      * @return The component that represents the recipe.
      */
     @Override
-    public @NotNull Component asComponent() {
-        Component component = super.asComponent();
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.TABLE.getArg(), this.getID());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.TABLE.getArg(), this.getRecipeID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 

@@ -214,7 +214,7 @@ public class DACommand implements CommandExecutor, TabCompleter {
         StringBuilder recipes = new StringBuilder(DA.loader.languageReader.getString("Command_Info_ListItems", recipeType.getArg()) + "\n");
         for (Object o : recipeList) {
             DARecipe registeredRecipe = (DARecipe) o;
-            String s = "- ID:" + registeredRecipe.getID() + " - Type: " + registeredRecipe.getRecipeType() + "\n";
+            String s = "- ID:" + registeredRecipe.getRecipeID() + " - Type: " + registeredRecipe.getRecipeType() + "\n";
             recipes.append(s);
         }
         return recipes.toString();

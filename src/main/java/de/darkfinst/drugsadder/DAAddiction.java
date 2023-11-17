@@ -158,6 +158,7 @@ public class DAAddiction {
      * @param extended Whether the component should be extended or not (includes the effects)
      * @return The addiction as a component
      */
+    //TODO: Make Translatable
     protected Component asComponent(boolean extended) {
         Component component = Component.text().asComponent();
         component = component.append(Component.text("AddictionPoints: " + this.addictionPoints));
@@ -171,14 +172,14 @@ public class DAAddiction {
             for (Map.Entry<Integer, List<DAEffect>> entry : this.deprivation.entrySet()) {
                 component = component.appendNewline().append(Component.text("  " + entry.getKey() + ":"));
                 for (DAEffect effect : entry.getValue()) {
-                    component = component.appendNewline().append(Component.text("    " + effect.toString()));
+                    component = component.appendNewline().append(effect.asComponent());
                 }
             }
             component = component.appendNewline().append(Component.text("Consummation:"));
             for (Map.Entry<Integer, List<DAEffect>> entry : this.consummation.entrySet()) {
                 component = component.appendNewline().append(Component.text("  " + entry.getKey() + ":"));
                 for (DAEffect effect : entry.getValue()) {
-                    component = component.appendNewline().append(Component.text("    " + effect.toString()));
+                    component = component.appendNewline().append(effect.asComponent());
                 }
             }
         }

@@ -15,6 +15,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,21 +24,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Getter
 public class DABarrelRecipe extends DARecipe {
 
     /**
      * The time the recipe needs to process
+     * <br>
+     * The time is in Minutes
      */
     private final long processTime;
+
     /**
      * The time the recipe can process longer than the process time
+     * <br>
+     * The time is in Minutes
      */
     private final long processOverdueAcceptance;
 
-    public DABarrelRecipe(String namedID, RecipeType recipeType, long processTime, long processOverdueAcceptance, DAItem result, DAItem... materials) {
-        super(namedID, recipeType, result, materials);
+    public DABarrelRecipe(String recipeID, RecipeType recipeType, long processTime, long processOverdueAcceptance, DAItem result, DAItem... materials) {
+        super(recipeID, recipeType, result, materials);
         this.processTime = processTime;
         this.processOverdueAcceptance = processOverdueAcceptance;
     }
@@ -156,21 +163,29 @@ public class DABarrelRecipe extends DARecipe {
 
     /**
      * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
      *
      * @return The component that represents the recipe.
      */
     @Override
-    public @NotNull Component asComponent() {
-        Component component = super.asComponent();
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.BARREL.getArg(), this.getID());
+        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.BARREL.getArg(), this.getRecipeID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 
     /**
-     * Returns the hover event of the recipe
+     * Returns the component that is used for the Hover Event of the recipe
+     * <br>
+     * It shows the process time and the materials.
      *
-     * @return The hover event of the recipe
+     * @return the component
      */
     @Override
     //TODO: Make Translatable

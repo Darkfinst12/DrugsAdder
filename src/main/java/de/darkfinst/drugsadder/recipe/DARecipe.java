@@ -15,8 +15,11 @@ public abstract class DARecipe {
 
     /**
      * The id of the recipe
+     * <br>
+     * The id is set in the config and is used to identify the recipe.
+     * It is possible to give multiple recipes the same id if they have different types.
      */
-    private final String ID;
+    private final String recipeID;
     /**
      * The type of the recipe
      *
@@ -32,8 +35,8 @@ public abstract class DARecipe {
      */
     private DAItem[] materials;
 
-    protected DARecipe(String ID, RecipeType recipeType, DAItem result, DAItem... materials) {
-        this.ID = ID;
+    protected DARecipe(String recipeID, RecipeType recipeType, DAItem result, DAItem... materials) {
+        this.recipeID = recipeID;
         this.recipeType = recipeType;
         this.result = result;
         this.materials = materials;
@@ -73,7 +76,7 @@ public abstract class DARecipe {
      * @return The named id of the recipe
      */
     public String getRecipeNamedID() {
-        return this.recipeType.name().toLowerCase() + ":" + this.ID;
+        return this.recipeType.name().toLowerCase() + ":" + this.recipeID;
     }
 
     /**
@@ -90,7 +93,7 @@ public abstract class DARecipe {
     @Override
     public String toString() {
         return "DARecipe{" +
-                "namedID='" + ID + '\'' +
+                "namedID='" + recipeID + '\'' +
                 ", recipeType=" + recipeType +
                 ", materials=" + Arrays.toString(materials) +
                 ", result=" + result +
@@ -101,11 +104,28 @@ public abstract class DARecipe {
      * This method generates a component that represents the recipe.
      * <br>
      * This may be overridden by the child class to add additional information.
+     * <br>
+     * It is used in the {@link de.darkfinst.drugsadder.commands.ListCommand}.
      *
      * @return The component that represents the recipe.
      */
-    public @NotNull Component asComponent() {
-        return Component.text(RecipeType.getNamedRecipeID(this.recipeType, this.ID));
+    public @NotNull Component asListComponent() {
+        return Component.text(RecipeType.getNamedRecipeID(this.recipeType, this.recipeID));
+    }
+
+    /**
+     * This method generates a component that represents the recipe.
+     * <br>
+     * This may be overridden by the child class to add additional information.
+     * <br>
+     * It is used in the {@link de.darkfinst.drugsadder.commands.InfoCommand}.
+     *
+     * @return The component that represents the recipe.
+     */
+    public @NotNull Component asInfoComponent() {
+        Component component = Component.text(this.recipeID);
+        component = component.appendNewline().append(this.getHover());
+        return component;
     }
 
     /**

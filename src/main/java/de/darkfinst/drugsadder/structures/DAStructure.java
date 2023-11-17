@@ -84,8 +84,8 @@ public abstract class DAStructure {
                     config.set(prefix + ".forRemoval", table.isForRemoval());
 
                     config.set(prefix + ".process.state", table.getProcess().getState());
-                    config.set(prefix + ".process.recipe.one", table.getProcess().getRecipeOne() == null ? "null" : table.getProcess().getRecipeOne().getID());
-                    config.set(prefix + ".process.recipe.two", table.getProcess().getRecipeTwo() == null ? "null" : table.getProcess().getRecipeTwo().getID());
+                    config.set(prefix + ".process.recipe.one", table.getProcess().getRecipeOne() == null ? "null" : table.getProcess().getRecipeOne().getRecipeID());
+                    config.set(prefix + ".process.recipe.two", table.getProcess().getRecipeTwo() == null ? "null" : table.getProcess().getRecipeTwo().getRecipeID());
 
                     tableID = saveInventory(config, tableID, prefix, table.getInventory());
                 } else if (structure instanceof DACrafter crafter) {
@@ -98,7 +98,7 @@ public abstract class DAStructure {
                     config.set(prefix + ".forRemoval", crafter.isForRemoval());
 
                     config.set(prefix + ".process.state", crafter.getProcess().getState());
-                    config.set(prefix + ".process.recipe", crafter.getProcess().getRecipe() == null ? "null" : crafter.getProcess().getRecipe().getID());
+                    config.set(prefix + ".process.recipe", crafter.getProcess().getRecipe() == null ? "null" : crafter.getProcess().getRecipe().getRecipeID());
 
                     crafterID = saveInventory(config, crafterID, prefix, crafter.getInventory());
                 } else if (structure instanceof DAPlant plant) {

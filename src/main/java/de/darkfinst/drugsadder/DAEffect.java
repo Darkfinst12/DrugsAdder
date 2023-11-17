@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -170,6 +171,25 @@ public class DAEffect {
                 ", maxDuration=" + maxDuration +
                 ", probability=" + probability +
                 '}';
+    }
+
+    //TODO: Make Translatable
+    public Component asComponent() {
+        Component component = Component.text().asComponent();
+        component = component.append(Component.text("EffectType: " + this.effectType.name()));
+        if (DAEffectType.POTION.equals(this.effectType)) {
+            component = component.appendNewline().append(Component.text("EffectName: " + this.effectName));
+            component = component.appendNewline().append(Component.text("MinLevel: " + this.minLevel));
+            component = component.appendNewline().append(Component.text("MaxLevel: " + this.maxLevel));
+            component = component.appendNewline().append(Component.text("Particles: " + this.particles));
+            component = component.appendNewline().append(Component.text("Icon: " + this.icon));
+        } else if (DAEffectType.SCREEN.equals(this.effectType)) {
+            component = component.appendNewline().append(Component.text("ScreenEffect: " + this.screenEffect));
+        }
+        component = component.appendNewline().append(Component.text("MinDuration: " + this.minDuration));
+        component = component.appendNewline().append(Component.text("MaxDuration: " + this.maxDuration));
+        component = component.appendNewline().append(Component.text("Probability: " + this.probability));
+        return component;
     }
 
     private String getPotionEffectString() {

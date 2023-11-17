@@ -224,7 +224,7 @@ public class DAPress extends DAStructure {
             if ((recipe.containsMold(compressedItems))) {
                 if (recipe.hasMaterials(compressedItems)) {
                     long duration = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - this.pressActiveTime);
-                    if (duration < recipe.getDuration()) {
+                    if (duration < recipe.getProcessingTime()) {
                         return;
                     }
                     if (!recipe.hasMaterials(compressedItems)) {
