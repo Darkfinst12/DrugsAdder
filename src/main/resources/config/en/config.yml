@@ -3,6 +3,9 @@
 #Version of the Config
 version: "0.1"
 
+
+#TODO: https://github.com/KyoriPowered/adventure-webui - New format for color codes
+
 #Language of the Messages and Commands
 language: en
 

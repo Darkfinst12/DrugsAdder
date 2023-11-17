@@ -1,5 +1,8 @@
 # Config für DrugsAdder.jar
 
+#TODO: https://github.com/KyoriPowered/adventure-webui - Neues Format für Farbcodes
+
+
 #Version der Config
 version: "0.1"
 
