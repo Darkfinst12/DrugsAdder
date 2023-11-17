@@ -61,7 +61,7 @@ public class PlayerCommand {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound", drugID));
         } else {
             daPlayer.addDrug(daDrug.getID(), amount);
-            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Player_Set", target.getName(), drugID, amount + ""));
+            DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Player_Set", target.getName(), amount + "", drugID));
         }
     }
 

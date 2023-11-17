@@ -51,7 +51,7 @@ public class InfoCommand {
             if (daItem == null) {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_CustomItemNotFound", namespacedID));
             } else {
-                Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_CustomItem", daItem.getNamespacedID());
+                Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_CustomItem");
                 component = component.appendNewline().append(daItem.asInfoComponent());
                 DA.loader.msg(commandSender, component);
             }
@@ -66,7 +66,7 @@ public class InfoCommand {
             if (daDrug == null) {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_DrugNotFound", args[0]));
             } else {
-                Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Drug", daDrug.getID());
+                Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Drug");
                 component = component.appendNewline().append(daDrug.asInfoComponent());
 
                 DA.loader.msg(commandSender, component);
@@ -82,7 +82,7 @@ public class InfoCommand {
             if (daPlant == null) {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlantNotFound", args[0]));
             } else {
-                Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Plant", daPlant.getNamespacedID());
+                Component component = DA.loader.languageReader.getComponentWithFallback("Command_Info_Plant");
                 component = component.appendNewline().append(daPlant.asInfoComponent());
 
                 DA.loader.msg(commandSender, component);
