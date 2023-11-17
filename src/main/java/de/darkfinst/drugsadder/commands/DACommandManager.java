@@ -35,15 +35,15 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
             this.sendHelp(sender);
         } else {
             if (PossibleArgs.INFO.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.INFO.getPermission())) {
-                InfoCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                InfoCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (PossibleArgs.RELOAD.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.RELOAD.getPermission())) {
-                ReloadCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                ReloadCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (PossibleArgs.LIST.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.LIST.getPermission())) {
-                ListCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                ListCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (PossibleArgs.GIVE.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.GIVE.getPermission())) {
-                GiveCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                GiveCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (PossibleArgs.PLAYER.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.PLAYER.getPermission())) {
-                PlayerCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                PlayerCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
             } else {
                 this.sendHelp(sender);
             }
@@ -79,16 +79,16 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
             return list.stream().filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
         } else {
             if (PossibleArgs.INFO.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.INFO.getPermission())) {
-                return InfoCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                return InfoCommand.complete(sender, Arrays.copyOfRange(args, 1, args.length));
             }
             if (PossibleArgs.LIST.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.LIST.getPermission())) {
-                return ListCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                return ListCommand.complete(sender, Arrays.copyOfRange(args, 1, args.length));
             }
             if (PossibleArgs.GIVE.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.GIVE.getPermission())) {
-                return GiveCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                return GiveCommand.complete(sender, Arrays.copyOfRange(args, 1, args.length));
             }
             if (PossibleArgs.PLAYER.getArg().equalsIgnoreCase(args[0].toLowerCase()) && sender.hasPermission(PossibleArgs.PLAYER.getPermission())) {
-                return PlayerCommand.complete(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
+                return PlayerCommand.complete(sender, Arrays.copyOfRange(args, 1, args.length));
             }
             return new ArrayList<>();
         }

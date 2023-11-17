@@ -18,7 +18,7 @@ import java.util.List;
 
 public class InfoCommand {
 
-    public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Info"));
         } else {
@@ -132,7 +132,7 @@ public class InfoCommand {
     }
 
 
-    public static @NotNull List<String> complete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPos() == 0 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
         } else if (args.length == 2) {

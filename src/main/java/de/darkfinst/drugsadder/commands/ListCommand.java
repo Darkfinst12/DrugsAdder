@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public class ListCommand {
 
-    public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_List"));
         } else {
@@ -115,7 +115,7 @@ public class ListCommand {
     }
 
 
-    public static @NotNull List<String> complete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Stream.of(PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.RECIPES.getArg()).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
         }

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GiveCommand {
 
-    public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             commandSender.sendMessage(DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Reload"));
         } else {
@@ -92,7 +92,7 @@ public class GiveCommand {
     }
 
 
-    public static @NotNull List<String> complete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Arrays.stream(GiveCommand.PossibleArgs.values()).filter(possibleArgs -> sender.hasPermission(possibleArgs.getPermission())).map(GiveCommand.PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
         }

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated(since = "0.1.2", forRemoval = true)
 public class DACommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> MAIN_ARGS = List.of(PossibleArgs.RELOAD.getArg(), PossibleArgs.GET_CUSTOM_ITEM.getArg(), PossibleArgs.LIST.getArg(), PossibleArgs.CONSUME.getArg(), PossibleArgs.INFO.getArg(), PossibleArgs.PLAYER.getArg());

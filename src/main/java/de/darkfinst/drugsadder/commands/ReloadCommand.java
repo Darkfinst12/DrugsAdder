@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ReloadCommand {
 
-    public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length != 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Reload"));
         } else if (!commandSender.hasPermission("drugsadder.cmd.reload")) {

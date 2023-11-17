@@ -128,7 +128,6 @@ public class DALoader {
      */
     private void initCommands() {
         new DACommandManager().register();
-        //new DACommand().register();
     }
 
     /**

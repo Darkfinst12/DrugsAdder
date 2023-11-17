@@ -25,7 +25,7 @@ public class PlayerCommand {
     //arg[1] = action
     //arg[2] = drug (if required)
     //arg[3] = amount (if required)
-    public static void execute(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Player"));
         } else {
@@ -113,7 +113,7 @@ public class PlayerCommand {
 
 
     //TabComplete
-    public static @NotNull List<String> complete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
