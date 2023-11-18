@@ -158,26 +158,25 @@ public class DAAddiction {
      * @param extended Whether the component should be extended or not (includes the effects)
      * @return The addiction as a component
      */
-    //TODO: Make Translatable
     protected Component asComponent(boolean extended) {
         Component component = Component.text().asComponent();
-        component = component.append(Component.text("AddictionPoints: " + this.addictionPoints));
-        component = component.appendNewline().append(Component.text("Overdose: " + this.overdose));
-        component = component.appendNewline().append(Component.text("OverdoseTime: " + this.overdoseTime));
-        component = component.appendNewline().append(Component.text("ReductionAmount: " + this.reductionAmount));
-        component = component.appendNewline().append(Component.text("ReductionTime: " + this.reductionTime));
-        component = component.appendNewline().append(Component.text("ReductionOnlyOnline: " + this.reductionOnlyOnline));
+        component = component.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AddictionPoints", this.addictionPoints + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Overdose", this.overdose + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_OverdoseTime", this.overdoseTime + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ReductionAmount", this.reductionAmount + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ReductionTime", this.reductionTime + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ReductionOnlyOnline", this.reductionOnlyOnline + ""));
         if (extended) {
-            component = component.appendNewline().append(Component.text("Deprivation:"));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Deprivation"));
             for (Map.Entry<Integer, List<DAEffect>> entry : this.deprivation.entrySet()) {
-                component = component.appendNewline().append(Component.text("  " + entry.getKey() + ":"));
+                component = component.appendNewline().append(Component.text("- " + entry.getKey() + ":"));
                 for (DAEffect effect : entry.getValue()) {
                     component = component.appendNewline().append(effect.asComponent());
                 }
             }
-            component = component.appendNewline().append(Component.text("Consummation:"));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Consummation"));
             for (Map.Entry<Integer, List<DAEffect>> entry : this.consummation.entrySet()) {
-                component = component.appendNewline().append(Component.text("  " + entry.getKey() + ":"));
+                component = component.appendNewline().append(Component.text("- " + entry.getKey() + ":"));
                 for (DAEffect effect : entry.getValue()) {
                     component = component.appendNewline().append(effect.asComponent());
                 }

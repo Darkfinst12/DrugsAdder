@@ -406,49 +406,49 @@ public class DATableRecipe extends DARecipe {
      *
      * @return The hover event of the recipe
      */
-    //TODO: Make Translatable
     @Override
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Processing Time One: " + this.getProcessingTimeOne() + "s\n"));
-        hover = hover.append(Component.text("Filter One: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessingTime", this.getProcessingTimeOne() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FilterOne"));
         Component name = this.getFilterOne().getName();
         if (name == null) {
             name = Component.text(this.getFilterOne().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getFilterOne().getAmount() + " ")).append(name).append(Component.text("\n"));
-        hover = hover.append(Component.text("Fuel One: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFilterOne().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FuelOne"));
         name = this.getFuelOne().getName();
         if (name == null) {
             name = Component.text(this.getFuelOne().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getFuelOne().getAmount() + " ")).append(name).append(Component.text("\n"));
-        hover = hover.append(Component.text("Material One: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFuelOne().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaterialOne"));
         name = this.getMaterialOne().getName();
         if (name == null) {
             name = Component.text(this.getMaterialOne().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getMaterialOne().getAmount() + " ")).append(name).append(Component.text("\n"));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getMaterialOne().getAmount() + "")).append(name);
 
-        hover = hover.append(Component.text("Processing Time Two: " + this.getProcessingTimeTwo() + "s\n"));
-        hover = hover.append(Component.text("Filter Two: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessingTime", this.getProcessingTimeTwo() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FilterTwo"));
         name = this.getFilterTwo().getName();
         if (name == null) {
             name = Component.text(this.getFilterTwo().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getFilterTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
-        hover = hover.append(Component.text("Fuel Two: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFilterTwo().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FuelTwo"));
         name = this.getFuelTwo().getName();
         if (name == null) {
-            name = Component.text(this.getFuelTwo().getItemStack().getType().name());
+            name = Component.text(this.getFuelOne().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getFuelTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
-        hover = hover.append(Component.text("Material Two: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFuelOne().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaterialTwo"));
         name = this.getMaterialTwo().getName();
         if (name == null) {
             name = Component.text(this.getMaterialTwo().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getMaterialTwo().getAmount() + " ")).append(name).append(Component.text("\n"));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getMaterialTwo().getAmount() + "")).append(name);
+
         return hover;
     }
 

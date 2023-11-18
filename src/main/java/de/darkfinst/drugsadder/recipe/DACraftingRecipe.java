@@ -5,7 +5,6 @@ import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -16,45 +15,11 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-
 @Getter
 public class DACraftingRecipe extends DAShapedRecipe {
 
-    /**
-     * The shape of the recipe
-     * <br>
-     * The shape is a list of strings with a length of 3
-     * <br>
-     * Each string represents a row of the shape
-     * <br>
-     * Each character represents a slot in the row, that means the length of the string must be 3
-     */
-    private final List<String> shape = new ArrayList<>(3);
-
-    /**
-     * A list of keys for the shape, these keys are used to match the materials
-     */
-    private final Map<String, DAItem> shapeKeys = new HashMap<>();
-
-    /**
-     * Whether the recipe is shapeless or not
-     */
-    @Setter
-    private boolean isShapeless = false;
-
     public DACraftingRecipe(String recipeID, RecipeType recipeType, DAItem result, DAItem... materials) {
         super(recipeID, recipeType, result, materials);
-    }
-
-    public void setShape(String... shape) {
-        this.shape.clear();
-        this.shape.addAll(Arrays.asList(shape));
-    }
-
-    public void setShapeKeys(@NotNull Map<String, DAItem> shapeKeys) {
-        this.shapeKeys.clear();
-        this.shapeKeys.putAll(shapeKeys);
     }
 
     /**
@@ -64,7 +29,7 @@ public class DACraftingRecipe extends DAShapedRecipe {
      */
     public boolean registerRecipe() {
         NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getRecipeID());
-        if (this.isShapeless) {
+        if (super.isShapeless()) {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, result);
@@ -87,13 +52,13 @@ public class DACraftingRecipe extends DAShapedRecipe {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
             ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
-            shapedRecipe.shape(this.shape.toArray(new String[0]));
-            for (String s : this.shape) {
+            shapedRecipe.shape(super.getShape().toArray(new String[0]));
+            for (String s : super.getShape()) {
                 for (int i = 0; i < s.length(); i++) {
                     char key = s.charAt(i);
-                    if (this.shapeKeys.containsKey(key + "")) {
-                        ItemStack itemStack = this.shapeKeys.get(key + "").getItemStack();
-                        itemStack.setAmount(this.shapeKeys.get(key + "").getAmount());
+                    if (super.getShapeKeys().containsKey(key + "")) {
+                        ItemStack itemStack = super.getShapeKeys().get(key + "").getItemStack();
+                        itemStack.setAmount(super.getShapeKeys().get(key + "").getAmount());
                         RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(itemStack);
                         shapedRecipe.setIngredient(key, exactChoice);
                     } else {
@@ -117,9 +82,9 @@ public class DACraftingRecipe extends DAShapedRecipe {
     public String toString() {
         return super.toString().replace("DARecipe", "DACraftingRecipe")
                 .replace("}", "") +
-                ", shape=" + shape +
-                ", shapeKeys=" + shapeKeys +
-                ", isShapeless=" + isShapeless +
+                ", shape=" + super.getShape() +
+                ", shapeKeys=" + super.getShapeKeys() +
+                ", isShapeless=" + super.isShapeless() +
                 "}";
     }
 
@@ -148,17 +113,10 @@ public class DACraftingRecipe extends DAShapedRecipe {
      * @return The hover event of the recipe
      */
     @Override
-    //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Shapeless: " + this.isShapeless + "\n"));
-        if (!this.isShapeless) {
-            hover = hover.append(Component.text("Shape:"));
-            for (String row : this.shape) {
-                hover = hover.appendNewline().append(Component.text(row));
-            }
-        }
-        hover = super.getMaterialsAsComponent(hover, this.shapeKeys);
+        hover = super.getShapeComponent(hover);
+        hover = super.getMaterialsAsComponent(hover);
         return hover;
     }
 }

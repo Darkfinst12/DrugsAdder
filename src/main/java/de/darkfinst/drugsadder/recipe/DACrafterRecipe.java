@@ -7,7 +7,6 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.crafter.DACrafter;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -15,64 +14,39 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
 public class DACrafterRecipe extends DAShapedRecipe {
-
-    /**
-     * The shape of the recipe
-     * <br>
-     * The shape is a list of strings with a length of 5
-     * <br>
-     * Each string represents a row of the shape
-     * <br>
-     * Each character represents a slot in the row, that means the length of the string must be 5
-     */
-    private final List<String> shape = new ArrayList<>(5);
-
-    /**
-     * A list of keys for the shape, these keys are used to match the materials
-     */
-    private final Map<String, DAItem> shapeKeys = new HashMap<>();
 
     /**
      * The processing time of the recipe
      * <br>
      * The Time is in seconds
      */
-    private final double processingTime;
+    private final double processTime;
 
     /**
      * The required players for the recipe
      */
     private final int requiredPlayers;
 
-    /**
-     * Whether the recipe is shapeless or not
-     */
-    @Setter
-    private boolean isShapeless = false;
-
-    public DACrafterRecipe(String recipeID, RecipeType recipeType, DAItem result, double processingTime, int requiredPlayers, DAItem... materials) {
+    public DACrafterRecipe(String recipeID, RecipeType recipeType, DAItem result, double processTime, int requiredPlayers, DAItem... materials) {
         super(recipeID, recipeType, result, materials);
-        this.processingTime = processingTime;
+        this.processTime = processTime;
         this.requiredPlayers = requiredPlayers;
     }
 
-    public void setShape(String... shape) {
-        this.shape.clear();
-        this.shape.addAll(Arrays.asList(shape));
-    }
-
-    public void setShapeKeys(@NotNull Map<String, DAItem> shapeKeys) {
-        this.shapeKeys.clear();
-        this.shapeKeys.putAll(shapeKeys);
-    }
-
+    /**
+     * Checks if the given items are materials of the recipe
+     *
+     * @param matrix The items to check
+     * @return If the given items are materials of the recipe
+     */
     public boolean matchMaterials(@NotNull Map<Integer, ItemStack> matrix) {
         try {
-            if (isShapeless) {
+            if (super.isShapeless()) {
                 return this.hasMaterials(matrix.values().toArray(new ItemStack[0]));
             } else {
                 return this.matchShape(matrix);
@@ -84,8 +58,15 @@ public class DACrafterRecipe extends DAShapedRecipe {
 
     }
 
+    /**
+     * Matches the shape of the recipe with the given matrix
+     *
+     * @param matrix The matrix to match the shape with
+     * @return If the shape matches
+     * @throws IllegalArgumentException If the recipe is shapeless or the matrix length isn't 25
+     */
     public boolean matchShape(@NotNull Map<Integer, ItemStack> matrix) throws IllegalArgumentException {
-        if (this.isShapeless) {
+        if (super.isShapeless()) {
             throw new IllegalArgumentException("Recipe is shapeless");
         }
         if (matrix.size() != 25) {
@@ -93,11 +74,11 @@ public class DACrafterRecipe extends DAShapedRecipe {
         }
 
         for (int i = 0; i < 5; i++) {
-            String row = this.shape.get(i);
+            String row = super.getShape().get(i);
             for (int j = 0; j < 5; j++) {
                 String key = String.valueOf(row.charAt(j));
                 if (!key.equals(" ")) {
-                    DAItem item = this.shapeKeys.get(key);
+                    DAItem item = super.getShapeKeys().get(key);
                     int slot = i * 9 + j;
                     if (item == null) {
                         continue;
@@ -119,18 +100,18 @@ public class DACrafterRecipe extends DAShapedRecipe {
      */
     public void executeShape(@NotNull DACrafter daCrafter) throws IllegalArgumentException {
         var matrix = daCrafter.getContentMap();
-        if (this.isShapeless) {
+        if (super.isShapeless()) {
             throw new IllegalArgumentException("Recipe is shapeless");
         }
         if (matrix.size() != 25) {
             throw new IllegalArgumentException("Matrix length must be 25");
         }
         for (int i = 0; i < 5; i++) {
-            String row = this.shape.get(i);
+            String row = super.getShape().get(i);
             for (int j = 0; j < 5; j++) {
                 String key = String.valueOf(row.charAt(j));
                 if (!key.equals(" ")) {
-                    DAItem item = this.shapeKeys.get(key);
+                    DAItem item = super.getShapeKeys().get(key);
                     int slot = i * 9 + j;
                     if (item == null) {
                         return;
@@ -151,9 +132,14 @@ public class DACrafterRecipe extends DAShapedRecipe {
         this.addResult(daCrafter, this.getResult());
     }
 
+    /**
+     * Starts the process of the recipe
+     *
+     * @param daCrafter The crafter to start the process on
+     */
     public void startProcess(@NotNull DACrafter daCrafter) {
         daCrafter.getProcess().setRecipe(this);
-        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, new ProcessMaterials(0, daCrafter, this, this.processingTime / 7));
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(DA.getInstance, new ProcessMaterials(0, daCrafter, this, this.processTime / 7));
         daCrafter.getProcess().setTaskID(task.getTaskId());
         daCrafter.getProcess().setState(0);
     }
@@ -234,7 +220,7 @@ public class DACrafterRecipe extends DAShapedRecipe {
 
     @Override
     public String toString() {
-        return super.toString().replace("DARecipe", "DACrafterRecipe").replace("}", "") + ", shape=" + shape + ", shapeKeys=" + shapeKeys + ", isShapeless=" + isShapeless + "}";
+        return super.toString().replace("DARecipe", "DACrafterRecipe").replace("}", "") + ", shape=" + super.getShape() + ", shapeKeys=" + super.getShapeKeys() + ", isShapeless=" + super.isShapeless() + "}";
     }
 
     /**
@@ -325,16 +311,12 @@ public class DACrafterRecipe extends DAShapedRecipe {
      * @return The hover event of the recipe
      */
     @Override
-    //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Process Time: " + this.getProcessingTime() + "s\n"));
-        hover = hover.append(Component.text("Required Players: " + this.getRequiredPlayers() + "\n"));
-        hover = hover.append(Component.text("Shape:"));
-        for (String row : this.shape) {
-            hover = hover.appendNewline().append(Component.text(row));
-        }
-        hover = super.getMaterialsAsComponent(hover, this.shapeKeys);
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessTime", this.getProcessTime() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_RequiredPlayers", this.getRequiredPlayers() + ""));
+        hover = getShapeComponent(hover);
+        hover = super.getMaterialsAsComponent(hover);
         return hover;
     }
 }

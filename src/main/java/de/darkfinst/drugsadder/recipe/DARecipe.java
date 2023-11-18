@@ -1,5 +1,6 @@
 package de.darkfinst.drugsadder.recipe;
 
+import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
@@ -144,15 +145,14 @@ public abstract class DARecipe {
      *
      * @return A text component that represents the materials used in the recipe.
      */
-    //TODO: Make Translatable
     public @NotNull Component getMaterialsAsComponent() {
-        Component hover = Component.text("Materials:");
+        Component hover = DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Materials");
         for (DAItem material : this.materials) {
             Component name = material.getName();
             if (name == null) {
                 name = Component.text(material.getItemStack().getType().name());
             }
-            hover = hover.appendNewline().append(Component.text("x" + material.getAmount() + " ")).append(name);
+            hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", material.getAmount() + " ")).append(name);
         }
         return hover;
     }

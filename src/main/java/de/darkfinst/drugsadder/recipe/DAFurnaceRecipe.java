@@ -102,11 +102,10 @@ public class DAFurnaceRecipe extends DARecipe {
      * @return The hover event of the recipe
      */
     @Override
-    //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Cooking Time: " + this.getCookingTime() + "s\n"));
-        hover = hover.append(Component.text("Experience: " + this.getExperience() + "\n"));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_CookingTime", this.getCookingTime() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Experience ", this.getExperience() + ""));
         hover = hover.append(super.getMaterialsAsComponent());
         return hover;
     }

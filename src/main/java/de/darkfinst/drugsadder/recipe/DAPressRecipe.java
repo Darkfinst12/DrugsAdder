@@ -1,5 +1,6 @@
 package de.darkfinst.drugsadder.recipe;
 
+import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
@@ -29,11 +30,11 @@ public class DAPressRecipe extends DARecipe {
      * <br>
      * The Time is in seconds
      */
-    private final double processingTime;
+    private final double processTime;
 
-    public DAPressRecipe(String recipeID, RecipeType recipeType, double processingTime, DAItem mold, boolean returnMold, DAItem result, DAItem... materials) {
+    public DAPressRecipe(String recipeID, RecipeType recipeType, double processTime, DAItem mold, boolean returnMold, DAItem result, DAItem... materials) {
         super(recipeID, recipeType, result, materials);
-        this.processingTime = processingTime;
+        this.processTime = processTime;
         this.returnMold = returnMold;
         this.mold = mold;
     }
@@ -76,7 +77,7 @@ public class DAPressRecipe extends DARecipe {
                 .replace("}", "") +
                 ", mold=" + mold +
                 ", returnMold=" + returnMold +
-                ", duration=" + processingTime +
+                ", duration=" + processTime +
                 '}';
     }
 
@@ -105,17 +106,16 @@ public class DAPressRecipe extends DARecipe {
      * @return The hover event of the recipe
      */
     @Override
-    //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Duration: " + this.getProcessingTime() + "s\n"));
-        hover = hover.append(Component.text("Mold: "));
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessTime", this.getProcessTime() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Mold"));
         Component name = this.getMold().getName();
         if (name == null) {
             name = Component.text(this.getMold().getItemStack().getType().name());
         }
-        hover = hover.append(Component.text("x" + this.getMold().getAmount() + " ")).append(name).append(Component.text("\n"));
-        hover = hover.append(super.getMaterialsAsComponent());
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.mold.getAmount() + " ")).append(name);
+        hover = hover.appendNewline().append(super.getMaterialsAsComponent());
         return hover;
     }
 }

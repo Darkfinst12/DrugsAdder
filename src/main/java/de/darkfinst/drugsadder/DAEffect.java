@@ -173,22 +173,21 @@ public class DAEffect {
                 '}';
     }
 
-    //TODO: Make Translatable
     public Component asComponent() {
         Component component = Component.text().asComponent();
-        component = component.append(Component.text("EffectType: " + this.effectType.name()));
+        component = component.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_EffectType", this.effectType.name()));
         if (DAEffectType.POTION.equals(this.effectType)) {
-            component = component.appendNewline().append(Component.text("EffectName: " + this.effectName));
-            component = component.appendNewline().append(Component.text("MinLevel: " + this.minLevel));
-            component = component.appendNewline().append(Component.text("MaxLevel: " + this.maxLevel));
-            component = component.appendNewline().append(Component.text("Particles: " + this.particles));
-            component = component.appendNewline().append(Component.text("Icon: " + this.icon));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_EffectName", this.effectName));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MinLevel", this.minLevel + ""));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaxLevel", this.maxLevel + ""));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Particles", this.particles + ""));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Icon", this.icon + ""));
         } else if (DAEffectType.SCREEN.equals(this.effectType)) {
-            component = component.appendNewline().append(Component.text("ScreenEffect: " + this.screenEffect));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ScreenEffect", this.screenEffect));
         }
-        component = component.appendNewline().append(Component.text("MinDuration: " + this.minDuration));
-        component = component.appendNewline().append(Component.text("MaxDuration: " + this.maxDuration));
-        component = component.appendNewline().append(Component.text("Probability: " + this.probability));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MinDuration", this.minDuration + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaxDuration", this.maxDuration + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Probability", this.probability + ""));
         return component;
     }
 

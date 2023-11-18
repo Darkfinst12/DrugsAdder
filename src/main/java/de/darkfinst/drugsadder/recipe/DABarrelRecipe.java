@@ -1,5 +1,6 @@
 package de.darkfinst.drugsadder.recipe;
 
+import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.barrel.BarrelProcessMaterialsEvent;
 import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.commands.InfoCommand;
@@ -186,12 +187,11 @@ public class DABarrelRecipe extends DARecipe {
      * @return the component
      */
     @Override
-    //TODO: Make Translatable
     public @NotNull Component getHover() {
         Component hover = Component.text().asComponent();
-        hover = hover.append(Component.text("Process Time: " + this.getProcessTime() + "s\n"));
-        hover = hover.append(Component.text("Process Overdue Acceptance: " + this.getProcessOverdueAcceptance() + "s\n"));
-        hover = hover.append(super.getMaterialsAsComponent());
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessTime", this.getProcessTime() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessOverdueAcceptance", this.getProcessOverdueAcceptance() + ""));
+        hover = hover.appendNewline().append(super.getMaterialsAsComponent());
         return hover;
     }
 }
