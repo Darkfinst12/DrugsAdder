@@ -187,7 +187,7 @@ public class PlayerCommand {
         } else if (args.length == 4) {
             //Handel SET
             if (args[1].equalsIgnoreCase(PossibleArgs.SET.getArg()) && sender.hasPermission(PossibleArgs.SET.getPermission())) {
-                return Collections.singletonList(DA.loader.languageReader.getString("Command_Args_Amount"));
+                return Collections.singletonList(DA.loader.languageReader.getString("Command_Arg_Amount"));
             }
         }
         return new ArrayList<>();
