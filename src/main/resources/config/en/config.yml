@@ -3,9 +3,6 @@
 #Version of the Config
 version: "0.1"
 
-
-#TODO: https://github.com/KyoriPowered/adventure-webui - New format for color codes
-
 #Language of the Messages and Commands
 language: en
 
@@ -83,89 +80,91 @@ customItems:
   #Name of the Item – This is the ID of the Item, the NamespacedID is then drugsadder:ITEMNAME
   cocaine:
     #Displayname of the Item
-    #You can also use color codes with '&' – Example: '&7This is a Name'
+    #You can also use color codes – Example: '<dark_red>This is a Name</dark_red>'
+    #For more Information about color codes check the Wiki
     #You can also use Unicode Characters – Example: '\uE000'
     #But note that if your Name is too long it will be cut off from Minecraft and you will not see the full Name
-    name: '&fCocaine'
+    name: '<white>Cocaine</white>'
     #Material of the Item – Only items from Minecraft are allowed here
     material: 'apple'
     #Lore of the Item – You can add as many lines as you want just add a '–' before the line
-    #You can also use color codes with '&' – Example: '&7This is a Lore'
+    #You can also use color codes – Example: '<dark_red>This is a Lore</dark_red>'
+    #For more Information about color codes check the Wiki
     #You can also use Unicode Characters – Example: '\uE000'
     #But note that if your Lore is too long it will be cut off from Minecraft and you will not see the full Lore
     lore:
-      – '&7Some nice clean Cocaine'
+      - '<gray>Some nice clean Cocaine</gray>'
     #CustomModelData of the Item
     #Note the Model will be taken from the Users highest Resourcepack, wich contains the Model
     customModelData: 3
   dirty_cocaine:
-    name: '&fDirty Cocaine'
+    name: '<white>Dirty Cocaine</white>'
     material: 'apple'
     lore:
-      – '&7Oh no my Cocaine is not clean'
+      - '<gray>Oh no my Cocaine is not clean</gray>'
     customModelData: 4
   cocaine_pill:
-    name: '&fCocaine Pill'
+    name: '<white>Cocaine Pill</white>'
     material: 'apple'
     customModelData: 6
   blue_pill:
-    name: '&fBlue Pill'
+    name: '<white>Blue Pill</white>'
     material: 'apple'
     customModelData: 2
     lore:
-      – '&7You take the blue pill, the story ends.'
+      - '<gray>You take the blue pill, the story ends.</gray>'
   red_pill:
-    name: '&fRed Pill'
+    name: '<white>Red Pill</white>'
     material: 'apple'
     customModelData: 1
     lore:
-      – '&7You take the red pill, you stay in Wonderland,'
-      – '&7and I show you how deep the rabbit hole goes.'
+      - '<gray>You take the red pill, you stay in Wonderland,</gray>'
+      - '<gray>and I show you how deep the rabbit hole goes.</gray>'
   heroin_syringe:
-    name: '&fHeroin Syringe'
+    name: '<white>Heroin Syringe</white>'
     material: 'apple'
     customModelData: 5
     lore:
-      – '&7Lets inject some Heroin'
+      - '<gray>Lets inject some Heroin</gray>'
   joint:
-    name: '&fJoint'
+    name: '<white>Joint</white>'
     material: 'apple'
     customModelData: 7
     lore:
-      – '&7Lets smoke some Weed'
+      - '<gray>Lets smoke some Weed</gray>'
   pill_mold:
-    name: '&fPill Mold'
+    name: '<white>Pill Mold</white>'
     material: 'stick'
     lore:
-      – '&7Lets press some Pills'
+      - '<gray>Lets press some Pills</gray>'
     customModelData: 3
   coca_leaf:
-    name: '&fCoca Leaf'
+    name: '<white>Coca Leaf</white>'
     material: 'stick'
     lore:
-      – '&7Coca'
+      - '<gray>Coca</gray>'
     customModelData: 1
   hanf:
-    name: '&fHanf'
+    name: '<white>Hanf</white>'
     material: 'stick'
     lore:
-      – '&7Coca'
+      - '<gray>Coca</gray>'
     customModelData: 2
   suspicious_potion:
-    name: '&cSus Potion'
+    name: '<red>Sus Potion</red>'
     material: 'potion'
     lore:
-      – '&7SUS Potion'
+      - '<gray>SUS Potion</gray>'
     customModelData: 0
     potionMeta:
       color: "255,10,255,125"
       effects:
-        – 'PotionEffect{type=SLOW, duration=600, level=2, particles=true, icon=true}'
+        - 'PotionEffect{type=SLOW, duration=600, level=2, particles=true, icon=true}'
   coca_seeds:
-    name: '&fCoca Seeds'
+    name: '<white>Coca Seeds</white>'
     material: 'pumpkin_seeds'
     lore:
-      – '&7Coca'
+      - '<gray>Coca</gray>'
     customModelData: 0
 
 #Whether a bucket should be returned when a filled one is used when crafting
@@ -222,9 +221,9 @@ recipes:
       isShaped: true
       #The Shape of the Recipe – You musst add three Lines and three Characters per Line
       shape:
-        – 'XVX'
-        – 'XVX'
-        – 'XVX'
+        - 'XVX'
+        - 'XVX'
+        - 'XVX'
       #The Materials of the Recipe – You can add nine Materials
       #The position of the Material does not matter, but the Section must be in the Shape
       materials:
@@ -255,11 +254,11 @@ recipes:
       isShaped: true
       #The Shape of the Recipe – You musst add five Lines and five Characters per Line
       shape:
-        – 'OXVXO'
-        – 'OXVXO'
-        – '0XVX0'
-        – '0XVX0'
-        – '0XVX0'
+        - 'OXVXO'
+        - 'OXVXO'
+        - '0XVX0'
+        - '0XVX0'
+        - '0XVX0'
       #The time it takes to process the Recipe in Seconds
       processingTime: 10.0
       #The amount of Players that are required for the Recipe
@@ -444,9 +443,9 @@ drugs:
       #If the player has 16 addictionPoints he will also get the effect
       consummation:
         15:
-          – 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+          - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
         30:
-          – 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
       #Which effects you get when the player is in deprivation
       #Just add a value of addictionPoints and then a List of effects
       #The effects will be chosen by the players addictionPoints if it is not in the list it will be the closest value
@@ -456,24 +455,23 @@ drugs:
       #If the player has 16 addictionPoints he will also get the effect
       deprivation:
         15:
-          – 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
         30:
-          – 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
-          – 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          - 'PotionEffect{type=WEAKNESS, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
+          - 'PotionEffect{type=SLOW, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=30, particles=true, icon=true}'
     #The Effects of the Drug – The effects are Minecraft PotionEffects – You can add as many as you want
     effects:
-      – 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
+      - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
     #The Commands that are executed when the Drug is consumed – You can add as many as you want
     #You can use the following Placeholders: %player%, %drug%
-    #You can also use color codes with '&' in your Command lines – Example: '&7This is a Command'
     #You can also use Unicode Characters in your Command lines – Example: '\uE000'
     #ServerCommands means that the Command will be executed by the Server
     serverCommands:
-      – 'say %player% has %drug% consumed!'
+      - 'say %player% has %drug% consumed!'
     #PlayerCommands means that the Command will be executed by the Player
     #Note that the Player must have the Permission to execute the Command
     playerCommands:
-      – 'say I have %drug% consumed!'
+      - 'say I have %drug% consumed!'
     #The Message that is sent to the Player when the Drug is consumed
     #You can use the following Placeholders: %player%, %drug%
     consumeMessage: 'You have %drug% consumed'
