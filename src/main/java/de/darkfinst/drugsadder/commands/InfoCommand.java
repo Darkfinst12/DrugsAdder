@@ -245,13 +245,13 @@ public class InfoCommand {
         PLANT("Command_Arg_Plant", "drugsadder.cmd.info.plant", 0),
         PLUGIN("Command_Arg_Plugin", "drugsadder.cmd.info.plugin", 0),
 
-        ALL("Command_Arg_All", "drugsadder.cmd.info.all", 1),
-        CRAFTER("Command_Arg_Crafter", "drugsadder.cmd.info.crafter", 1),
-        CRAFTING("Command_Arg_Crafting", "drugsadder.cmd.info.crafting", 1),
-        BARREL("Command_Arg_Barrel", "drugsadder.cmd.info.barrel", 1),
-        PRESS("Command_Arg_Press", "drugsadder.cmd.info.press", 1),
-        TABLE("Command_Arg_Table", "drugsadder.cmd.info.table", 1),
-        FURNACE("Command_Arg_Furnace", "drugsadder.cmd.info.furnace", 1),
+        ALL("Command_Arg_All", "drugsadder.cmd.info.recipes.all", 1),
+        CRAFTER("Command_Arg_Crafter", "drugsadder.cmd.info.recipes.crafter", 1),
+        CRAFTING("Command_Arg_Crafting", "drugsadder.cmd.info.recipes.crafting", 1),
+        BARREL("Command_Arg_Barrel", "drugsadder.cmd.info.recipes.barrel", 1),
+        PRESS("Command_Arg_Press", "drugsadder.cmd.info.recipes.press", 1),
+        TABLE("Command_Arg_Table", "drugsadder.cmd.info.recipes.table", 1),
+        FURNACE("Command_Arg_Furnace", "drugsadder.cmd.info.recipes.furnace", 1),
         ;
 
         private final String languageKey;

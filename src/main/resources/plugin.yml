@@ -97,7 +97,6 @@ permissions:
     description: Allow to harvest a Plant
 
   # -- Commands --
-  # TODO: REWORK - Command was split
   drugsadder.cmd:
     description: Gives access to all DrugsAdder Commands
     default: false
@@ -108,6 +107,17 @@ permissions:
       drugsadder.cmd.player: true
   drugsadder.cmd.reload:
     description: Reload config
+  drugsadder.cmd.give:
+    description: Give a Drug, Plant or a CustomItem to a Player
+    drugsadder.cmd.give.drugs: true
+    drugsadder.cmd.give.plants: true
+    drugsadder.cmd.give.customitems: true
+  drugsadder.cmd.give.drug:
+    description: Give a Drug to a Player
+  drugsadder.cmd.give.plant:
+    description: Give a Plant to a Player
+  drugsadder.cmd.give.customitems:
+    description: Give a CustomItem to a Player
   drugsadder.cmd.info:
     description: Information about the Plugin
     children:
@@ -125,12 +135,15 @@ permissions:
   drugsadder.cmd.info.recipes:
     description: Information about a specific Recipe
     children:
+      drugsadder.cmd.info.recipes.all: true
       drugsadder.cmd.info.recipes.barrel: true
       drugsadder.cmd.info.recipes.press: true
       drugsadder.cmd.info.recipes.table: true
       drugsadder.cmd.info.recipes.crafting: true
       drugsadder.cmd.info.recipes.crafter: true
       drugsadder.cmd.info.recipes.furnace: true
+  drugsadder.cmd.info.recipes.all:
+    description: List all Recipes
   drugsadder.cmd.info.recipes.barrel:
     description: Information about a specific Barrel Recipe
   drugsadder.cmd.info.recipes.press:
@@ -160,12 +173,15 @@ permissions:
   drugsadder.cmd.list.recipes:
     description: List all Recipes
     children:
+      drugsadder.cmd.list.recipes.all: true
       drugsadder.cmd.list.recipes.barrel: true
       drugsadder.cmd.list.recipes.press: true
       drugsadder.cmd.list.recipes.table: true
       drugsadder.cmd.list.recipes.crafting: true
       drugsadder.cmd.list.recipes.crafter: true
       drugsadder.cmd.list.recipes.furnace: true
+    drugsadder.cmd.list.recipes.all:
+      description: List all Recipes
     drugsadder.cmd.list.recipes.barrel:
       description: List all Barrel Recipes
     drugsadder.cmd.list.recipes.press:
