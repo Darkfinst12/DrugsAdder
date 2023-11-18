@@ -1,74 +1,25 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
-import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-
 @Getter
-public class DACraftingRecipe extends DARecipe {
+public class DACraftingRecipe extends DAShapedRecipe {
 
-    /**
-     * The shape of the recipe
-     */
-    private final List<String> shape = new ArrayList<>(3);
-    /**
-     * The keys of the shape
-     */
-    private final Map<String, DAItem> shapeKeys = new HashMap<>();
-    /**
-     * Whether the recipe is shapeless or not
-     */
-    @Setter
-    private boolean isShapeless = false;
-
-    public DACraftingRecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
-        super(namedID, recipeType, result, materials);
-    }
-
-    @Deprecated(since = "0.0.1", forRemoval = true)
-    public static void registerDEMORecipe(boolean isShapeless) {
-        ItemStack result = new ItemStack(Material.STICK, 1);
-        ItemMeta meta = result.getItemMeta();
-        if (isShapeless) {
-            meta.setDisplayName("§6§lDEMO-Recipe-NoShape");
-            result.setItemMeta(meta);
-            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shapeless"), result);
-            shapelessRecipe.addIngredient(Material.BIRCH_PLANKS);
-            shapelessRecipe.addIngredient(Material.ACACIA_PLANKS);
-            shapelessRecipe.addIngredient(Material.CHERRY_PLANKS);
-            Bukkit.addRecipe(shapelessRecipe);
-        } else {
-            meta.setDisplayName("§6§lDEMO-Recipe-Shape");
-            result.setItemMeta(meta);
-            ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(DA.getInstance, "demo_recipe_shape"), result);
-            shapedRecipe.shape(" A ", " B ", " C ");
-            shapedRecipe.setIngredient('A', Material.SPRUCE_PLANKS);
-            shapedRecipe.setIngredient('B', Material.DARK_OAK_PLANKS);
-            shapedRecipe.setIngredient('C', Material.CHERRY_PLANKS);
-            Bukkit.addRecipe(shapedRecipe);
-        }
-    }
-
-    public void setShape(String... shape) {
-        this.shape.clear();
-        this.shape.addAll(Arrays.asList(shape));
-    }
-
-    public void setShapeKeys(@NotNull Map<String, DAItem> shapeKeys) {
-        this.shapeKeys.clear();
-        this.shapeKeys.putAll(shapeKeys);
+    public DACraftingRecipe(String recipeID, RecipeType recipeType, DAItem result, DAItem... materials) {
+        super(recipeID, recipeType, result, materials);
     }
 
     /**
@@ -77,8 +28,8 @@ public class DACraftingRecipe extends DARecipe {
      * @return If the recipe was successfully registered
      */
     public boolean registerRecipe() {
-        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getID());
-        if (this.isShapeless) {
+        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getRecipeID());
+        if (super.isShapeless()) {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, result);
@@ -101,13 +52,13 @@ public class DACraftingRecipe extends DARecipe {
             ItemStack result = this.getResult().getItemStack();
             result.setAmount(this.getResult().getAmount());
             ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
-            shapedRecipe.shape(this.shape.toArray(new String[0]));
-            for (String s : this.shape) {
+            shapedRecipe.shape(super.getShape().toArray(new String[0]));
+            for (String s : super.getShape()) {
                 for (int i = 0; i < s.length(); i++) {
                     char key = s.charAt(i);
-                    if (this.shapeKeys.containsKey(key + "")) {
-                        ItemStack itemStack = this.shapeKeys.get(key + "").getItemStack();
-                        itemStack.setAmount(this.shapeKeys.get(key + "").getAmount());
+                    if (super.getShapeKeys().containsKey(key + "")) {
+                        ItemStack itemStack = super.getShapeKeys().get(key + "").getItemStack();
+                        itemStack.setAmount(super.getShapeKeys().get(key + "").getAmount());
                         RecipeChoice.ExactChoice exactChoice = new RecipeChoice.ExactChoice(itemStack);
                         shapedRecipe.setIngredient(key, exactChoice);
                     } else {
@@ -131,9 +82,41 @@ public class DACraftingRecipe extends DARecipe {
     public String toString() {
         return super.toString().replace("DARecipe", "DACraftingRecipe")
                 .replace("}", "") +
-                ", shape=" + shape +
-                ", shapeKeys=" + shapeKeys +
-                ", isShapeless=" + isShapeless +
+                ", shape=" + super.getShape() +
+                ", shapeKeys=" + super.getShapeKeys() +
+                ", isShapeless=" + super.isShapeless() +
                 "}";
+    }
+
+    /**
+     * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
+     *
+     * @return The component that represents the recipe.
+     */
+    @Override
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.CRAFTING.getArg(), this.getRecipeID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    /**
+     * Returns the hover event of the recipe
+     *
+     * @return The hover event of the recipe
+     */
+    @Override
+    public @NotNull Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = super.getShapeComponent(hover);
+        hover = super.getMaterialsAsComponent(hover);
+        return hover;
     }
 }

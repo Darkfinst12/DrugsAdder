@@ -111,7 +111,7 @@ public class DAPlant extends DAStructure {
                     super.setBody(daPlantBody);
                     boolean success = DA.loader.registerDAStructure(this, false);
                     if (success) {
-                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Plant_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                         this.lastHarvest = System.currentTimeMillis();
                         if (this.isCrop && daPlantBody.getPlantBLock().getBlockData() instanceof Ageable ageable) {
                             long tsp = Math.round(this.growthTime / ageable.getMaximumAge());
@@ -120,10 +120,10 @@ public class DAPlant extends DAStructure {
                     }
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Plant_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Plant_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perm_Plant_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -167,26 +167,26 @@ public class DAPlant extends DAStructure {
                 try {
                     if (this.isCrop && this.getBody().getPlantBLock().getBlockData() instanceof Ageable ageable && ageable.getAge() == ageable.getMaximumAge()) {
                         this.executeHarvest(player, namespacedID);
-                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
 
                     } else {
                         long time = System.currentTimeMillis() - this.lastHarvest;
                         long passedTime = TimeUnit.MILLISECONDS.toSeconds(time);
                         if (passedTime > this.growthTime && !this.isCrop) {
                             this.executeHarvest(player, namespacedID);
-                            DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                            DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Plant_Harvested"), DrugsAdderSendMessageEvent.Type.PLAYER);
                         } else {
-                            DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                            DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Plant_NoReady"), DrugsAdderSendMessageEvent.Type.PLAYER);
                         }
                     }
                 } catch (DamageToolException e) {
-                    DA.loader.msg(player, DA.loader.languageReader.get("Player_Tool_NotEnoughDurability"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                    DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Tool_NotEnoughDurability"), DrugsAdderSendMessageEvent.Type.PLAYER);
                 }
             } else {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Plant_WrongTool", namespacedID), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getString("Player_Plant_WrongTool", namespacedID), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Plant_NoHarvest"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perm_Plant_NoHarvest"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 

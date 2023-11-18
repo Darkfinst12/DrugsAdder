@@ -49,7 +49,7 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
      * @return The title of the table
      */
     public Component getTitle(int state) {
-        String title = DA.loader.languageReader.get(this.translationKey);
+        String title = DA.loader.languageReader.getString(this.translationKey);
         Component titleComp = MiniMessage.miniMessage().deserialize(title);
         title = LegacyComponentSerializer.legacyAmpersand().serialize(titleComp);
         int[] titleArray = this.titleArray;
@@ -76,7 +76,7 @@ public abstract class DAInvStructure extends DAStructure implements InventoryHol
      * @return The title of the table
      */
     public Component getTitle(int m1, int m2, int m3, int m4, int state) {
-        String title = DA.loader.languageReader.get(this.translationKey);
+        String title = DA.loader.languageReader.getString(this.translationKey);
         Component titleComp = MiniMessage.miniMessage().deserialize(title);
         title = LegacyComponentSerializer.legacyAmpersand().serialize(titleComp);
         String stateString;

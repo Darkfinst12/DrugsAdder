@@ -1,12 +1,17 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -16,6 +21,8 @@ public class DAFurnaceRecipe extends DARecipe {
 
     /**
      * The cooking time of the recipe
+     * <br>
+     * The Time is in seconds
      */
     private int cookingTime;
     /**
@@ -23,8 +30,8 @@ public class DAFurnaceRecipe extends DARecipe {
      */
     private float experience;
 
-    public DAFurnaceRecipe(String namedID, RecipeType recipeType, DAItem result, DAItem... materials) {
-        super(namedID, recipeType, result, materials);
+    public DAFurnaceRecipe(String recipeID, RecipeType recipeType, DAItem result, DAItem... materials) {
+        super(recipeID, recipeType, result, materials);
     }
 
     /**
@@ -33,7 +40,7 @@ public class DAFurnaceRecipe extends DARecipe {
      * @return If the recipe was successfully registered
      */
     public boolean registerRecipe() {
-        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getID());
+        NamespacedKey namespacedKey = new NamespacedKey(DA.getInstance, this.getRecipeID());
         DAItem daItem = Arrays.stream(this.getMaterials()).findFirst().orElse(null);
         if (daItem == null) {
             return false;
@@ -68,5 +75,38 @@ public class DAFurnaceRecipe extends DARecipe {
                 ", cookingTime=" + cookingTime +
                 ", experience=" + experience +
                 '}';
+    }
+
+    /**
+     * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
+     *
+     * @return The component that represents the recipe.
+     */
+    @Override
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.FURNACE.getArg(), this.getRecipeID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    /**
+     * Returns the hover event of the recipe
+     *
+     * @return The hover event of the recipe
+     */
+    @Override
+    public @NotNull Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_CookingTime", this.getCookingTime() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Experience ", this.getExperience() + ""));
+        hover = hover.append(super.getMaterialsAsComponent());
+        return hover;
     }
 }

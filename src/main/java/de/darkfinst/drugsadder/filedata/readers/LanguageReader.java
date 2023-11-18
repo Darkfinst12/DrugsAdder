@@ -1,8 +1,12 @@
 package de.darkfinst.drugsadder.filedata.readers;
 
 import de.darkfinst.drugsadder.DA;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +20,6 @@ public class LanguageReader {
 
     public LanguageReader(File file, String defaultPath) {
         /* Load */
-
         FileConfiguration configFile = YamlConfiguration.loadConfiguration(file);
 
         Set<String> keySet = configFile.getKeys(false);
@@ -65,9 +68,8 @@ public class LanguageReader {
      * @param args The arguments to replace the placeholders if there are any.
      * @return The found string with the placeholders replaced. - If no entry is found, it will return the given key.
      */
-    public String get(String key, String... args) {
+    public @NotNull String getString(String key, String... args) {
         String entry = entries.get(key);
-
         if (entry != null) {
             int i = 0;
             for (String arg : args) {
@@ -83,5 +85,35 @@ public class LanguageReader {
         return entry;
     }
 
+    /**
+     * This method is used to get a component from the language file.
+     * <p>
+     * see {@link #getString(String, String...)}
+     *
+     * @param key  The key of the component.
+     * @param args The arguments to replace the placeholders if there are any.
+     * @return The found component with the placeholders replaced. - If no entry is found, it will return null.
+     */
+    public @Nullable Component getComponent(String key, String... args) {
+        String s = this.getString(key, args);
+        if (s.equals(String.format("Key: %s not found", key))) {
+            return null;
+        }
+        return MiniMessage.miniMessage().deserialize(s);
+    }
 
+    /**
+     * This method is used to get a component from the language file.
+     *
+     * @param key  The key of the component.
+     * @param args The arguments to replace the placeholders if there are any.
+     * @return The found component with the placeholders replaced. - If no entry is found, it will return the string of the key.
+     */
+    public @NotNull Component getComponentWithFallback(String key, String... args) {
+        Component component = this.getComponent(key, args);
+        if (component == null) {
+            component = Component.text(this.getString(key, args));
+        }
+        return component;
+    }
 }

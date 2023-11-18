@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder;
 
 import de.darkfinst.drugsadder.api.events.DrugsAdderSendMessageEvent;
 import de.darkfinst.drugsadder.api.events.RegisterStructureEvent;
+import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.exceptions.Structures.RegisterStructureException;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.filedata.data.DAData;
@@ -22,6 +23,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -29,10 +31,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -100,13 +99,13 @@ public class DALoader {
         try {
             FileConfiguration config = DAConfig.loadConfigFile();
             if (config == null) {
-                this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+                DA.getInstance.disable();
                 return;
             }
             DAConfig.readConfig(config);
         } catch (Exception e) {
             this.logException(e);
-            this.plugin.getServer().getPluginManager().disablePlugin(this.plugin);
+            DA.getInstance.disable();
         }
     }
 
@@ -125,7 +124,7 @@ public class DALoader {
      * Initializes the commands
      */
     private void initCommands() {
-        new DACommand().register();
+        new DACommandManager().register();
     }
 
     /**
@@ -211,7 +210,7 @@ public class DALoader {
             }
             boolean success = this.unregisterDAStructure(structure);
             if (success) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Structure_Destroyed", structure.getClass().getSimpleName().replace("DA", "")), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getString("Player_Structure_Destroyed", structure.getClass().getSimpleName().replace("DA", "")), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
 
         }
@@ -311,14 +310,43 @@ public class DALoader {
 
     /**
      * Get a DAPlayer by a player
+     * <br>
+     * It is a wrapper for {@link DALoader#getDaPlayer(UUID)}
      *
      * @param player The player, which is part of the DAPlayer
      * @return The DAPlayer, which contains the player or null if no DAPlayer was found
      */
     public DAPlayer getDaPlayer(Player player) {
-        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
+        return this.getDaPlayer(player.getUniqueId());
     }
 
+    /**
+     * Get a DAPlayer by an offline player
+     * <br>
+     * It is a wrapper for {@link DALoader#getDaPlayer(UUID)}
+     *
+     * @param offlinePlayer The offline player, which is part of the DAPlayer
+     * @return The DAPlayer, which contains the offline player or null if no DAPlayer was found
+     */
+    public DAPlayer getDaPlayer(OfflinePlayer offlinePlayer) {
+        return this.getDaPlayer(offlinePlayer.getUniqueId());
+    }
+
+    /**
+     * Get a DAPlayer by a UUID
+     *
+     * @param uuid The UUID, which is part of the DAPlayer
+     * @return The DAPlayer, which contains the UUID or null if no DAPlayer was found
+     */
+    public DAPlayer getDaPlayer(UUID uuid) {
+        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(uuid)).findAny().orElse(null);
+    }
+
+    /**
+     * Removes a DAPlayer from the list of DAPlayers
+     *
+     * @param daPlayer The DAPlayer to remove
+     */
     public void removeDaPlayer(DAPlayer daPlayer) {
         this.daPlayerList.remove(daPlayer);
     }
@@ -346,7 +374,7 @@ public class DALoader {
         if (this.languageReader == null) {
             return fallback;
         }
-        return this.languageReader.get(key, args);
+        return this.languageReader.getString(key, args);
     }
 
 

@@ -1,6 +1,9 @@
 package de.darkfinst.drugsadder.recipe;
 
+import de.darkfinst.drugsadder.DA;
 import de.darkfinst.drugsadder.api.events.barrel.BarrelProcessMaterialsEvent;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.BarrelException;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughMaterialsException;
 import de.darkfinst.drugsadder.exceptions.Structures.Barrel.NotEnoughTimePassedException;
@@ -9,6 +12,8 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.barrel.DABarrel;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -25,15 +30,20 @@ public class DABarrelRecipe extends DARecipe {
 
     /**
      * The time the recipe needs to process
+     * <br>
+     * The time is in Minutes
      */
     private final long processTime;
+
     /**
      * The time the recipe can process longer than the process time
+     * <br>
+     * The time is in Minutes
      */
     private final long processOverdueAcceptance;
 
-    public DABarrelRecipe(String namedID, RecipeType recipeType, long processTime, long processOverdueAcceptance, DAItem result, DAItem... materials) {
-        super(namedID, recipeType, result, materials);
+    public DABarrelRecipe(String recipeID, RecipeType recipeType, long processTime, long processOverdueAcceptance, DAItem result, DAItem... materials) {
+        super(recipeID, recipeType, result, materials);
         this.processTime = processTime;
         this.processOverdueAcceptance = processOverdueAcceptance;
     }
@@ -148,5 +158,40 @@ public class DABarrelRecipe extends DARecipe {
                 ", processTime=" + processTime +
                 ", processOverdueAcceptance=" + processOverdueAcceptance +
                 "}";
+    }
+
+    /**
+     * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
+     *
+     * @return The component that represents the recipe.
+     */
+    @Override
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.BARREL.getArg(), this.getRecipeID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    /**
+     * Returns the component that is used for the Hover Event of the recipe
+     * <br>
+     * It shows the process time and the materials.
+     *
+     * @return the component
+     */
+    @Override
+    public @NotNull Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessTime", this.getProcessTime() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessOverdueAcceptance", this.getProcessOverdueAcceptance() + ""));
+        hover = hover.appendNewline().append(super.getMaterialsAsComponent());
+        return hover;
     }
 }

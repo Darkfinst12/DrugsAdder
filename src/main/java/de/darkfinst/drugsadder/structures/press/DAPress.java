@@ -62,14 +62,14 @@ public class DAPress extends DAStructure {
                     super.setBody(pressBody);
                     boolean success = DA.loader.registerDAStructure(this, false);
                     if (success) {
-                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Press_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                     }
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Press_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Press_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perm_Press_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -153,7 +153,7 @@ public class DAPress extends DAStructure {
                 DA.loader.unregisterDAStructure(this);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Press_NoUse"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perm_Press_NoUse"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -224,7 +224,7 @@ public class DAPress extends DAStructure {
             if ((recipe.containsMold(compressedItems))) {
                 if (recipe.hasMaterials(compressedItems)) {
                     long duration = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - this.pressActiveTime);
-                    if (duration < recipe.getDuration()) {
+                    if (duration < recipe.getProcessTime()) {
                         return;
                     }
                     if (!recipe.hasMaterials(compressedItems)) {

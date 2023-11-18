@@ -77,7 +77,7 @@ public class CraftItemEventListener implements Listener {
                 if (location != null) {
                     location.getWorld().dropItem(location, entry.getValue());
                 } else {
-                    DA.log.errorLog(DA.loader.languageReader.get("Error_Crafting_ReturnItems", ((Keyed) recipe).getKey().asString(), entry.getValue().getType().name(), entry.getValue().getAmount() + ""));
+                    DA.log.errorLog(DA.loader.languageReader.getString("Error_Crafting_ReturnItems", ((Keyed) recipe).getKey().asString(), entry.getValue().getType().name(), entry.getValue().getAmount() + ""));
                 }
             }
         }

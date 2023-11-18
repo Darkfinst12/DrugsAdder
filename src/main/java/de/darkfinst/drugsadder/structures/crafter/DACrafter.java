@@ -70,14 +70,14 @@ public class DACrafter extends DAInvStructure {
                     super.setBody(dacrafterBody);
                     boolean success = DA.loader.registerDAStructure(this, false);
                     if (success) {
-                        DA.loader.msg(player, DA.loader.languageReader.get("Player_Crafter_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                        DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Crafter_Created"), DrugsAdderSendMessageEvent.Type.PLAYER);
                     }
                 }
             } catch (ValidateStructureException ignored) {
-                DA.loader.msg(player, DA.loader.languageReader.get("Player_Crafter_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
+                DA.loader.msg(player, DA.loader.languageReader.getComponent("Player_Crafter_NotValid"), DrugsAdderSendMessageEvent.Type.PLAYER);
             }
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perm_Crafter_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perm_Crafter_NoCreate"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 
@@ -113,7 +113,7 @@ public class DACrafter extends DAInvStructure {
             String title = LegacyComponentSerializer.legacyAmpersand().serialize(this.getTitle(this.getProcess().getState()));
             player.getOpenInventory().setTitle(ChatColor.translateAlternateColorCodes('&', title)); //Can not be changed to a Component, because it can not be set as such (Missing Paper API Update)
         } else {
-            DA.loader.msg(player, DA.loader.languageReader.get("Perms_Crafter_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
+            DA.loader.msg(player, DA.loader.languageReader.getComponent("Perms_Crafter_NoOpen"), DrugsAdderSendMessageEvent.Type.PERMISSION);
         }
     }
 

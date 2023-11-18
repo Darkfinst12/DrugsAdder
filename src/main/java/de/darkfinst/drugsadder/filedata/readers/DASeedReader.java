@@ -178,6 +178,10 @@ public class DASeedReader {
         return this.registeredSeeds.stream().filter(drug -> drug.getNamespacedID().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
 
+    public List<String> getSeedNames() {
+        return this.registeredSeeds.stream().map(DAItem::getNamespacedID).toList();
+    }
+
     public Map<String, Integer> getAllowedTools(ConfigurationSection seedConfig) {
         Map<String, Integer> allowedTools = new HashMap<>();
         if (seedConfig != null) {
@@ -202,7 +206,7 @@ public class DASeedReader {
             LanguageReader languageReader = DA.loader.getLanguageReader();
             DALoader loader = DA.loader;
             if (languageReader != null) {
-                loader.errorLog(languageReader.get(key, args));
+                loader.errorLog(languageReader.getString(key, args));
             } else {
                 loader.errorLog("Error while loading seed " + args[0] + " - Skipping");
             }
@@ -219,7 +223,7 @@ public class DASeedReader {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;
         if (languageReader != null) {
-            loader.log(languageReader.get(key, args));
+            loader.log(languageReader.getString(key, args));
         }
     }
 

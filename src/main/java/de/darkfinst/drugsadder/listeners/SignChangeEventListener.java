@@ -41,7 +41,7 @@ public class SignChangeEventListener implements Listener {
                 dacRafter.create(event.getBlock(), event.getPlayer());
             }
         } catch (RegisterStructureException e) {
-            DA.loader.msg(event.getPlayer(), DA.loader.languageReader.get("Error_Structures_Register"), DrugsAdderSendMessageEvent.Type.ERROR);
+            DA.loader.msg(event.getPlayer(), DA.loader.languageReader.getComponent("Error_Structures_Register"), DrugsAdderSendMessageEvent.Type.ERROR);
             DA.log.logException(e);
         }
 

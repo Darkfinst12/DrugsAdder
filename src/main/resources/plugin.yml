@@ -1,13 +1,13 @@
 main: de.darkfinst.drugsadder.DA
 name: DrugsAdder
-version: 0.1.1
+version: 0.2.0
 api-version: 1.20
 softdepend: [ WorldGuard, ItemsAdder, Slimefun ]
 author: Jarod A. M. Békési
 
 commands:
   drugsadder:
-    description: Mostly admin commands to create/modify Drugs and addictions
+    description: An admin commands to get Information about settings and Players
     aliases: [ da ]
 
 permissions:
@@ -102,38 +102,51 @@ permissions:
     default: false
     children:
       drugsadder.cmd.reload: true
-      drugsadder.cmd.help: true
       drugsadder.cmd.info: true
       drugsadder.cmd.list: true
       drugsadder.cmd.player: true
+  #Reload Command
   drugsadder.cmd.reload:
     description: Reload config
-  drugsadder.cmd.help:
-    description: Get help for the Plugin and its Commands
+  #Give Commands
+  drugsadder.cmd.give:
+    description: Give a Drug, Plant or a CustomItem to a Player
+    drugsadder.cmd.give.drugs: true
+    drugsadder.cmd.give.plants: true
+    drugsadder.cmd.give.customitems: true
+  drugsadder.cmd.give.drug:
+    description: Give a Drug to a Player
+  drugsadder.cmd.give.plant:
+    description: Give a Plant to a Player
+  drugsadder.cmd.give.customitems:
+    description: Give a CustomItem to a Player
+  #Info Commands
   drugsadder.cmd.info:
     description: Information about the Plugin
     children:
       drugsadder.cmd.info.plugin: true
-      drugsadder.cmd.info.player: true
       drugsadder.cmd.info.drugs: true
       drugsadder.cmd.info.recipes: true
-  drugsadder.cmd.info.player:
-    description: Information about the addictions of a Player
-    children:
-      drugsadder.cmd.info.player.other: true
-  drugsadder.cmd.info.player.other:
-    description: Information about the addictions of another Player
+      drugsadder.cmd.info.customitems: true
+      drugsadder.cmd.info.plant: true
   drugsadder.cmd.info.drugs:
     description: Information about a specific Drug
+  drugsadder.cmd.info.plant:
+    description: Information about a specific Plant
+  drugsadder.cmd.info.customitems:
+    description: Information about a specific CustomItem
   drugsadder.cmd.info.recipes:
     description: Information about a specific Recipe
     children:
+      drugsadder.cmd.info.recipes.all: true
       drugsadder.cmd.info.recipes.barrel: true
       drugsadder.cmd.info.recipes.press: true
       drugsadder.cmd.info.recipes.table: true
       drugsadder.cmd.info.recipes.crafting: true
       drugsadder.cmd.info.recipes.crafter: true
       drugsadder.cmd.info.recipes.furnace: true
+  drugsadder.cmd.info.recipes.all:
+    description: List all Recipes
   drugsadder.cmd.info.recipes.barrel:
     description: Information about a specific Barrel Recipe
   drugsadder.cmd.info.recipes.press:
@@ -146,43 +159,60 @@ permissions:
     description: Information about a specific Crafter Recipe
   drugsadder.cmd.info.recipes.furnace:
     description: Information about a specific Furnace Recipe
+  # List Commands
   drugsadder.cmd.list:
     description: List all Drugs,Recipes or CustomItems
     children:
       drugsadder.cmd.list.drugs: true
       drugsadder.cmd.list.recipes: true
       drugsadder.cmd.list.customitems: true
+      drugsadder.cmd.list.plants: true
   drugsadder.cmd.list.drugs:
     description: List all Drugs
+  drugsadder.cmd.list.customitems:
+    description: List all CustomItems
+  drugsadder.cmd.list.plants:
+    description: List all plants
   drugsadder.cmd.list.recipes:
     description: List all Recipes
     children:
+      drugsadder.cmd.list.recipes.all: true
       drugsadder.cmd.list.recipes.barrel: true
       drugsadder.cmd.list.recipes.press: true
       drugsadder.cmd.list.recipes.table: true
       drugsadder.cmd.list.recipes.crafting: true
       drugsadder.cmd.list.recipes.crafter: true
       drugsadder.cmd.list.recipes.furnace: true
-  drugsadder.cmd.list.recipes.barrel:
-    description: List all Barrel Recipes
-  drugsadder.cmd.list.recipes.press:
-    description: List all Press Recipes
-  drugsadder.cmd.list.recipes.table:
-    description: List all Table Recipes
-  drugsadder.cmd.list.recipes.crafting:
-    description: List all Crafting Recipes
-  drugsadder.cmd.list.recipes.crafter:
-    description: List all Crafter Recipes
-  drugsadder.cmd.list.recipes.furnace:
-    description: List all Furnace Recipes
-  drugsadder.cmd.list.customitems:
-    description: List all CustomItems
+    drugsadder.cmd.list.recipes.all:
+      description: List all Recipes
+    drugsadder.cmd.list.recipes.barrel:
+      description: List all Barrel Recipes
+    drugsadder.cmd.list.recipes.press:
+      description: List all Press Recipes
+    drugsadder.cmd.list.recipes.table:
+      description: List all Table Recipes
+    drugsadder.cmd.list.recipes.crafting:
+      description: List all Crafting Recipes
+    drugsadder.cmd.list.recipes.crafter:
+      description: List all Crafter Recipes
+    drugsadder.cmd.list.recipes.furnace:
+      description: List all Furnace Recipes
+  # Player Commands
   drugsadder.cmd.player:
     description: Gives access to all Player Commands
     children:
+      drugsadder.cmd.player.info: true
       drugsadder.cmd.player.set: true
+      drugsadder.cmd.player.get: true
       drugsadder.cmd.player.clear: true
+      drugsadder.cmd.player.remove: true
+  drugsadder.cmd.player.info:
+    description: Information about the addictions of a Player
   drugsadder.cmd.player.set:
     description: Set the addiction of a Player for a Drug
+  drugsadder.cmd.player.get:
+    description: Get the addiction of a Player for a Drug
   drugsadder.cmd.player.clear:
     description: Clear the addiction of a Player for a Drug or all Drugs
+  drugsadder.cmd.player.remove:
+    description: Remove the addiction of a Player for a Drug

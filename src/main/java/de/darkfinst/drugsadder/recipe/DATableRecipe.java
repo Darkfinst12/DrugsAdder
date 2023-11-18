@@ -1,12 +1,16 @@
 package de.darkfinst.drugsadder.recipe;
 
 import de.darkfinst.drugsadder.DA;
+import de.darkfinst.drugsadder.commands.DACommandManager;
+import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.filedata.DAConfig;
 import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.structures.table.DATable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -58,8 +62,8 @@ public class DATableRecipe extends DARecipe {
      */
     private double processingTimeTwo;
 
-    public DATableRecipe(String ID, RecipeType recipeType, DAItem result, DAItem filterOne, DAItem fuelOne, DAItem materialOne, double processingTimeOne) {
-        super(ID, recipeType, result, materialOne);
+    public DATableRecipe(String recipeID, RecipeType recipeType, DAItem result, DAItem filterOne, DAItem fuelOne, DAItem materialOne, double processingTimeOne) {
+        super(recipeID, recipeType, result, materialOne);
         this.filterOne = filterOne;
         this.fuelOne = fuelOne;
         this.materialOne = materialOne;
@@ -376,6 +380,76 @@ public class DATableRecipe extends DARecipe {
                 DA.log.logException(e, true);
             }
         }
+    }
+
+    /**
+     * This method generates a component that represents the recipe.
+     * <br>
+     * It only shows the ID but extends a Hover Event that shows the process time and the materials.
+     * <br>
+     * It also extends a Click Event that executes the command to show the recipe in the info command.
+     * <br>
+     * For use see {@link de.darkfinst.drugsadder.commands.ListCommand}
+     *
+     * @return The component that represents the recipe.
+     */
+    @Override
+    public @NotNull Component asListComponent() {
+        Component component = super.asListComponent();
+        component = component.hoverEvent(this.getHover().asHoverEvent());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.TABLE.getArg(), this.getRecipeID());
+        return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    /**
+     * Returns the hover event of the recipe
+     *
+     * @return The hover event of the recipe
+     */
+    @Override
+    public @NotNull Component getHover() {
+        Component hover = Component.text().asComponent();
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessingTime", this.getProcessingTimeOne() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FilterOne"));
+        Component name = this.getFilterOne().getName();
+        if (name == null) {
+            name = Component.text(this.getFilterOne().getItemStack().getType().name());
+        }
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFilterOne().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FuelOne"));
+        name = this.getFuelOne().getName();
+        if (name == null) {
+            name = Component.text(this.getFuelOne().getItemStack().getType().name());
+        }
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFuelOne().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaterialOne"));
+        name = this.getMaterialOne().getName();
+        if (name == null) {
+            name = Component.text(this.getMaterialOne().getItemStack().getType().name());
+        }
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getMaterialOne().getAmount() + "")).append(name);
+
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ProcessingTime", this.getProcessingTimeTwo() + ""));
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FilterTwo"));
+        name = this.getFilterTwo().getName();
+        if (name == null) {
+            name = Component.text(this.getFilterTwo().getItemStack().getType().name());
+        }
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFilterTwo().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_FuelTwo"));
+        name = this.getFuelTwo().getName();
+        if (name == null) {
+            name = Component.text(this.getFuelOne().getItemStack().getType().name());
+        }
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getFuelOne().getAmount() + "")).append(name);
+        hover = hover.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaterialTwo"));
+        name = this.getMaterialTwo().getName();
+        if (name == null) {
+            name = Component.text(this.getMaterialTwo().getItemStack().getType().name());
+        }
+        hover = hover.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AmountX", this.getMaterialTwo().getAmount() + "")).append(name);
+
+        return hover;
     }
 
 

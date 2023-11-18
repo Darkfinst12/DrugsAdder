@@ -88,7 +88,7 @@ public class DACustomItemReader {
         itemMeta.displayName(name);
         List<Component> lore = new ArrayList<>();
         for (String loreLine : itemConfig.getStringList("lore")) {
-            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(loreLine));
+            lore.add(MiniMessage.miniMessage().deserialize(loreLine));
         }
         itemMeta.lore(lore);
         int cmd = itemConfig.getInt("customModelData", -1);
@@ -176,7 +176,7 @@ public class DACustomItemReader {
             LanguageReader languageReader = DA.loader.getLanguageReader();
             DALoader loader = DA.loader;
             if (languageReader != null) {
-                loader.errorLog(languageReader.get(key, args));
+                loader.errorLog(languageReader.getString(key, args));
             } else {
                 loader.errorLog("Error while loading CustomItem " + args[0] + " - Skipping");
             }
@@ -193,7 +193,7 @@ public class DACustomItemReader {
         LanguageReader languageReader = DA.loader.getLanguageReader();
         DALoader loader = DA.loader;
         if (languageReader != null) {
-            loader.log(languageReader.get(key, args));
+            loader.log(languageReader.getString(key, args));
         }
     }
 

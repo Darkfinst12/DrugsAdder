@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -151,4 +152,36 @@ public class DAAddiction {
                 '}';
     }
 
+    /**
+     * Returns the addiction as a component
+     *
+     * @param extended Whether the component should be extended or not (includes the effects)
+     * @return The addiction as a component
+     */
+    protected Component asComponent(boolean extended) {
+        Component component = Component.text().asComponent();
+        component = component.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_AddictionPoints", this.addictionPoints + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Overdose", this.overdose + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_OverdoseTime", this.overdoseTime + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ReductionAmount", this.reductionAmount + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ReductionTime", this.reductionTime + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ReductionOnlyOnline", this.reductionOnlyOnline + ""));
+        if (extended) {
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Deprivation"));
+            for (Map.Entry<Integer, List<DAEffect>> entry : this.deprivation.entrySet()) {
+                component = component.appendNewline().append(Component.text("- " + entry.getKey() + ":"));
+                for (DAEffect effect : entry.getValue()) {
+                    component = component.appendNewline().append(effect.asComponent());
+                }
+            }
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Consummation"));
+            for (Map.Entry<Integer, List<DAEffect>> entry : this.consummation.entrySet()) {
+                component = component.appendNewline().append(Component.text("- " + entry.getKey() + ":"));
+                for (DAEffect effect : entry.getValue()) {
+                    component = component.appendNewline().append(effect.asComponent());
+                }
+            }
+        }
+        return component;
+    }
 }

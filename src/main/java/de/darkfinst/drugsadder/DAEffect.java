@@ -2,6 +2,7 @@ package de.darkfinst.drugsadder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -170,6 +171,24 @@ public class DAEffect {
                 ", maxDuration=" + maxDuration +
                 ", probability=" + probability +
                 '}';
+    }
+
+    public Component asComponent() {
+        Component component = Component.text().asComponent();
+        component = component.append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_EffectType", this.effectType.name()));
+        if (DAEffectType.POTION.equals(this.effectType)) {
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_EffectName", this.effectName));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MinLevel", this.minLevel + ""));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaxLevel", this.maxLevel + ""));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Particles", this.particles + ""));
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Icon", this.icon + ""));
+        } else if (DAEffectType.SCREEN.equals(this.effectType)) {
+            component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_ScreenEffect", this.screenEffect));
+        }
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MinDuration", this.minDuration + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_MaxDuration", this.maxDuration + ""));
+        component = component.appendNewline().append(DA.loader.languageReader.getComponentWithFallback("Miscellaneous_Components_Probability", this.probability + ""));
+        return component;
     }
 
     private String getPotionEffectString() {

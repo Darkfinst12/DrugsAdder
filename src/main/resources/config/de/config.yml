@@ -94,89 +94,91 @@ customItems:
   #Name des CustomItems - Dies ist die ID des CustomItems, die NamespacedID ist dann drugsadder:CUSTOMITEM_NAME
   cocaine:
     #Displayname vom Item
-    #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: '&7This is a Name'.
+    #Du kannst auch Farbcodes verwenden - Beispiel: '<dark_red>Das ist ein Name</dark_red>'.
+    #Für eine genaue Erklärung siehe in der Wiki nach
     #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
     #Wenn der Name zu lang ist, wird er von Minecraft abgeschnitten und man sieht nicht den ganzen Namen.
-    name: '&fCocaine'
+    name: '<white>Cocaine'
     #Material des Gegenstandes - Hier sind nur Gegenstände aus Minecraft erlaubt
     material: 'apple'
     #Die Beschreibung des Gegenstandes - Du kannst so viele Zeilen hinzufügen, wie du willst, füge einfach ein '-' vor der Zeile ein.
-    #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: '&7This is a Name'.
+    #Du kannst auch Farbcodes verwenden - Beispiel: '<dark_red>Das ist eine Lore</dark_red>'.
+    #Für eine genaue Erklärung siehe in der Wiki nach
     #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
     #Wenn deine Lore zu lang ist, wird sie von Minecraft abgeschnitten und du wirst nicht die ganze Lore sehen.
     lore:
-      - '&7Cocaine'
+      - '<gray>Cocaine'
     #CustomModelData von dem Item
     #Beachten, dass das Modell aus dem höchsten Texturenpacket des Benutzers entnommen wird, welches diese hat.
     customModelData: 3
   dirty_cocaine:
-    name: '&fDreckiges Kokain'
+    name: '<white>Dreckiges Kokain</white>'
     material: 'apple'
     lore:
-      - '&7Oh nein mein Kokain ist schmutzig'
+      - '<gray>Oh nein mein Kokain ist schmutzig</gray>'
     customModelData: 4
   cocaine_pill:
-    name: '&fKokain Pille'
+    name: '<white>Kokain Pille</white>'
     material: 'apple'
     customModelData: 6
   blue_pill:
-    name: '&fBlaue Pill'
+    name: '<white>Blaue Pill</white>'
     material: 'apple'
     customModelData: 2
     lore:
-      - '&7You take the blue pill, the story ends.'
+      - '<gray>You take the blue pill, the story ends.</gray>'
   red_pill:
-    name: '&fRote Pill'
+    name: '<white>Rote Pill</white>'
     material: 'apple'
     customModelData: 1
     lore:
-      - '&7You take the red pill, you stay in Wonderland,'
-      - '&7and I show you how deep the rabbit hole goes.'
+      - '<gray>You take the red pill, you stay in Wonderland,</gray>'
+      - '<gray>and I show you how deep the rabbit hole goes.</gray>'
   heroin_syringe:
-    name: '&fHeroinspritze'
+    name: '<white>Heroinspritze</white>'
     material: 'apple'
     customModelData: 5
     lore:
-      - '&7Spritz dir Heroin'
+      - '<gray>Spritz dir Heroin</gray>'
   joint:
-    name: '&fJoint'
+    name: '<white>Joint</white>'
     material: 'apple'
     customModelData: 7
     lore:
-      - '&7Lets smoke some Weed'
+      - '<gray>Lets smoke some Weed</gray>'
   pill_mold:
-    name: '&fPill Mold'
+    name: '<white>Pill Mold</white>'
     material: 'stick'
     lore:
-      - '&7Lets press some Pills'
+      - '<gray>Lets press some Pills</gray>'
     customModelData: 3
   coca_leaf:
-    name: '&fCoca Leaf'
+    name: '<white>Coca Leaf</white>'
     material: 'stick'
     lore:
-      - '&7Coca'
+      - '<gray>Coca</gray>'
     customModelData: 1
   hanf:
-    name: '&fHanf'
+    name: '<white>Hanf</white>'
     material: 'stick'
     lore:
-      - '&7Coca'
+      - '<gray>Coca</gray>'
     customModelData: 2
   suspicious_potion:
-    name: '&cSus Potion'
+    name: '<red>Sus Potion</red>'
     material: 'potion'
     lore:
-      - '&7SUS Potion'
+      - '<gray>SUS Potion</gray>'
     customModelData: 0
     potionMeta:
       color: "255,10,255,125"
       effects:
         - 'PotionEffect{type=SLOW, duration=600, level=2, particles=true, icon=true}'
   coca_seeds:
-    name: '&fCoca Seeds'
+    name: '<white>Coca Seeds</white>'
     material: 'pumpkin_seeds'
     lore:
-      - '&7Coca'
+      - '<gray>Coca</gray>'
     customModelData: 0
 
 #Rezepte
@@ -462,7 +464,6 @@ drugs:
       - 'PotionEffect{type=SPEED, minDuration=600, maxDuration=700, minLevel=1, maxLevel=2, probability=100, particles=true, icon=true}'
     #Die Befehle welche ausgeführt werden, wenn die Droge konsumiert wird - Du kannst so viele hinzufügen, wie du willst
     #Du kannst die folgenden Platzhalter verwenden: %player%, %drug%
-    #Du kannst auch Farbcodes mit '&' verwenden - Beispiel: 'say &7TDas ist ein Befehl'.
     #Du kannst auch Unicode-Zeichen verwenden - Beispiel: '\uE000'
     #Die Befehle werden vom Server ausgeführt
     serverCommands:
