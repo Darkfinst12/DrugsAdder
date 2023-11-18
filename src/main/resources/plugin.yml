@@ -105,8 +105,10 @@ permissions:
       drugsadder.cmd.info: true
       drugsadder.cmd.list: true
       drugsadder.cmd.player: true
+  #Reload Command
   drugsadder.cmd.reload:
     description: Reload config
+  #Give Commands
   drugsadder.cmd.give:
     description: Give a Drug, Plant or a CustomItem to a Player
     drugsadder.cmd.give.drugs: true
@@ -118,6 +120,7 @@ permissions:
     description: Give a Plant to a Player
   drugsadder.cmd.give.customitems:
     description: Give a CustomItem to a Player
+  #Info Commands
   drugsadder.cmd.info:
     description: Information about the Plugin
     children:

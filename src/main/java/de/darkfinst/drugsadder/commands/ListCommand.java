@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class ListCommand {
 
@@ -161,7 +160,7 @@ public class ListCommand {
      */
     public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
-            return Stream.of(PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.RECIPES.getArg()).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
+            return Arrays.stream(InfoCommand.PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPos() == 0 && sender.hasPermission(possibleArgs.getPermission())).map(InfoCommand.PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
         }
         if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
             return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPosition() == 1 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
