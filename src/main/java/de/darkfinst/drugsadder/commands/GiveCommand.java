@@ -11,14 +11,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class GiveCommand {
 
+    /**
+     * Handels the give command and calls the right method to execute it
+     * <br>
+     * args[0] = type of item
+     * <br>
+     * args[1] = id of the item
+     * <br>
+     * args[2] = amount of the item
+     * <br>
+     * Possible arguments: {@link PossibleArgs}
+     *
+     * @param commandSender The sender of the command
+     * @param args          The arguments of the command
+     */
     public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             commandSender.sendMessage(DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Give"));
@@ -26,7 +38,7 @@ public class GiveCommand {
             if (commandSender instanceof Player player) {
                 try {
                     GiveCommand.PossibleArgs possibleArgs = GiveCommand.PossibleArgs.valueOfIgnoreCase(args[0]);
-                    if (!commandSender.hasPermission(possibleArgs.getPermission())) {
+                    if (!commandSender.hasPermission(Objects.requireNonNull(possibleArgs).getPermission())) {
                         DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                     }
                     switch (possibleArgs) {
@@ -46,7 +58,14 @@ public class GiveCommand {
         }
     }
 
-    private static void plants(Player player, String id, int amount) {
+    /**
+     * Gives the player the given number of plants
+     *
+     * @param player The player, which should receive the plants
+     * @param id     The id of the plant
+     * @param amount The number of plants to give
+     */
+    private static void plants(@NotNull Player player, @NotNull String id, int amount) {
         if (!player.hasPermission(PossibleArgs.PLANTS.getPermission())) {
             DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         }
@@ -61,11 +80,18 @@ public class GiveCommand {
         DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Info_PlantGiven", id, amount + ""));
     }
 
-    private static void customItems(Player player, String id, int amount) {
+    /**
+     * Gives the player the given number of custom items
+     *
+     * @param player       The player, which should receive the custom items
+     * @param namespacedID The namespacedID of the custom item
+     * @param amount       The number of custom items to give
+     */
+    private static void customItems(@NotNull Player player, @NotNull String namespacedID, int amount) {
         if (!player.hasPermission(PossibleArgs.CUSTOM_ITEMS.getPermission())) {
             DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         }
-        DAItem daItem = DAUtil.getItemStackByNamespacedID(id);
+        DAItem daItem = DAUtil.getItemStackByNamespacedID(namespacedID);
         if (daItem == null) {
             DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Error_CustomItemNotFound"));
             return;
@@ -73,10 +99,17 @@ public class GiveCommand {
         ItemStack itemStack = daItem.getItemStack();
         itemStack.setAmount(amount);
         DAUtil.addToInventory(player.getInventory(), itemStack);
-        DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Info_CustomItemGiven", id, amount + ""));
+        DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Info_CustomItemGiven", namespacedID, amount + ""));
     }
 
-    private static void drugs(Player player, String id, int amount) {
+    /**
+     * Gives the player the given number of drugs
+     *
+     * @param player The player, which should receive the drugs
+     * @param id     The id of the drug
+     * @param amount The number of drugs to give
+     */
+    private static void drugs(@NotNull Player player, @NotNull String id, int amount) {
         if (!player.hasPermission(PossibleArgs.DRUGS.getPermission())) {
             DA.loader.msg(player, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         }
@@ -92,6 +125,13 @@ public class GiveCommand {
     }
 
 
+    /**
+     * Manges the tab completion for the give command
+     *
+     * @param sender The sender of the command
+     * @param args   The arguments of the command
+     * @return A list of possible arguments
+     */
     public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Arrays.stream(GiveCommand.PossibleArgs.values()).filter(possibleArgs -> sender.hasPermission(possibleArgs.getPermission())).map(GiveCommand.PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
@@ -120,6 +160,9 @@ public class GiveCommand {
 
     }
 
+    /**
+     * This enum contains all possible arguments for the give command
+     */
     @Getter
     public enum PossibleArgs {
         DRUGS("Command_Arg_Drugs", "drugsadder.cmd.give.drugs"),
@@ -129,16 +172,16 @@ public class GiveCommand {
         private final String languageKey;
         private final String permission;
 
-        PossibleArgs(String languageKey, String permission) {
+        PossibleArgs(@NotNull String languageKey, @NotNull String permission) {
             this.languageKey = languageKey;
             this.permission = permission;
         }
 
-        public String getArg() {
+        public @NotNull String getArg() {
             return DA.loader.languageReader.getString(languageKey);
         }
 
-        public static PossibleArgs valueOfIgnoreCase(String translation) {
+        public static @Nullable PossibleArgs valueOfIgnoreCase(@Nullable String translation) {
             return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getArg().equalsIgnoreCase(translation)).findFirst().orElse(null);
         }
     }

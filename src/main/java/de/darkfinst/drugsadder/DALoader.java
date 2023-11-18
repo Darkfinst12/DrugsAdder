@@ -31,10 +31,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -313,24 +310,43 @@ public class DALoader {
 
     /**
      * Get a DAPlayer by a player
+     * <br>
+     * It is a wrapper for {@link DALoader#getDaPlayer(UUID)}
      *
      * @param player The player, which is part of the DAPlayer
      * @return The DAPlayer, which contains the player or null if no DAPlayer was found
      */
     public DAPlayer getDaPlayer(Player player) {
-        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(player.getUniqueId())).findAny().orElse(null);
+        return this.getDaPlayer(player.getUniqueId());
     }
 
     /**
      * Get a DAPlayer by an offline player
+     * <br>
+     * It is a wrapper for {@link DALoader#getDaPlayer(UUID)}
      *
      * @param offlinePlayer The offline player, which is part of the DAPlayer
      * @return The DAPlayer, which contains the offline player or null if no DAPlayer was found
      */
     public DAPlayer getDaPlayer(OfflinePlayer offlinePlayer) {
-        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(offlinePlayer.getUniqueId())).findAny().orElse(null);
+        return this.getDaPlayer(offlinePlayer.getUniqueId());
     }
 
+    /**
+     * Get a DAPlayer by a UUID
+     *
+     * @param uuid The UUID, which is part of the DAPlayer
+     * @return The DAPlayer, which contains the UUID or null if no DAPlayer was found
+     */
+    public DAPlayer getDaPlayer(UUID uuid) {
+        return this.daPlayerList.stream().filter(daPlayer -> daPlayer.getUuid().equals(uuid)).findAny().orElse(null);
+    }
+
+    /**
+     * Removes a DAPlayer from the list of DAPlayers
+     *
+     * @param daPlayer The DAPlayer to remove
+     */
     public void removeDaPlayer(DAPlayer daPlayer) {
         this.daPlayerList.remove(daPlayer);
     }

@@ -113,7 +113,7 @@ public class DAItem implements Cloneable {
     public Component asListComponent() {
         Component component = Component.text(this.namespacedID);
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.CUSTOM_ITEMS.getArg(), this.getNamespacedID());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.CUSTOM_ITEMS.getArg(), this.getNamespacedID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 

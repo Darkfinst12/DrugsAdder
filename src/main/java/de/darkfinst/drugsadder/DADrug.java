@@ -145,7 +145,7 @@ public class DADrug extends DAAddiction {
     public Component asListComponent() {
         Component component = Component.text(this.ID);
         component = component.hoverEvent(this.getHover(false).asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.DRUGS.getArg(), this.getID());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.DRUGS.getArg(), this.getID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 

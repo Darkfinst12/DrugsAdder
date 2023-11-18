@@ -7,25 +7,34 @@ import de.darkfinst.drugsadder.items.DAItem;
 import de.darkfinst.drugsadder.items.DAPlantItem;
 import de.darkfinst.drugsadder.recipe.DARecipe;
 import de.darkfinst.drugsadder.utils.DAUtil;
-import io.papermc.paper.plugin.configuration.PluginMeta;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class InfoCommand {
 
+    /**
+     * Handles the info command with the given arguments and calls the corresponding method for the given argument
+     * <p>
+     * Possible arguments: {@link PossibleArgs}
+     *
+     * @param commandSender The command sender
+     * @param args          The arguments
+     */
     public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Info"));
         } else {
             try {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[0], 0);
-                if (!commandSender.hasPermission(possibleArgs.getPermission())) {
+                if (!commandSender.hasPermission(Objects.requireNonNull(possibleArgs).getPermission())) {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                 }
                 switch (possibleArgs) {
@@ -42,7 +51,13 @@ public class InfoCommand {
         }
     }
 
-    private static void customItems(CommandSender commandSender, String[] args) {
+    /**
+     * Gives the information about the given custom item to the command sender
+     *
+     * @param commandSender The command sender
+     * @param args          The custom item ID or namespacedID
+     */
+    private static void customItems(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (!commandSender.hasPermission(PossibleArgs.CUSTOM_ITEMS.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
@@ -58,7 +73,13 @@ public class InfoCommand {
         }
     }
 
-    private static void drugs(CommandSender commandSender, String[] args) {
+    /**
+     * Gives the information about the given drug to the command sender
+     *
+     * @param commandSender The command sender
+     * @param args          The ID of the drug
+     */
+    private static void drugs(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (!commandSender.hasPermission(PossibleArgs.DRUGS.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
@@ -74,7 +95,13 @@ public class InfoCommand {
         }
     }
 
-    private static void plant(CommandSender commandSender, String[] args) {
+    /**
+     * Gives the information about the given plant to the command sender
+     *
+     * @param commandSender The command sender
+     * @param args          The ID of the plant
+     */
+    private static void plant(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (!commandSender.hasPermission(PossibleArgs.PLANT.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
@@ -90,14 +117,28 @@ public class InfoCommand {
         }
     }
 
+    /**
+     * Gives the information about the plugin to the command sender
+     *
+     * @param commandSender The command sender
+     */
+    private static void plugin(@NotNull CommandSender commandSender) {
+        DA.loader.msg(commandSender, DA.getInstance.getInfoComponent());
+    }
 
-    private static void recipes(CommandSender commandSender, String[] args) {
+    /**
+     * Handles the sub selection of the recipe to get information about
+     *
+     * @param commandSender The command sender
+     * @param args          The type of the recipe and the ID of the recipe
+     */
+    private static void recipes(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (!commandSender.hasPermission(PossibleArgs.RECIPES.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
             try {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[0], 1);
-                if (!commandSender.hasPermission(possibleArgs.getPermission())) {
+                if (!commandSender.hasPermission(Objects.requireNonNull(possibleArgs).getPermission())) {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                 }
                 switch (possibleArgs) {
@@ -122,7 +163,14 @@ public class InfoCommand {
         }
     }
 
-    private static void listRecipe(CommandSender commandSender, DARecipe recipe, String recipeID) {
+    /**
+     * Gives the information about the given recipe to the command sender
+     *
+     * @param commandSender The command sender
+     * @param recipe        The recipe – can be null
+     * @param recipeID      The ID of the recipe
+     */
+    private static void listRecipe(@NotNull CommandSender commandSender, @Nullable DARecipe recipe, @NotNull String recipeID) {
         if (recipe == null) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_RecipeNotFound", recipeID));
         } else {
@@ -133,11 +181,13 @@ public class InfoCommand {
         }
     }
 
-
-    private static void plugin(CommandSender commandSender) {
-        DA.loader.msg(commandSender, DA.getInstance.getInfoComponent());
-    }
-
+    /**
+     * Manges tge tab completion for the info command
+     *
+     * @param sender The command sender
+     * @param args   The arguments of the command
+     * @return A list of possible arguments
+     */
 
     public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
@@ -184,7 +234,9 @@ public class InfoCommand {
         return new ArrayList<>();
     }
 
-    //Enum for possible arguments
+    /**
+     * This enum contains all possible arguments for the info command.
+     */
     @Getter
     public enum PossibleArgs {
         CUSTOM_ITEMS("Command_Arg_CustomItems", "drugsadder.cmd.info.customitems", 0),
@@ -206,17 +258,17 @@ public class InfoCommand {
         private final String permission;
         private final int pos;
 
-        PossibleArgs(String languageKey, String permission, int pos) {
+        PossibleArgs(@NotNull String languageKey, @NotNull String permission, int pos) {
             this.languageKey = languageKey;
             this.permission = permission;
             this.pos = pos;
         }
 
-        public String getArg() {
+        public @NotNull String getArg() {
             return DA.loader.languageReader.getString(languageKey);
         }
 
-        public static PossibleArgs valueOfIgnoreCase(String translation, Integer pos) {
+        public static @Nullable PossibleArgs valueOfIgnoreCase(@NotNull String translation, @Nullable Integer pos) {
             return Arrays.stream(PossibleArgs.values())
                     .filter(possibleArgs -> possibleArgs.getArg().equalsIgnoreCase(translation))
                     .filter(possibleArgs -> pos == null || possibleArgs.getPos() == pos)
@@ -225,6 +277,5 @@ public class InfoCommand {
         }
 
     }
-
 
 }

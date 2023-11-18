@@ -18,6 +18,9 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
 
     public static final String COMMAND_NAME = "drugsadder";
 
+    /**
+     * Registers the command and sets the executor and tab completer
+     */
     public void register() {
         PluginCommand command = DA.getInstance.getCommand(COMMAND_NAME);
         if (command != null) {
@@ -29,6 +32,15 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
 
     }
 
+    /**
+     * This method is called when the command is executed
+     *
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     * @return true
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
@@ -51,15 +63,23 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void sendHelp(CommandSender commandSender) {
+    /**
+     * Sends the help message to the sender
+     *
+     * @param commandSender The sender of the command
+     */
+    private void sendHelp(@NotNull CommandSender commandSender) {
         Component component = DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Use");
-        if (component == null) {
-            component = Component.text(DA.loader.languageReader.getString("Command_Assistance_Use"));
-        }
         DA.loader.msg(commandSender, component);
     }
 
-    public static String buildCommand(String... args) {
+    /**
+     * Builds the command string
+     *
+     * @param args The arguments of the command
+     * @return The command string
+     */
+    public static @NotNull String buildCommandString(@NotNull String... args) {
         StringBuilder stringBuilder = new StringBuilder("/" + COMMAND_NAME);
         for (String arg : args) {
             stringBuilder.append(" ").append(arg);
@@ -67,6 +87,19 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
         return stringBuilder.toString();
     }
 
+    /**
+     * This method is called when <i>tab</i> is pressed
+     *
+     * @param sender  Source of the command.
+     *                For players tab-completing a
+     *                command inside a command block, this will be the player, not
+     *                the command block.
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    The arguments passed to the command, including final
+     *                partial argument to be completed
+     * @return A list of possible completions for the final argument, or an empty list
+     */
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length <= 1) {
@@ -94,6 +127,9 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
         }
     }
 
+    /**
+     * This enum contains all possible arguments for the main command
+     */
     @Getter
     public enum PossibleArgs {
         INFO("Command_Arg_Info", "drugsadder.cmd.info"),
@@ -105,12 +141,12 @@ public class DACommandManager implements CommandExecutor, TabCompleter {
         private final String languageKey;
         private final String permission;
 
-        PossibleArgs(String languageKey, String permission) {
+        PossibleArgs(@NotNull String languageKey, @NotNull String permission) {
             this.languageKey = languageKey;
             this.permission = permission;
         }
 
-        public String getArg() {
+        public @NotNull String getArg() {
             return DA.loader.languageReader.getString(languageKey);
         }
     }

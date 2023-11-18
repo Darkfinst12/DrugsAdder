@@ -44,7 +44,7 @@ public class DAPlantItem extends DAItem implements Cloneable {
     public Component asListComponent() {
         Component component = super.asListComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.PLANT.getArg(), this.getNamespacedID());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.PLANT.getArg(), this.getNamespacedID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 

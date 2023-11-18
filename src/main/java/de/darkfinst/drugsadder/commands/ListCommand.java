@@ -10,23 +10,33 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ListCommand {
 
+    /**
+     * Handels the list command with the given arguments and calls the required methods to list the items
+     * <br>
+     * args[0] = The type of the items, which should be listed
+     * <br>
+     * args[1] = The type of the recipes, which should be listed (only if args[0] = recipes)
+     * <br>
+     * Possible arguments: {@link PossibleArgs}
+     *
+     * @param commandSender The sender of the command
+     * @param args          The arguments of the command
+     */
     public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_List"));
         } else {
             try {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[0]);
-                if (!commandSender.hasPermission(possibleArgs.getPermission())) {
+                if (!commandSender.hasPermission(Objects.requireNonNull(possibleArgs).getPermission())) {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                 }
                 switch (possibleArgs) {
@@ -42,12 +52,18 @@ public class ListCommand {
 
     }
 
+    /**
+     * Handels the sub selection of the recipes to be listed and calls the correct method to list the recipes
+     *
+     * @param commandSender The sender of the command
+     * @param args          The recipe type, which should be listed
+     */
     private static void recipes(CommandSender commandSender, String[] args) {
         if (args.length < 1) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_List_Recipes"));
         } else {
             PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[0]);
-            if (!commandSender.hasPermission(possibleArgs.getPermission())) {
+            if (!commandSender.hasPermission(Objects.requireNonNull(possibleArgs).getPermission())) {
                 DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
             }
             switch (possibleArgs) {
@@ -69,6 +85,22 @@ public class ListCommand {
         }
     }
 
+    /**
+     * Lists all registered recipes of the given type
+     *
+     * @param commandSender The sender of the command
+     * @param type          The type of the recipes, which should be listed
+     * @param recipes       The recipes, which should be listed
+     */
+    private static void listRecipes(CommandSender commandSender, PossibleArgs type, List<? extends DARecipe> recipes) {
+        ListCommand.listItems(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_List_Recipes", type.getArg()), v -> recipes, DARecipe::asListComponent);
+    }
+
+    /**
+     * Lists all registered drugs
+     *
+     * @param commandSender The sender of the command
+     */
     private static void drugs(CommandSender commandSender) {
         if (!commandSender.hasPermission(PossibleArgs.DRUGS.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
@@ -77,6 +109,11 @@ public class ListCommand {
         }
     }
 
+    /**
+     * Lists all registered plants
+     *
+     * @param commandSender The sender of the command
+     */
     private static void plants(CommandSender commandSender) {
         if (!commandSender.hasPermission(PossibleArgs.DRUGS.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
@@ -85,16 +122,17 @@ public class ListCommand {
         }
     }
 
+    /**
+     * Lists all registered custom items
+     *
+     * @param commandSender The sender of the command
+     */
     private static void customItems(CommandSender commandSender) {
         if (!commandSender.hasPermission(PossibleArgs.CUSTOM_ITEMS.getPermission())) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
         } else {
             ListCommand.listItems(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_List_CustomItems"), v -> DAConfig.customItemReader.getRegisteredItems().values(), DAItem::asListComponent);
         }
-    }
-
-    private static void listRecipes(CommandSender commandSender, PossibleArgs type, List<? extends DARecipe> recipes) {
-        ListCommand.listItems(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_List_Recipes", type.getArg()), v -> recipes, DARecipe::asListComponent);
     }
 
     /**
@@ -114,18 +152,26 @@ public class ListCommand {
         DA.loader.msg(commandSender, component);
     }
 
-
+    /**
+     * Manges the tab completion for the list command
+     *
+     * @param sender The sender of the command
+     * @param args   The arguments of the command
+     * @return A list of possible arguments
+     */
     public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Stream.of(PossibleArgs.CUSTOM_ITEMS.getArg(), PossibleArgs.DRUGS.getArg(), PossibleArgs.RECIPES.getArg()).filter(possArg -> possArg.toLowerCase().contains(args[0])).toList();
         }
         if (args.length == 2 && args[0].equalsIgnoreCase(PossibleArgs.RECIPES.getArg())) {
-            return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPos() == 1 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
+            return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getPosition() == 1 && sender.hasPermission(possibleArgs.getPermission())).map(PossibleArgs::getArg).filter(possArg -> possArg.toLowerCase().contains(args[1])).toList();
         }
         return new ArrayList<>();
     }
 
-    //Enum for possible arguments
+    /**
+     * This enum contains all possible arguments for the list command
+     */
     @Getter
     public enum PossibleArgs {
         CUSTOM_ITEMS("Command_Arg_CustomItems", "drugsadder.cmd.list.customitems", 0),
@@ -144,19 +190,19 @@ public class ListCommand {
 
         private final String languageKey;
         private final String permission;
-        private final int pos;
+        private final int position;
 
-        PossibleArgs(String languageKey, String permission, int pos) {
+        PossibleArgs(@NotNull String languageKey, @NotNull String permission, int position) {
             this.languageKey = languageKey;
             this.permission = permission;
-            this.pos = pos;
+            this.position = position;
         }
 
         public String getArg() {
             return DA.loader.languageReader.getString(languageKey);
         }
 
-        public static PossibleArgs valueOfIgnoreCase(String translation) {
+        public static @Nullable PossibleArgs valueOfIgnoreCase(@Nullable String translation) {
             return Arrays.stream(PossibleArgs.values()).filter(possibleArgs -> possibleArgs.getArg().equalsIgnoreCase(translation)).findFirst().orElse(null);
         }
 

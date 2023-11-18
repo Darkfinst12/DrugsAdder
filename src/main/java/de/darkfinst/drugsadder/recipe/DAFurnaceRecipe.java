@@ -92,7 +92,7 @@ public class DAFurnaceRecipe extends DARecipe {
     public @NotNull Component asListComponent() {
         Component component = super.asListComponent();
         component = component.hoverEvent(this.getHover().asHoverEvent());
-        String command = DACommandManager.buildCommand(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.FURNACE.getArg(), this.getRecipeID());
+        String command = DACommandManager.buildCommandString(DACommandManager.PossibleArgs.INFO.getArg(), InfoCommand.PossibleArgs.RECIPES.getArg(), InfoCommand.PossibleArgs.FURNACE.getArg(), this.getRecipeID());
         return component.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, command));
     }
 

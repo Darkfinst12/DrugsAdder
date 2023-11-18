@@ -5,6 +5,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,7 +68,7 @@ public class LanguageReader {
      * @param args The arguments to replace the placeholders if there are any.
      * @return The found string with the placeholders replaced. - If no entry is found, it will return the given key.
      */
-    public String getString(String key, String... args) {
+    public @NotNull String getString(String key, String... args) {
         String entry = entries.get(key);
         if (entry != null) {
             int i = 0;
@@ -92,7 +94,7 @@ public class LanguageReader {
      * @param args The arguments to replace the placeholders if there are any.
      * @return The found component with the placeholders replaced. - If no entry is found, it will return null.
      */
-    public Component getComponent(String key, String... args) {
+    public @Nullable Component getComponent(String key, String... args) {
         String s = this.getString(key, args);
         if (s.equals(String.format("Key: %s not found", key))) {
             return null;
@@ -100,8 +102,14 @@ public class LanguageReader {
         return MiniMessage.miniMessage().deserialize(s);
     }
 
-
-    public Component getComponentWithFallback(String key, String... args) {
+    /**
+     * This method is used to get a component from the language file.
+     *
+     * @param key  The key of the component.
+     * @param args The arguments to replace the placeholders if there are any.
+     * @return The found component with the placeholders replaced. - If no entry is found, it will return the string of the key.
+     */
+    public @NotNull Component getComponentWithFallback(String key, String... args) {
         Component component = this.getComponent(key, args);
         if (component == null) {
             component = Component.text(this.getString(key, args));

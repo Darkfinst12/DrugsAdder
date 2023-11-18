@@ -11,20 +11,30 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerCommand {
 
-    //Handel Command
-    //arg[0] = targetPlayer
-    //arg[1] = action
-    //arg[2] = drug (if required)
-    //arg[3] = amount (if required)
+
+    /**
+     * Handels the player command with the given arguments and calls the required method to execute the command
+     * <br>
+     * arg[0] = targetPlayer
+     * <br>
+     * arg[1] = action
+     * <br>
+     * arg[2] = drug (if required)
+     * <br>
+     * arg[3] = amount (if required)
+     * <br>
+     * Possible arguments: {@link PossibleArgs}
+     *
+     * @param commandSender The sender of the command
+     * @param args          The arguments of the command
+     */
     public static void execute(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length == 0) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Assistance_Player"));
@@ -32,7 +42,7 @@ public class PlayerCommand {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
             try {
                 PossibleArgs possibleArgs = PossibleArgs.valueOfIgnoreCase(args[1]);
-                if (!commandSender.hasPermission(possibleArgs.getPermission())) {
+                if (!commandSender.hasPermission(Objects.requireNonNull(possibleArgs).getPermission())) {
                     DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_NoPermission"));
                     return;
                 }
@@ -50,7 +60,15 @@ public class PlayerCommand {
         }
     }
 
-    private static void set(CommandSender commandSender, OfflinePlayer target, String drugID, int amount) {
+    /**
+     * Set the addiction of a player
+     *
+     * @param commandSender The sender of the command
+     * @param target        The target player
+     * @param drugID        The ID of the drug
+     * @param amount        The amount of addiction
+     */
+    private static void set(@NotNull CommandSender commandSender, @NotNull OfflinePlayer target, @NotNull String drugID, int amount) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(target);
         if (daPlayer == null) {
             daPlayer = new DAPlayer(target.getUniqueId());
@@ -65,7 +83,14 @@ public class PlayerCommand {
         }
     }
 
-    private static void get(CommandSender commandSender, OfflinePlayer offlinePlayer, String drugID) {
+    /**
+     * Get the addiction of a player
+     *
+     * @param commandSender The sender of the command
+     * @param offlinePlayer The target player
+     * @param drugID        The ID of the drug
+     */
+    private static void get(@NotNull CommandSender commandSender, @NotNull OfflinePlayer offlinePlayer, @NotNull String drugID) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -75,7 +100,14 @@ public class PlayerCommand {
         }
     }
 
-    private static void remove(CommandSender commandSender, OfflinePlayer offlinePlayer, String drugID) {
+    /**
+     * Remove the addiction of a player
+     *
+     * @param commandSender The sender of the command
+     * @param offlinePlayer The target player
+     * @param drugID        The ID of the drug
+     */
+    private static void remove(@NotNull CommandSender commandSender, @NotNull OfflinePlayer offlinePlayer, @NotNull String drugID) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -90,9 +122,15 @@ public class PlayerCommand {
         }
     }
 
-    private static void clear(CommandSender commandSender, OfflinePlayer offlinePlayer) {
+    /**
+     * Clear the addiction of a player
+     *
+     * @param commandSender The sender of the command
+     * @param offlinePlayer The target player
+     */
+    private static void clear(@NotNull CommandSender commandSender, @NotNull OfflinePlayer offlinePlayer) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
-        if (daPlayer == null) {
+        if (daPlayer == null || daPlayer.getAddicted().isEmpty()) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
         } else {
             daPlayer.clearAddictions();
@@ -100,7 +138,13 @@ public class PlayerCommand {
         }
     }
 
-    private static void info(CommandSender commandSender, OfflinePlayer offlinePlayer) {
+    /**
+     * Get the addiction of a player
+     *
+     * @param commandSender The sender of the command
+     * @param offlinePlayer The target player
+     */
+    private static void info(@NotNull CommandSender commandSender, @NotNull OfflinePlayer offlinePlayer) {
         DAPlayer daPlayer = DA.loader.getDaPlayer(offlinePlayer);
         if (daPlayer == null) {
             DA.loader.msg(commandSender, DA.loader.languageReader.getComponentWithFallback("Command_Error_PlayerNotAddicted", offlinePlayer.getName()));
@@ -112,7 +156,13 @@ public class PlayerCommand {
     }
 
 
-    //TabComplete
+    /**
+     * Manages the tab completion for the player command
+     *
+     * @param sender The sender of the command
+     * @param args   The arguments of the command
+     * @return A list of possible completions
+     */
     public static @NotNull List<String> complete(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length <= 1) {
             return Bukkit.getOnlinePlayers().stream()
@@ -143,7 +193,9 @@ public class PlayerCommand {
         return new ArrayList<>();
     }
 
-    //Enum for possible arguments
+    /**
+     * The Enum for the possible arguments of the player command
+     */
     @Getter
     public enum PossibleArgs {
         SET("Command_Arg_Set", "drugsadder.cmd.player.set"),
@@ -156,16 +208,16 @@ public class PlayerCommand {
         private final String languageKey;
         private final String permission;
 
-        PossibleArgs(String languageKey, String permission) {
+        PossibleArgs(@NotNull String languageKey, @NotNull String permission) {
             this.languageKey = languageKey;
             this.permission = permission;
         }
 
-        public String getArg() {
+        public @NotNull String getArg() {
             return DA.loader.languageReader.getString(languageKey);
         }
 
-        public static PossibleArgs valueOfIgnoreCase(String translation) {
+        public static @Nullable PossibleArgs valueOfIgnoreCase(@Nullable String translation) {
             return Arrays.stream(PossibleArgs.values())
                     .filter(possibleArgs -> possibleArgs.getArg().equalsIgnoreCase(translation))
                     .findFirst()
