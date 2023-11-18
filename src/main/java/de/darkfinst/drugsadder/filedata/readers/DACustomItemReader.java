@@ -88,7 +88,7 @@ public class DACustomItemReader {
         itemMeta.displayName(name);
         List<Component> lore = new ArrayList<>();
         for (String loreLine : itemConfig.getStringList("lore")) {
-            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(loreLine));
+            lore.add(MiniMessage.miniMessage().deserialize(loreLine));
         }
         itemMeta.lore(lore);
         int cmd = itemConfig.getInt("customModelData", -1);
