@@ -48,10 +48,14 @@ public class DAAddiction {
     private int reductionAmount = -1;
     /**
      * The time, which has to pass, until the reduction amount is removed
+     * <br>
+     * The time is in minutes
      */
     private int reductionTime = -1;
     /**
      * The timespan in which the player overdoses, if the drug is consumed to often
+     * <br>
+     * The time is in minutes
      */
     private long overdoseTime = -1;
     /**

@@ -3,6 +3,7 @@ package de.darkfinst.drugsadder;
 import de.darkfinst.drugsadder.commands.DACommandManager;
 import de.darkfinst.drugsadder.commands.InfoCommand;
 import de.darkfinst.drugsadder.items.DAItem;
+import de.darkfinst.drugsadder.timed.TimedExecutable;
 import de.darkfinst.drugsadder.utils.DAUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class DADrug extends DAAddiction {
@@ -115,8 +117,7 @@ public class DADrug extends DAAddiction {
      */
     public void registerReductionTask() {
         if (this.getReductionTime() > 0) {
-            long time = this.getReductionTime() * 60L * 20L;
-            DA.getInstance.getServer().getScheduler().runTaskTimerAsynchronously(DA.getInstance, new DrugsReductionRunnable(this, true), time, time);
+            DA.loader.getTimedExecutionManager().addExecutable(new DrugsReductionRunnable(this));
         }
     }
 
@@ -165,7 +166,7 @@ public class DADrug extends DAAddiction {
     /**
      * Returns the drug as a component, which can be used in a message as a hover
      *
-     * @param extended Whether the hover should be extended or not - For details see {@link DAAddiction#asComponent(boolean)}
+     * @param extended Whether the hover should be extended or not – For details see {@link DAAddiction#asComponent(boolean)}
      * @return The hover as a component
      */
     public Component getHover(boolean extended) {
@@ -187,17 +188,16 @@ public class DADrug extends DAAddiction {
     /**
      * A runnable, which reduces the addiction of all addicted players
      */
-    public static class DrugsReductionRunnable implements Runnable {
+    public static class DrugsReductionRunnable extends TimedExecutable {
 
         /**
          * The drug, which should be reduced
          */
         private final DADrug daDrug;
-        private final boolean isAsync;
 
-        public DrugsReductionRunnable(DADrug daDrug, boolean isAsync) {
+        public DrugsReductionRunnable(DADrug daDrug) {
+            super(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(daDrug.getReductionTime()));
             this.daDrug = daDrug;
-            this.isAsync = isAsync;
         }
 
         /**
@@ -207,10 +207,13 @@ public class DADrug extends DAAddiction {
         public void run() {
             for (DAPlayer daPlayer : DA.loader.getDaPlayerList().stream().filter(daPlayer -> daPlayer.isAddicted(this.daDrug)).toList()) {
                 if (this.daDrug.isReductionOnlyOnline() && daPlayer.isOnline()) {
-                    daPlayer.reduceAddiction(this.daDrug, isAsync);
+                    daPlayer.reduceAddiction(this.daDrug, false);
                 } else if (!this.daDrug.isReductionOnlyOnline()) {
-                    daPlayer.reduceAddiction(this.daDrug, isAsync);
+                    daPlayer.reduceAddiction(this.daDrug, false);
                 }
+            }
+            if (this.daDrug.isAddictionAble()) {
+                DA.loader.getTimedExecutionManager().addExecutable(new DrugsReductionRunnable(this.daDrug));
             }
         }
     }

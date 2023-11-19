@@ -60,6 +60,7 @@ public class DAPlayer {
      *
      * @param daDrug The drug, which should be consumed
      */
+    //TODO: Rework this
     public void consumeDrug(DADrug daDrug) {
         Player player = Bukkit.getPlayer(this.uuid);
         if (player == null) {
@@ -142,7 +143,7 @@ public class DAPlayer {
      */
     public void reduceAddiction(DADrug daDrug, boolean isAsync) {
         int addictionPoints = this.addicted.getOrDefault(daDrug, 0);
-        reduceAddiction(daDrug, addictionPoints, isAsync);
+        this.reduceAddiction(daDrug, addictionPoints, isAsync);
     }
 
     /**
