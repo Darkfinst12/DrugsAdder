@@ -252,6 +252,7 @@ public class DAPlant extends DAStructure {
      */
     public void destroy() {
         if (DA.loader.unregisterDAStructure(this)) {
+            this.getBody().getPlantBLock().setType(Material.AIR);
             this.getBody().getPlantBLock().getWorld().dropItemNaturally(this.getBody().blocks.get(0).getLocation(), this.seed.getItemStack());
         }
     }
