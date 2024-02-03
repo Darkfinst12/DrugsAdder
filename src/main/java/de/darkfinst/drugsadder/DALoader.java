@@ -81,11 +81,13 @@ public class DALoader {
      * Initializes the plugin and all its components
      */
     public void init() {
-        if (DAConfig.hasItemsAdder && !DALoader.iaLoaded) {
+        if (DAConfig.hasItemsAdder) {
+            if (!DALoader.iaLoaded) {
+                this.infoLog("ItemsAdder is not loaded, await finishing of the ItemsAdder loading process");
+            }
+        } else {
             this.initConfig();
             this.initData();
-        } else {
-            this.infoLog("ItemsAdder is not loaded, await finishing of the ItemsAdder loading process");
         }
         this.initCommands();
         this.initListener();
@@ -141,7 +143,11 @@ public class DALoader {
         new InventoryClickEventListener();
         new InventoryCloseEventListener();
         new InventoryDragEventListener();
-        new ItemsAdderLoadDataEventListener();
+        if (DAConfig.hasItemsAdder) {
+            new ItemsAdderLoadDataEventListener();
+        } else {
+            this.infoLog("ItemsAdder is not installed, skipping registration of ItemsAdderLoadDataEventListener");
+        }
         new PlayerInteractEventListener();
         new PlayerItemConsumeEventListener();
         new PrepareItemCraftEventListener();
