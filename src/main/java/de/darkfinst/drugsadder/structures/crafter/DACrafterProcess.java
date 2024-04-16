@@ -32,4 +32,13 @@ public class DACrafterProcess extends DAProcess {
     public void restart(DAStructure daStructure) {
         //Do nothing - not needed
     }
+
+    /**
+     * Checks if the process is running
+     *
+     * @return True if the process is running
+     */
+    public boolean isRunning() {
+        return recipe != null;
+    }
 }
