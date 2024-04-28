@@ -205,6 +205,11 @@ public class DACrafter extends DAInvStructure {
      * @param recipe The recipe to start
      */
     public void startRecipe(@Nullable HumanEntity who, @NotNull DACrafterRecipe recipe) {
+        // Check if a process is already running
+        if (this.getProcess().isRunning()) {
+            return;
+        }
+
         CrafterStartRecipeEvent crafterStartRecipeEvent = new CrafterStartRecipeEvent(who, this, recipe);
         Bukkit.getPluginManager().callEvent(crafterStartRecipeEvent);
         if (!crafterStartRecipeEvent.isCancelled()) {
